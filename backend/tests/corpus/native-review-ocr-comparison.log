@@ -1,0 +1,19 @@
+[INFO] 2026-11-11 17:44:16,889 [RapidOCR] base.py:22: Using engine_name: onnxruntime
+[INFO] 2026-11-11 17:44:16,950 [RapidOCR] download_file.py:60: File exists and is valid: C:\Users\����\AppData\Local\Programs\Python\Python311\Lib\site-packages\rapidocr\models\ch_PP-OCRv4_det_infer.onnx
+[INFO] 2026-11-11 17:44:16,950 [RapidOCR] main.py:53: Using C:\Users\����\AppData\Local\Programs\Python\Python311\Lib\site-packages\rapidocr\models\ch_PP-OCRv4_det_infer.onnx
+[INFO] 2026-11-11 17:44:17,040 [RapidOCR] base.py:22: Using engine_name: onnxruntime
+[INFO] 2026-11-11 17:44:17,041 [RapidOCR] download_file.py:60: File exists and is valid: C:\Users\����\AppData\Local\Programs\Python\Python311\Lib\site-packages\rapidocr\models\ch_ppocr_mobile_v2.0_cls_infer.onnx
+[INFO] 2026-11-11 17:44:17,041 [RapidOCR] main.py:53: Using C:\Users\����\AppData\Local\Programs\Python\Python311\Lib\site-packages\rapidocr\models\ch_ppocr_mobile_v2.0_cls_infer.onnx
+[INFO] 2026-11-11 17:44:17,089 [RapidOCR] base.py:22: Using engine_name: onnxruntime
+[INFO] 2026-11-11 17:44:17,098 [RapidOCR] download_file.py:60: File exists and is valid: C:\Users\����\AppData\Local\Programs\Python\Python311\Lib\site-packages\rapidocr\models\ch_PP-OCRv4_rec_infer.onnx
+[INFO] 2026-11-11 17:44:17,098 [RapidOCR] main.py:53: Using C:\Users\����\AppData\Local\Programs\Python\Python311\Lib\site-packages\rapidocr\models\ch_PP-OCRv4_rec_infer.onnx
+[INFO] 2026-11-11 17:44:25,036 [RapidOCR] base.py:22: Using engine_name: onnxruntime
+[INFO] 2026-11-11 17:44:25,041 [RapidOCR] download_file.py:60: File exists and is valid: C:\Users\����\AppData\Local\Programs\Python\Python311\Lib\site-packages\rapidocr\models\ch_PP-OCRv4_det_infer.onnx
+[INFO] 2026-11-11 17:44:25,041 [RapidOCR] main.py:53: Using C:\Users\����\AppData\Local\Programs\Python\Python311\Lib\site-packages\rapidocr\models\ch_PP-OCRv4_det_infer.onnx
+[INFO] 2026-11-11 17:44:25,131 [RapidOCR] base.py:22: Using engine_name: onnxruntime
+[INFO] 2026-11-11 17:44:25,133 [RapidOCR] download_file.py:60: File exists and is valid: C:\Users\����\AppData\Local\Programs\Python\Python311\Lib\site-packages\rapidocr\models\ch_ppocr_mobile_v2.0_cls_infer.onnx
+[INFO] 2026-11-11 17:44:25,133 [RapidOCR] main.py:53: Using C:\Users\����\AppData\Local\Programs\Python\Python311\Lib\site-packages\rapidocr\models\ch_ppocr_mobile_v2.0_cls_infer.onnx
+[INFO] 2026-11-11 17:44:25,183 [RapidOCR] base.py:22: Using engine_name: onnxruntime
+[INFO] 2026-11-11 17:44:25,183 [RapidOCR] main.py:53: Using C:\Users\����\AppData\Local\ListDocumentViewer\models\rapidocr-v3.6.0\cyrillic_PP-OCRv3_rec_infer.onnx
+default_ch {'user_png': {'seconds': 2.574, 'cyrillic_characters': 6, 'ascii_english': 154}, 'user_scan_pdf': {'seconds': 2.84, 'cyrillic_characters': 0, 'ascii_english': 324}, 'english_control': {'seconds': 2.385, 'cyrillic_characters': 0, 'ascii_english': 32}}
+cyrillic {'user_png': {'seconds': 2.26, 'cyrillic_characters': 138, 'ascii_english': 44}, 'user_scan_pdf': {'seconds': 2.123, 'cyrillic_characters': 39, 'ascii_english': 271}, 'english_control': {'seconds': 2.257, 'cyrillic_characters': 0, 'ascii_english': 32}}

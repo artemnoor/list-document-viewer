@@ -1,0 +1,13 @@
+{
+  "state": "ready",
+  "id": "9bb00bb01b764c79abb758470f6cfeca",
+  "seconds": 2.6,
+  "ocr": {
+    "enabled": true,
+    "mode": "auto",
+    "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой.",
+    "profile": "cyrillic-latin-v1"
+  },
+  "native_header_preserved": true,
+  "cyrillic_body_preserved": true
+}

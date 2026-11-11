@@ -1,0 +1,66 @@
+test_extreme_model_table_dimensions_warn_without_allocating (test_audit_edges.AuditEdges.test_extreme_model_table_dimensions_warn_without_allocating) ... ok
+test_key_value_table_preserves_long_values_and_following_prose (test_audit_edges.AuditEdges.test_key_value_table_preserves_long_values_and_following_prose) ... ok
+test_model_empty_formula_does_not_overlay_native_text (test_audit_edges.AuditEdges.test_model_empty_formula_does_not_overlay_native_text) ... ok
+test_model_text_spanning_native_lines_is_deduplicated (test_audit_edges.AuditEdges.test_model_text_spanning_native_lines_is_deduplicated) ... ok
+test_multicolumn_reading_order_is_column_major (test_audit_edges.AuditEdges.test_multicolumn_reading_order_is_column_major) ... ok
+test_numeric_prose_columns_are_not_table_cells (test_audit_edges.AuditEdges.test_numeric_prose_columns_are_not_table_cells) ... ok
+test_ocr_text_on_partially_digital_page_survives (test_audit_edges.AuditEdges.test_ocr_text_on_partially_digital_page_survives)
+A digital header does not make the scanned body redundant. ... ok
+test_pdf_blank_grid_row_is_preserved (test_audit_edges.AuditEdges.test_pdf_blank_grid_row_is_preserved) ... ok
+test_pdf_hyperlink_target_survives_export (test_audit_edges.AuditEdges.test_pdf_hyperlink_target_survives_export) ... ok
+test_plain_text_xml_tags_survive_markdown_preview (test_audit_edges.AuditEdges.test_plain_text_xml_tags_survive_markdown_preview) ... ok
+test_rotated_model_geometry_is_not_rotated_twice (test_audit_edges.AuditEdges.test_rotated_model_geometry_is_not_rotated_twice) ... ok
+test_rotated_pdf_geometry_matches_rendered_page (test_audit_edges.AuditEdges.test_rotated_pdf_geometry_matches_rendered_page) ... ok
+test_external_hyperlink_keeps_target (test_docx_audit.DocxAudit.test_external_hyperlink_keeps_target) ... ok
+test_inline_image_alt_metadata_is_not_silently_dropped (test_docx_audit.DocxAudit.test_inline_image_alt_metadata_is_not_silently_dropped) ... ok
+test_nested_table_text_is_preserved_once (test_docx_audit.DocxAudit.test_nested_table_text_is_preserved_once) ... ok
+test_note_bodies_survive_extraction_and_markdown (test_docx_audit.DocxAudit.test_note_bodies_survive_extraction_and_markdown) ... ok
+test_numbered_bulleted_and_nested_lists_survive (test_docx_audit.DocxAudit.test_numbered_bulleted_and_nested_lists_survive) ... ok
+test_formatting_is_not_data_loss (test_extraction_audit.ExtractionAudit.test_formatting_is_not_data_loss) ... ok
+test_formula_cache_is_explicit (test_extraction_audit.ExtractionAudit.test_formula_cache_is_explicit) ... ok
+test_sparse_formatted_workbook (test_extraction_audit.ExtractionAudit.test_sparse_formatted_workbook) ... ok
+test_cell_literal_stars_are_not_emphasis (test_markdown_literals.MarkdownLiteralAudit.test_cell_literal_stars_are_not_emphasis) ... ok
+test_list_start_is_preserved (test_markdown_literals.MarkdownLiteralAudit.test_list_start_is_preserved) ... ok
+test_nonfinite_page_rejected (test_media_limits.MediaLimits.test_nonfinite_page_rejected) ... ok
+test_ocr_render_is_bounded (test_media_limits.MediaLimits.test_ocr_render_is_bounded) ... ok
+test_tiny_huge_page_pdf_rejected_before_models (test_media_limits.MediaLimits.test_tiny_huge_page_pdf_rejected_before_models) ... ok
+test_docling_selects_cyrillic_recognizer_explicitly (test_ocr_config.OcrConfigTests.test_docling_selects_cyrillic_recognizer_explicitly) ... ok
+test_failed_checksum_is_not_installed (test_ocr_config.OcrConfigTests.test_failed_checksum_is_not_installed) ... ok
+test_verified_cached_model_never_downloads (test_ocr_config.OcrConfigTests.test_verified_cached_model_never_downloads) ... ok
+test_plain_image_does_not_become_table (test_ocr_config.OcrLayoutTests.test_plain_image_does_not_become_table) ... ok
+test_plain_ocr_keeps_neutral_text_without_bogus_semantic_labels (test_ocr_config.OcrLayoutTests.test_plain_ocr_keeps_neutral_text_without_bogus_semantic_labels) ... ok
+test_raster_grid_preserves_cell_positions (test_ocr_config.OcrLayoutTests.test_raster_grid_preserves_cell_positions) ... ok
+test_digital_text_skips_ocr (test_ocr_selection.OCRSelection.test_digital_text_skips_ocr) ... ok
+test_scanned_body_with_digital_header (test_ocr_selection.OCRSelection.test_scanned_body_with_digital_header) ... ok
+test_background_converter_uses_cpu_by_default (test_runtime_safety.RuntimeSafety.test_background_converter_uses_cpu_by_default) ... C:\Users\����\AppData\Local\Programs\Python\Python311\Lib\site-packages\triton\knobs.py:212: UserWarning: Failed to find cuobjdump.exe
+  warnings.warn(f"Failed to find {binary}")
+C:\Users\����\AppData\Local\Programs\Python\Python311\Lib\site-packages\triton\knobs.py:212: UserWarning: Failed to find nvdisasm.exe
+  warnings.warn(f"Failed to find {binary}")
+<frozen importlib._bootstrap>:241: DeprecationWarning: builtin type SwigPyPacked has no __module__ attribute
+<frozen importlib._bootstrap>:241: DeprecationWarning: builtin type SwigPyObject has no __module__ attribute
+ok
+test_scan_background_does_not_mask_ocr_regions (test_runtime_safety.RuntimeSafety.test_scan_background_does_not_mask_ocr_regions) ... ok
+test_analysis_writes_use_atomic_replace (test_server_audit.ServerAudit.test_analysis_writes_use_atomic_replace) ... ok
+test_corrupt_analysis_cache_recovers_with_json_response (test_server_audit.ServerAudit.test_corrupt_analysis_cache_recovers_with_json_response) ... ok
+test_explicit_retry_replaces_old_cache (test_server_audit.ServerAudit.test_explicit_retry_replaces_old_cache) ... ok
+test_image_table_is_normalized_for_inspector (test_server_audit.ServerAudit.test_image_table_is_normalized_for_inspector) ... ok
+test_old_cache_is_marked_stale_without_loading_models (test_server_audit.ServerAudit.test_old_cache_is_marked_stale_without_loading_models) ... ok
+test_pdf_render_is_pixel_bounded (test_server_audit.ServerAudit.test_pdf_render_is_pixel_bounded) ... ok
+test_retry_recovers_failed_job_without_duplicate_runs (test_server_audit.ServerAudit.test_retry_recovers_failed_job_without_duplicate_runs) ... ok
+test_trusted_origin_is_echoed (test_server_audit.ServerAudit.test_trusted_origin_is_echoed) ... ok
+test_untrusted_origin_cannot_read_or_upload (test_server_audit.ServerAudit.test_untrusted_origin_cannot_read_or_upload) ... ok
+test_borderless_pdf (test_structures.Structures.test_borderless_pdf) ... ok
+test_columns_are_not_a_table (test_structures.Structures.test_columns_are_not_a_table) ... ok
+test_merged_docx (test_structures.Structures.test_merged_docx) ... ok
+test_merged_pdf (test_structures.Structures.test_merged_pdf) ... ok
+test_mixed_scan_and_native (test_structures.Structures.test_mixed_scan_and_native) ... ok
+test_model_table_not_hidden_by_native_text (test_structures.Structures.test_model_table_not_hidden_by_native_text) ... ok
+test_ruled_pdf (test_structures.Structures.test_ruled_pdf) ... ok
+test_sanitized_merged_html (test_structures.Structures.test_sanitized_merged_html) ... ok
+test_xlsx_grid (test_structures.Structures.test_xlsx_grid) ... ok
+
+----------------------------------------------------------------------
+Ran 53 tests in 20.178s
+
+OK
+sys:1: DeprecationWarning: builtin type swigvarlink has no __module__ attribute

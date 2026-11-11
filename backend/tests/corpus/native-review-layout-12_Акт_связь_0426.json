@@ -1,0 +1,160 @@
+{
+  "version": 1,
+  "source": "ocr_geometry",
+  "pages": {
+    "1": {
+      "page_no": 1,
+      "size": {
+        "width": 1654.0,
+        "height": 2339.0
+      }
+    }
+  },
+  "parts": [
+    {
+      "kind": "text",
+      "text": "АКТ ОКАЗАННЫХ УСЛУГ № СВ-О426",
+      "source": "ocr_text",
+      "confidence": 0.96346,
+      "provenance": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 395.8792724609375,
+            "t": 116.71421305338542,
+            "r": 1261.6448567708333,
+            "b": 152.08216349283853,
+            "coord_origin": "TOPLEFT"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "text",
+      "text": "Дата: 29.04.2026",
+      "source": "ocr_text",
+      "confidence": 0.99842,
+      "provenance": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 120.99573771158855,
+            "t": 190.98689778645834,
+            "r": 374.734375,
+            "b": 222.81805419921875,
+            "coord_origin": "TOPLEFT"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "text",
+      "text": "По договору 24/03/15-01",
+      "source": "ocr_text",
+      "confidence": 0.99954,
+      "provenance": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 118.6463114420573,
+            "t": 247.57560221354166,
+            "r": 485.1576741536458,
+            "b": 285.30141194661456,
+            "coord_origin": "TOPLEFT"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "text",
+      "text": "Поставщик: ООО «КомЛинк Дзета»",
+      "source": "ocr_text",
+      "confidence": 0.99058,
+      "provenance": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 118.6463114420573,
+            "t": 306.5221761067708,
+            "r": 644.9190266927084,
+            "b": 339.5322672526042,
+            "coord_origin": "TOPLEFT"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "text",
+      "text": "Получатель: ФГАОУ ВО «МФТИ»",
+      "source": "ocr_text",
+      "confidence": 0.98971,
+      "provenance": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 119.82102457682292,
+            "t": 366.647705078125,
+            "r": 594.40625,
+            "b": 397.2999267578125,
+            "coord_origin": "TOPLEFT"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "text",
+      "text": "Услуги связи, защищенного доступа и информационного обеспечения",
+      "source": "ocr_text",
+      "confidence": 0.99573,
+      "provenance": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 117.47158813476562,
+            "t": 422.0574544270833,
+            "r": 1177.0653483072917,
+            "b": 459.7832845052083,
+            "coord_origin": "TOPLEFT"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "text",
+      "text": "административной группы договора.",
+      "source": "ocr_text",
+      "confidence": 0.99974,
+      "provenance": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 119.82102457682292,
+            "t": 471.5725911458333,
+            "r": 675.461669921875,
+            "b": 504.5826822916667,
+            "coord_origin": "TOPLEFT"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "text",
+      "text": "Итого к оплате: 650 000,00 руб.",
+      "source": "ocr_text",
+      "confidence": 0.98824,
+      "provenance": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 118.6463114420573,
+            "t": 526.9823811848959,
+            "r": 594.40625,
+            "b": 561.17138671875,
+            "coord_origin": "TOPLEFT"
+          }
+        }
+      ]
+    }
+  ],
+  "warnings": []
+}

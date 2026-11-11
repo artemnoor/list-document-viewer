@@ -1,0 +1,272 @@
+[
+  {
+    "name": "данные/01_Карточка_учета_фактических_затрат_этап_3.pdf",
+    "id": "97c882e16515439ea3cbefbcd2752687",
+    "state": "ready",
+    "seconds": 0.16,
+    "stale": false,
+    "parts": 20,
+    "table_count": 1
+  },
+  {
+    "name": "данные/10_Акт_ADM-27_копия.pdf",
+    "id": "6674e5b064534a0bb45f30ec7205d8aa",
+    "state": "ready",
+    "seconds": 0.06,
+    "stale": false,
+    "parts": 4,
+    "table_count": 3
+  },
+  {
+    "name": "данные/02_01_Ведомость_ЗП_Январь_2026.xlsx",
+    "id": "5274071dc0f14b39a878999c08ac7867",
+    "state": "ready",
+    "seconds": 0.45,
+    "stale": false,
+    "parts": 18,
+    "table_count": 0
+  },
+  {
+    "name": "данные/09_Акт_ADM-27_27-02-2026.pdf",
+    "id": "6674e5b064534a0bb45f30ec7205d8aa",
+    "state": "ready",
+    "seconds": 0.05,
+    "stale": false,
+    "parts": 4,
+    "table_count": 3
+  },
+  {
+    "name": "данные/15_Акт_ADM-75_15-05-2026.pdf",
+    "id": "46348feb951e44a4a419f36edec88c8c",
+    "state": "ready",
+    "seconds": 0.06,
+    "stale": false,
+    "parts": 7,
+    "table_count": 0
+  },
+  {
+    "name": "данные/08_Акт_ИА-15_31-01-2026.pdf",
+    "id": "cac031721da944a19f2840dba986dedd",
+    "state": "ready",
+    "seconds": 0.05,
+    "stale": false,
+    "parts": 8,
+    "table_count": 0
+  },
+  {
+    "name": "данные/07_УПД_0426-77.pdf",
+    "id": "59ff965a8f534fbb90cb4600ef8587a2",
+    "state": "ready",
+    "seconds": 0.06,
+    "stale": false,
+    "parts": 7,
+    "table_count": 3
+  },
+  {
+    "name": "данные/05_Счет-акт_174_25-02-2026.pdf",
+    "id": "1ad08ca501ee4aa096e7be9580400280",
+    "state": "ready",
+    "seconds": 16.82,
+    "stale": false,
+    "parts": 13,
+    "table_count": 1
+  },
+  {
+    "name": "данные/03_04_Страховые_взносы_Апрель_2026.xlsx",
+    "id": "254120791a644623bc5473bc53816a52",
+    "state": "ready",
+    "seconds": 0.61,
+    "stale": false,
+    "parts": 12,
+    "table_count": 0
+  },
+  {
+    "name": "данные/04_Акт_118_28-01-2026.pdf",
+    "id": "c7f2e3dc2d1944d9af2fa0ac5dfa0abb",
+    "state": "ready",
+    "seconds": 4.77,
+    "stale": false,
+    "parts": 9,
+    "table_count": 0
+  },
+  {
+    "name": "данные/02_02_Ведомость_ЗП_Февраль_2026.xlsx",
+    "id": "f17b15f77877484fb4f7f517ce2302f0",
+    "state": "ready",
+    "seconds": 0.59,
+    "stale": false,
+    "parts": 18,
+    "table_count": 0
+  },
+  {
+    "name": "данные/!Правильные_ответы_и_разбор.xlsx",
+    "id": "4473a32680b643cbaf47c9751dca8e04",
+    "state": "ready",
+    "seconds": 0.6,
+    "stale": false,
+    "parts": 111,
+    "table_count": 0
+  },
+  {
+    "name": "данные/02_05_Ведомость_ЗП_Май_2026.xlsx",
+    "id": "a1b5f8b34eb741d19790d89609ed1d20",
+    "state": "ready",
+    "seconds": 0.6,
+    "stale": false,
+    "parts": 18,
+    "table_count": 0
+  },
+  {
+    "name": "данные/02_03_Ведомость_ЗП_Март_2026.xlsx",
+    "id": "876d4c2155394c1185b65405cfcfcb28",
+    "state": "ready",
+    "seconds": 0.58,
+    "stale": false,
+    "parts": 18,
+    "table_count": 0
+  },
+  {
+    "name": "данные/02_04_Ведомость_ЗП_Апрель_2026.xlsx",
+    "id": "1dcd148330464527812bda1b5ac2b421",
+    "state": "ready",
+    "seconds": 0.6,
+    "stale": false,
+    "parts": 18,
+    "table_count": 0
+  },
+  {
+    "name": "данные/03_03_Страховые_взносы_Март_2026.xlsx",
+    "id": "a06e5731ba3b46a6b169d0d20f87490f",
+    "state": "ready",
+    "seconds": 0.6,
+    "stale": false,
+    "parts": 12,
+    "table_count": 0
+  },
+  {
+    "name": "данные/13_УПД_УПР-55.pdf",
+    "id": "a26565b5e8774d99b2d1f905c768a26c",
+    "state": "ready",
+    "seconds": 1.13,
+    "stale": false,
+    "parts": 11,
+    "table_count": 0
+  },
+  {
+    "name": "данные/03_02_Страховые_взносы_Февраль_2026.xlsx",
+    "id": "6273e898f20e417ba82f6226985e7231",
+    "state": "ready",
+    "seconds": 0.57,
+    "stale": false,
+    "parts": 12,
+    "table_count": 0
+  },
+  {
+    "name": "данные/00_README_набор_данных.txt",
+    "id": "fa83a33b034746ff8d55582b1ed47185",
+    "state": "ready",
+    "seconds": 0.58,
+    "stale": false,
+    "parts": 12,
+    "table_count": 0
+  },
+  {
+    "name": "данные/03_05_Страховые_взносы_Май_2026.xlsx",
+    "id": "210d78f0f3774b2bbba7e2b928273b59",
+    "state": "ready",
+    "seconds": 0.6,
+    "stale": false,
+    "parts": 12,
+    "table_count": 0
+  },
+  {
+    "name": "данные/12_Акт_связь_0426.png",
+    "id": "89bc57a0bba8406186402be51e65e2de",
+    "state": "ready",
+    "seconds": 2.67,
+    "stale": false,
+    "parts": 8,
+    "table_count": 0
+  },
+  {
+    "name": "данные/03_01_Страховые_взносы_Январь_2026.xlsx",
+    "id": "47f390509b3341879b9af7a5a2036557",
+    "state": "ready",
+    "seconds": 0.58,
+    "stale": false,
+    "parts": 12,
+    "table_count": 0
+  },
+  {
+    "name": "данные/14_Акт_ОРГ-0603.pdf",
+    "id": "754d540ec3224fe5808d67ef70e3fcdc",
+    "state": "ready",
+    "seconds": 1.14,
+    "stale": false,
+    "parts": 9,
+    "table_count": 1
+  },
+  {
+    "name": "данные/06_Служебная_записка_КЛ-31.docx",
+    "id": "1652ddda85014c7ea013de0dc34f996b",
+    "state": "ready",
+    "seconds": 0.57,
+    "stale": false,
+    "parts": 9,
+    "table_count": 1
+  },
+  {
+    "name": "данные/11_Справка_ИТ_03-26.docx",
+    "id": "2b415e6eb6c74e489444c865c3084a1c",
+    "state": "ready",
+    "seconds": 0.58,
+    "stale": false,
+    "parts": 9,
+    "table_count": 1
+  },
+  {
+    "name": "данные/00_README_набор_данных.docx",
+    "id": "135d0c9f457648758856f050e7bf1c64",
+    "state": "ready",
+    "seconds": 0.6,
+    "stale": false,
+    "parts": 15,
+    "table_count": 0
+  },
+  {
+    "name": "public/irs-w4.pdf",
+    "id": "653cc5b1211b401c8ce9f3f1a1a33850",
+    "state": "ready",
+    "seconds": 49.8,
+    "stale": false,
+    "parts": 1489,
+    "table_count": 6
+  },
+  {
+    "name": "public/ons-population.xlsx",
+    "id": "8e23db84cf5949dcaea6fe7f8847b126",
+    "state": "ready",
+    "seconds": 0.66,
+    "stale": false,
+    "parts": 497,
+    "table_count": 0
+  },
+  {
+    "name": "public/ons-population.csv",
+    "id": "1ed508a20ae94435856b8cdddbbcdc34",
+    "state": "ready",
+    "seconds": 0.61,
+    "stale": false,
+    "parts": 1,
+    "table_count": 1
+  },
+  {
+    "name": "public/calibre-demo.docx",
+    "id": "8155ec3ba99e4b9daa323a723d83da4c",
+    "state": "ready",
+    "seconds": 0.62,
+    "stale": false,
+    "parts": 109,
+    "table_count": 5
+  }
+]

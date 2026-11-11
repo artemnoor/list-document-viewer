@@ -1,0 +1,16 @@
+[INFO] 2026-11-11 17:42:07,853 [RapidOCR] base.py:22: Using engine_name: onnxruntime
+[INFO] 2026-11-11 17:42:07,918 [RapidOCR] download_file.py:60: File exists and is valid: C:\Users\����\AppData\Local\Programs\Python\Python311\Lib\site-packages\rapidocr\models\ch_PP-OCRv4_det_infer.onnx
+[INFO] 2026-11-11 17:42:07,918 [RapidOCR] main.py:53: Using C:\Users\����\AppData\Local\Programs\Python\Python311\Lib\site-packages\rapidocr\models\ch_PP-OCRv4_det_infer.onnx
+[INFO] 2026-11-11 17:42:08,015 [RapidOCR] base.py:22: Using engine_name: onnxruntime
+[INFO] 2026-11-11 17:42:08,017 [RapidOCR] download_file.py:60: File exists and is valid: C:\Users\����\AppData\Local\Programs\Python\Python311\Lib\site-packages\rapidocr\models\ch_ppocr_mobile_v2.0_cls_infer.onnx
+[INFO] 2026-11-11 17:42:08,018 [RapidOCR] main.py:53: Using C:\Users\����\AppData\Local\Programs\Python\Python311\Lib\site-packages\rapidocr\models\ch_ppocr_mobile_v2.0_cls_infer.onnx
+[INFO] 2026-11-11 17:42:08,061 [RapidOCR] base.py:22: Using engine_name: onnxruntime
+[INFO] 2026-11-11 17:42:08,070 [RapidOCR] download_file.py:60: File exists and is valid: C:\Users\����\AppData\Local\Programs\Python\Python311\Lib\site-packages\rapidocr\models\ch_PP-OCRv4_rec_infer.onnx
+[INFO] 2026-11-11 17:42:08,070 [RapidOCR] main.py:53: Using C:\Users\����\AppData\Local\Programs\Python\Python311\Lib\site-packages\rapidocr\models\ch_PP-OCRv4_rec_infer.onnx
+Traceback (most recent call last):
+  File "C:\Users\����\Documents\ChatGPT\New project 19\backend\tests\corpus\native-review-ocr.py", line 11, in <module>
+    print(report)
+  File "C:\Users\����\AppData\Local\Programs\Python\Python311\Lib\encodings\cp1251.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u5c71' in position 156: character maps to <undefined>

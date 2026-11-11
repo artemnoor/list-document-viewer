@@ -1,0 +1,34 @@
+[
+  {
+    "name": "public/irs-w4.pdf",
+    "path": "C:\\Users\\\u0410\u0440\u0442\u0451\u043c\\Documents\\ChatGPT\\New project 19\\backend\\tests\\corpus\\public\\irs-w4.pdf",
+    "source": "https://www.irs.gov/pub/irs-pdf/fw4.pdf",
+    "size": 208845,
+    "extension": ".pdf",
+    "sha256": "92444d8856ce55d9e25dca8b6d1420634fc68b11e1ab1f760916ea29ddd312b2"
+  },
+  {
+    "name": "public/ons-population.xlsx",
+    "path": "C:\\Users\\\u0410\u0440\u0442\u0451\u043c\\Documents\\ChatGPT\\New project 19\\backend\\tests\\corpus\\public\\ons-population.xlsx",
+    "source": "https://www.ons.gov.uk/file?uri=%2Fpeoplepopulationandcommunity%2Fpopulationandmigration%2Fpopulationestimates%2Fdatasets%2Fpopulationestimatestimeseriesdataset%2Fcurrent%2Fpop.xlsx",
+    "size": 7257,
+    "extension": ".xlsx",
+    "sha256": "1bb2efc55c6f7d88f78ddb8d03db6589c0dc9b391277baf043eb3ec3be44c1e3"
+  },
+  {
+    "name": "public/ons-population.csv",
+    "path": "C:\\Users\\\u0410\u0440\u0442\u0451\u043c\\Documents\\ChatGPT\\New project 19\\backend\\tests\\corpus\\public\\ons-population.csv",
+    "source": "https://www.ons.gov.uk/file?uri=%2Fpeoplepopulationandcommunity%2Fpopulationandmigration%2Fpopulationestimates%2Fdatasets%2Fpopulationestimatestimeseriesdataset%2Fcurrent%2Fpop.csv",
+    "size": 5902,
+    "extension": ".csv",
+    "sha256": "741388ee347534b37096120a46a76cb02fbb2c15008b21c466873f8ae2c01d4b"
+  },
+  {
+    "name": "public/calibre-demo.docx",
+    "path": "C:\\Users\\\u0410\u0440\u0442\u0451\u043c\\Documents\\ChatGPT\\New project 19\\backend\\tests\\corpus\\public\\calibre-demo.docx",
+    "source": "https://calibre-ebook.com/downloads/demos/demo.docx",
+    "size": 1311881,
+    "extension": ".docx",
+    "sha256": "269329fc7ae54b3f289b3ac52efde387edc2e566ef9a48d637e841022c7e0eab"
+  }
+]

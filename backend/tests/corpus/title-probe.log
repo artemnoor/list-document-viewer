@@ -1,0 +1,11 @@
+[INFO] 2026-11-11 18:25:04,494 [RapidOCR] base.py:22: Using engine_name: onnxruntime
+[INFO] 2026-11-11 18:25:04,549 [RapidOCR] download_file.py:60: File exists and is valid: C:\Users\����\AppData\Local\Programs\Python\Python311\Lib\site-packages\rapidocr\models\ch_PP-OCRv4_det_infer.onnx
+[INFO] 2026-11-11 18:25:04,549 [RapidOCR] main.py:53: Using C:\Users\����\AppData\Local\Programs\Python\Python311\Lib\site-packages\rapidocr\models\ch_PP-OCRv4_det_infer.onnx
+[INFO] 2026-11-11 18:25:04,630 [RapidOCR] base.py:22: Using engine_name: onnxruntime
+[INFO] 2026-11-11 18:25:04,631 [RapidOCR] download_file.py:60: File exists and is valid: C:\Users\����\AppData\Local\Programs\Python\Python311\Lib\site-packages\rapidocr\models\ch_ppocr_mobile_v2.0_cls_infer.onnx
+[INFO] 2026-11-11 18:25:04,631 [RapidOCR] main.py:53: Using C:\Users\����\AppData\Local\Programs\Python\Python311\Lib\site-packages\rapidocr\models\ch_ppocr_mobile_v2.0_cls_infer.onnx
+[INFO] 2026-11-11 18:25:04,668 [RapidOCR] base.py:22: Using engine_name: onnxruntime
+[INFO] 2026-11-11 18:25:04,669 [RapidOCR] main.py:53: Using C:\Users\����\AppData\Local\ListDocumentViewer\models\rapidocr-v3.6.0\cyrillic_PP-OCRv5_rec_mobile_infer.onnx
+raw ["\u044d\u043e", "\u043c\u044c\u0433\u043e"]
+sharp ["\u041a\u0410\u0420\u0422\u041e\u0427\u041a\u0410 \u0423\u0427\u0415\u0422\u0410 \u0424\u0410\u041a\u0422\u0418\u0427\u0415\u0421\u041a\u0418\u0425 \u0417\u0410\u0422\u0420\u0410\u0422 \u041c \u0417\u041b", "\u0441\u043e", ".\u0445\u043e"]
+threshold ["\u041a\u0410\u0420\u0422\u041e\u0427\u041a\u0410\u0423\u0427\u0415\u0422\u0410\u0424\u0410\u041a\u0422\u0418\u0427\u0415\u0421\u041a\u0418\u0425\u0417\u0410\u0422\u0420\u0410\u0422\u0410\u041c"]

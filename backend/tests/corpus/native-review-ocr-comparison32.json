@@ -1,0 +1,65 @@
+{
+  "inputs": {
+    "user_png": "12_Акт_связь_0426.png",
+    "user_scan_pdf": "01_Карточка_учета_фактических_затрат_этап_3.pdf"
+  },
+  "models": {
+    "cyrillic32": {
+      "user_png": {
+        "seconds": 1.743,
+        "texts": [
+          "AKT 0KA3AHHьIX yCЛyF N: CB-O426",
+          "Дата:29.04:2026",
+          "одоговору 24јоз15яо1",
+          "ПоставШикооо Комлинк Дзета",
+          "ПолучаTeлы9FAOy BO MOTИ",
+          "услуги связи, зашишенного доступа и информационного обеспечения ",
+          "административной групыдоговора.",
+          "VToro K onлaTe: 650 000,00 py6."
+        ],
+        "cyrillic_characters": 138,
+        "ascii_english": 42
+      },
+      "user_scan_pdf": {
+        "seconds": 1.372,
+        "texts": [
+          "х de хиаhих оu.",
+          "акгиk",
+          "J",
+          "MoTh, lex",
+          "Censsh yhear  s u p",
+          "Etээ",
+          "балилцйн бээн ",
+          "салылицин бов ",
+          "Sт",
+          "Meeu",
+          "Gis. uhe",
+          "йтor",
+          "Е",
+          "т",
+          "з",
+          "ш",
+          "т",
+          "лал",
+          ".",
+          "и.",
+          "Ss mas",
+          "BcEros sm.",
+          "злл",
+          "S is is .",
+          ".l s sui,s-"
+        ],
+        "cyrillic_characters": 52,
+        "ascii_english": 66
+      },
+      "english_control": {
+        "seconds": 2.141,
+        "texts": [
+          "Invoice T0TAL 1245 English Russian ABC xy2"
+        ],
+        "cyrillic_characters": 0,
+        "ascii_english": 30
+      }
+    }
+  }
+}

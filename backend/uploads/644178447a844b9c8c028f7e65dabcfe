@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="referrer" content="no-referrer" />
+    <meta name="description" content="Контакты Bento Bank: поддержка, обращения, реквизиты (демо)." />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; connect-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; frame-ancestors 'none'; upgrade-insecure-requests" />
+    <title>Контакты — Bento Bank</title>
+    <link rel="icon" href="assets/logo.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="assets/styles.css" />
+    <script src="assets/app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip" href="#content">Перейти к содержимому</a>
+
+    <header class="topbar">
+      <div class="container">
+        <a class="brand" href="index.html" aria-label="Bento Bank">
+          <img src="assets/logo.svg" alt="" width="26" height="26" />
+          <span>
+            <span class="name">Bento Bank</span>
+            <span class="tag">contacts</span>
+          </span>
+        </a>
+
+        <nav class="nav" aria-label="Навигация" aria-expanded="false">
+          <a href="cabinet.html">Личный кабинет</a>
+          <a href="products.html">Продукты</a>
+          <a href="credits.html">Кредиты</a>
+          <a href="investments.html">Инвестиции</a>
+          <a href="contacts.html">Контакты</a>
+        </nav>
+
+        <div class="nav-tools">
+          <span class="pill">support • forms • info</span>
+          <button class="btn burger" type="button" data-burger aria-label="Открыть меню" aria-expanded="false"><span class="mono">≡</span></button>
+          <a class="btn" href="index.html">Главная</a>
+        </div>
+      </div>
+    </header>
+
+    <main id="content">
+      <div class="container">
+        <div class="headline">
+          <div>
+            <h1>Контакты</h1>
+            <p>Чёткие каналы связи и понятные формы обращений. Чат — в правом нижнем углу.</p>
+          </div>
+        </div>
+
+        <section class="grid bento" aria-label="Контакты">
+          <article class="card span-6">
+            <h2>Поддержка</h2>
+            <div class="divider"></div>
+            <div class="meta">
+              <span class="badge ok">24/7</span>
+              <span class="badge">SLA</span>
+              <span class="badge">ticket</span>
+            </div>
+            <div class="divider"></div>
+            <p class="hint">Телефон: <span class="mono">+7 (800) 000‑00‑00</span></p>
+            <p class="hint">Email: <span class="mono">support@bentobank.example</span></p>
+            <p class="hint">Адрес: Москва, Демо-улица 1</p>
+          </article>
+
+          <article class="card span-6">
+            <h2>Реквизиты (демо)</h2>
+            <div class="divider"></div>
+            <table class="table" aria-label="Реквизиты">
+              <tbody>
+                <tr><th>БИК</th><td class="mono">044525000</td></tr>
+                <tr><th>ИНН</th><td class="mono">7700000000</td></tr>
+                <tr><th>ОГРН</th><td class="mono">1027700000000</td></tr>
+              </tbody>
+            </table>
+          </article>
+
+          <article class="card span-7">
+            <h2>Обращение</h2>
+            <p>Форма без лишних полей. В демо данные не отправляются.</p>
+            <div class="divider"></div>
+            <form class="form-grid" data-application>
+              <div class="col-6">
+                <label>Тема</label>
+                <select name="topic" data-required>
+                  <option value="">Выберите…</option>
+                  <option>Доступ / вход</option>
+                  <option>Продукты</option>
+                  <option>Кредиты</option>
+                  <option>Инвестиции</option>
+                  <option>Другое</option>
+                </select>
+              </div>
+              <div class="col-6">
+                <label>Контакт</label>
+                <input name="contact" placeholder="телефон или email" data-required />
+              </div>
+              <div class="col-12">
+                <label>Сообщение</label>
+                <textarea name="message" placeholder="Опишите ситуацию…" data-required></textarea>
+              </div>
+              <div class="col-12">
+                <button class="btn primary" type="submit">Отправить</button>
+                <div class="hint" data-form-msg></div>
+              </div>
+            </form>
+          </article>
+
+          <article class="card span-5">
+            <h2>Уровень безопасности</h2>
+            <div class="divider"></div>
+            <p class="hint">Рекомендуемый набор для production:</p>
+            <ul class="list-min">
+              <li>CSP + строгие заголовки</li>
+              <li>CSRF/XSS защита, rate limiting</li>
+              <li>шифрование данных, аудит</li>
+              <li>2FA/Passkeys, мониторинг</li>
+            </ul>
+          </article>
+        </section>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <div>© <span data-year></span> Bento Bank</div>
+        <div class="meta"><span>Контакты</span><span class="dot"></span><span>Поддержка</span></div>
+      </div>
+    </footer>
+
+    <div class="chat-fab" aria-label="Чат поддержки">
+      <button class="chat-btn" type="button" data-chat-toggle aria-expanded="false" aria-controls="chatPanel"><span class="mono">?</span></button>
+      <section class="chat-panel" id="chatPanel" data-chat-panel aria-hidden="true" aria-label="Панель чата">
+        <div class="chat-head">
+          <div class="title"><strong>Поддержка</strong><span>Ответы — демо</span></div>
+          <button class="btn" type="button" data-chat-close aria-label="Закрыть чат">×</button>
+        </div>
+        <div class="chat-body" data-chat-list></div>
+        <form class="chat-form" data-chat-form>
+          <input data-chat-input type="text" placeholder="Напишите вопрос…" aria-label="Сообщение" />
+          <button class="btn primary" type="submit">Отправить</button>
+        </form>
+      </section>
+    </div>
+  </body>
+</html>
+

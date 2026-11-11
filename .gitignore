@@ -1,0 +1,8 @@
+backend/uploads/
+__pycache__/
+.playwright-cli/
+backend/*.log
+backend/tests/*.log
+backend/tests/artifacts/
+backend/ocr-check-result.json
+backend/tests/corpus/

@@ -1,0 +1,52 @@
+{
+  "inputs": 30,
+  "user_inputs": 26,
+  "public_inputs": 4,
+  "direct_after": {
+    "ready": 30
+  },
+  "http_after": {
+    "ready": 30
+  },
+  "unique_http_ids": 29,
+  "extensions": {
+    ".pdf": 11,
+    ".xlsx": 12,
+    ".txt": 1,
+    ".png": 1,
+    ".docx": 4,
+    ".csv": 1
+  },
+  "ocr_changes": [
+    {
+      "name": "данные/15_Акт_ADM-75_15-05-2026.pdf",
+      "profile": "cyrillic-latin-v1",
+      "table_count": 0,
+      "cyrillic_chars": 104
+    },
+    {
+      "name": "данные/08_Акт_ИА-15_31-01-2026.pdf",
+      "profile": "cyrillic-latin-v1",
+      "table_count": 0,
+      "cyrillic_chars": 148
+    },
+    {
+      "name": "данные/12_Акт_связь_0426.png",
+      "profile": "cyrillic-latin-v1",
+      "table_count": 0,
+      "cyrillic_chars": 180
+    },
+    {
+      "name": "данные/04_Акт_118_28-01-2026.pdf",
+      "profile": "cyrillic-latin-v1",
+      "table_count": 0,
+      "cyrillic_chars": 259
+    },
+    {
+      "name": "данные/01_Карточка_учета_фактических_затрат_этап_3.pdf",
+      "profile": "cyrillic-latin-v1",
+      "table_count": 1,
+      "cyrillic_chars": 1123
+    }
+  ]
+}

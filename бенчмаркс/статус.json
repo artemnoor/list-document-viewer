@@ -1,0 +1,725 @@
+[
+  {
+    "number": 1,
+    "name": "тест 1.png",
+    "id": null,
+    "state": "processed",
+    "status": "ConversionStatus.SUCCESS",
+    "warnings": [],
+    "ocr": {
+      "enabled": true,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой.",
+      "profile": "cyrillic-latin-v1"
+    },
+    "chars": 251,
+    "seconds": 29.14
+  },
+  {
+    "number": 2,
+    "name": "тест 2.png",
+    "id": null,
+    "state": "processed",
+    "status": "ConversionStatus.SUCCESS",
+    "warnings": [
+      "Проверка таблиц через ИИ отключена или ключ недоступен."
+    ],
+    "ocr": {
+      "enabled": true,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой.",
+      "profile": "cyrillic-latin-v1"
+    },
+    "chars": 208,
+    "seconds": 18.1
+  },
+  {
+    "number": 3,
+    "name": "тест 3.png",
+    "id": null,
+    "state": "processed",
+    "status": "ConversionStatus.SUCCESS",
+    "warnings": [
+      "Проверка таблиц через ИИ отключена или ключ недоступен."
+    ],
+    "ocr": {
+      "enabled": true,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой.",
+      "profile": "cyrillic-latin-v1"
+    },
+    "chars": 547,
+    "seconds": 20.94
+  },
+  {
+    "number": 4,
+    "name": "тест 4.png",
+    "id": null,
+    "state": "processed",
+    "status": "ConversionStatus.SUCCESS",
+    "warnings": [
+      "Проверка таблиц через ИИ отключена или ключ недоступен."
+    ],
+    "ocr": {
+      "enabled": true,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой.",
+      "profile": "cyrillic-latin-v1"
+    },
+    "chars": 789,
+    "seconds": 8.09
+  },
+  {
+    "number": 5,
+    "name": "тест 5.png",
+    "id": null,
+    "state": "processed",
+    "status": "ConversionStatus.SUCCESS",
+    "warnings": [
+      "Проверка таблиц через ИИ отключена или ключ недоступен."
+    ],
+    "ocr": {
+      "enabled": true,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой.",
+      "profile": "cyrillic-latin-v1"
+    },
+    "chars": 214,
+    "seconds": 9.25
+  },
+  {
+    "number": 6,
+    "name": "тест 6.png",
+    "id": null,
+    "state": "processed",
+    "status": "ConversionStatus.SUCCESS",
+    "warnings": [
+      "Проверка таблиц через ИИ отключена или ключ недоступен."
+    ],
+    "ocr": {
+      "enabled": true,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой.",
+      "profile": "cyrillic-latin-v1"
+    },
+    "chars": 162,
+    "seconds": 7.21
+  },
+  {
+    "number": 7,
+    "name": "тест 7.png",
+    "id": null,
+    "state": "processed",
+    "status": "ConversionStatus.SUCCESS",
+    "warnings": [
+      "Некоторые значения восстановлены повторным распознаванием или по контексту. Сверьте их с оригиналом; исходное OCR сохранено в данных ячеек.",
+      "Проверка таблиц через ИИ отключена или ключ недоступен."
+    ],
+    "ocr": {
+      "enabled": true,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой.",
+      "profile": "cyrillic-latin-v1"
+    },
+    "chars": 264,
+    "seconds": 10.81
+  },
+  {
+    "number": 8,
+    "name": "тест 8.pdf",
+    "id": null,
+    "state": "processed",
+    "status": "ConversionStatus.SUCCESS",
+    "warnings": [],
+    "ocr": {
+      "enabled": false,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой."
+    },
+    "chars": 276,
+    "seconds": 2.79
+  },
+  {
+    "number": 9,
+    "name": "тест 9.pdf",
+    "id": null,
+    "state": "processed",
+    "status": "ConversionStatus.SUCCESS",
+    "warnings": [
+      "Проверка таблиц через ИИ отключена или ключ недоступен."
+    ],
+    "ocr": {
+      "enabled": true,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой.",
+      "profile": "cyrillic-latin-v1"
+    },
+    "chars": 368,
+    "seconds": 17.69
+  },
+  {
+    "number": 10,
+    "name": "тест 10.pdf",
+    "id": null,
+    "state": "processed",
+    "status": "ConversionStatus.SUCCESS",
+    "warnings": [
+      "Проверка таблиц через ИИ отключена или ключ недоступен.",
+      "Возможные пропуски обнаружены на страницах: 1. Проверьте данные coverage и оригинал."
+    ],
+    "ocr": {
+      "enabled": true,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой.",
+      "profile": "cyrillic-latin-v1"
+    },
+    "chars": 233,
+    "seconds": 7.88
+  },
+  {
+    "number": 11,
+    "name": "тест 11.pdf",
+    "id": null,
+    "state": "processed",
+    "status": "ConversionStatus.SUCCESS",
+    "warnings": [],
+    "ocr": {
+      "enabled": true,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой.",
+      "profile": "cyrillic-latin-v1"
+    },
+    "chars": 234,
+    "seconds": 11.49
+  },
+  {
+    "number": 12,
+    "name": "тест 12.pdf",
+    "id": null,
+    "state": "processed",
+    "status": "ConversionStatus.SUCCESS",
+    "warnings": [],
+    "ocr": {
+      "enabled": true,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой.",
+      "profile": "cyrillic-latin-v1"
+    },
+    "chars": 368,
+    "seconds": 12.73
+  },
+  {
+    "number": 13,
+    "name": "тест 13.docx",
+    "id": null,
+    "state": "processed",
+    "status": "ConversionStatus.SUCCESS",
+    "warnings": [],
+    "ocr": {
+      "enabled": false,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой."
+    },
+    "chars": 985,
+    "seconds": 0.09
+  },
+  {
+    "number": 14,
+    "name": "тест 14.pdf",
+    "id": null,
+    "state": "processed",
+    "status": "ConversionStatus.SUCCESS",
+    "warnings": [
+      "Некоторые значения восстановлены повторным распознаванием или по контексту. Сверьте их с оригиналом; исходное OCR сохранено в данных ячеек.",
+      "Проверка таблиц через ИИ отключена или ключ недоступен."
+    ],
+    "ocr": {
+      "enabled": true,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой.",
+      "profile": "cyrillic-latin-v1"
+    },
+    "chars": 19947,
+    "seconds": 262.46
+  },
+  {
+    "number": 15,
+    "name": "тест 15.txt",
+    "id": null,
+    "state": "processed",
+    "status": "None",
+    "warnings": [],
+    "ocr": null,
+    "chars": 26,
+    "seconds": 0.01
+  },
+  {
+    "number": 16,
+    "name": "тест 16.png",
+    "id": null,
+    "state": "processed",
+    "status": "ConversionStatus.SUCCESS",
+    "warnings": [
+      "Некоторые значения восстановлены повторным распознаванием или по контексту. Сверьте их с оригиналом; исходное OCR сохранено в данных ячеек.",
+      "Проверка таблиц через ИИ отключена или ключ недоступен."
+    ],
+    "ocr": {
+      "enabled": true,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой.",
+      "profile": "cyrillic-latin-v1"
+    },
+    "chars": 949,
+    "seconds": 9.63
+  },
+  {
+    "number": 17,
+    "name": "тест 17.png",
+    "id": null,
+    "state": "processed",
+    "status": "ConversionStatus.SUCCESS",
+    "warnings": [
+      "Некоторые значения восстановлены повторным распознаванием или по контексту. Сверьте их с оригиналом; исходное OCR сохранено в данных ячеек.",
+      "Проверка таблиц через ИИ отключена или ключ недоступен."
+    ],
+    "ocr": {
+      "enabled": true,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой.",
+      "profile": "cyrillic-latin-v1"
+    },
+    "chars": 192,
+    "seconds": 8.47
+  },
+  {
+    "number": 18,
+    "name": "тест 18.pdf",
+    "id": null,
+    "state": "processed",
+    "status": "ConversionStatus.SUCCESS",
+    "warnings": [
+      "Некоторые значения восстановлены повторным распознаванием или по контексту. Сверьте их с оригиналом; исходное OCR сохранено в данных ячеек.",
+      "Проверка таблиц через ИИ отключена или ключ недоступен."
+    ],
+    "ocr": {
+      "enabled": true,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой.",
+      "profile": "cyrillic-latin-v1"
+    },
+    "chars": 6042,
+    "seconds": 22.05
+  },
+  {
+    "number": 19,
+    "name": "тест 19.png",
+    "id": null,
+    "state": "processed",
+    "status": "ConversionStatus.SUCCESS",
+    "warnings": [],
+    "ocr": {
+      "enabled": true,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой.",
+      "profile": "cyrillic-latin-v1"
+    },
+    "chars": 267,
+    "seconds": 9.13
+  },
+  {
+    "number": 20,
+    "name": "тест 20.pdf",
+    "id": null,
+    "state": "processed",
+    "status": "ConversionStatus.SUCCESS",
+    "warnings": [
+      "Возможные пропуски обнаружены на страницах: 10. Проверьте данные coverage и оригинал."
+    ],
+    "ocr": {
+      "enabled": false,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой."
+    },
+    "chars": 31367,
+    "seconds": 27.0
+  },
+  {
+    "number": 21,
+    "name": "тест 21.xlsx",
+    "id": null,
+    "state": "processed",
+    "status": "ConversionStatus.SUCCESS",
+    "warnings": [
+      "У 1 формул нет сохранённого результата. Показаны формулы; значения не вычислялись."
+    ],
+    "ocr": {
+      "enabled": false,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой."
+    },
+    "chars": 1901,
+    "seconds": 0.08
+  },
+  {
+    "number": 22,
+    "name": "тест 22.txt",
+    "id": null,
+    "state": "processed",
+    "status": "None",
+    "warnings": [],
+    "ocr": null,
+    "chars": 984,
+    "seconds": 0.0
+  },
+  {
+    "number": 23,
+    "name": "тест 23.pdf",
+    "id": null,
+    "state": "processed",
+    "status": "ConversionStatus.SUCCESS",
+    "warnings": [],
+    "ocr": {
+      "enabled": false,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой."
+    },
+    "chars": 1332,
+    "seconds": 1.3
+  },
+  {
+    "number": 24,
+    "name": "тест 24.pdf",
+    "id": null,
+    "state": "processed",
+    "status": "ConversionStatus.SUCCESS",
+    "warnings": [],
+    "ocr": {
+      "enabled": false,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой."
+    },
+    "chars": 362,
+    "seconds": 1.12
+  },
+  {
+    "number": 25,
+    "name": "тест 25.pdf",
+    "id": null,
+    "state": "processed",
+    "status": "ConversionStatus.SUCCESS",
+    "warnings": [],
+    "ocr": {
+      "enabled": false,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой."
+    },
+    "chars": 216,
+    "seconds": 1.4
+  },
+  {
+    "number": 26,
+    "name": "тест 26.html",
+    "id": null,
+    "state": "processed",
+    "status": "ConversionStatus.SUCCESS",
+    "warnings": [],
+    "ocr": {
+      "enabled": false,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой."
+    },
+    "chars": 80,
+    "seconds": 0.06
+  },
+  {
+    "number": 27,
+    "name": "тест 27.png",
+    "id": null,
+    "state": "processed",
+    "status": "ConversionStatus.SUCCESS",
+    "warnings": [
+      "Некоторые значения восстановлены повторным распознаванием или по контексту. Сверьте их с оригиналом; исходное OCR сохранено в данных ячеек.",
+      "Проверка таблиц через ИИ отключена или ключ недоступен."
+    ],
+    "ocr": {
+      "enabled": true,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой.",
+      "profile": "cyrillic-latin-v1"
+    },
+    "chars": 2294,
+    "seconds": 14.46
+  },
+  {
+    "number": 28,
+    "name": "тест 28.pdf",
+    "id": null,
+    "state": "processed",
+    "status": "ConversionStatus.SUCCESS",
+    "warnings": [],
+    "ocr": {
+      "enabled": false,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой."
+    },
+    "chars": 289,
+    "seconds": 0.98
+  },
+  {
+    "number": 29,
+    "name": "тест 29.pdf",
+    "id": null,
+    "state": "processed",
+    "status": "ConversionStatus.SUCCESS",
+    "warnings": [],
+    "ocr": {
+      "enabled": false,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой."
+    },
+    "chars": 1332,
+    "seconds": 1.11
+  },
+  {
+    "number": 30,
+    "name": "тест 30.pdf",
+    "id": null,
+    "state": "processed",
+    "status": "ConversionStatus.SUCCESS",
+    "warnings": [
+      "Возможные пропуски обнаружены на страницах: 1. Проверьте данные coverage и оригинал."
+    ],
+    "ocr": {
+      "enabled": false,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой."
+    },
+    "chars": 318,
+    "seconds": 0.91
+  },
+  {
+    "number": 31,
+    "name": "тест 31.xlsx",
+    "id": null,
+    "state": "processed",
+    "status": "ConversionStatus.SUCCESS",
+    "warnings": [
+      "У 1 формул нет сохранённого результата. Показаны формулы; значения не вычислялись."
+    ],
+    "ocr": {
+      "enabled": false,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой."
+    },
+    "chars": 1902,
+    "seconds": 0.03
+  },
+  {
+    "number": 32,
+    "name": "тест 32.docx",
+    "id": null,
+    "state": "processed",
+    "status": "ConversionStatus.SUCCESS",
+    "warnings": [],
+    "ocr": {
+      "enabled": false,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой."
+    },
+    "chars": 462,
+    "seconds": 0.11
+  },
+  {
+    "number": 33,
+    "name": "тест 33.xlsx",
+    "id": null,
+    "state": "processed",
+    "status": "ConversionStatus.SUCCESS",
+    "warnings": [],
+    "ocr": {
+      "enabled": false,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой."
+    },
+    "chars": 11213,
+    "seconds": 0.15
+  },
+  {
+    "number": 34,
+    "name": "тест 34.xlsx",
+    "id": null,
+    "state": "processed",
+    "status": "ConversionStatus.SUCCESS",
+    "warnings": [
+      "У 1 формул нет сохранённого результата. Показаны формулы; значения не вычислялись."
+    ],
+    "ocr": {
+      "enabled": false,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой."
+    },
+    "chars": 1898,
+    "seconds": 0.02
+  },
+  {
+    "number": 35,
+    "name": "тест 35.xlsx",
+    "id": null,
+    "state": "processed",
+    "status": "ConversionStatus.SUCCESS",
+    "warnings": [
+      "У 1 формул нет сохранённого результата. Показаны формулы; значения не вычислялись."
+    ],
+    "ocr": {
+      "enabled": false,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой."
+    },
+    "chars": 1898,
+    "seconds": 0.03
+  },
+  {
+    "number": 36,
+    "name": "тест 36.xlsx",
+    "id": null,
+    "state": "processed",
+    "status": "ConversionStatus.SUCCESS",
+    "warnings": [],
+    "ocr": {
+      "enabled": false,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой."
+    },
+    "chars": 1463,
+    "seconds": 0.03
+  },
+  {
+    "number": 37,
+    "name": "тест 37.pdf",
+    "id": null,
+    "state": "processed",
+    "status": "ConversionStatus.SUCCESS",
+    "warnings": [],
+    "ocr": {
+      "enabled": false,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой."
+    },
+    "chars": 1332,
+    "seconds": 1.08
+  },
+  {
+    "number": 38,
+    "name": "тест 38.jpg",
+    "id": null,
+    "state": "processed",
+    "status": "ConversionStatus.SUCCESS",
+    "warnings": [
+      "Некоторые значения восстановлены повторным распознаванием или по контексту. Сверьте их с оригиналом; исходное OCR сохранено в данных ячеек.",
+      "Проверка таблиц через ИИ отключена или ключ недоступен."
+    ],
+    "ocr": {
+      "enabled": true,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой.",
+      "profile": "cyrillic-latin-v1"
+    },
+    "chars": 949,
+    "seconds": 9.5
+  },
+  {
+    "number": 39,
+    "name": "тест 39.pdf",
+    "id": null,
+    "state": "processed",
+    "status": "ConversionStatus.SUCCESS",
+    "warnings": [],
+    "ocr": {
+      "enabled": false,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой."
+    },
+    "chars": 698,
+    "seconds": 0.96
+  },
+  {
+    "number": 40,
+    "name": "тест 40.xlsx",
+    "id": null,
+    "state": "processed",
+    "status": "ConversionStatus.SUCCESS",
+    "warnings": [],
+    "ocr": {
+      "enabled": false,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой."
+    },
+    "chars": 1465,
+    "seconds": 0.02
+  },
+  {
+    "number": 41,
+    "name": "тест 41.xlsx",
+    "id": null,
+    "state": "processed",
+    "status": "ConversionStatus.SUCCESS",
+    "warnings": [],
+    "ocr": {
+      "enabled": false,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой."
+    },
+    "chars": 1462,
+    "seconds": 0.03
+  },
+  {
+    "number": 42,
+    "name": "тест 42.xlsx",
+    "id": null,
+    "state": "processed",
+    "status": "ConversionStatus.SUCCESS",
+    "warnings": [],
+    "ocr": {
+      "enabled": false,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой."
+    },
+    "chars": 1466,
+    "seconds": 0.04
+  },
+  {
+    "number": 43,
+    "name": "тест 43.pdf",
+    "id": null,
+    "state": "processed",
+    "status": "ConversionStatus.SUCCESS",
+    "warnings": [],
+    "ocr": {
+      "enabled": true,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой.",
+      "profile": "cyrillic-latin-v1"
+    },
+    "chars": 190,
+    "seconds": 10.63
+  },
+  {
+    "number": 44,
+    "name": "тест 44.png",
+    "id": null,
+    "state": "processed",
+    "status": "ConversionStatus.SUCCESS",
+    "warnings": [
+      "Некоторые значения восстановлены повторным распознаванием или по контексту. Сверьте их с оригиналом; исходное OCR сохранено в данных ячеек.",
+      "Проверка таблиц через ИИ отключена или ключ недоступен."
+    ],
+    "ocr": {
+      "enabled": true,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой.",
+      "profile": "cyrillic-latin-v1"
+    },
+    "chars": 949,
+    "seconds": 11.15
+  }
+]

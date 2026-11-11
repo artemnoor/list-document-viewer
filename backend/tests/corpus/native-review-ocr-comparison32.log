@@ -1,0 +1,9 @@
+[INFO] 2026-11-11 17:45:51,166 [RapidOCR] base.py:22: Using engine_name: onnxruntime
+[INFO] 2026-11-11 17:45:51,231 [RapidOCR] download_file.py:60: File exists and is valid: C:\Users\����\AppData\Local\Programs\Python\Python311\Lib\site-packages\rapidocr\models\ch_PP-OCRv4_det_infer.onnx
+[INFO] 2026-11-11 17:45:51,232 [RapidOCR] main.py:53: Using C:\Users\����\AppData\Local\Programs\Python\Python311\Lib\site-packages\rapidocr\models\ch_PP-OCRv4_det_infer.onnx
+[INFO] 2026-11-11 17:45:51,313 [RapidOCR] base.py:22: Using engine_name: onnxruntime
+[INFO] 2026-11-11 17:45:51,315 [RapidOCR] download_file.py:60: File exists and is valid: C:\Users\����\AppData\Local\Programs\Python\Python311\Lib\site-packages\rapidocr\models\ch_ppocr_mobile_v2.0_cls_infer.onnx
+[INFO] 2026-11-11 17:45:51,315 [RapidOCR] main.py:53: Using C:\Users\����\AppData\Local\Programs\Python\Python311\Lib\site-packages\rapidocr\models\ch_ppocr_mobile_v2.0_cls_infer.onnx
+[INFO] 2026-11-11 17:45:51,353 [RapidOCR] base.py:22: Using engine_name: onnxruntime
+[INFO] 2026-11-11 17:45:51,353 [RapidOCR] main.py:53: Using C:\Users\����\AppData\Local\ListDocumentViewer\models\rapidocr-v3.6.0\cyrillic_PP-OCRv3_rec_infer.onnx
+cyrillic32 {'user_png': {'seconds': 1.743, 'cyrillic_characters': 138, 'ascii_english': 42}, 'user_scan_pdf': {'seconds': 1.372, 'cyrillic_characters': 52, 'ascii_english': 66}, 'english_control': {'seconds': 2.141, 'cyrillic_characters': 0, 'ascii_english': 30}}

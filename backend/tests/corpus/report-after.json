@@ -1,0 +1,489 @@
+[
+  {
+    "name": "данные/01_Карточка_учета_фактических_затрат_этап_3.pdf",
+    "extension": ".pdf",
+    "state": "ready",
+    "seconds": 20.263,
+    "parts": 20,
+    "model_tables": 1,
+    "visible_tables": 1,
+    "markdown_chars": 6014,
+    "warnings": [],
+    "ocr": {
+      "enabled": true,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой.",
+      "profile": "cyrillic-latin-v1"
+    }
+  },
+  {
+    "name": "данные/10_Акт_ADM-27_копия.pdf",
+    "extension": ".pdf",
+    "state": "ready",
+    "seconds": 1.87,
+    "parts": 10,
+    "model_tables": 0,
+    "visible_tables": 1,
+    "markdown_chars": 289,
+    "warnings": [],
+    "ocr": {
+      "enabled": false,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой."
+    }
+  },
+  {
+    "name": "данные/02_01_Ведомость_ЗП_Январь_2026.xlsx",
+    "extension": ".xlsx",
+    "state": "ready",
+    "seconds": 0.035,
+    "parts": 18,
+    "model_tables": 0,
+    "visible_tables": 0,
+    "markdown_chars": 1901,
+    "warnings": [
+      "У 1 формул нет сохранённого результата. Показаны формулы; значения не вычислялись."
+    ],
+    "ocr": {
+      "enabled": false,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой."
+    }
+  },
+  {
+    "name": "данные/09_Акт_ADM-27_27-02-2026.pdf",
+    "extension": ".pdf",
+    "state": "ready",
+    "seconds": 0.741,
+    "parts": 10,
+    "model_tables": 0,
+    "visible_tables": 1,
+    "markdown_chars": 289,
+    "warnings": [],
+    "ocr": {
+      "enabled": false,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой."
+    }
+  },
+  {
+    "name": "данные/15_Акт_ADM-75_15-05-2026.pdf",
+    "extension": ".pdf",
+    "state": "ready",
+    "seconds": 3.1,
+    "parts": 7,
+    "model_tables": 0,
+    "visible_tables": 0,
+    "markdown_chars": 190,
+    "warnings": [],
+    "ocr": {
+      "enabled": true,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой.",
+      "profile": "cyrillic-latin-v1"
+    }
+  },
+  {
+    "name": "данные/08_Акт_ИА-15_31-01-2026.pdf",
+    "extension": ".pdf",
+    "state": "ready",
+    "seconds": 2.661,
+    "parts": 8,
+    "model_tables": 0,
+    "visible_tables": 0,
+    "markdown_chars": 234,
+    "warnings": [],
+    "ocr": {
+      "enabled": true,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой.",
+      "profile": "cyrillic-latin-v1"
+    }
+  },
+  {
+    "name": "данные/07_УПД_0426-77.pdf",
+    "extension": ".pdf",
+    "state": "ready",
+    "seconds": 0.814,
+    "parts": 12,
+    "model_tables": 0,
+    "visible_tables": 1,
+    "markdown_chars": 362,
+    "warnings": [],
+    "ocr": {
+      "enabled": false,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой."
+    }
+  },
+  {
+    "name": "данные/05_Счет-акт_174_25-02-2026.pdf",
+    "extension": ".pdf",
+    "state": "ready",
+    "seconds": 0.787,
+    "parts": 13,
+    "model_tables": 0,
+    "visible_tables": 1,
+    "markdown_chars": 407,
+    "warnings": [],
+    "ocr": {
+      "enabled": false,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой."
+    }
+  },
+  {
+    "name": "данные/03_04_Страховые_взносы_Апрель_2026.xlsx",
+    "extension": ".xlsx",
+    "state": "ready",
+    "seconds": 0.022,
+    "parts": 12,
+    "model_tables": 0,
+    "visible_tables": 0,
+    "markdown_chars": 1465,
+    "warnings": [],
+    "ocr": {
+      "enabled": false,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой."
+    }
+  },
+  {
+    "name": "данные/04_Акт_118_28-01-2026.pdf",
+    "extension": ".pdf",
+    "state": "ready",
+    "seconds": 2.579,
+    "parts": 9,
+    "model_tables": 0,
+    "visible_tables": 0,
+    "markdown_chars": 368,
+    "warnings": [],
+    "ocr": {
+      "enabled": true,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой.",
+      "profile": "cyrillic-latin-v1"
+    }
+  },
+  {
+    "name": "данные/02_02_Ведомость_ЗП_Февраль_2026.xlsx",
+    "extension": ".xlsx",
+    "state": "ready",
+    "seconds": 0.022,
+    "parts": 18,
+    "model_tables": 0,
+    "visible_tables": 0,
+    "markdown_chars": 1902,
+    "warnings": [
+      "У 1 формул нет сохранённого результата. Показаны формулы; значения не вычислялись."
+    ],
+    "ocr": {
+      "enabled": false,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой."
+    }
+  },
+  {
+    "name": "данные/!Правильные_ответы_и_разбор.xlsx",
+    "extension": ".xlsx",
+    "state": "ready",
+    "seconds": 0.117,
+    "parts": 111,
+    "model_tables": 0,
+    "visible_tables": 0,
+    "markdown_chars": 11213,
+    "warnings": [],
+    "ocr": {
+      "enabled": false,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой."
+    }
+  },
+  {
+    "name": "данные/02_05_Ведомость_ЗП_Май_2026.xlsx",
+    "extension": ".xlsx",
+    "state": "ready",
+    "seconds": 0.021,
+    "parts": 18,
+    "model_tables": 0,
+    "visible_tables": 0,
+    "markdown_chars": 1898,
+    "warnings": [
+      "У 1 формул нет сохранённого результата. Показаны формулы; значения не вычислялись."
+    ],
+    "ocr": {
+      "enabled": false,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой."
+    }
+  },
+  {
+    "name": "данные/02_03_Ведомость_ЗП_Март_2026.xlsx",
+    "extension": ".xlsx",
+    "state": "ready",
+    "seconds": 0.021,
+    "parts": 18,
+    "model_tables": 0,
+    "visible_tables": 0,
+    "markdown_chars": 1898,
+    "warnings": [
+      "У 1 формул нет сохранённого результата. Показаны формулы; значения не вычислялись."
+    ],
+    "ocr": {
+      "enabled": false,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой."
+    }
+  },
+  {
+    "name": "данные/02_04_Ведомость_ЗП_Апрель_2026.xlsx",
+    "extension": ".xlsx",
+    "state": "ready",
+    "seconds": 0.022,
+    "parts": 18,
+    "model_tables": 0,
+    "visible_tables": 0,
+    "markdown_chars": 1901,
+    "warnings": [
+      "У 1 формул нет сохранённого результата. Показаны формулы; значения не вычислялись."
+    ],
+    "ocr": {
+      "enabled": false,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой."
+    }
+  },
+  {
+    "name": "данные/03_03_Страховые_взносы_Март_2026.xlsx",
+    "extension": ".xlsx",
+    "state": "ready",
+    "seconds": 0.02,
+    "parts": 12,
+    "model_tables": 0,
+    "visible_tables": 0,
+    "markdown_chars": 1463,
+    "warnings": [],
+    "ocr": {
+      "enabled": false,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой."
+    }
+  },
+  {
+    "name": "данные/13_УПД_УПР-55.pdf",
+    "extension": ".pdf",
+    "state": "ready",
+    "seconds": 0.811,
+    "parts": 11,
+    "model_tables": 0,
+    "visible_tables": 0,
+    "markdown_chars": 318,
+    "warnings": [],
+    "ocr": {
+      "enabled": false,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой."
+    }
+  },
+  {
+    "name": "данные/03_02_Страховые_взносы_Февраль_2026.xlsx",
+    "extension": ".xlsx",
+    "state": "ready",
+    "seconds": 0.02,
+    "parts": 12,
+    "model_tables": 0,
+    "visible_tables": 0,
+    "markdown_chars": 1466,
+    "warnings": [],
+    "ocr": {
+      "enabled": false,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой."
+    }
+  },
+  {
+    "name": "данные/00_README_набор_данных.txt",
+    "extension": ".txt",
+    "state": "ready",
+    "seconds": 0.002,
+    "parts": 12,
+    "model_tables": 0,
+    "visible_tables": 0,
+    "markdown_chars": 984,
+    "warnings": [],
+    "ocr": null
+  },
+  {
+    "name": "данные/03_05_Страховые_взносы_Май_2026.xlsx",
+    "extension": ".xlsx",
+    "state": "ready",
+    "seconds": 0.023,
+    "parts": 12,
+    "model_tables": 0,
+    "visible_tables": 0,
+    "markdown_chars": 1462,
+    "warnings": [],
+    "ocr": {
+      "enabled": false,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой."
+    }
+  },
+  {
+    "name": "данные/12_Акт_связь_0426.png",
+    "extension": ".png",
+    "state": "ready",
+    "seconds": 2.437,
+    "parts": 8,
+    "model_tables": 0,
+    "visible_tables": 0,
+    "markdown_chars": 267,
+    "warnings": [],
+    "ocr": {
+      "enabled": true,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой.",
+      "profile": "cyrillic-latin-v1"
+    }
+  },
+  {
+    "name": "данные/03_01_Страховые_взносы_Январь_2026.xlsx",
+    "extension": ".xlsx",
+    "state": "ready",
+    "seconds": 0.02,
+    "parts": 12,
+    "model_tables": 0,
+    "visible_tables": 0,
+    "markdown_chars": 1465,
+    "warnings": [],
+    "ocr": {
+      "enabled": false,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой."
+    }
+  },
+  {
+    "name": "данные/14_Акт_ОРГ-0603.pdf",
+    "extension": ".pdf",
+    "state": "ready",
+    "seconds": 0.887,
+    "parts": 9,
+    "model_tables": 0,
+    "visible_tables": 1,
+    "markdown_chars": 216,
+    "warnings": [],
+    "ocr": {
+      "enabled": false,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой."
+    }
+  },
+  {
+    "name": "данные/06_Служебная_записка_КЛ-31.docx",
+    "extension": ".docx",
+    "state": "ready",
+    "seconds": 0.068,
+    "parts": 9,
+    "model_tables": 1,
+    "visible_tables": 1,
+    "markdown_chars": 462,
+    "warnings": [],
+    "ocr": {
+      "enabled": false,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой."
+    }
+  },
+  {
+    "name": "данные/11_Справка_ИТ_03-26.docx",
+    "extension": ".docx",
+    "state": "ready",
+    "seconds": 0.068,
+    "parts": 9,
+    "model_tables": 1,
+    "visible_tables": 1,
+    "markdown_chars": 519,
+    "warnings": [],
+    "ocr": {
+      "enabled": false,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой."
+    }
+  },
+  {
+    "name": "данные/00_README_набор_данных.docx",
+    "extension": ".docx",
+    "state": "ready",
+    "seconds": 0.033,
+    "parts": 15,
+    "model_tables": 0,
+    "visible_tables": 0,
+    "markdown_chars": 985,
+    "warnings": [],
+    "ocr": {
+      "enabled": false,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой."
+    }
+  },
+  {
+    "name": "public/irs-w4.pdf",
+    "extension": ".pdf",
+    "state": "ready",
+    "seconds": 51.942,
+    "parts": 1556,
+    "model_tables": 0,
+    "visible_tables": 6,
+    "markdown_chars": 37427,
+    "warnings": [],
+    "ocr": {
+      "enabled": false,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой."
+    }
+  },
+  {
+    "name": "public/ons-population.xlsx",
+    "extension": ".xlsx",
+    "state": "ready",
+    "seconds": 0.104,
+    "parts": 497,
+    "model_tables": 0,
+    "visible_tables": 0,
+    "markdown_chars": 7208,
+    "warnings": [],
+    "ocr": {
+      "enabled": false,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой."
+    }
+  },
+  {
+    "name": "public/ons-population.csv",
+    "extension": ".csv",
+    "state": "ready",
+    "seconds": 0.027,
+    "parts": 1,
+    "model_tables": 1,
+    "visible_tables": 1,
+    "markdown_chars": 6085,
+    "warnings": [],
+    "ocr": null
+  },
+  {
+    "name": "public/calibre-demo.docx",
+    "extension": ".docx",
+    "state": "ready",
+    "seconds": 0.469,
+    "parts": 109,
+    "model_tables": 5,
+    "visible_tables": 5,
+    "markdown_chars": 15681,
+    "warnings": [],
+    "ocr": {
+      "enabled": false,
+      "mode": "auto",
+      "note": "OCR включён для сканов и изображений; цифровой PDF использует текстовый слой."
+    }
+  }
+]

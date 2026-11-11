@@ -1,0 +1,1516 @@
+[
+  {
+    "fixture": "clean",
+    "condition": "rotate 0",
+    "file": "clean-angle-0.png",
+    "status": "ready",
+    "seconds": 21.3,
+    "shape": [
+      4,
+      4
+    ],
+    "expected_shape": [
+      4,
+      4
+    ],
+    "correct_cells": 16,
+    "expected_cells": 16,
+    "merged_ok": null,
+    "orientation": null,
+    "rows": [
+      [
+        "СТАТЬЯ",
+        "КОД",
+        "КОЛИЧЕСТВО",
+        "СУММА"
+      ],
+      [
+        "Аренда",
+        "A17",
+        "12",
+        "12450"
+      ],
+      [
+        "Связь",
+        "B28",
+        "8",
+        "9600"
+      ],
+      [
+        "Материалы",
+        "C39",
+        "15",
+        "18750"
+      ]
+    ]
+  },
+  {
+    "fixture": "clean",
+    "condition": "rotate 5",
+    "file": "clean-angle-5.png",
+    "status": "ready",
+    "seconds": 7.1,
+    "shape": [
+      4,
+      4
+    ],
+    "expected_shape": [
+      4,
+      4
+    ],
+    "correct_cells": 16,
+    "expected_cells": 16,
+    "merged_ok": null,
+    "orientation": {
+      "rotation": 0,
+      "deskew": -5.004,
+      "perspective_corrected": false,
+      "quality": 1.5055
+    },
+    "rows": [
+      [
+        "СТАТЬЯ",
+        "КОД",
+        "КОЛИЧЕСТВО",
+        "СУММА"
+      ],
+      [
+        "Аренда",
+        "A17",
+        "12",
+        "12450"
+      ],
+      [
+        "Связь",
+        "B28",
+        "8",
+        "9600"
+      ],
+      [
+        "Материалы",
+        "C39",
+        "15",
+        "18750"
+      ]
+    ]
+  },
+  {
+    "fixture": "clean",
+    "condition": "rotate 15",
+    "file": "clean-angle-15.png",
+    "status": "ready",
+    "seconds": 9.2,
+    "shape": [
+      4,
+      4
+    ],
+    "expected_shape": [
+      4,
+      4
+    ],
+    "correct_cells": 16,
+    "expected_cells": 16,
+    "merged_ok": null,
+    "orientation": {
+      "rotation": 0,
+      "deskew": -15.004,
+      "perspective_corrected": false,
+      "quality": 1.5001
+    },
+    "rows": [
+      [
+        "СТАТЬЯ",
+        "КОД",
+        "КОЛИЧЕСТВО",
+        "СУММА"
+      ],
+      [
+        "Аренда",
+        "A17",
+        "12",
+        "12450"
+      ],
+      [
+        "Связь",
+        "B28",
+        "8",
+        "9600"
+      ],
+      [
+        "Материалы",
+        "C39",
+        "15",
+        "18750"
+      ]
+    ]
+  },
+  {
+    "fixture": "clean",
+    "condition": "rotate 33",
+    "file": "clean-angle-33.png",
+    "status": "ready",
+    "seconds": 10.1,
+    "shape": [
+      4,
+      4
+    ],
+    "expected_shape": [
+      4,
+      4
+    ],
+    "correct_cells": 16,
+    "expected_cells": 16,
+    "merged_ok": null,
+    "orientation": {
+      "rotation": 0,
+      "deskew": -33.004,
+      "perspective_corrected": false,
+      "quality": 1.497
+    },
+    "rows": [
+      [
+        "СТАТЬЯ",
+        "КОД",
+        "КОЛИЧЕСТВО",
+        "СУММА"
+      ],
+      [
+        "Аренда",
+        "A17",
+        "12",
+        "12450"
+      ],
+      [
+        "Связь",
+        "B28",
+        "8",
+        "9600"
+      ],
+      [
+        "Материалы",
+        "C39",
+        "15",
+        "18750"
+      ]
+    ]
+  },
+  {
+    "fixture": "clean",
+    "condition": "rotate 35",
+    "file": "clean-angle-35.png",
+    "status": "ready",
+    "seconds": 9.5,
+    "shape": [
+      4,
+      4
+    ],
+    "expected_shape": [
+      4,
+      4
+    ],
+    "correct_cells": 16,
+    "expected_cells": 16,
+    "merged_ok": null,
+    "orientation": {
+      "rotation": 0,
+      "deskew": -34.992,
+      "perspective_corrected": false,
+      "quality": 1.4901
+    },
+    "rows": [
+      [
+        "СТАТЬЯ",
+        "КОД",
+        "КОЛИЧЕСТВО",
+        "СУММА"
+      ],
+      [
+        "Аренда",
+        "A17",
+        "12",
+        "12450"
+      ],
+      [
+        "Связь",
+        "B28",
+        "8",
+        "9600"
+      ],
+      [
+        "Материалы",
+        "C39",
+        "15",
+        "18750"
+      ]
+    ]
+  },
+  {
+    "fixture": "clean",
+    "condition": "rotate 37",
+    "file": "clean-angle-37.png",
+    "status": "ready",
+    "seconds": 8.4,
+    "shape": [
+      4,
+      4
+    ],
+    "expected_shape": [
+      4,
+      4
+    ],
+    "correct_cells": 16,
+    "expected_cells": 16,
+    "merged_ok": null,
+    "orientation": {
+      "rotation": 0,
+      "deskew": -36.991,
+      "perspective_corrected": false,
+      "quality": 1.495
+    },
+    "rows": [
+      [
+        "СТАТЬЯ",
+        "КОД",
+        "КОЛИЧЕСТВО",
+        "СУММА"
+      ],
+      [
+        "Аренда",
+        "A17",
+        "12",
+        "12450"
+      ],
+      [
+        "Связь",
+        "B28",
+        "8",
+        "9600"
+      ],
+      [
+        "Материалы",
+        "C39",
+        "15",
+        "18750"
+      ]
+    ]
+  },
+  {
+    "fixture": "clean",
+    "condition": "rotate 45",
+    "file": "clean-angle-45.png",
+    "status": "ready",
+    "seconds": 9.4,
+    "shape": [
+      4,
+      4
+    ],
+    "expected_shape": [
+      4,
+      4
+    ],
+    "correct_cells": 16,
+    "expected_cells": 16,
+    "merged_ok": null,
+    "orientation": {
+      "rotation": 0,
+      "deskew": -45.0,
+      "perspective_corrected": false,
+      "quality": 1.4982
+    },
+    "rows": [
+      [
+        "СТАТЬЯ",
+        "КОД",
+        "КОЛИЧЕСТВО",
+        "СУММА"
+      ],
+      [
+        "Аренда",
+        "A17",
+        "12",
+        "12450"
+      ],
+      [
+        "Связь",
+        "B28",
+        "8",
+        "9600"
+      ],
+      [
+        "Материалы",
+        "C39",
+        "15",
+        "18750"
+      ]
+    ]
+  },
+  {
+    "fixture": "clean",
+    "condition": "rotate 60",
+    "file": "clean-angle-60.png",
+    "status": "ready",
+    "seconds": 10.1,
+    "shape": [
+      4,
+      4
+    ],
+    "expected_shape": [
+      4,
+      4
+    ],
+    "correct_cells": 16,
+    "expected_cells": 16,
+    "merged_ok": null,
+    "orientation": {
+      "rotation": 270,
+      "deskew": 30.003,
+      "perspective_corrected": false,
+      "quality": 1.4929
+    },
+    "rows": [
+      [
+        "СТАТЬЯ",
+        "КОД",
+        "КОЛИЧЕСТВО",
+        "СУММА"
+      ],
+      [
+        "Аренда",
+        "A17",
+        "12",
+        "12450"
+      ],
+      [
+        "Связь",
+        "B28",
+        "8",
+        "9600"
+      ],
+      [
+        "Материалы",
+        "C39",
+        "15",
+        "18750"
+      ]
+    ]
+  },
+  {
+    "fixture": "clean",
+    "condition": "rotate 70",
+    "file": "clean-angle-70.png",
+    "status": "ready",
+    "seconds": 9.3,
+    "shape": [
+      4,
+      4
+    ],
+    "expected_shape": [
+      4,
+      4
+    ],
+    "correct_cells": 16,
+    "expected_cells": 16,
+    "merged_ok": null,
+    "orientation": {
+      "rotation": 270,
+      "deskew": 19.996,
+      "perspective_corrected": false,
+      "quality": 1.4984
+    },
+    "rows": [
+      [
+        "СТАТЬЯ",
+        "КОД",
+        "КОЛИЧЕСТВО",
+        "СУММА"
+      ],
+      [
+        "Аренда",
+        "A17",
+        "12",
+        "12450"
+      ],
+      [
+        "Связь",
+        "B28",
+        "8",
+        "9600"
+      ],
+      [
+        "Материалы",
+        "C39",
+        "15",
+        "18750"
+      ]
+    ]
+  },
+  {
+    "fixture": "clean",
+    "condition": "rotate 90",
+    "file": "clean-angle-90.png",
+    "status": "ready",
+    "seconds": 4.5,
+    "shape": [
+      4,
+      4
+    ],
+    "expected_shape": [
+      4,
+      4
+    ],
+    "correct_cells": 16,
+    "expected_cells": 16,
+    "merged_ok": null,
+    "orientation": {
+      "rotation": 270,
+      "deskew": 0.0,
+      "perspective_corrected": false,
+      "quality": 1.5091
+    },
+    "rows": [
+      [
+        "СТАТЬЯ",
+        "КОД",
+        "КОЛИЧЕСТВО",
+        "СУММА"
+      ],
+      [
+        "Аренда",
+        "A17",
+        "12",
+        "12450"
+      ],
+      [
+        "Связь",
+        "B28",
+        "8",
+        "9600"
+      ],
+      [
+        "Материалы",
+        "C39",
+        "15",
+        "18750"
+      ]
+    ]
+  },
+  {
+    "fixture": "clean",
+    "condition": "rotate 180",
+    "file": "clean-angle-180.png",
+    "status": "ready",
+    "seconds": 4.5,
+    "shape": [
+      4,
+      4
+    ],
+    "expected_shape": [
+      4,
+      4
+    ],
+    "correct_cells": 16,
+    "expected_cells": 16,
+    "merged_ok": null,
+    "orientation": {
+      "rotation": 180,
+      "deskew": 0.0,
+      "perspective_corrected": false,
+      "quality": 1.5096
+    },
+    "rows": [
+      [
+        "СТАТЬЯ",
+        "КОД",
+        "КОЛИЧЕСТВО",
+        "СУММА"
+      ],
+      [
+        "Аренда",
+        "A17",
+        "12",
+        "12450"
+      ],
+      [
+        "Связь",
+        "B28",
+        "8",
+        "9600"
+      ],
+      [
+        "Материалы",
+        "C39",
+        "15",
+        "18750"
+      ]
+    ]
+  },
+  {
+    "fixture": "clean",
+    "condition": "blur2",
+    "file": "clean-blur2.png",
+    "status": "ready",
+    "seconds": 4.7,
+    "shape": [
+      4,
+      4
+    ],
+    "expected_shape": [
+      4,
+      4
+    ],
+    "correct_cells": 16,
+    "expected_cells": 16,
+    "merged_ok": null,
+    "orientation": null,
+    "rows": [
+      [
+        "СТАТЬЯ",
+        "Код",
+        "КОЛИЧЕСТВО",
+        "СУММА"
+      ],
+      [
+        "Аренда",
+        "A17",
+        "12",
+        "12450"
+      ],
+      [
+        "Связь",
+        "B28",
+        "8",
+        "9600"
+      ],
+      [
+        "Материалы",
+        "C39",
+        "15",
+        "18750"
+      ]
+    ]
+  },
+  {
+    "fixture": "clean",
+    "condition": "contrast25",
+    "file": "clean-contrast25.png",
+    "status": "ready",
+    "seconds": 4.8,
+    "shape": [
+      4,
+      4
+    ],
+    "expected_shape": [
+      4,
+      4
+    ],
+    "correct_cells": 16,
+    "expected_cells": 16,
+    "merged_ok": null,
+    "orientation": null,
+    "rows": [
+      [
+        "СТАТЬЯ",
+        "КОД",
+        "КОЛИЧЕСТВО",
+        "СУММА"
+      ],
+      [
+        "Аренда",
+        "A17",
+        "12",
+        "12450"
+      ],
+      [
+        "Связь",
+        "B28",
+        "8",
+        "9600"
+      ],
+      [
+        "Материалы",
+        "C39",
+        "15",
+        "18750"
+      ]
+    ]
+  },
+  {
+    "fixture": "clean",
+    "condition": "small35",
+    "file": "clean-small35.png",
+    "status": "ready",
+    "seconds": 3.5,
+    "shape": [
+      4,
+      4
+    ],
+    "expected_shape": [
+      4,
+      4
+    ],
+    "correct_cells": 16,
+    "expected_cells": 16,
+    "merged_ok": null,
+    "orientation": null,
+    "rows": [
+      [
+        "СТАТЬЯ",
+        "код",
+        "КОЛИЧЕСТВО",
+        "СУММА"
+      ],
+      [
+        "Аренда",
+        "A17",
+        "12",
+        "12450"
+      ],
+      [
+        "Связь",
+        "B28",
+        "8",
+        "9600"
+      ],
+      [
+        "Материалы",
+        "C39",
+        "15",
+        "18750"
+      ]
+    ]
+  },
+  {
+    "fixture": "complex-clean",
+    "condition": "rotate 0",
+    "file": "complex-clean-angle-0.png",
+    "status": "ready",
+    "seconds": 6.0,
+    "shape": [
+      5,
+      5
+    ],
+    "expected_shape": [
+      5,
+      5
+    ],
+    "correct_cells": 22,
+    "expected_cells": 22,
+    "merged_ok": true,
+    "orientation": null,
+    "rows": [
+      [
+        "ПОДРАЗДЕЛЕНИЕ",
+        "ФИНАНСОВЫЙ ОТЧЕТ",
+        "",
+        "",
+        ""
+      ],
+      [
+        "ОТДЕЛ",
+        "ЯНВАРЬ",
+        "ФЕВРАЛЬ",
+        "МАРТ",
+        "ИТОГО"
+      ],
+      [
+        "ОПЛАТА ТРУДА",
+        "0",
+        "12500",
+        "34500",
+        "47000"
+      ],
+      [
+        "МАТЕРИАЛЫ",
+        "2500",
+        "0",
+        "900",
+        "3400"
+      ],
+      [
+        "итого",
+        "2500",
+        "12500",
+        "35400",
+        "50400"
+      ]
+    ]
+  },
+  {
+    "fixture": "complex-clean",
+    "condition": "rotate 5",
+    "file": "complex-clean-angle-5.png",
+    "status": "ready",
+    "seconds": 7.5,
+    "shape": [
+      5,
+      5
+    ],
+    "expected_shape": [
+      5,
+      5
+    ],
+    "correct_cells": 22,
+    "expected_cells": 22,
+    "merged_ok": true,
+    "orientation": {
+      "rotation": 0,
+      "deskew": -5.011,
+      "perspective_corrected": false,
+      "quality": 1.5303
+    },
+    "rows": [
+      [
+        "ПОДРАЗДЕЛЕНИЕ",
+        "ФИНАНСОВЫЙ ОТЧЕТ",
+        "",
+        "",
+        ""
+      ],
+      [
+        "ОТДЕЛ",
+        "ЯНВАРЬ",
+        "ФЕВРАЛЬ",
+        "МАРТ",
+        "ИТОГО"
+      ],
+      [
+        "ОПЛАТА ТРУДА",
+        "0",
+        "12500",
+        "34500",
+        "47000"
+      ],
+      [
+        "МАТЕРИАЛЫ",
+        "2500",
+        "0",
+        "900",
+        "3400"
+      ],
+      [
+        "итого",
+        "2500",
+        "12500",
+        "35400",
+        "50400"
+      ]
+    ]
+  },
+  {
+    "fixture": "complex-clean",
+    "condition": "rotate 15",
+    "file": "complex-clean-angle-15.png",
+    "status": "ready",
+    "seconds": 9.2,
+    "shape": [
+      5,
+      5
+    ],
+    "expected_shape": [
+      5,
+      5
+    ],
+    "correct_cells": 22,
+    "expected_cells": 22,
+    "merged_ok": true,
+    "orientation": {
+      "rotation": 0,
+      "deskew": -15.003,
+      "perspective_corrected": false,
+      "quality": 1.5314
+    },
+    "rows": [
+      [
+        "ПОДРАЗДЕЛЕНИЕ",
+        "ФИНАНСОВЫЙ ОТЧЕТ",
+        "",
+        "",
+        ""
+      ],
+      [
+        "ОТДЕЛ",
+        "ЯНВАРЬ",
+        "ФЕВРАЛЬ",
+        "МАРТ",
+        "итого"
+      ],
+      [
+        "ОПЛАТА ТРУДА",
+        "0",
+        "12500",
+        "34500",
+        "47000"
+      ],
+      [
+        "МАТЕРИАЛЫ",
+        "2500",
+        "0",
+        "900",
+        "3400"
+      ],
+      [
+        "итого",
+        "2500",
+        "12500",
+        "35400",
+        "50400"
+      ]
+    ]
+  },
+  {
+    "fixture": "complex-clean",
+    "condition": "rotate 33",
+    "file": "complex-clean-angle-33.png",
+    "status": "ready",
+    "seconds": 9.4,
+    "shape": [
+      5,
+      5
+    ],
+    "expected_shape": [
+      5,
+      5
+    ],
+    "correct_cells": 22,
+    "expected_cells": 22,
+    "merged_ok": true,
+    "orientation": {
+      "rotation": 0,
+      "deskew": -32.998,
+      "perspective_corrected": false,
+      "quality": 1.5156
+    },
+    "rows": [
+      [
+        "ПОДРАЗДЕЛЕНИЕ",
+        "ФИНАНСОВЫЙ ОТЧЕТ",
+        "",
+        "",
+        ""
+      ],
+      [
+        "ОТДЕЛ",
+        "ЯНВАРЬ",
+        "ФЕВРАЛЬ",
+        "МАРТ",
+        "иТого"
+      ],
+      [
+        "ОПЛАТА ТРУДА",
+        "0",
+        "12500",
+        "34500",
+        "47000"
+      ],
+      [
+        "МАТЕРИАЛЫ",
+        "2500",
+        "0",
+        "900",
+        "3400"
+      ],
+      [
+        "итого",
+        "2500",
+        "12500",
+        "35400",
+        "50400"
+      ]
+    ]
+  },
+  {
+    "fixture": "complex-clean",
+    "condition": "rotate 35",
+    "file": "complex-clean-angle-35.png",
+    "status": "ready",
+    "seconds": 8.6,
+    "shape": [
+      5,
+      5
+    ],
+    "expected_shape": [
+      5,
+      5
+    ],
+    "correct_cells": 22,
+    "expected_cells": 22,
+    "merged_ok": true,
+    "orientation": {
+      "rotation": 0,
+      "deskew": -34.998,
+      "perspective_corrected": false,
+      "quality": 1.5514
+    },
+    "rows": [
+      [
+        "ПОДРАЗДЕЛЕНИЕ",
+        "ФИНАНСОВЫЙ ОТЧЕТ",
+        "",
+        "",
+        ""
+      ],
+      [
+        "ОТДЕЛ",
+        "ЯНВАРЬ",
+        "ФЕВРАЛЬ",
+        "МАРТ",
+        "итого"
+      ],
+      [
+        "ОПЛАТА ТРУДА",
+        "0",
+        "12500",
+        "34500",
+        "47000"
+      ],
+      [
+        "МАТЕРИАЛЫ",
+        "2500",
+        "0",
+        "900",
+        "3400"
+      ],
+      [
+        "итого",
+        "2500",
+        "12500",
+        "35400",
+        "50400"
+      ]
+    ]
+  },
+  {
+    "fixture": "complex-clean",
+    "condition": "rotate 37",
+    "file": "complex-clean-angle-37.png",
+    "status": "ready",
+    "seconds": 9.1,
+    "shape": [
+      5,
+      5
+    ],
+    "expected_shape": [
+      5,
+      5
+    ],
+    "correct_cells": 22,
+    "expected_cells": 22,
+    "merged_ok": true,
+    "orientation": {
+      "rotation": 0,
+      "deskew": -36.988,
+      "perspective_corrected": false,
+      "quality": 1.5415
+    },
+    "rows": [
+      [
+        "ПОДРАЗДЕЛЕНИЕ",
+        "ФИНАНСОВЫЙ ОТЧЕТ",
+        "",
+        "",
+        ""
+      ],
+      [
+        "ОТДЕЛ",
+        "ЯНВАРЬ",
+        "ФЕВРАЛЬ",
+        "МАРТ",
+        "итого"
+      ],
+      [
+        "ОПЛАТА ТРУДА",
+        "0",
+        "12500",
+        "34500",
+        "47000"
+      ],
+      [
+        "МАТЕРИАЛЫ",
+        "2500",
+        "0",
+        "900",
+        "3400"
+      ],
+      [
+        "итого",
+        "2500",
+        "12500",
+        "35400",
+        "50400"
+      ]
+    ]
+  },
+  {
+    "fixture": "complex-clean",
+    "condition": "rotate 45",
+    "file": "complex-clean-angle-45.png",
+    "status": "ready",
+    "seconds": 8.9,
+    "shape": [
+      5,
+      5
+    ],
+    "expected_shape": [
+      5,
+      5
+    ],
+    "correct_cells": 22,
+    "expected_cells": 22,
+    "merged_ok": true,
+    "orientation": {
+      "rotation": 0,
+      "deskew": -45.0,
+      "perspective_corrected": false,
+      "quality": 1.5304
+    },
+    "rows": [
+      [
+        "ПОДРАЗДЕЛЕНИЕ",
+        "ФИНАНСОВЫЙ ОТЧЕТ",
+        "",
+        "",
+        ""
+      ],
+      [
+        "ОТДЕЛ",
+        "ЯНВАРЬ",
+        "ФЕВРАЛЬ",
+        "МАРТ",
+        "итого"
+      ],
+      [
+        "ОПЛАТА ТРУДА",
+        "0",
+        "12500",
+        "34500",
+        "47000"
+      ],
+      [
+        "МАТЕРИАЛЫ",
+        "2500",
+        "0",
+        "900",
+        "3400"
+      ],
+      [
+        "итого",
+        "2500",
+        "12500",
+        "35400",
+        "50400"
+      ]
+    ]
+  },
+  {
+    "fixture": "complex-clean",
+    "condition": "rotate 60",
+    "file": "complex-clean-angle-60.png",
+    "status": "ready",
+    "seconds": 9.9,
+    "shape": [
+      5,
+      5
+    ],
+    "expected_shape": [
+      5,
+      5
+    ],
+    "correct_cells": 22,
+    "expected_cells": 22,
+    "merged_ok": true,
+    "orientation": {
+      "rotation": 270,
+      "deskew": 29.999,
+      "perspective_corrected": false,
+      "quality": 1.539
+    },
+    "rows": [
+      [
+        "ПОДРАЗДЕЛЕНИЕ",
+        "ФИНАНСОВЫЙ ОТЧЕТ",
+        "",
+        "",
+        ""
+      ],
+      [
+        "ОТДЕЛ",
+        "ЯНВАРЬ",
+        "ФЕВРАЛЬ",
+        "МАРТ",
+        "итого"
+      ],
+      [
+        "ОПЛАТА ТРУДА",
+        "0",
+        "12500",
+        "34500",
+        "47000"
+      ],
+      [
+        "МАТЕРИАЛЫ",
+        "2500",
+        "0",
+        "900",
+        "3400"
+      ],
+      [
+        "итого",
+        "2500",
+        "12500",
+        "35400",
+        "50400"
+      ]
+    ]
+  },
+  {
+    "fixture": "complex-clean",
+    "condition": "rotate 70",
+    "file": "complex-clean-angle-70.png",
+    "status": "ready",
+    "seconds": 8.7,
+    "shape": [
+      5,
+      5
+    ],
+    "expected_shape": [
+      5,
+      5
+    ],
+    "correct_cells": 22,
+    "expected_cells": 22,
+    "merged_ok": true,
+    "orientation": {
+      "rotation": 270,
+      "deskew": 19.992,
+      "perspective_corrected": false,
+      "quality": 1.5375
+    },
+    "rows": [
+      [
+        "ПОДРАЗДЕЛЕНИЕ",
+        "ФИНАНСОВЫЙ ОТЧЕТ",
+        "",
+        "",
+        ""
+      ],
+      [
+        "ОТДЕЛ",
+        "ЯНВАРЬ",
+        "ФЕВРАЛЬ",
+        "МАРТ",
+        "ИТОГО"
+      ],
+      [
+        "ОПЛАТА ТРУДА",
+        "0",
+        "12500",
+        "34500",
+        "47000"
+      ],
+      [
+        "МАТЕРИАЛЫ",
+        "2500",
+        "0",
+        "900",
+        "3400"
+      ],
+      [
+        "итого",
+        "2500",
+        "12500",
+        "35400",
+        "50400"
+      ]
+    ]
+  },
+  {
+    "fixture": "complex-clean",
+    "condition": "rotate 90",
+    "file": "complex-clean-angle-90.png",
+    "status": "ready",
+    "seconds": 4.9,
+    "shape": [
+      5,
+      5
+    ],
+    "expected_shape": [
+      5,
+      5
+    ],
+    "correct_cells": 22,
+    "expected_cells": 22,
+    "merged_ok": true,
+    "orientation": {
+      "rotation": 270,
+      "deskew": 0.0,
+      "perspective_corrected": false,
+      "quality": 1.5467
+    },
+    "rows": [
+      [
+        "ПОДРАЗДЕЛЕНИЕ",
+        "ФИНАНСОВЫЙ ОТЧЕТ",
+        "",
+        "",
+        ""
+      ],
+      [
+        "ОТДЕЛ",
+        "ЯНВАРЬ",
+        "ФЕВРАЛЬ",
+        "МАРТ",
+        "итого"
+      ],
+      [
+        "ОПЛАТА ТРУДА",
+        "0",
+        "12500",
+        "34500",
+        "47000"
+      ],
+      [
+        "МАТЕРИАЛЫ",
+        "2500",
+        "0",
+        "900",
+        "3400"
+      ],
+      [
+        "итого",
+        "2500",
+        "12500",
+        "35400",
+        "50400"
+      ]
+    ]
+  },
+  {
+    "fixture": "complex-clean",
+    "condition": "rotate 180",
+    "file": "complex-clean-angle-180.png",
+    "status": "ready",
+    "seconds": 4.9,
+    "shape": [
+      5,
+      5
+    ],
+    "expected_shape": [
+      5,
+      5
+    ],
+    "correct_cells": 22,
+    "expected_cells": 22,
+    "merged_ok": true,
+    "orientation": {
+      "rotation": 180,
+      "deskew": 0.0,
+      "perspective_corrected": false,
+      "quality": 1.5209
+    },
+    "rows": [
+      [
+        "ПОДРАЗДЕЛЕНИЕ",
+        "ФИНАНСОВЫЙ ОТЧЕТ",
+        "",
+        "",
+        ""
+      ],
+      [
+        "ОТДЕЛ",
+        "ЯНВАРЬ",
+        "ФЕВРАЛЬ",
+        "МАРТ",
+        "ИТОГо"
+      ],
+      [
+        "ОПЛАТА ТРУДА",
+        "0",
+        "12500",
+        "34500",
+        "47000"
+      ],
+      [
+        "МАТЕРИАЛЫ",
+        "2500",
+        "0",
+        "900",
+        "3400"
+      ],
+      [
+        "итого",
+        "2500",
+        "12500",
+        "35400",
+        "50400"
+      ]
+    ]
+  },
+  {
+    "fixture": "complex-clean",
+    "condition": "blur2",
+    "file": "complex-clean-blur2.png",
+    "status": "ready",
+    "seconds": 5.8,
+    "shape": [
+      5,
+      5
+    ],
+    "expected_shape": [
+      5,
+      5
+    ],
+    "correct_cells": 22,
+    "expected_cells": 22,
+    "merged_ok": true,
+    "orientation": null,
+    "rows": [
+      [
+        "ПОДРАЗДЕЛЕНИЕ",
+        "ФИНАНСОВЫЙ ОТЧЕТ",
+        "",
+        "",
+        ""
+      ],
+      [
+        "ОТДЕЛ",
+        "ЯНВАРЬ",
+        "ФЕВРАЛЬ",
+        "МАРТ",
+        "ИТОГО"
+      ],
+      [
+        "ОПЛАТА ТРУДА",
+        "0",
+        "12500",
+        "34500",
+        "47000"
+      ],
+      [
+        "МАТЕРИАЛЫ",
+        "2500",
+        "0",
+        "900",
+        "3400"
+      ],
+      [
+        "ИТОГО",
+        "2500",
+        "12500",
+        "35400",
+        "50400"
+      ]
+    ]
+  },
+  {
+    "fixture": "complex-clean",
+    "condition": "contrast25",
+    "file": "complex-clean-contrast25.png",
+    "status": "ready",
+    "seconds": 5.0,
+    "shape": [
+      5,
+      5
+    ],
+    "expected_shape": [
+      5,
+      5
+    ],
+    "correct_cells": 22,
+    "expected_cells": 22,
+    "merged_ok": true,
+    "orientation": null,
+    "rows": [
+      [
+        "ПОДРАЗДЕЛЕНИЕ",
+        "ФИНАНСОВЫЙ ОТЧЕТ",
+        "",
+        "",
+        ""
+      ],
+      [
+        "ОТДЕЛ",
+        "ЯНВАРЬ",
+        "ФЕВРАЛЬ",
+        "МАРТ",
+        "ИТОГО"
+      ],
+      [
+        "ОПЛАТА ТРУДА",
+        "0",
+        "12500",
+        "34500",
+        "47000"
+      ],
+      [
+        "МАТЕРИАЛЫ",
+        "2500",
+        "0",
+        "900",
+        "3400"
+      ],
+      [
+        "итого",
+        "2500",
+        "12500",
+        "35400",
+        "50400"
+      ]
+    ]
+  },
+  {
+    "fixture": "complex-clean",
+    "condition": "small35",
+    "file": "complex-clean-small35.png",
+    "status": "ready",
+    "seconds": 4.0,
+    "shape": [
+      5,
+      5
+    ],
+    "expected_shape": [
+      5,
+      5
+    ],
+    "correct_cells": 22,
+    "expected_cells": 22,
+    "merged_ok": true,
+    "orientation": null,
+    "rows": [
+      [
+        "ПОДРАЗДЕЛЕНИЕ",
+        "ФИНАНСОВЫЙ ОТЧЕТ",
+        "",
+        "",
+        ""
+      ],
+      [
+        "ОТДЕЛ",
+        "ЯНВАРЬ",
+        "ФЕВРАЛЬ",
+        "МАРТ",
+        "итого"
+      ],
+      [
+        "ОПЛАТА ТРУДА",
+        "0",
+        "12500",
+        "34500",
+        "47000"
+      ],
+      [
+        "МАТЕРИАЛЫ",
+        "2500",
+        "0",
+        "900",
+        "3400"
+      ],
+      [
+        "итого",
+        "2500",
+        "12500",
+        "35400",
+        "50400"
+      ]
+    ]
+  }
+]
