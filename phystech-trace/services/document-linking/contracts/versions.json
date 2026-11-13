@@ -1,0 +1,13 @@
+{
+  "input_contract_version": "1.2.0",
+  "output_contract_version": "1.2.0",
+  "structured_extraction_baseline": {
+    "repository": "https://github.com/artemnoor/kfz-structured-extraction-",
+    "commit": "1e922e284805f2c1b343b4cb369813c8073b67dd",
+    "schema_version": "1.2.0"
+  },
+  "compatibility": {
+    "accepted_schema_versions": "1.2.x and additive 1.x",
+    "breaking_upstream_major_requires_new_adapter": true
+  }
+}

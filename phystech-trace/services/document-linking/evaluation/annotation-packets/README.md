@@ -1,0 +1,20 @@
+# Independent annotation packets
+
+These packets contain no model predictions or labels. Complete both independent reviewer JSON files before the adjudication file. Review all unordered document pairs, including pairs with no relationship. For each supported relation, record direction, row matches, supporting/contradictory source paths, and uncertainty. Evidence paths and raw values must be copied from the original source JSON. The source hashes detect fixture changes.
+
+| Scenario | Documents | Pairs to decide | Source bundle SHA-256 | Packets |
+|---|---:|---:|---|---|
+| indirect-link-no-shared-number | 3 | 3 | `d5cd31278756ae9372642dbfc2f70e51877c641dbba9b5966f940629ca19ae9d` | indirect-link-no-shared-number.reviewer-1.json, indirect-link-no-shared-number.reviewer-2.json; indirect-link-no-shared-number.adjudication.json |
+| organization-alias | 2 | 1 | `5a4b500580f0396c23e218011e3a666f202f4d0daea49a45372fbd9250d5915f` | organization-alias.reviewer-1.json, organization-alias.reviewer-2.json; organization-alias.adjudication.json |
+| contextual-link | 3 | 3 | `de587f605be30af39e6bd1bee615964036030344f7e110d9abe205494aa92a50` | contextual-link.reviewer-1.json, contextual-link.reviewer-2.json; contextual-link.adjudication.json |
+| amendment-changes-contract | 2 | 1 | `7529237074c1508c6c02ad4da0d64804cb894888b8fdf6cac7ffb7e38d1784b7` | amendment-changes-contract.reviewer-1.json, amendment-changes-contract.reviewer-2.json; amendment-changes-contract.adjudication.json |
+| line-item-cross-document | 2 | 1 | `204635c4d57d9545ed9252b567cc7952ed59044b111b731193add80ffdb7ef66` | line-item-cross-document.reviewer-1.json, line-item-cross-document.reviewer-2.json; line-item-cross-document.adjudication.json |
+| same-amount-unrelated | 2 | 1 | `2edd473456941577672f99287fcdacc6b13396ad8a0ddd3b81c713b3e3e43e40` | same-amount-unrelated.reviewer-1.json, same-amount-unrelated.reviewer-2.json; same-amount-unrelated.adjudication.json |
+| same-counterparty-different-operation | 3 | 3 | `119257b660d0a8a092a62a647a348725513c775dc0acddfbbc2c1d70f2cc62ca` | same-counterparty-different-operation.reviewer-1.json, same-counterparty-different-operation.reviewer-2.json; same-counterparty-different-operation.adjudication.json |
+| many-documents-one-contract | 5 | 10 | `d601d53d60a66e79bb9cfa7528239b3dd245a4d1eca0ad558c889f01e6dd874e` | many-documents-one-contract.reviewer-1.json, many-documents-one-contract.reviewer-2.json; many-documents-one-contract.adjudication.json |
+| ambiguous-relationships | 3 | 3 | `69758f13c390dbb677073a38058525fbf9a3c519fec295155fb3932d75dd524d` | ambiguous-relationships.reviewer-1.json, ambiguous-relationships.reviewer-2.json; ambiguous-relationships.adjudication.json |
+| unlinked-documents | 2 | 1 | `c5f56b759bf61d084792eabcf543f3b83a0bd4ca689e458dd6042263e5faaaa2` | unlinked-documents.reviewer-1.json, unlinked-documents.reviewer-2.json; unlinked-documents.adjudication.json |
+
+Use `review_status: "complete"` only after every pair is decided. Pair decisions are `supported`, `not_supported`, or `ambiguous`. A supported pair must contain one or more relationship instances. Each relationship instance has a `decision` (`supported` or `ambiguous`), `relationship_type`, directed source/target document IDs, optional source/target row IDs, `supporting_evidence`, `contradicting_evidence`, `row_correspondences`, and `ambiguity_notes`. Evidence entries use `{source:{document_id,path,raw_value},target:{document_id,path,raw_value},explanation}`. Each row correspondence carries source/target row IDs, a `supported`/`not_supported`/`ambiguous` decision, evidence, contrary evidence, and notes. Pair-level contrary evidence uses the same evidence-entry shape. Do not use a blank `relationship_instances` array to mean an unreviewed pair.
+
+After both reviewers finish, adjudicate all pairs in the third packet. `npm run eval:compile-annotations` verifies pair coverage, reviewer IDs, and source hashes, then writes independent gold labels to `evaluation/expert-gold.json`. It refuses pending or mismatched packets. Add prediction files only after the gold is frozen.

@@ -1,0 +1,41 @@
+{
+  "extraction_id": "ext-receipt-unknown-v1",
+  "document_id": "receipt-unknown-1",
+  "version": 1,
+  "schema_version": "1.2.0",
+  "input_version": 1,
+  "extracted_at": "2026-11-12T10:00:00.000Z",
+  "document_type": "unknown",
+  "classification": {
+    "type": "unknown",
+    "label": "unknown",
+    "confidence": 0.98,
+    "status": "classified"
+  },
+  "extraction_engine": {
+    "rules_executed": true,
+    "llm": {
+      "provider": "polza",
+      "model": null,
+      "called": false,
+      "response_validated": true
+    },
+    "parser_adapter": "document-parser-v2"
+  },
+  "mode": "rules_only",
+  "fields": {
+    "title": {
+      "label": "title",
+      "value": "Кассовый документ без номера договора",
+      "source_value": "Кассовый документ без номера договора",
+      "status": "extracted",
+      "confidence": 0.98,
+      "provenance": null
+    }
+  },
+  "tables": [],
+  "indicators": [],
+  "missing_fields": [],
+  "review_required": [],
+  "line_items": []
+}

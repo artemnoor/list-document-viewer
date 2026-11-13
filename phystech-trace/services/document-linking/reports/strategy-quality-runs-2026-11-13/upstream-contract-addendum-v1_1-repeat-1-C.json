@@ -1,0 +1,153 @@
+{
+  "version": "1.0.0",
+  "scenario": {
+    "id": "upstream-contract-addendum-v1_1",
+    "description": "Same actual Structured Extraction 1.2.0 contract/addendum bundle used in the earlier pilot, rerun with the corrected evidence/status instructions.",
+    "fixture_files": [
+      "contract-2026-0315.json",
+      "addendum-2026-04.json"
+    ]
+  },
+  "repeat": 1,
+  "strategy": "C",
+  "provider": "Polza AI",
+  "model": "google/gemma-4-26b-a4b-it",
+  "prompt_version": "document-linking-system@9c7ac83555cc+strategy-prompts@1.1.0-bc5ec24601bd",
+  "system_prompt_sha256": "9c7ac83555cc3fa9d83aed70e18c5d68a9e95b47c959d5de24065e5a48da5a63",
+  "strategy_prompts_sha256": "bc5ec24601bd0bcaede9a17f3bc054d5907b7662a9da43aa87c7b03768372ea9",
+  "strategy_source_sha256": "654acd3ba3cea61dc1c295173a5aa536423475511372bc9a8e73f098363f2885",
+  "started_at": "2026-11-13T08:18:55.603Z",
+  "status": "stopped_budget",
+  "spend_rub_so_far": 7.25479187,
+  "calls": [
+    {
+      "label": "C.independent-agent-1",
+      "raw_response": {
+        "candidates": [
+          {
+            "relationship_type": "amendment_of",
+            "source_document_id": "addendum-2026-04",
+            "target_document_id": "contract-2026-0315",
+            "source_row_id": "document-metadata-r004",
+            "target_row_id": "document-metadata-r002",
+            "explanation": "Дополнительное соглашение (addendum-2026-04) прямо ссылается на основной договор КД-24/03-15 (contract-2026-0315) как на документ, условия которого изменяются.",
+            "confidence": 1,
+            "status": "confirmed",
+            "conflicts": [],
+            "alternatives": []
+          },
+          {
+            "relationship_type": "amends_parameter",
+            "source_document_id": "addendum-2026-04",
+            "target_document_id": "contract-2026-0315",
+            "source_row_id": "addendum-changes-r001",
+            "target_row_id": "document-metadata-r008",
+            "explanation": "Дополнительное соглашение изменяет общую цену договора с 4 860 000,00 руб. на 5 214 600,00 руб.",
+            "confidence": 1,
+            "status": "confirmed",
+            "conflicts": [],
+            "alternatives": []
+          },
+          {
+            "relationship_type": "amends_parameter",
+            "source_document_id": "addendum-2026-04",
+            "target_document_id": "contract-2026-0315",
+            "source_row_id": "addendum-changes-r002",
+            "target_row_id": "contract-schedule-r002",
+            "explanation": "Дополнительное соглашение изменяет срок выполнения 2-го этапа работ (с 31.08.2026 на 15.09.2026), что зафиксировано в таблице этапов основного договора.",
+            "confidence": 0.95,
+            "status": "confirmed",
+            "conflicts": [],
+            "alternatives": []
+          },
+          {
+            "relationship_type": "amends_parameter",
+            "source_document_id": "addendum-2026-04",
+            "target_document_id": "contract-2026-0315",
+            "source_row_id": "addendum-changes-r003",
+            "target_row_id": "contract-schedule-r002",
+            "explanation": "Дополнительное соглашение изменяет количество крепежей М12 в рамках 2-го этапа (с 12 на 18 комплектов). Хотя в таблице основного договора количество не выделено отдельным полем, это изменение относится к содержанию работ 2-го этапа.",
+            "confidence": 0.85,
+            "status": "review",
+            "conflicts": [],
+            "alternatives": []
+          }
+        ],
+        "unlinked_document_ids": [],
+        "analysis_summary": "Проведен анализ связи между основным договором (contract-2026-0315) и дополнительным соглашением (addendum-2026-04). Установлено, что соглашение является инструментом изменения параметров договора. Подтверждены изменения общей стоимости договора и сроков выполнения конкретного этапа. Выявлено косвенное отношение по изменению объема материалов (крепежа) для второго этапа работ, требующее дополнительной проверки на предмет точности привязки к строке таблицы, так как в исходной таблице основного договора количественные характеристики не были выделены в отдельные колонки."
+      },
+      "model": "google/gemma-4-26b-a4b-it",
+      "input_tokens": 110029,
+      "output_tokens": 935,
+      "cost": 1.22512641,
+      "currency": "RUB",
+      "duration_ms": 21353
+    },
+    {
+      "label": "C.independent-agent-2",
+      "raw_response": {
+        "candidates": [
+          {
+            "relationship_type": "amendment_of",
+            "source_document_id": "addendum-2026-04",
+            "target_document_id": "contract-2026-0315",
+            "source_row_id": "document-metadata-r004",
+            "target_row_id": "document-metadata-r002",
+            "explanation": "Дополнительное соглашение (addendum-2026-04) прямо ссылается на основной договор КД-24/03-15 (contract-2026-0315) как на объект изменений.",
+            "confidence": 1,
+            "status": "confirmed",
+            "conflicts": [],
+            "alternatives": []
+          },
+          {
+            "relationship_type": "amends_parameter",
+            "source_document_id": "addendum-2026-04",
+            "target_document_id": "contract-2026-0315",
+            "source_row_id": "addendum-changes-r001",
+            "target_row_id": "document-metadata-r008",
+            "explanation": "Дополнительное соглашение изменяет общую цену договора с 4 860 000,00 руб. на 5 214 600,00 руб.",
+            "confidence": 0.98,
+            "status": "confirmed",
+            "conflicts": [],
+            "alternatives": []
+          },
+          {
+            "relationship_type": "amends_parameter",
+            "source_document_id": "addendum-2026-04",
+            "target_document_id": "contract-2026-0315",
+            "source_row_id": "addendum-changes-r002",
+            "target_row_id": "contract-schedule-r002",
+            "explanation": "Дополнительное соглашение изменяет срок выполнения второго этапа работ (с 31.08.2026 на 15.09.2026).",
+            "confidence": 0.98,
+            "status": "confirmed",
+            "conflicts": [],
+            "alternatives": []
+          },
+          {
+            "relationship_type": "amends_parameter",
+            "source_document_id": "addendum-2026-04",
+            "target_document_id": "contract-2026-0315",
+            "source_row_id": "addendum-changes-r003",
+            "target_row_id": "contract-schedule-r002",
+            "explanation": "Дополнительное соглашение изменяет объем/содержание работ (количество креплений М12) во втором этапе.",
+            "confidence": 0.9,
+            "status": "review",
+            "conflicts": [],
+            "alternatives": []
+          }
+        ],
+        "unlinked_document_ids": [],
+        "analysis_summary": "Проведен анализ связи между основным договором (contract-2026-0315) и дополнительным соглашением (addendum-2026-04). Установлено, что соглашение является юридическим дополнением к договору, изменяющим его ключевые параметры: общую стоимость (п. 2.1) и сроки выполнения второго этапа (п. 4.2), а также объем материалов (прил. 2, п. 6)."
+      },
+      "model": "google/gemma-4-26b-a4b-it",
+      "input_tokens": 110029,
+      "output_tokens": 739,
+      "cost": 1.21627403,
+      "currency": "RUB",
+      "duration_ms": 20430
+    }
+  ],
+  "attempted_calls": 2,
+  "unpriced_reserved_rub": 0,
+  "error": "BUDGET_STOP: резерв 2.760130 RUB для C.critic превысит лимит 10 RUB (учтено 7.254792 + резерв 0.753939)"
+}

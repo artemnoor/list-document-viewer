@@ -1,0 +1,50 @@
+{
+  "name": "kfz-document-linking",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "dev:api": "tsx watch server/index.ts",
+    "dev:worker": "tsx watch server/worker-main.ts",
+    "start": "node build/server/index.mjs",
+    "start:worker": "node build/server/worker-main.mjs",
+    "migrate": "tsx server/migrate.ts",
+    "build": "npm run typecheck && vite build && esbuild server/index.ts --bundle --platform=node --format=esm --packages=external --outfile=build/server/index.mjs && esbuild server/worker-main.ts --bundle --platform=node --format=esm --packages=external --outfile=build/server/worker-main.mjs && esbuild server/migrate.ts --bundle --platform=node --format=esm --packages=external --outfile=build/server/migrate.mjs && esbuild server/config-check.ts --bundle --platform=node --format=esm --packages=external --outfile=build/server/config-check.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test tests/*.test.ts",
+    "test:integration": "tsx --test tests/*.integration.test.ts",
+    "test:polza": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/test-polza.ps1",
+    "test:contract": "tsx --test tests/contracts.test.ts",
+    "eval:links": "tsx scripts/evaluate-links.ts",
+    "eval:strategies": "tsx scripts/benchmark-linking-strategies.ts",
+    "eval:prepare-annotations": "tsx scripts/prepare-annotation-packets.ts",
+    "eval:compile-annotations": "tsx scripts/compile-expert-annotations.ts",
+    "contracts:export": "tsx scripts/write-demo-fixtures.ts && tsx scripts/export-contract-schemas.ts",
+    "demo:export": "tsx scripts/write-demo-result.ts",
+    "compose:up": "docker compose up --build",
+    "test:polza:full": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/test-polza-full.ps1"
+  },
+  "dependencies": {
+    "@hono/node-server": "^2.1.8",
+    "bullmq": "^6.7.6",
+    "dotenv": "^18.0.10",
+    "hono": "^4.7.0",
+    "ioredis": "^6.0.0",
+    "lucide-react": "^0.468.0",
+    "postgres": "^4.1.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "esbuild": "^0.28.2",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0",
+    "vite": "^6.0.0"
+  }
+}

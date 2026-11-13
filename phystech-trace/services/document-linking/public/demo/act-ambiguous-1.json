@@ -1,0 +1,49 @@
+{
+  "extraction_id": "ext-act-ambiguous-1-v1",
+  "document_id": "act-ambiguous-1",
+  "version": 1,
+  "schema_version": "1.2.0",
+  "input_version": 1,
+  "extracted_at": "2026-11-12T10:00:00.000Z",
+  "document_type": "act",
+  "classification": {
+    "type": "act",
+    "label": "act",
+    "confidence": 0.98,
+    "status": "classified"
+  },
+  "extraction_engine": {
+    "rules_executed": true,
+    "llm": {
+      "provider": "polza",
+      "model": null,
+      "called": false,
+      "response_validated": true
+    },
+    "parser_adapter": "document-parser-v2"
+  },
+  "mode": "rules_only",
+  "fields": {
+    "act_number": {
+      "label": "act_number",
+      "value": "А-109/26",
+      "source_value": "А-109/26",
+      "status": "extracted",
+      "confidence": 0.98,
+      "provenance": null
+    },
+    "contract_reference": {
+      "label": "contract_reference",
+      "value": "КД-77-11-09",
+      "source_value": "КД-77-11-09",
+      "status": "extracted",
+      "confidence": 0.98,
+      "provenance": null
+    }
+  },
+  "tables": [],
+  "indicators": [],
+  "missing_fields": [],
+  "review_required": [],
+  "line_items": []
+}

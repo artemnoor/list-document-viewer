@@ -1,0 +1,386 @@
+{
+  "version": "1.0.0",
+  "scenario": {
+    "id": "demo-ambiguous-no-evidence",
+    "description": "Four Structured Extraction-shaped demo outputs covering ambiguous duplicate identifiers, a possible act relation and an unsupported unknown document; provenance is intentionally absent, so evidence should remain unconfirmed.",
+    "fixture_files": [
+      "contract-ambiguous-a.json",
+      "contract-ambiguous-b.json",
+      "act-ambiguous-1.json",
+      "receipt-unknown-1.json"
+    ]
+  },
+  "repeat": 3,
+  "strategy": "A",
+  "provider": "Polza AI",
+  "model": "google/gemma-4-26b-a4b-it",
+  "prompt_version": "document-linking-system@ff99509e616a+strategy-prompts@1.0.0",
+  "started_at": "2026-11-13T07:11:43.555Z",
+  "status": "complete",
+  "spend_rub_so_far": 6.74816181,
+  "calls": [
+    {
+      "label": "baseline.relationship-analysis",
+      "raw_response": {
+        "links": [
+          {
+            "relationship_type": "potential_contract_reference",
+            "source_document_id": "act-ambiguous-1",
+            "target_document_id": "contract-ambiguous-b",
+            "source_row_id": null,
+            "target_row_id": null,
+            "evidence": [
+              {
+                "source_reference_id": "r2h",
+                "target_reference_id": "r1f",
+                "signal": "contract number match",
+                "explanation": "The act 'act-ambiguous-1' references contract number 'КД-77-11-09', which matches the contract number in 'contract-ambiguous-b'."
+              }
+            ],
+            "explanation": "The act explicitly references contract 'КД-77-11-09'. This matches the value in document 'contract-ambiguous-b'. However, document 'contract-ambiguous-a' contains a very similar number 'КД-77/11-09' (using a slash instead of a hyphen), suggesting a possible typographical variation or a different contract entirely. Given the exact string match with 'contract-ambiguous-b', it is the primary candidate.",
+            "confidence": 0.8,
+            "status": "proposed",
+            "conflicts": [],
+            "alternatives": [
+              {
+                "description": "The act might actually refer to 'contract-ambiguous-a' if the slash/hyphen difference is a transcription error in the act.",
+                "evidence_strength": "low"
+              }
+            ]
+          }
+        ],
+        "unlinked_document_ids": [
+          "contract-ambiguous-a",
+          "receipt-unknown-1"
+        ],
+        "analysis_summary": "The document set contains two potential contracts, one act, and one unknown receipt. There is a strong semantic link between the act (act-ambiguous-1) and contract-ambiguous-b based on the contract number 'КД-77-11-09'. Contract-ambiguous-a is excluded from this link due to a structural difference in the identifier ('/' vs '-'). The receipt-unknown-1 document has no identifiable relationships to the other documents in the set.",
+        "context_requests": []
+      },
+      "model": "google/gemma-4-26b-a4b-it",
+      "input_tokens": 3359,
+      "output_tokens": 531,
+      "cost": 0.08213059,
+      "duration_ms": 6415
+    },
+    {
+      "label": "baseline.evidence-correction:1",
+      "raw_response": {
+        "corrections": [
+          {
+            "proposal_index": 0,
+            "action": "replace",
+            "link": {
+              "relationship_type": "potential_contract_reference",
+              "source_document_id": "act-ambiguous-1",
+              "target_document_id": "contract-ambiguous-b",
+              "source_row_id": null,
+              "target_row_id": null,
+              "evidence": [
+                {
+                  "source_reference_id": "r2h",
+                  "target_reference_id": "r1f",
+                  "signal": "contract number match",
+                  "explanation": "The act 'act-ambiguous-1' references contract number 'КД-77-11-09', which matches the contract number in 'contract-ambiguous-b'."
+                }
+              ],
+              "explanation": "The act explicitly references contract 'КД-77-11-09'. This matches the value in document 'contract-ambiguous-b'. However, document 'contract-ambiguous-a' contains a very similar number 'КД-77/11-09' (using a slash instead of a hyphen), suggesting a possible typographical variation or a different contract entirely. Given the exact string match with 'contract-ambiguous-b', it is the primary candidate.",
+              "confidence": 0.8,
+              "status": "proposed",
+              "conflicts": [],
+              "alternatives": [
+                {
+                  "description": "The act might actually refer to 'contract-ambiguous-a' if the slash/hyphen difference is a transcription error in the act.",
+                  "evidence_strength": "low"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "model": "google/gemma-4-26b-a4b-it",
+      "input_tokens": 3482,
+      "output_tokens": 303,
+      "cost": 0.05282797,
+      "duration_ms": 5691
+    }
+  ],
+  "result": {
+    "strategy": "A",
+    "links": [],
+    "candidates": [],
+    "diagnostics": [
+      {
+        "candidate_index": 0,
+        "reason": "provenance_missing",
+        "proposal": {
+          "proposal_index": 0,
+          "relationship_type": "potential_contract_reference",
+          "source_document_id": "act-ambiguous-1",
+          "target_document_id": "contract-ambiguous-b",
+          "reason_codes": [
+            "provenance_missing"
+          ],
+          "evidence_issues": [
+            {
+              "evidence_index": 0,
+              "reason_codes": [
+                "provenance_missing"
+              ],
+              "source_path": "fields.contract_reference.value",
+              "target_path": "fields.contract_number.value",
+              "source_reference_id": "r2h",
+              "target_reference_id": "r1f"
+            }
+          ],
+          "proposal": {
+            "relationship_type": "potential_contract_reference",
+            "source_document_id": "act-ambiguous-1",
+            "target_document_id": "contract-ambiguous-b",
+            "source_row_id": null,
+            "target_row_id": null,
+            "evidence": [
+              {
+                "source_reference_id": "r2h",
+                "target_reference_id": "r1f",
+                "signal": "contract number match",
+                "explanation": "The act 'act-ambiguous-1' references contract number 'КД-77-11-09', which matches the contract number in 'contract-ambiguous-b'."
+              }
+            ],
+            "explanation": "The act explicitly references contract 'КД-77-11-09'. This matches the value in document 'contract-ambiguous-b'. However, document 'contract-ambiguous-a' contains a very similar number 'КД-77/11-09' (using a slash instead of a hyphen), suggesting a possible typographical variation or a different contract entirely. Given the exact string match with 'contract-ambiguous-b', it is the primary candidate.",
+            "confidence": 0.8,
+            "status": "proposed",
+            "conflicts": [],
+            "alternatives": [
+              {
+                "description": "The act might actually refer to 'contract-ambiguous-a' if the slash/hyphen difference is a transcription error in the act.",
+                "evidence_strength": "low"
+              }
+            ]
+          },
+          "resolution": "unresolved",
+          "current_proposal": {
+            "relationship_type": "potential_contract_reference",
+            "source_document_id": "act-ambiguous-1",
+            "target_document_id": "contract-ambiguous-b",
+            "source_row_id": null,
+            "target_row_id": null,
+            "evidence": [
+              {
+                "source_reference_id": "r2h",
+                "target_reference_id": "r1f",
+                "signal": "contract number match",
+                "explanation": "The act 'act-ambiguous-1' references contract number 'КД-77-11-09', which matches the contract number in 'contract-ambiguous-b'."
+              }
+            ],
+            "explanation": "The act explicitly references contract 'КД-77-11-09'. This matches the value in document 'contract-ambiguous-b'. However, document 'contract-ambiguous-a' contains a very similar number 'КД-77/11-09' (using a slash instead of a hyphen), suggesting a possible typographical variation or a different contract entirely. Given the exact string match with 'contract-ambiguous-b', it is the primary candidate.",
+            "confidence": 0.8,
+            "status": "proposed",
+            "conflicts": [],
+            "alternatives": [
+              {
+                "description": "The act might actually refer to 'contract-ambiguous-a' if the slash/hyphen difference is a transcription error in the act.",
+                "evidence_strength": "low"
+              }
+            ]
+          },
+          "correction_attempts": 1
+        }
+      }
+    ],
+    "calls": [
+      {
+        "label": "baseline.relationship-analysis",
+        "raw_response": {
+          "links": [
+            {
+              "relationship_type": "potential_contract_reference",
+              "source_document_id": "act-ambiguous-1",
+              "target_document_id": "contract-ambiguous-b",
+              "source_row_id": null,
+              "target_row_id": null,
+              "evidence": [
+                {
+                  "source_reference_id": "r2h",
+                  "target_reference_id": "r1f",
+                  "signal": "contract number match",
+                  "explanation": "The act 'act-ambiguous-1' references contract number 'КД-77-11-09', which matches the contract number in 'contract-ambiguous-b'."
+                }
+              ],
+              "explanation": "The act explicitly references contract 'КД-77-11-09'. This matches the value in document 'contract-ambiguous-b'. However, document 'contract-ambiguous-a' contains a very similar number 'КД-77/11-09' (using a slash instead of a hyphen), suggesting a possible typographical variation or a different contract entirely. Given the exact string match with 'contract-ambiguous-b', it is the primary candidate.",
+              "confidence": 0.8,
+              "status": "proposed",
+              "conflicts": [],
+              "alternatives": [
+                {
+                  "description": "The act might actually refer to 'contract-ambiguous-a' if the slash/hyphen difference is a transcription error in the act.",
+                  "evidence_strength": "low"
+                }
+              ]
+            }
+          ],
+          "unlinked_document_ids": [
+            "contract-ambiguous-a",
+            "receipt-unknown-1"
+          ],
+          "analysis_summary": "The document set contains two potential contracts, one act, and one unknown receipt. There is a strong semantic link between the act (act-ambiguous-1) and contract-ambiguous-b based on the contract number 'КД-77-11-09'. Contract-ambiguous-a is excluded from this link due to a structural difference in the identifier ('/' vs '-'). The receipt-unknown-1 document has no identifiable relationships to the other documents in the set.",
+          "context_requests": []
+        },
+        "model": "google/gemma-4-26b-a4b-it",
+        "input_tokens": 3359,
+        "output_tokens": 531,
+        "cost": 0.08213059,
+        "duration_ms": 6415
+      },
+      {
+        "label": "baseline.evidence-correction:1",
+        "raw_response": {
+          "corrections": [
+            {
+              "proposal_index": 0,
+              "action": "replace",
+              "link": {
+                "relationship_type": "potential_contract_reference",
+                "source_document_id": "act-ambiguous-1",
+                "target_document_id": "contract-ambiguous-b",
+                "source_row_id": null,
+                "target_row_id": null,
+                "evidence": [
+                  {
+                    "source_reference_id": "r2h",
+                    "target_reference_id": "r1f",
+                    "signal": "contract number match",
+                    "explanation": "The act 'act-ambiguous-1' references contract number 'КД-77-11-09', which matches the contract number in 'contract-ambiguous-b'."
+                  }
+                ],
+                "explanation": "The act explicitly references contract 'КД-77-11-09'. This matches the value in document 'contract-ambiguous-b'. However, document 'contract-ambiguous-a' contains a very similar number 'КД-77/11-09' (using a slash instead of a hyphen), suggesting a possible typographical variation or a different contract entirely. Given the exact string match with 'contract-ambiguous-b', it is the primary candidate.",
+                "confidence": 0.8,
+                "status": "proposed",
+                "conflicts": [],
+                "alternatives": [
+                  {
+                    "description": "The act might actually refer to 'contract-ambiguous-a' if the slash/hyphen difference is a transcription error in the act.",
+                    "evidence_strength": "low"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "model": "google/gemma-4-26b-a4b-it",
+        "input_tokens": 3482,
+        "output_tokens": 303,
+        "cost": 0.05282797,
+        "duration_ms": 5691
+      }
+    ],
+    "duration_ms": 12116,
+    "model": "google/gemma-4-26b-a4b-it",
+    "analysis_summary": "The document set contains two potential contracts, one act, and one unknown receipt. There is a strong semantic link between the act (act-ambiguous-1) and contract-ambiguous-b based on the contract number 'КД-77-11-09'. Contract-ambiguous-a is excluded from this link due to a structural difference in the identifier ('/' vs '-'). The receipt-unknown-1 document has no identifiable relationships to the other documents in the set.",
+    "unlinked_document_ids": [
+      "contract-ambiguous-a",
+      "receipt-unknown-1"
+    ],
+    "usage": {
+      "input_tokens": 6841,
+      "output_tokens": 834,
+      "cost_amount": 0.13495856,
+      "cost_currency": "RUB"
+    },
+    "baseline": {
+      "complete": true,
+      "phase": "complete",
+      "links": [],
+      "unlinkedDocumentIds": [
+        "contract-ambiguous-a",
+        "receipt-unknown-1"
+      ],
+      "invalidRelationshipDiagnostics": [
+        {
+          "proposal_index": 0,
+          "relationship_type": "potential_contract_reference",
+          "source_document_id": "act-ambiguous-1",
+          "target_document_id": "contract-ambiguous-b",
+          "reason_codes": [
+            "provenance_missing"
+          ],
+          "evidence_issues": [
+            {
+              "evidence_index": 0,
+              "reason_codes": [
+                "provenance_missing"
+              ],
+              "source_path": "fields.contract_reference.value",
+              "target_path": "fields.contract_number.value",
+              "source_reference_id": "r2h",
+              "target_reference_id": "r1f"
+            }
+          ],
+          "proposal": {
+            "relationship_type": "potential_contract_reference",
+            "source_document_id": "act-ambiguous-1",
+            "target_document_id": "contract-ambiguous-b",
+            "source_row_id": null,
+            "target_row_id": null,
+            "evidence": [
+              {
+                "source_reference_id": "r2h",
+                "target_reference_id": "r1f",
+                "signal": "contract number match",
+                "explanation": "The act 'act-ambiguous-1' references contract number 'КД-77-11-09', which matches the contract number in 'contract-ambiguous-b'."
+              }
+            ],
+            "explanation": "The act explicitly references contract 'КД-77-11-09'. This matches the value in document 'contract-ambiguous-b'. However, document 'contract-ambiguous-a' contains a very similar number 'КД-77/11-09' (using a slash instead of a hyphen), suggesting a possible typographical variation or a different contract entirely. Given the exact string match with 'contract-ambiguous-b', it is the primary candidate.",
+            "confidence": 0.8,
+            "status": "proposed",
+            "conflicts": [],
+            "alternatives": [
+              {
+                "description": "The act might actually refer to 'contract-ambiguous-a' if the slash/hyphen difference is a transcription error in the act.",
+                "evidence_strength": "low"
+              }
+            ]
+          },
+          "resolution": "unresolved",
+          "current_proposal": {
+            "relationship_type": "potential_contract_reference",
+            "source_document_id": "act-ambiguous-1",
+            "target_document_id": "contract-ambiguous-b",
+            "source_row_id": null,
+            "target_row_id": null,
+            "evidence": [
+              {
+                "source_reference_id": "r2h",
+                "target_reference_id": "r1f",
+                "signal": "contract number match",
+                "explanation": "The act 'act-ambiguous-1' references contract number 'КД-77-11-09', which matches the contract number in 'contract-ambiguous-b'."
+              }
+            ],
+            "explanation": "The act explicitly references contract 'КД-77-11-09'. This matches the value in document 'contract-ambiguous-b'. However, document 'contract-ambiguous-a' contains a very similar number 'КД-77/11-09' (using a slash instead of a hyphen), suggesting a possible typographical variation or a different contract entirely. Given the exact string match with 'contract-ambiguous-b', it is the primary candidate.",
+            "confidence": 0.8,
+            "status": "proposed",
+            "conflicts": [],
+            "alternatives": [
+              {
+                "description": "The act might actually refer to 'contract-ambiguous-a' if the slash/hyphen difference is a transcription error in the act.",
+                "evidence_strength": "low"
+              }
+            ]
+          },
+          "correction_attempts": 1
+        }
+      ],
+      "calls": 2,
+      "errors": 0,
+      "inputTokens": 6841,
+      "outputTokens": 834,
+      "costAmount": 0.13495856,
+      "costCurrency": "RUB",
+      "durationMs": 12113,
+      "model": "google/gemma-4-26b-a4b-it",
+      "provider": "Polza AI",
+      "analysisSummary": "The document set contains two potential contracts, one act, and one unknown receipt. There is a strong semantic link between the act (act-ambiguous-1) and contract-ambiguous-b based on the contract number 'КД-77-11-09'. Contract-ambiguous-a is excluded from this link due to a structural difference in the identifier ('/' vs '-'). The receipt-unknown-1 document has no identifiable relationships to the other documents in the set.",
+      "strategy": "full_set",
+      "estimatedInputTokens": 5896
+    }
+  }
+}

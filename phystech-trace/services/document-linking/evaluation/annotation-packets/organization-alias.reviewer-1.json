@@ -1,0 +1,34 @@
+{
+  "packet_version": "1.0.0",
+  "scenario_id": "organization-alias",
+  "source_bundle_sha256": "5a4b500580f0396c23e218011e3a666f202f4d0daea49a45372fbd9250d5915f",
+  "reviewer_id": "reviewer-1-pending",
+  "review_status": "pending",
+  "source_documents": [
+    {
+      "path": "fixtures/upstream-structured-extraction-1.2.0/contract-2026-0315.json",
+      "sha256": "237324eb12181125b9b60076852de1d4c8f0bf3cebc61c41d39af4ce6757e3a2",
+      "document_id": "contract-2026-0315",
+      "extraction_id": "real-contract-2026-0315-v1",
+      "schema_version": "1.2.0"
+    },
+    {
+      "path": "fixtures/upstream-structured-extraction-1.2.0/invoice-2026-0408.json",
+      "sha256": "3d78355654c78acecbdf7936679cfdb2feb8781559bada85195cc1fa298d0ef8",
+      "document_id": "invoice-2026-0408",
+      "extraction_id": "real-invoice-2026-0408-v1",
+      "schema_version": "1.2.0"
+    }
+  ],
+  "instruction": "Review only these original Structured Extraction JSON files. Do not inspect model predictions. Decide every unordered document pair, record direction for each supported relation, annotate row matches and supporting/contradictory source paths, and mark genuine ambiguity explicitly.",
+  "document_pair_decisions": [
+    {
+      "left_document_id": "contract-2026-0315",
+      "right_document_id": "invoice-2026-0408",
+      "decision": "pending",
+      "relationship_instances": [],
+      "contradicting_evidence": [],
+      "ambiguity_notes": ""
+    }
+  ]
+}

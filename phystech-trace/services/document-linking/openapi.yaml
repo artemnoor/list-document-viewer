@@ -1,0 +1,105 @@
+openapi: 3.1.0
+info:
+  title: KFZ Document Linking API
+  version: 1.2.0
+  description: LLM-first анализ всего комплекта результатов Structured Extraction через Gemma 4 26B A4B в Polza AI.
+  security:
+    - bearerAuth: []
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: API_BEARER_TOKEN
+servers:
+  - url: http://127.0.0.1:3000
+paths:
+  /api/health:
+    get:
+      summary: Проверка готовности
+      security: []
+      responses:
+        '200': { description: PostgreSQL and Redis доступны }
+        '503': { description: Зависимость недоступна }
+  /api/linking-jobs:
+    post:
+      summary: Создать асинхронное задание анализа
+      parameters:
+        - { name: Idempotency-Key, in: header, required: false, schema: { type: string, maxLength: 128 } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - type: array
+                  items: { $ref: './contracts/input.schema.json' }
+                - type: object
+                  required: [documents]
+                  properties:
+                    documents: { type: array, items: { $ref: './contracts/input.schema.json' } }
+      responses:
+        '202': { description: Задание поставлено в BullMQ очередь }
+        '200': { description: Возвращено существующее задание с тем же Idempotency-Key }
+        '409': { description: Idempotency-Key повторно использован с другим содержимым }
+        '422': { description: Вход несовместим со Structured Extraction }
+  /api/linking-jobs/{id}:
+    get:
+      summary: Получить прогресс или результат задания
+      parameters: [{ name: id, in: path, required: true, schema: { type: string, format: uuid } }]
+      responses: { '200': { description: Статус, checkpoints, usage и готовый result при завершении }, '404': { description: Задание не найдено } }
+  /api/linking-jobs/{id}/resume:
+    post:
+      summary: Повторно поставить ошибочное задание в очередь
+      parameters: [{ name: id, in: path, required: true, schema: { type: string, format: uuid } }]
+      responses: { '202': { description: Задание возобновлено с сохранённых checkpoints }, '404': { description: Задание не найдено } }
+  /api/linking-runs:
+    post:
+      summary: Проверить массив результатов Structured Extraction и найти документные и построчные связи
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - type: array
+                  items: { $ref: './contracts/input.schema.json' }
+                - type: object
+                  required: [documents]
+                  properties:
+                    documents:
+                      type: array
+                      items: { $ref: './contracts/input.schema.json' }
+      responses:
+        '201': { description: Результат соответствует output contract 1.2.0, content: { application/json: { schema: { $ref: './contracts/output.schema.json' } } } }
+        '200': { description: Повторный идемпотентный запрос возвращает сохранённый результат }
+        '401': { description: Отсутствует или неверен bearer token }
+        '409': { description: Idempotency-Key повторно использован с другим содержимым }
+        '413': { description: Превышен лимит размера тела, контекста или числа запросов модели }
+        '429': { description: Превышен лимит частоты запросов }
+        '422': { description: Вход несовместим; тело содержит diagnostics с индексом, JSON-путём и описанием }
+        '502': { description: Ошибка модели или невалидный технический ответ }
+        '503': { description: Ключ Polza отсутствует, баланс недостаточен (HTTP 402 от провайдера) или ограничена частота запросов (HTTP 429) }
+        '504': { description: Таймаут Polza AI }
+  /api/demo:
+    get:
+      summary: Получить встроенный демонстрационный набор Structured Extraction
+      responses:
+        '200': { description: Встроенный пример }
+  /api/linking-runs/{id}:
+    get:
+      summary: Получить сохранённый запуск
+      parameters: [{ name: id, in: path, required: true, schema: { type: string } }]
+      responses: { '200': { description: Result JSON }, '401': { description: Не авторизован }, '404': { description: Не найден } }
+  /api/linking-runs/{runId}/links/{linkId}:
+    patch:
+      summary: Подтвердить или отклонить связь специалистом
+      parameters:
+        - { name: runId, in: path, required: true, schema: { type: string } }
+        - { name: linkId, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { type: object, required: [status], properties: { status: { enum: [confirmed, rejected] } } }
+      responses: { '200': { description: Обновлённый результат }, '401': { description: Не авторизован }, '404': { description: Не найден }, '409': { description: Решение уже принято или есть параллельное изменение } }

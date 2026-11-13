@@ -1,0 +1,57 @@
+{
+  "packet_version": "1.0.0",
+  "scenario_id": "indirect-link-no-shared-number",
+  "source_bundle_sha256": "d5cd31278756ae9372642dbfc2f70e51877c641dbba9b5966f940629ca19ae9d",
+  "reviewer_id": "adjudicator-pending",
+  "review_status": "pending",
+  "source_documents": [
+    {
+      "path": "fixtures/upstream-structured-extraction-1.2.0/kfz-2026-q1.json",
+      "sha256": "0ad738f6d9cfe8e6586a13096e69e5aabb0e2ef669651f6a0abdbe4513c6f5e4",
+      "document_id": "kfz-2026-q1",
+      "extraction_id": "real-kfz-2026-q1-v1",
+      "schema_version": "1.2.0"
+    },
+    {
+      "path": "fixtures/upstream-structured-extraction-1.2.0/act-2026-0424.json",
+      "sha256": "57a13a1f883ae6a05d6b3c72e99c5336fa066fbb4ccbba3017a7347606ba444b",
+      "document_id": "act-2026-0424",
+      "extraction_id": "real-act-2026-0424-v1",
+      "schema_version": "1.2.0"
+    },
+    {
+      "path": "fixtures/upstream-structured-extraction-1.2.0/registry-2026-04.json",
+      "sha256": "a923dd884c96961b2c8b2a70545795c3938958624ed9aea45e83f3e8034b8500",
+      "document_id": "registry-2026-04",
+      "extraction_id": "real-registry-2026-04-v1",
+      "schema_version": "1.2.0"
+    }
+  ],
+  "instruction": "After both independent reviews are complete, adjudicate every disagreement against the original JSON. Preserve uncertainty; do not consult model outputs until labels are frozen.",
+  "document_pair_decisions": [
+    {
+      "left_document_id": "kfz-2026-q1",
+      "right_document_id": "act-2026-0424",
+      "decision": "pending",
+      "relationship_instances": [],
+      "contradicting_evidence": [],
+      "ambiguity_notes": ""
+    },
+    {
+      "left_document_id": "kfz-2026-q1",
+      "right_document_id": "registry-2026-04",
+      "decision": "pending",
+      "relationship_instances": [],
+      "contradicting_evidence": [],
+      "ambiguity_notes": ""
+    },
+    {
+      "left_document_id": "act-2026-0424",
+      "right_document_id": "registry-2026-04",
+      "decision": "pending",
+      "relationship_instances": [],
+      "contradicting_evidence": [],
+      "ambiguity_notes": ""
+    }
+  ]
+}

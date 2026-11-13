@@ -1,0 +1,382 @@
+{
+  "version": "1.0.0",
+  "scenario": {
+    "id": "demo-ambiguous-review-regression",
+    "description": "Small Structured Extraction-shaped fixture for repeated prompt/status/evidence handling. It intentionally has limited provenance and is not a gold-labeled quality case.",
+    "fixture_files": [
+      "contract-ambiguous-a.json",
+      "contract-ambiguous-b.json",
+      "act-ambiguous-1.json",
+      "receipt-unknown-1.json"
+    ]
+  },
+  "repeat": 1,
+  "strategy": "B",
+  "provider": "Polza AI",
+  "model": "google/gemma-4-26b-a4b-it",
+  "prompt_version": "document-linking-system@9c7ac83555cc+strategy-prompts@1.1.0-bc5ec24601bd",
+  "system_prompt_sha256": "9c7ac83555cc3fa9d83aed70e18c5d68a9e95b47c959d5de24065e5a48da5a63",
+  "strategy_prompts_sha256": "bc5ec24601bd0bcaede9a17f3bc054d5907b7662a9da43aa87c7b03768372ea9",
+  "strategy_source_sha256": "654acd3ba3cea61dc1c295173a5aa536423475511372bc9a8e73f098363f2885",
+  "started_at": "2026-11-13T08:09:46.155Z",
+  "status": "complete",
+  "spend_rub_so_far": 0.15407352,
+  "calls": [
+    {
+      "label": "B.candidate-discovery",
+      "raw_response": {
+        "candidates": [
+          {
+            "relationship_type": "contract_reference",
+            "source_document_id": "act-ambiguous-1",
+            "target_document_id": "contract-ambiguous-b",
+            "source_row_id": "fields.contract_reference.value",
+            "target_row_id": "fields.contract_number.value",
+            "explanation": "The act (act-ambiguous-1) explicitly references contract number 'КД-77-11-09', which matches the contract number in contract-ambiguous-b.",
+            "confidence": 0.95,
+            "status": "confirmed",
+            "conflicts": [],
+            "alternatives": []
+          },
+          {
+            "relationship_type": "potential_duplicate_contract",
+            "source_document_id": "contract-ambiguous-a",
+            "target_document_id": "contract-ambiguous-b",
+            "source_row_id": "fields.contract_number.value",
+            "target_row_id": "fields.contract_number.value",
+            "explanation": "The contract numbers 'КД-77/11-09' and 'КД-77-11-09' are highly similar, differing only by the separator (/ vs -). They likely refer to the same contract.",
+            "confidence": 0.8,
+            "status": "review",
+            "conflicts": [
+              "Different separators in the contract number string."
+            ],
+            "alternatives": []
+          },
+          {
+            "relationship_type": "indirect_contract_reference",
+            "source_document_id": "act-ambiguous-1",
+            "target_document_id": "contract-ambiguous-a",
+            "source_row_id": "fields.contract_reference.value",
+            "target_row_id": "fields.contract_number.value",
+            "explanation": "The act references 'КД-77-11-09'. While this matches contract-ambiguous-b exactly, it is a near-match for contract-ambiguous-a ('КД-77/11-09'), suggesting a possible link if the documents are duplicates.",
+            "confidence": 0.6,
+            "status": "review",
+            "conflicts": [
+              "String mismatch in contract number separator."
+            ],
+            "alternatives": []
+          }
+        ],
+        "unlinked_document_ids": [
+          "receipt-unknown-1"
+        ],
+        "analysis_summary": "The analysis identified a confirmed link between the Act (act-ambiguous-1) and Contract B (contract-ambiguous-b) based on the contract number. A potential duplicate relationship was identified between Contract A and Contract B due to a minor typographical difference in the contract number (separator mismatch). The receipt (receipt-unknown-1) remains unlinked as it contains no identifying contract information."
+      },
+      "model": "google/gemma-4-26b-a4b-it",
+      "input_tokens": 2731,
+      "output_tokens": 688,
+      "cost": 0.00748824,
+      "currency": "RUB",
+      "duration_ms": 4884
+    },
+    {
+      "label": "B.evidence-selection",
+      "raw_response": {
+        "semantic_duplicate_groups": [],
+        "evidence": [
+          {
+            "candidate_index": 0,
+            "evidence": [
+              {
+                "source_reference_id": "r2h",
+                "target_reference_id": "r1f",
+                "signal": "exact_match",
+                "explanation": "The act's contract reference 'КД-77-11-09' is an exact match for the contract number in document contract-ambiguous-b."
+              }
+            ]
+          },
+          {
+            "candidate_index": 1,
+            "evidence": [
+              {
+                "source_reference_id": "ri",
+                "target_reference_id": "r1f",
+                "signal": "near_match",
+                "explanation": "The contract numbers 'КД-77/11-09' and 'КД-77-11-09' are semantically identical but differ by a separator (/ vs -)."
+              }
+            ]
+          },
+          {
+            "candidate_index": 2,
+            "evidence": [
+              {
+                "source_reference_id": "r2h",
+                "target_reference_id": "ri",
+                "signal": "near_match",
+                "explanation": "The act references 'КД-77-11-09', which is a near-match for the contract number 'КД-77/11-09' in document contract-ambiguous-a."
+              }
+            ]
+          }
+        ],
+        "unresolved": []
+      },
+      "model": "google/gemma-4-26b-a4b-it",
+      "input_tokens": 3241,
+      "output_tokens": 287,
+      "cost": 0.04476121,
+      "currency": "RUB",
+      "duration_ms": 1307
+    }
+  ],
+  "attempted_calls": 2,
+  "unpriced_reserved_rub": 0,
+  "result": {
+    "strategy": "B",
+    "links": [],
+    "candidates": [
+      {
+        "relationship_type": "contract_reference",
+        "source_document_id": "act-ambiguous-1",
+        "target_document_id": "contract-ambiguous-b",
+        "source_row_id": "fields.contract_reference.value",
+        "target_row_id": "fields.contract_number.value",
+        "explanation": "The act (act-ambiguous-1) explicitly references contract number 'КД-77-11-09', which matches the contract number in contract-ambiguous-b.",
+        "confidence": 0.95,
+        "status": "confirmed",
+        "model_status": "confirmed",
+        "technical_warnings": [],
+        "conflicts": [],
+        "alternatives": []
+      },
+      {
+        "relationship_type": "potential_duplicate_contract",
+        "source_document_id": "contract-ambiguous-a",
+        "target_document_id": "contract-ambiguous-b",
+        "source_row_id": "fields.contract_number.value",
+        "target_row_id": "fields.contract_number.value",
+        "explanation": "The contract numbers 'КД-77/11-09' and 'КД-77-11-09' are highly similar, differing only by the separator (/ vs -). They likely refer to the same contract.",
+        "confidence": 0.8,
+        "status": "review",
+        "model_status": "review",
+        "technical_warnings": [],
+        "conflicts": [
+          "Different separators in the contract number string."
+        ],
+        "alternatives": []
+      },
+      {
+        "relationship_type": "indirect_contract_reference",
+        "source_document_id": "act-ambiguous-1",
+        "target_document_id": "contract-ambiguous-a",
+        "source_row_id": "fields.contract_reference.value",
+        "target_row_id": "fields.contract_number.value",
+        "explanation": "The act references 'КД-77-11-09'. While this matches contract-ambiguous-b exactly, it is a near-match for contract-ambiguous-a ('КД-77/11-09'), suggesting a possible link if the documents are duplicates.",
+        "confidence": 0.6,
+        "status": "review",
+        "model_status": "review",
+        "technical_warnings": [],
+        "conflicts": [
+          "String mismatch in contract number separator."
+        ],
+        "alternatives": []
+      }
+    ],
+    "diagnostics": [
+      {
+        "candidate_index": 0,
+        "reason": "source row_id does not exist in source document; target row_id does not exist in target document; evidence reference missing, wrong document, or technically unavailable; source row_id does not match selected source reference; target row_id does not match selected target reference",
+        "proposal": {
+          "relationship_type": "contract_reference",
+          "source_document_id": "act-ambiguous-1",
+          "target_document_id": "contract-ambiguous-b",
+          "source_row_id": "fields.contract_reference.value",
+          "target_row_id": "fields.contract_number.value",
+          "explanation": "The act (act-ambiguous-1) explicitly references contract number 'КД-77-11-09', which matches the contract number in contract-ambiguous-b.",
+          "confidence": 0.95,
+          "status": "confirmed",
+          "model_status": "confirmed",
+          "technical_warnings": [],
+          "conflicts": [],
+          "alternatives": []
+        }
+      },
+      {
+        "candidate_index": 1,
+        "reason": "source row_id does not exist in source document; target row_id does not exist in target document; evidence reference missing, wrong document, or technically unavailable; source row_id does not match selected source reference; target row_id does not match selected target reference",
+        "proposal": {
+          "relationship_type": "potential_duplicate_contract",
+          "source_document_id": "contract-ambiguous-a",
+          "target_document_id": "contract-ambiguous-b",
+          "source_row_id": "fields.contract_number.value",
+          "target_row_id": "fields.contract_number.value",
+          "explanation": "The contract numbers 'КД-77/11-09' and 'КД-77-11-09' are highly similar, differing only by the separator (/ vs -). They likely refer to the same contract.",
+          "confidence": 0.8,
+          "status": "review",
+          "model_status": "review",
+          "technical_warnings": [],
+          "conflicts": [
+            "Different separators in the contract number string."
+          ],
+          "alternatives": []
+        }
+      },
+      {
+        "candidate_index": 2,
+        "reason": "source row_id does not exist in source document; target row_id does not exist in target document; evidence reference missing, wrong document, or technically unavailable; source row_id does not match selected source reference; target row_id does not match selected target reference",
+        "proposal": {
+          "relationship_type": "indirect_contract_reference",
+          "source_document_id": "act-ambiguous-1",
+          "target_document_id": "contract-ambiguous-a",
+          "source_row_id": "fields.contract_reference.value",
+          "target_row_id": "fields.contract_number.value",
+          "explanation": "The act references 'КД-77-11-09'. While this matches contract-ambiguous-b exactly, it is a near-match for contract-ambiguous-a ('КД-77/11-09'), suggesting a possible link if the documents are duplicates.",
+          "confidence": 0.6,
+          "status": "review",
+          "model_status": "review",
+          "technical_warnings": [],
+          "conflicts": [
+            "String mismatch in contract number separator."
+          ],
+          "alternatives": []
+        }
+      }
+    ],
+    "candidate_dispositions": [
+      {
+        "candidate_index": 0,
+        "disposition": "retained_unverified"
+      },
+      {
+        "candidate_index": 1,
+        "disposition": "retained_unverified"
+      },
+      {
+        "candidate_index": 2,
+        "disposition": "retained_unverified"
+      }
+    ],
+    "semantic_deduplication": {
+      "groups": [],
+      "collapsed_candidate_indices": []
+    },
+    "calls": [
+      {
+        "label": "B.candidate-discovery",
+        "raw_response": {
+          "candidates": [
+            {
+              "relationship_type": "contract_reference",
+              "source_document_id": "act-ambiguous-1",
+              "target_document_id": "contract-ambiguous-b",
+              "source_row_id": "fields.contract_reference.value",
+              "target_row_id": "fields.contract_number.value",
+              "explanation": "The act (act-ambiguous-1) explicitly references contract number 'КД-77-11-09', which matches the contract number in contract-ambiguous-b.",
+              "confidence": 0.95,
+              "status": "confirmed",
+              "conflicts": [],
+              "alternatives": []
+            },
+            {
+              "relationship_type": "potential_duplicate_contract",
+              "source_document_id": "contract-ambiguous-a",
+              "target_document_id": "contract-ambiguous-b",
+              "source_row_id": "fields.contract_number.value",
+              "target_row_id": "fields.contract_number.value",
+              "explanation": "The contract numbers 'КД-77/11-09' and 'КД-77-11-09' are highly similar, differing only by the separator (/ vs -). They likely refer to the same contract.",
+              "confidence": 0.8,
+              "status": "review",
+              "conflicts": [
+                "Different separators in the contract number string."
+              ],
+              "alternatives": []
+            },
+            {
+              "relationship_type": "indirect_contract_reference",
+              "source_document_id": "act-ambiguous-1",
+              "target_document_id": "contract-ambiguous-a",
+              "source_row_id": "fields.contract_reference.value",
+              "target_row_id": "fields.contract_number.value",
+              "explanation": "The act references 'КД-77-11-09'. While this matches contract-ambiguous-b exactly, it is a near-match for contract-ambiguous-a ('КД-77/11-09'), suggesting a possible link if the documents are duplicates.",
+              "confidence": 0.6,
+              "status": "review",
+              "conflicts": [
+                "String mismatch in contract number separator."
+              ],
+              "alternatives": []
+            }
+          ],
+          "unlinked_document_ids": [
+            "receipt-unknown-1"
+          ],
+          "analysis_summary": "The analysis identified a confirmed link between the Act (act-ambiguous-1) and Contract B (contract-ambiguous-b) based on the contract number. A potential duplicate relationship was identified between Contract A and Contract B due to a minor typographical difference in the contract number (separator mismatch). The receipt (receipt-unknown-1) remains unlinked as it contains no identifying contract information."
+        },
+        "model": "google/gemma-4-26b-a4b-it",
+        "input_tokens": 2731,
+        "output_tokens": 688,
+        "cost": 0.00748824,
+        "currency": "RUB",
+        "duration_ms": 4884
+      },
+      {
+        "label": "B.evidence-selection",
+        "raw_response": {
+          "semantic_duplicate_groups": [],
+          "evidence": [
+            {
+              "candidate_index": 0,
+              "evidence": [
+                {
+                  "source_reference_id": "r2h",
+                  "target_reference_id": "r1f",
+                  "signal": "exact_match",
+                  "explanation": "The act's contract reference 'КД-77-11-09' is an exact match for the contract number in document contract-ambiguous-b."
+                }
+              ]
+            },
+            {
+              "candidate_index": 1,
+              "evidence": [
+                {
+                  "source_reference_id": "ri",
+                  "target_reference_id": "r1f",
+                  "signal": "near_match",
+                  "explanation": "The contract numbers 'КД-77/11-09' and 'КД-77-11-09' are semantically identical but differ by a separator (/ vs -)."
+                }
+              ]
+            },
+            {
+              "candidate_index": 2,
+              "evidence": [
+                {
+                  "source_reference_id": "r2h",
+                  "target_reference_id": "ri",
+                  "signal": "near_match",
+                  "explanation": "The act references 'КД-77-11-09', which is a near-match for the contract number 'КД-77/11-09' in document contract-ambiguous-a."
+                }
+              ]
+            }
+          ],
+          "unresolved": []
+        },
+        "model": "google/gemma-4-26b-a4b-it",
+        "input_tokens": 3241,
+        "output_tokens": 287,
+        "cost": 0.04476121,
+        "currency": "RUB",
+        "duration_ms": 1307
+      }
+    ],
+    "duration_ms": 6198,
+    "model": "google/gemma-4-26b-a4b-it",
+    "analysis_summary": "",
+    "unlinked_document_ids": [
+      "receipt-unknown-1"
+    ],
+    "usage": {
+      "input_tokens": 5972,
+      "output_tokens": 975,
+      "cost_amount": 0.05224945,
+      "cost_currency": "RUB"
+    }
+  }
+}

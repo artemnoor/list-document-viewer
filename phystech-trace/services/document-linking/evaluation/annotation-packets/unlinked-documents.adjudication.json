@@ -1,0 +1,34 @@
+{
+  "packet_version": "1.0.0",
+  "scenario_id": "unlinked-documents",
+  "source_bundle_sha256": "c5f56b759bf61d084792eabcf543f3b83a0bd4ca689e458dd6042263e5faaaa2",
+  "reviewer_id": "adjudicator-pending",
+  "review_status": "pending",
+  "source_documents": [
+    {
+      "path": "fixtures/demo-structured-extraction/receipt-unknown-1.json",
+      "sha256": "99e5d010834e62c462581addb1b1294c0e3842c535b598766bf617f25c12eb8d",
+      "document_id": "receipt-unknown-1",
+      "extraction_id": "ext-receipt-unknown-v1",
+      "schema_version": "1.2.0"
+    },
+    {
+      "path": "fixtures/demo-structured-extraction/contract-ambiguous-a.json",
+      "sha256": "a80a1c60931e89424e5d1f876c78e78efc4f2ea84eecd27c9b5061672e5c939a",
+      "document_id": "contract-ambiguous-a",
+      "extraction_id": "ext-contract-ambiguous-a-v1",
+      "schema_version": "1.2.0"
+    }
+  ],
+  "instruction": "After both independent reviews are complete, adjudicate every disagreement against the original JSON. Preserve uncertainty; do not consult model outputs until labels are frozen.",
+  "document_pair_decisions": [
+    {
+      "left_document_id": "receipt-unknown-1",
+      "right_document_id": "contract-ambiguous-a",
+      "decision": "pending",
+      "relationship_instances": [],
+      "contradicting_evidence": [],
+      "ambiguity_notes": ""
+    }
+  ]
+}

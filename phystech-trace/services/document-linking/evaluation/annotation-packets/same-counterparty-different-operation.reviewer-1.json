@@ -1,0 +1,57 @@
+{
+  "packet_version": "1.0.0",
+  "scenario_id": "same-counterparty-different-operation",
+  "source_bundle_sha256": "119257b660d0a8a092a62a647a348725513c775dc0acddfbbc2c1d70f2cc62ca",
+  "reviewer_id": "reviewer-1-pending",
+  "review_status": "pending",
+  "source_documents": [
+    {
+      "path": "fixtures/upstream-structured-extraction-1.2.0/contract-2026-0315.json",
+      "sha256": "237324eb12181125b9b60076852de1d4c8f0bf3cebc61c41d39af4ce6757e3a2",
+      "document_id": "contract-2026-0315",
+      "extraction_id": "real-contract-2026-0315-v1",
+      "schema_version": "1.2.0"
+    },
+    {
+      "path": "fixtures/upstream-structured-extraction-1.2.0/invoice-2026-0408.json",
+      "sha256": "3d78355654c78acecbdf7936679cfdb2feb8781559bada85195cc1fa298d0ef8",
+      "document_id": "invoice-2026-0408",
+      "extraction_id": "real-invoice-2026-0408-v1",
+      "schema_version": "1.2.0"
+    },
+    {
+      "path": "fixtures/demo-structured-extraction/receipt-unknown-1.json",
+      "sha256": "99e5d010834e62c462581addb1b1294c0e3842c535b598766bf617f25c12eb8d",
+      "document_id": "receipt-unknown-1",
+      "extraction_id": "ext-receipt-unknown-v1",
+      "schema_version": "1.2.0"
+    }
+  ],
+  "instruction": "Review only these original Structured Extraction JSON files. Do not inspect model predictions. Decide every unordered document pair, record direction for each supported relation, annotate row matches and supporting/contradictory source paths, and mark genuine ambiguity explicitly.",
+  "document_pair_decisions": [
+    {
+      "left_document_id": "contract-2026-0315",
+      "right_document_id": "invoice-2026-0408",
+      "decision": "pending",
+      "relationship_instances": [],
+      "contradicting_evidence": [],
+      "ambiguity_notes": ""
+    },
+    {
+      "left_document_id": "contract-2026-0315",
+      "right_document_id": "receipt-unknown-1",
+      "decision": "pending",
+      "relationship_instances": [],
+      "contradicting_evidence": [],
+      "ambiguity_notes": ""
+    },
+    {
+      "left_document_id": "invoice-2026-0408",
+      "right_document_id": "receipt-unknown-1",
+      "decision": "pending",
+      "relationship_instances": [],
+      "contradicting_evidence": [],
+      "ambiguity_notes": ""
+    }
+  ]
+}

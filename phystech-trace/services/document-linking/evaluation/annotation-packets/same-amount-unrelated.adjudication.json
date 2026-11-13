@@ -1,0 +1,34 @@
+{
+  "packet_version": "1.0.0",
+  "scenario_id": "same-amount-unrelated",
+  "source_bundle_sha256": "2edd473456941577672f99287fcdacc6b13396ad8a0ddd3b81c713b3e3e43e40",
+  "reviewer_id": "adjudicator-pending",
+  "review_status": "pending",
+  "source_documents": [
+    {
+      "path": "fixtures/upstream-structured-extraction-1.2.0/invoice-2026-0408.json",
+      "sha256": "3d78355654c78acecbdf7936679cfdb2feb8781559bada85195cc1fa298d0ef8",
+      "document_id": "invoice-2026-0408",
+      "extraction_id": "real-invoice-2026-0408-v1",
+      "schema_version": "1.2.0"
+    },
+    {
+      "path": "fixtures/demo-structured-extraction/receipt-unknown-1.json",
+      "sha256": "99e5d010834e62c462581addb1b1294c0e3842c535b598766bf617f25c12eb8d",
+      "document_id": "receipt-unknown-1",
+      "extraction_id": "ext-receipt-unknown-v1",
+      "schema_version": "1.2.0"
+    }
+  ],
+  "instruction": "After both independent reviews are complete, adjudicate every disagreement against the original JSON. Preserve uncertainty; do not consult model outputs until labels are frozen.",
+  "document_pair_decisions": [
+    {
+      "left_document_id": "invoice-2026-0408",
+      "right_document_id": "receipt-unknown-1",
+      "decision": "pending",
+      "relationship_instances": [],
+      "contradicting_evidence": [],
+      "ambiguity_notes": ""
+    }
+  ]
+}

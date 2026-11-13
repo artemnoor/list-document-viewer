@@ -1,0 +1,34 @@
+{
+  "packet_version": "1.0.0",
+  "scenario_id": "line-item-cross-document",
+  "source_bundle_sha256": "204635c4d57d9545ed9252b567cc7952ed59044b111b731193add80ffdb7ef66",
+  "reviewer_id": "reviewer-1-pending",
+  "review_status": "pending",
+  "source_documents": [
+    {
+      "path": "fixtures/upstream-structured-extraction-1.2.0/kfz-2026-q1.json",
+      "sha256": "0ad738f6d9cfe8e6586a13096e69e5aabb0e2ef669651f6a0abdbe4513c6f5e4",
+      "document_id": "kfz-2026-q1",
+      "extraction_id": "real-kfz-2026-q1-v1",
+      "schema_version": "1.2.0"
+    },
+    {
+      "path": "fixtures/upstream-structured-extraction-1.2.0/act-2026-0424.json",
+      "sha256": "57a13a1f883ae6a05d6b3c72e99c5336fa066fbb4ccbba3017a7347606ba444b",
+      "document_id": "act-2026-0424",
+      "extraction_id": "real-act-2026-0424-v1",
+      "schema_version": "1.2.0"
+    }
+  ],
+  "instruction": "Review only these original Structured Extraction JSON files. Do not inspect model predictions. Decide every unordered document pair, record direction for each supported relation, annotate row matches and supporting/contradictory source paths, and mark genuine ambiguity explicitly.",
+  "document_pair_decisions": [
+    {
+      "left_document_id": "kfz-2026-q1",
+      "right_document_id": "act-2026-0424",
+      "decision": "pending",
+      "relationship_instances": [],
+      "contradicting_evidence": [],
+      "ambiguity_notes": ""
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "version": "1.0.0",
+  "instructions": "Independent reviewers annotate each scenario from source documents without seeing Gemma predictions. Use an adjudicated consensus as gold. Do not fill labels from model output. Use predictions_files to compare repeat runs for graph stability and usage.",
+  "annotations_complete": false,
+  "reviewer_ids": [],
+  "scenarios": []
+}

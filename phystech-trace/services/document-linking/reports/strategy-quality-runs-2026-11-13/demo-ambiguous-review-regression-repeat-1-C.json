@@ -1,0 +1,773 @@
+{
+  "version": "1.0.0",
+  "scenario": {
+    "id": "demo-ambiguous-review-regression",
+    "description": "Small Structured Extraction-shaped fixture for repeated prompt/status/evidence handling. It intentionally has limited provenance and is not a gold-labeled quality case.",
+    "fixture_files": [
+      "contract-ambiguous-a.json",
+      "contract-ambiguous-b.json",
+      "act-ambiguous-1.json",
+      "receipt-unknown-1.json"
+    ]
+  },
+  "repeat": 1,
+  "strategy": "C",
+  "provider": "Polza AI",
+  "model": "google/gemma-4-26b-a4b-it",
+  "prompt_version": "document-linking-system@9c7ac83555cc+strategy-prompts@1.1.0-bc5ec24601bd",
+  "system_prompt_sha256": "9c7ac83555cc3fa9d83aed70e18c5d68a9e95b47c959d5de24065e5a48da5a63",
+  "strategy_prompts_sha256": "bc5ec24601bd0bcaede9a17f3bc054d5907b7662a9da43aa87c7b03768372ea9",
+  "strategy_source_sha256": "654acd3ba3cea61dc1c295173a5aa536423475511372bc9a8e73f098363f2885",
+  "started_at": "2026-11-13T08:10:30.988Z",
+  "status": "complete",
+  "spend_rub_so_far": 0.40278269,
+  "calls": [
+    {
+      "label": "C.independent-agent-1",
+      "raw_response": {
+        "candidates": [
+          {
+            "relationship_type": "is_referenced_by",
+            "source_document_id": "act-ambiguous-1",
+            "target_document_id": "contract-ambiguous-b",
+            "source_row_id": "fields.contract_reference.value",
+            "target_row_id": "fields.contract_number.value",
+            "explanation": "Акт (А-109/26) ссылается на номер договора 'КД-77-11-09', который полностью совпадает с номером договора в документе contract-ambiguous-b.",
+            "confidence": 0.95,
+            "status": "confirmed",
+            "conflicts": [],
+            "alternatives": []
+          },
+          {
+            "relationship_type": "is_referenced_by",
+            "source_document_id": "act-ambiguous-1",
+            "target_document_id": "contract-ambiguous-a",
+            "source_row_id": "fields.contract_reference.value",
+            "target_row_id": "fields.contract_number.value",
+            "explanation": "Существует вероятная связь между актом и документом contract-ambiguous-a, так как номера договоров идентичны за исключением одного символа (разделитель '/' вместо '-'). Это может быть опечаткой при извлечении или в самом документе.",
+            "confidence": 0.6,
+            "status": "review",
+            "conflicts": [],
+            "alternatives": []
+          }
+        ],
+        "unlinked_document_ids": [
+          "receipt-unknown-1"
+        ],
+        "analysis_summary": "Проведен анализ четырех документов. Выявлена прямая связь между актом (act-ambiguous-1) и контрактом (contract-ambiguous-b) на основании полного совпадения номера договора. Обнаружена косвенная/неоднозначная связь между актом и контрактом (contract-ambiguous-a) из-за незначительного расхождения в формате номера договора (КД-77/11-09 vs КД-77-11-09), что требует проверки на предмет опечатки. Документ receipt-unknown-1 не имеет связей с остальными документами."
+      },
+      "model": "google/gemma-4-26b-a4b-it",
+      "input_tokens": 2713,
+      "output_tokens": 472,
+      "cost": 0.04573347,
+      "currency": "RUB",
+      "duration_ms": 2402
+    },
+    {
+      "label": "C.independent-agent-2",
+      "raw_response": {
+        "candidates": [
+          {
+            "relationship_type": "reference",
+            "source_document_id": "act-ambiguous-1",
+            "target_document_id": "contract-ambiguous-b",
+            "source_row_id": "fields.contract_reference.value",
+            "target_row_id": "fields.contract_number.value",
+            "explanation": "Акт ссылается на номер договора 'КД-77-11-09', который полностью совпадает с номером договора в документе contract-ambiguous-b.",
+            "confidence": 0.95,
+            "status": "confirmed",
+            "conflicts": [],
+            "alternatives": []
+          },
+          {
+            "relationship_type": "potential_duplicate",
+            "source_document_id": "contract-ambiguous-a",
+            "target_document_id": "contract-ambiguous-b",
+            "source_row_id": "fields.contract_number.value",
+            "target_row_id": "fields.contract_number.value",
+            "explanation": "Документы имеют почти идентичные номера договоров ('КД-77/11-09' vs 'КД-77-11-09'). Различие в одном символе (слеш против дефиса) может указывать на опечатку в одном из документов или на то, что это разные версии/вариации одного и того же договора.",
+            "confidence": 0.7,
+            "status": "review",
+            "conflicts": [],
+            "alternatives": []
+          }
+        ],
+        "unlinked_document_ids": [
+          "receipt-unknown-1"
+        ],
+        "analysis_summary": "Проведен анализ четырех документов. Выявлена прямая связь между Актом (act-ambiguous-1) и Контрактом (contract-ambiguous-b) на основании совпадения номера договора. Обнаружено потенциальное противоречие или дублирование между двумя контрактами (contract-ambiguous-a и contract-ambiguous-b) из-за незначительного различия в написании номера договора, что требует проверки. Документ receipt-unknown-1 не имеет явных связей с другими документами в предоставленном наборе данных."
+      },
+      "model": "google/gemma-4-26b-a4b-it",
+      "input_tokens": 2713,
+      "output_tokens": 464,
+      "cost": 0.04225056,
+      "currency": "RUB",
+      "duration_ms": 6712
+    },
+    {
+      "label": "C.critic",
+      "raw_response": {
+        "candidates": [
+          {
+            "relationship_type": "is_referenced_by",
+            "source_document_id": "act-ambiguous-1",
+            "target_document_id": "contract-ambiguous-b",
+            "source_row_id": "fields.contract_reference.value",
+            "target_row_id": "fields.contract_number.value",
+            "explanation": "Акт (А-109/26) содержит ссылку на номер договора 'КД-77-11-09', который полностью идентичен значению в документе contract-ambiguous-b. Это прямое подтверждение связи через реквизит договора.",
+            "confidence": 0.95,
+            "status": "confirmed",
+            "conflicts": [],
+            "alternatives": []
+          },
+          {
+            "relationship_type": "is_referenced_by",
+            "source_document_id": "act-ambiguous-1",
+            "target_document_id": "contract-ambiguous-a",
+            "source_row_id": "fields.contract_reference.value",
+            "target_row_id": "fields.contract_number.value",
+            "explanation": "Номер договора в акте ('КД-77-11-09') отличается от номера в contract-ambiguous-a ('КД-77/11-09') только типом разделителя (дефис против слеша). Существует высокая вероятность, что это один и тот же документ, а различие вызвано опечаткой при распознавании или вводе данных.",
+            "confidence": 0.6,
+            "status": "review",
+            "conflicts": [],
+            "alternatives": [
+              "rejected: direct_reference (due to character mismatch)"
+            ]
+          },
+          {
+            "relationship_type": "potential_duplicate",
+            "source_document_id": "contract-ambiguous-a",
+            "target_document_id": "contract-ambiguous-b",
+            "source_row_id": "fields.contract_number.value",
+            "target_row_id": "fields.contract_number.value",
+            "explanation": "Документы contract-ambiguous-a и contract-ambiguous-b представляют собой, вероятно, одну и ту же сущность (договор), так как их номера 'КД-77/11-09' и 'КД-77-11-09' семантически идентичны и различаются только символом разделителя.",
+            "confidence": 0.7,
+            "status": "review",
+            "conflicts": [],
+            "alternatives": []
+          }
+        ],
+        "unlinked_document_ids": [
+          "receipt-unknown-1"
+        ],
+        "analysis_summary": "Проведен анализ связей между документами. Выявлена подтвержденная связь (is_referenced_by) между актом и документом contract-ambiguous-b на основании полного совпадения номера договора. Обнаружена группа документов (contract-ambiguous-a, contract-ambiguous-b и act-ambiguous-1), которые связаны через неявное сходство реквизитов (различие в разделителе номера договора). Эти отношения помечены как 'review', так как требуют верификации на предмет опечаток. Документ receipt-unknown-1 не имеет связей с другими документами в предоставленном наборе.",
+        "debate_requested": true,
+        "disagreements": [
+          {
+            "candidate_index": 1,
+            "issue": "Семантическая идентичность vs Строгое соответствие",
+            "arguments_needed": "Необходимо подтверждение, является ли различие '/' и '-' в номерах договоров допустимым вариантом написания одного и того же номера в рамках данной системы или это критическая ошибка, исключающая связь."
+          }
+        ]
+      },
+      "model": "google/gemma-4-26b-a4b-it",
+      "input_tokens": 3386,
+      "output_tokens": 907,
+      "cost": 0.0734731,
+      "currency": "RUB",
+      "duration_ms": 7415
+    },
+    {
+      "label": "C.single-debate-round",
+      "raw_response": {
+        "candidates": [
+          {
+            "relationship_type": "is_referenced_by",
+            "source_document_id": "act-ambiguous-1",
+            "target_document_id": "contract-ambiguous-b",
+            "source_row_id": "fields.contract_reference.value",
+            "target_row_id": "fields.contract_number.value",
+            "explanation": "Акт (А-109/26) содержит ссылку на номер договора 'КД-77-11-09', который полностью идентичен значению в документе contract-ambiguous-b. Это прямое подтверждение связи через реквизит договора.",
+            "confidence": 0.95,
+            "status": "confirmed",
+            "conflicts": [],
+            "alternatives": []
+          },
+          {
+            "relationship_type": "is_referenced_by",
+            "source_document_id": "act-ambiguous-1",
+            "target_document_id": "contract-ambiguous-a",
+            "source_row_id": "fields.contract_reference.value",
+            "target_row_id": "fields.contract_number.value",
+            "explanation": "Номер договора в акте ('КД-77-11-09') отличается от номера в contract-ambiguous-a ('КД-77/11-09') только типом разделителя (дефис против слеша). Существует высокая вероятность, что это один и тот же документ, а различие вызвано опечаткой при распознавании или вводе данных.",
+            "confidence": 0.6,
+            "status": "review",
+            "conflicts": [
+              "Strict character mismatch between 'КД-77/11-09' and 'КД-77-11-09'"
+            ],
+            "alternatives": [
+              "rejected: direct_reference (due to character mismatch)"
+            ]
+          },
+          {
+            "relationship_type": "reference",
+            "source_document_id": "act-ambiguous-1",
+            "target_document_id": "contract-ambiguous-b",
+            "source_row_id": "fields.contract_reference.value",
+            "target_row_id": "fields.contract_number.value",
+            "explanation": "Акт ссылается на номер договора 'КД-77-11-09', который полностью совпадает с номером договора в документе contract-ambiguous-b.",
+            "confidence": 0.95,
+            "status": "confirmed",
+            "conflicts": [],
+            "alternatives": []
+          },
+          {
+            "relationship_type": "potential_duplicate",
+            "source_document_id": "contract-ambiguous-a",
+            "target_document_id": "contract-ambiguous-b",
+            "source_row_id": "fields.contract_number.value",
+            "target_row_id": "fields.contract_number.value",
+            "explanation": "Документы contract-ambiguous-a и contract-ambiguous-b представляют собой, вероятно, одну и ту же сущность (договор), так как их номера 'КД-77/11-09' и 'КД-77-11-09' семантически идентичны и различаются только символом разделителя.",
+            "confidence": 0.7,
+            "status": "review",
+            "conflicts": [
+              "Character mismatch in contract_number"
+            ],
+            "alternatives": []
+          }
+        ],
+        "unlinked_document_ids": [
+          "receipt-unknown-1"
+        ],
+        "analysis_summary": "The analysis identified a confirmed link between the Act (act-ambiguous-1) and Contract B (contract-ambiguous-b) due to an exact match of the contract number ('КД-77-11-09'). A potential link and a potential duplicate relationship were identified between the Act and Contract A (contract-ambiguous-a) and between the two contracts themselves, respectively. These are marked as 'review' because the contract numbers differ by a single character (slash '/' vs hyphen '-'), which may represent a typo or a different document. The receipt document remains unlinked."
+      },
+      "model": "google/gemma-4-26b-a4b-it",
+      "input_tokens": 3411,
+      "output_tokens": 1003,
+      "cost": 0.009917,
+      "currency": "RUB",
+      "duration_ms": 20146
+    },
+    {
+      "label": "C.evidence-selection",
+      "raw_response": {
+        "semantic_duplicate_groups": [
+          {
+            "candidate_indices": [
+              0,
+              2
+            ],
+            "canonical_candidate_index": 0,
+            "canonical_relationship_type": "is_referenced_by"
+          }
+        ],
+        "evidence": [
+          {
+            "candidate_index": 0,
+            "evidence": [
+              {
+                "source_reference_id": "r2h",
+                "target_reference_id": "r1f",
+                "signal": "exact_match",
+                "explanation": "Значение поля contract_reference.value в акте ('КД-77-11-09') полностью совпадает со значением contract_number.value в контракте b ('КД-77-11-09')."
+              }
+            ]
+          },
+          {
+            "candidate_index": 1,
+            "evidence": [
+              {
+                "source_reference_id": "r2h",
+                "target_reference_id": "ri",
+                "signal": "fuzzy_match",
+                "explanation": "Значение поля contract_reference.value в акте ('КД-77-11-09') семантически близко к contract_number.value в контракте a ('КД-77/11-09'), различаясь только разделителем."
+              }
+            ]
+          },
+          {
+            "candidate_index": 2,
+            "evidence": [
+              {
+                "source_reference_id": "r2h",
+                "target_reference_id": "r1f",
+                "signal": "exact_match",
+                "explanation": "Значение поля contract_reference.value в акте ('КД-77-11-09') совпадает с contract_number.value в контракте b ('КД-77-11-09')."
+              }
+            ]
+          },
+          {
+            "candidate_index": 3,
+            "evidence": [
+              {
+                "source_reference_id": "ri",
+                "target_reference_id": "r1f",
+                "signal": "fuzzy_match",
+                "explanation": "Поля contract_number.value в обоих документах идентичны по смыслу, но различаются символом разделителя (слеш против дефиса)."
+              }
+            ]
+          }
+        ],
+        "unresolved": []
+      },
+      "model": "google/gemma-4-26b-a4b-it",
+      "input_tokens": 3480,
+      "output_tokens": 389,
+      "cost": 0.07733504,
+      "currency": "RUB",
+      "duration_ms": 8144
+    }
+  ],
+  "attempted_calls": 5,
+  "unpriced_reserved_rub": 0,
+  "result": {
+    "strategy": "C",
+    "links": [],
+    "candidates": [
+      {
+        "relationship_type": "is_referenced_by",
+        "source_document_id": "act-ambiguous-1",
+        "target_document_id": "contract-ambiguous-b",
+        "source_row_id": "fields.contract_reference.value",
+        "target_row_id": "fields.contract_number.value",
+        "explanation": "Акт (А-109/26) содержит ссылку на номер договора 'КД-77-11-09', который полностью идентичен значению в документе contract-ambiguous-b. Это прямое подтверждение связи через реквизит договора.",
+        "confidence": 0.95,
+        "status": "confirmed",
+        "model_status": "confirmed",
+        "technical_warnings": [],
+        "conflicts": [],
+        "alternatives": []
+      },
+      {
+        "relationship_type": "is_referenced_by",
+        "source_document_id": "act-ambiguous-1",
+        "target_document_id": "contract-ambiguous-a",
+        "source_row_id": "fields.contract_reference.value",
+        "target_row_id": "fields.contract_number.value",
+        "explanation": "Номер договора в акте ('КД-77-11-09') отличается от номера в contract-ambiguous-a ('КД-77/11-09') только типом разделителя (дефис против слеша). Существует высокая вероятность, что это один и тот же документ, а различие вызвано опечаткой при распознавании или вводе данных.",
+        "confidence": 0.6,
+        "status": "review",
+        "model_status": "review",
+        "technical_warnings": [],
+        "conflicts": [
+          "Strict character mismatch between 'КД-77/11-09' and 'КД-77-11-09'"
+        ],
+        "alternatives": [
+          "rejected: direct_reference (due to character mismatch)"
+        ]
+      },
+      {
+        "relationship_type": "reference",
+        "source_document_id": "act-ambiguous-1",
+        "target_document_id": "contract-ambiguous-b",
+        "source_row_id": "fields.contract_reference.value",
+        "target_row_id": "fields.contract_number.value",
+        "explanation": "Акт ссылается на номер договора 'КД-77-11-09', который полностью совпадает с номером договора в документе contract-ambiguous-b.",
+        "confidence": 0.95,
+        "status": "confirmed",
+        "model_status": "confirmed",
+        "technical_warnings": [],
+        "conflicts": [],
+        "alternatives": []
+      },
+      {
+        "relationship_type": "potential_duplicate",
+        "source_document_id": "contract-ambiguous-a",
+        "target_document_id": "contract-ambiguous-b",
+        "source_row_id": "fields.contract_number.value",
+        "target_row_id": "fields.contract_number.value",
+        "explanation": "Документы contract-ambiguous-a и contract-ambiguous-b представляют собой, вероятно, одну и ту же сущность (договор), так как их номера 'КД-77/11-09' и 'КД-77-11-09' семантически идентичны и различаются только символом разделителя.",
+        "confidence": 0.7,
+        "status": "review",
+        "model_status": "review",
+        "technical_warnings": [],
+        "conflicts": [
+          "Character mismatch in contract_number"
+        ],
+        "alternatives": []
+      }
+    ],
+    "diagnostics": [
+      {
+        "candidate_index": 0,
+        "reason": "source row_id does not exist in source document; target row_id does not exist in target document; evidence reference missing, wrong document, or technically unavailable; source row_id does not match selected source reference; target row_id does not match selected target reference",
+        "proposal": {
+          "relationship_type": "is_referenced_by",
+          "source_document_id": "act-ambiguous-1",
+          "target_document_id": "contract-ambiguous-b",
+          "source_row_id": "fields.contract_reference.value",
+          "target_row_id": "fields.contract_number.value",
+          "explanation": "Акт (А-109/26) содержит ссылку на номер договора 'КД-77-11-09', который полностью идентичен значению в документе contract-ambiguous-b. Это прямое подтверждение связи через реквизит договора.",
+          "confidence": 0.95,
+          "status": "confirmed",
+          "model_status": "confirmed",
+          "technical_warnings": [],
+          "conflicts": [],
+          "alternatives": []
+        }
+      },
+      {
+        "candidate_index": 1,
+        "reason": "source row_id does not exist in source document; target row_id does not exist in target document; evidence reference missing, wrong document, or technically unavailable; source row_id does not match selected source reference; target row_id does not match selected target reference",
+        "proposal": {
+          "relationship_type": "is_referenced_by",
+          "source_document_id": "act-ambiguous-1",
+          "target_document_id": "contract-ambiguous-a",
+          "source_row_id": "fields.contract_reference.value",
+          "target_row_id": "fields.contract_number.value",
+          "explanation": "Номер договора в акте ('КД-77-11-09') отличается от номера в contract-ambiguous-a ('КД-77/11-09') только типом разделителя (дефис против слеша). Существует высокая вероятность, что это один и тот же документ, а различие вызвано опечаткой при распознавании или вводе данных.",
+          "confidence": 0.6,
+          "status": "review",
+          "model_status": "review",
+          "technical_warnings": [],
+          "conflicts": [
+            "Strict character mismatch between 'КД-77/11-09' and 'КД-77-11-09'"
+          ],
+          "alternatives": [
+            "rejected: direct_reference (due to character mismatch)"
+          ]
+        }
+      },
+      {
+        "candidate_index": 3,
+        "reason": "source row_id does not exist in source document; target row_id does not exist in target document; evidence reference missing, wrong document, or technically unavailable; source row_id does not match selected source reference; target row_id does not match selected target reference",
+        "proposal": {
+          "relationship_type": "potential_duplicate",
+          "source_document_id": "contract-ambiguous-a",
+          "target_document_id": "contract-ambiguous-b",
+          "source_row_id": "fields.contract_number.value",
+          "target_row_id": "fields.contract_number.value",
+          "explanation": "Документы contract-ambiguous-a и contract-ambiguous-b представляют собой, вероятно, одну и ту же сущность (договор), так как их номера 'КД-77/11-09' и 'КД-77-11-09' семантически идентичны и различаются только символом разделителя.",
+          "confidence": 0.7,
+          "status": "review",
+          "model_status": "review",
+          "technical_warnings": [],
+          "conflicts": [
+            "Character mismatch in contract_number"
+          ],
+          "alternatives": []
+        }
+      }
+    ],
+    "candidate_dispositions": [
+      {
+        "candidate_index": 0,
+        "disposition": "retained_unverified"
+      },
+      {
+        "candidate_index": 1,
+        "disposition": "retained_unverified"
+      },
+      {
+        "candidate_index": 2,
+        "disposition": "semantic_duplicate"
+      },
+      {
+        "candidate_index": 3,
+        "disposition": "retained_unverified"
+      }
+    ],
+    "semantic_deduplication": {
+      "groups": [
+        {
+          "candidate_indices": [
+            0,
+            2
+          ],
+          "canonical_candidate_index": 0,
+          "canonical_relationship_type": "is_referenced_by"
+        }
+      ],
+      "collapsed_candidate_indices": [
+        2
+      ]
+    },
+    "calls": [
+      {
+        "label": "C.independent-agent-1",
+        "raw_response": {
+          "candidates": [
+            {
+              "relationship_type": "is_referenced_by",
+              "source_document_id": "act-ambiguous-1",
+              "target_document_id": "contract-ambiguous-b",
+              "source_row_id": "fields.contract_reference.value",
+              "target_row_id": "fields.contract_number.value",
+              "explanation": "Акт (А-109/26) ссылается на номер договора 'КД-77-11-09', который полностью совпадает с номером договора в документе contract-ambiguous-b.",
+              "confidence": 0.95,
+              "status": "confirmed",
+              "conflicts": [],
+              "alternatives": []
+            },
+            {
+              "relationship_type": "is_referenced_by",
+              "source_document_id": "act-ambiguous-1",
+              "target_document_id": "contract-ambiguous-a",
+              "source_row_id": "fields.contract_reference.value",
+              "target_row_id": "fields.contract_number.value",
+              "explanation": "Существует вероятная связь между актом и документом contract-ambiguous-a, так как номера договоров идентичны за исключением одного символа (разделитель '/' вместо '-'). Это может быть опечаткой при извлечении или в самом документе.",
+              "confidence": 0.6,
+              "status": "review",
+              "conflicts": [],
+              "alternatives": []
+            }
+          ],
+          "unlinked_document_ids": [
+            "receipt-unknown-1"
+          ],
+          "analysis_summary": "Проведен анализ четырех документов. Выявлена прямая связь между актом (act-ambiguous-1) и контрактом (contract-ambiguous-b) на основании полного совпадения номера договора. Обнаружена косвенная/неоднозначная связь между актом и контрактом (contract-ambiguous-a) из-за незначительного расхождения в формате номера договора (КД-77/11-09 vs КД-77-11-09), что требует проверки на предмет опечатки. Документ receipt-unknown-1 не имеет связей с остальными документами."
+        },
+        "model": "google/gemma-4-26b-a4b-it",
+        "input_tokens": 2713,
+        "output_tokens": 472,
+        "cost": 0.04573347,
+        "currency": "RUB",
+        "duration_ms": 2402
+      },
+      {
+        "label": "C.independent-agent-2",
+        "raw_response": {
+          "candidates": [
+            {
+              "relationship_type": "reference",
+              "source_document_id": "act-ambiguous-1",
+              "target_document_id": "contract-ambiguous-b",
+              "source_row_id": "fields.contract_reference.value",
+              "target_row_id": "fields.contract_number.value",
+              "explanation": "Акт ссылается на номер договора 'КД-77-11-09', который полностью совпадает с номером договора в документе contract-ambiguous-b.",
+              "confidence": 0.95,
+              "status": "confirmed",
+              "conflicts": [],
+              "alternatives": []
+            },
+            {
+              "relationship_type": "potential_duplicate",
+              "source_document_id": "contract-ambiguous-a",
+              "target_document_id": "contract-ambiguous-b",
+              "source_row_id": "fields.contract_number.value",
+              "target_row_id": "fields.contract_number.value",
+              "explanation": "Документы имеют почти идентичные номера договоров ('КД-77/11-09' vs 'КД-77-11-09'). Различие в одном символе (слеш против дефиса) может указывать на опечатку в одном из документов или на то, что это разные версии/вариации одного и того же договора.",
+              "confidence": 0.7,
+              "status": "review",
+              "conflicts": [],
+              "alternatives": []
+            }
+          ],
+          "unlinked_document_ids": [
+            "receipt-unknown-1"
+          ],
+          "analysis_summary": "Проведен анализ четырех документов. Выявлена прямая связь между Актом (act-ambiguous-1) и Контрактом (contract-ambiguous-b) на основании совпадения номера договора. Обнаружено потенциальное противоречие или дублирование между двумя контрактами (contract-ambiguous-a и contract-ambiguous-b) из-за незначительного различия в написании номера договора, что требует проверки. Документ receipt-unknown-1 не имеет явных связей с другими документами в предоставленном наборе данных."
+        },
+        "model": "google/gemma-4-26b-a4b-it",
+        "input_tokens": 2713,
+        "output_tokens": 464,
+        "cost": 0.04225056,
+        "currency": "RUB",
+        "duration_ms": 6712
+      },
+      {
+        "label": "C.critic",
+        "raw_response": {
+          "candidates": [
+            {
+              "relationship_type": "is_referenced_by",
+              "source_document_id": "act-ambiguous-1",
+              "target_document_id": "contract-ambiguous-b",
+              "source_row_id": "fields.contract_reference.value",
+              "target_row_id": "fields.contract_number.value",
+              "explanation": "Акт (А-109/26) содержит ссылку на номер договора 'КД-77-11-09', который полностью идентичен значению в документе contract-ambiguous-b. Это прямое подтверждение связи через реквизит договора.",
+              "confidence": 0.95,
+              "status": "confirmed",
+              "conflicts": [],
+              "alternatives": []
+            },
+            {
+              "relationship_type": "is_referenced_by",
+              "source_document_id": "act-ambiguous-1",
+              "target_document_id": "contract-ambiguous-a",
+              "source_row_id": "fields.contract_reference.value",
+              "target_row_id": "fields.contract_number.value",
+              "explanation": "Номер договора в акте ('КД-77-11-09') отличается от номера в contract-ambiguous-a ('КД-77/11-09') только типом разделителя (дефис против слеша). Существует высокая вероятность, что это один и тот же документ, а различие вызвано опечаткой при распознавании или вводе данных.",
+              "confidence": 0.6,
+              "status": "review",
+              "conflicts": [],
+              "alternatives": [
+                "rejected: direct_reference (due to character mismatch)"
+              ]
+            },
+            {
+              "relationship_type": "potential_duplicate",
+              "source_document_id": "contract-ambiguous-a",
+              "target_document_id": "contract-ambiguous-b",
+              "source_row_id": "fields.contract_number.value",
+              "target_row_id": "fields.contract_number.value",
+              "explanation": "Документы contract-ambiguous-a и contract-ambiguous-b представляют собой, вероятно, одну и ту же сущность (договор), так как их номера 'КД-77/11-09' и 'КД-77-11-09' семантически идентичны и различаются только символом разделителя.",
+              "confidence": 0.7,
+              "status": "review",
+              "conflicts": [],
+              "alternatives": []
+            }
+          ],
+          "unlinked_document_ids": [
+            "receipt-unknown-1"
+          ],
+          "analysis_summary": "Проведен анализ связей между документами. Выявлена подтвержденная связь (is_referenced_by) между актом и документом contract-ambiguous-b на основании полного совпадения номера договора. Обнаружена группа документов (contract-ambiguous-a, contract-ambiguous-b и act-ambiguous-1), которые связаны через неявное сходство реквизитов (различие в разделителе номера договора). Эти отношения помечены как 'review', так как требуют верификации на предмет опечаток. Документ receipt-unknown-1 не имеет связей с другими документами в предоставленном наборе.",
+          "debate_requested": true,
+          "disagreements": [
+            {
+              "candidate_index": 1,
+              "issue": "Семантическая идентичность vs Строгое соответствие",
+              "arguments_needed": "Необходимо подтверждение, является ли различие '/' и '-' в номерах договоров допустимым вариантом написания одного и того же номера в рамках данной системы или это критическая ошибка, исключающая связь."
+            }
+          ]
+        },
+        "model": "google/gemma-4-26b-a4b-it",
+        "input_tokens": 3386,
+        "output_tokens": 907,
+        "cost": 0.0734731,
+        "currency": "RUB",
+        "duration_ms": 7415
+      },
+      {
+        "label": "C.single-debate-round",
+        "raw_response": {
+          "candidates": [
+            {
+              "relationship_type": "is_referenced_by",
+              "source_document_id": "act-ambiguous-1",
+              "target_document_id": "contract-ambiguous-b",
+              "source_row_id": "fields.contract_reference.value",
+              "target_row_id": "fields.contract_number.value",
+              "explanation": "Акт (А-109/26) содержит ссылку на номер договора 'КД-77-11-09', который полностью идентичен значению в документе contract-ambiguous-b. Это прямое подтверждение связи через реквизит договора.",
+              "confidence": 0.95,
+              "status": "confirmed",
+              "conflicts": [],
+              "alternatives": []
+            },
+            {
+              "relationship_type": "is_referenced_by",
+              "source_document_id": "act-ambiguous-1",
+              "target_document_id": "contract-ambiguous-a",
+              "source_row_id": "fields.contract_reference.value",
+              "target_row_id": "fields.contract_number.value",
+              "explanation": "Номер договора в акте ('КД-77-11-09') отличается от номера в contract-ambiguous-a ('КД-77/11-09') только типом разделителя (дефис против слеша). Существует высокая вероятность, что это один и тот же документ, а различие вызвано опечаткой при распознавании или вводе данных.",
+              "confidence": 0.6,
+              "status": "review",
+              "conflicts": [
+                "Strict character mismatch between 'КД-77/11-09' and 'КД-77-11-09'"
+              ],
+              "alternatives": [
+                "rejected: direct_reference (due to character mismatch)"
+              ]
+            },
+            {
+              "relationship_type": "reference",
+              "source_document_id": "act-ambiguous-1",
+              "target_document_id": "contract-ambiguous-b",
+              "source_row_id": "fields.contract_reference.value",
+              "target_row_id": "fields.contract_number.value",
+              "explanation": "Акт ссылается на номер договора 'КД-77-11-09', который полностью совпадает с номером договора в документе contract-ambiguous-b.",
+              "confidence": 0.95,
+              "status": "confirmed",
+              "conflicts": [],
+              "alternatives": []
+            },
+            {
+              "relationship_type": "potential_duplicate",
+              "source_document_id": "contract-ambiguous-a",
+              "target_document_id": "contract-ambiguous-b",
+              "source_row_id": "fields.contract_number.value",
+              "target_row_id": "fields.contract_number.value",
+              "explanation": "Документы contract-ambiguous-a и contract-ambiguous-b представляют собой, вероятно, одну и ту же сущность (договор), так как их номера 'КД-77/11-09' и 'КД-77-11-09' семантически идентичны и различаются только символом разделителя.",
+              "confidence": 0.7,
+              "status": "review",
+              "conflicts": [
+                "Character mismatch in contract_number"
+              ],
+              "alternatives": []
+            }
+          ],
+          "unlinked_document_ids": [
+            "receipt-unknown-1"
+          ],
+          "analysis_summary": "The analysis identified a confirmed link between the Act (act-ambiguous-1) and Contract B (contract-ambiguous-b) due to an exact match of the contract number ('КД-77-11-09'). A potential link and a potential duplicate relationship were identified between the Act and Contract A (contract-ambiguous-a) and between the two contracts themselves, respectively. These are marked as 'review' because the contract numbers differ by a single character (slash '/' vs hyphen '-'), which may represent a typo or a different document. The receipt document remains unlinked."
+        },
+        "model": "google/gemma-4-26b-a4b-it",
+        "input_tokens": 3411,
+        "output_tokens": 1003,
+        "cost": 0.009917,
+        "currency": "RUB",
+        "duration_ms": 20146
+      },
+      {
+        "label": "C.evidence-selection",
+        "raw_response": {
+          "semantic_duplicate_groups": [
+            {
+              "candidate_indices": [
+                0,
+                2
+              ],
+              "canonical_candidate_index": 0,
+              "canonical_relationship_type": "is_referenced_by"
+            }
+          ],
+          "evidence": [
+            {
+              "candidate_index": 0,
+              "evidence": [
+                {
+                  "source_reference_id": "r2h",
+                  "target_reference_id": "r1f",
+                  "signal": "exact_match",
+                  "explanation": "Значение поля contract_reference.value в акте ('КД-77-11-09') полностью совпадает со значением contract_number.value в контракте b ('КД-77-11-09')."
+                }
+              ]
+            },
+            {
+              "candidate_index": 1,
+              "evidence": [
+                {
+                  "source_reference_id": "r2h",
+                  "target_reference_id": "ri",
+                  "signal": "fuzzy_match",
+                  "explanation": "Значение поля contract_reference.value в акте ('КД-77-11-09') семантически близко к contract_number.value в контракте a ('КД-77/11-09'), различаясь только разделителем."
+                }
+              ]
+            },
+            {
+              "candidate_index": 2,
+              "evidence": [
+                {
+                  "source_reference_id": "r2h",
+                  "target_reference_id": "r1f",
+                  "signal": "exact_match",
+                  "explanation": "Значение поля contract_reference.value в акте ('КД-77-11-09') совпадает с contract_number.value в контракте b ('КД-77-11-09')."
+                }
+              ]
+            },
+            {
+              "candidate_index": 3,
+              "evidence": [
+                {
+                  "source_reference_id": "ri",
+                  "target_reference_id": "r1f",
+                  "signal": "fuzzy_match",
+                  "explanation": "Поля contract_number.value в обоих документах идентичны по смыслу, но различаются символом разделителя (слеш против дефиса)."
+                }
+              ]
+            }
+          ],
+          "unresolved": []
+        },
+        "model": "google/gemma-4-26b-a4b-it",
+        "input_tokens": 3480,
+        "output_tokens": 389,
+        "cost": 0.07733504,
+        "currency": "RUB",
+        "duration_ms": 8144
+      }
+    ],
+    "duration_ms": 44831,
+    "model": "google/gemma-4-26b-a4b-it",
+    "analysis_summary": "",
+    "unlinked_document_ids": [
+      "receipt-unknown-1"
+    ],
+    "usage": {
+      "input_tokens": 15703,
+      "output_tokens": 3235,
+      "cost_amount": 0.24870917,
+      "cost_currency": "RUB"
+    }
+  }
+}

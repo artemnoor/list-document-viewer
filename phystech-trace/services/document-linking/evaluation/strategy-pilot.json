@@ -1,0 +1,22 @@
+{
+  "version": "1.0.0",
+  "budget_rub": 10,
+  "repeats_per_scenario": 1,
+  "strategies": ["A", "B", "C"],
+  "scenarios": [
+    {
+      "id": "upstream-contract-addendum",
+      "repeats": 1,
+      "description": "Two actual Structured Extraction 1.2.0 outputs; compare agreement, direction and evidence across architectures.",
+      "fixture_directory": "fixtures/upstream-structured-extraction-1.2.0",
+      "documents": ["contract-2026-0315.json", "addendum-2026-04.json"]
+    },
+    {
+      "id": "demo-ambiguous-no-evidence",
+      "repeats": 3,
+      "description": "Four Structured Extraction-shaped demo outputs covering ambiguous duplicate identifiers, a possible act relation and an unsupported unknown document; provenance is intentionally absent, so evidence should remain unconfirmed.",
+      "fixture_directory": "fixtures/demo-structured-extraction",
+      "documents": ["contract-ambiguous-a.json", "contract-ambiguous-b.json", "act-ambiguous-1.json", "receipt-unknown-1.json"]
+    }
+  ]
+}

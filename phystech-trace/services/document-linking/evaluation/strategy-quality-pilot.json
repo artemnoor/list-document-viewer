@@ -1,0 +1,22 @@
+{
+  "version": "1.0.0",
+  "budget_rub": 10,
+  "repeats_per_scenario": 1,
+  "strategies": ["A", "B", "C"],
+  "scenarios": [
+    {
+      "id": "demo-ambiguous-review-regression",
+      "repeats": 2,
+      "description": "Small Structured Extraction-shaped fixture for repeated prompt/status/evidence handling. It intentionally has limited provenance and is not a gold-labeled quality case.",
+      "fixture_directory": "fixtures/demo-structured-extraction",
+      "documents": ["contract-ambiguous-a.json", "contract-ambiguous-b.json", "act-ambiguous-1.json", "receipt-unknown-1.json"]
+    },
+    {
+      "id": "upstream-contract-addendum-v1_1",
+      "repeats": 1,
+      "description": "Same actual Structured Extraction 1.2.0 contract/addendum bundle used in the earlier pilot, rerun with the corrected evidence/status instructions.",
+      "fixture_directory": "fixtures/upstream-structured-extraction-1.2.0",
+      "documents": ["contract-2026-0315.json", "addendum-2026-04.json"]
+    }
+  ]
+}

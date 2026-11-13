@@ -1,0 +1,112 @@
+{
+  "version": "1.0.0",
+  "model": "google/gemma-4-26b-a4b-it",
+  "provider": "Polza AI",
+  "budget_rub": 10,
+  "actual_or_estimated_spend_rub": 8.11055792,
+  "reserved_spend_rub": 1.15196196,
+  "requests_attempted": 33,
+  "responses_with_usage": 31,
+  "requests_without_usage": 2,
+  "stopped_for_budget": true,
+  "external_live_checks": [
+    {
+      "tokens": "4557 / 759",
+      "label": "npm test live Polza smoke",
+      "calls": 2,
+      "included_in_strategy_rows": false,
+      "reported_cost_rub": 0.0736259
+    },
+    {
+      "tokens": "222458 / 2099",
+      "label": "npm test live contract/addendum integration",
+      "calls": 2,
+      "included_in_strategy_rows": false,
+      "reported_cost_rub": 1.10855117
+    }
+  ],
+  "pricing_source": "https://polza.ai/models/google/gemma-4-26b-a4b-it",
+  "input_rate_rub_per_million": 14.52,
+  "output_rate_rub_per_million": 79.8,
+  "system_prompt_sha256": "ff99509e616a5ff75d66e2561b6e5d97e590a7f27b14d4bfb57fc517b1fd7637",
+  "strategy_prompts_version": "1.0.0",
+  "strategy_prompts_sha256": "11bcd57b57481b68eddee36dc249a09b952140d7620448ebd2832bcdc66d1edc",
+  "strategy_source_sha256": "b1b32b82d2120d22ee4d2e3e0d518736cde964ea67785500ed48a494a95c5356",
+  "results": [
+    {
+      "scenario": "upstream-contract-addendum",
+      "repeat": 1,
+      "strategy": "A",
+      "file": "upstream-contract-addendum-repeat-1-A.json"
+    },
+    {
+      "scenario": "upstream-contract-addendum",
+      "repeat": 1,
+      "strategy": "B",
+      "file": "upstream-contract-addendum-repeat-1-B.json"
+    },
+    {
+      "scenario": "upstream-contract-addendum",
+      "repeat": 1,
+      "strategy": "C",
+      "error": "BUDGET_STOP: резерв 2.728012 RUB для C.independent-agent-2 превысит лимит 10 RUB (учтено 4.892773 + резерв 2.728012)",
+      "file": "upstream-contract-addendum-repeat-1-C.json"
+    },
+    {
+      "scenario": "demo-ambiguous-no-evidence",
+      "repeat": 1,
+      "strategy": "A",
+      "file": "demo-ambiguous-no-evidence-repeat-1-A.json"
+    },
+    {
+      "scenario": "demo-ambiguous-no-evidence",
+      "repeat": 1,
+      "strategy": "B",
+      "file": "demo-ambiguous-no-evidence-repeat-1-B.json"
+    },
+    {
+      "scenario": "demo-ambiguous-no-evidence",
+      "repeat": 1,
+      "strategy": "C",
+      "error": "Gemma вернула невалидный JSON",
+      "file": "demo-ambiguous-no-evidence-repeat-1-C.json"
+    },
+    {
+      "scenario": "demo-ambiguous-no-evidence",
+      "repeat": 2,
+      "strategy": "A",
+      "file": "demo-ambiguous-no-evidence-repeat-2-A.json"
+    },
+    {
+      "scenario": "demo-ambiguous-no-evidence",
+      "repeat": 2,
+      "strategy": "B",
+      "file": "demo-ambiguous-no-evidence-repeat-2-B.json"
+    },
+    {
+      "scenario": "demo-ambiguous-no-evidence",
+      "repeat": 2,
+      "strategy": "C",
+      "file": "demo-ambiguous-no-evidence-repeat-2-C.json"
+    },
+    {
+      "scenario": "demo-ambiguous-no-evidence",
+      "repeat": 3,
+      "strategy": "A",
+      "file": "demo-ambiguous-no-evidence-repeat-3-A.json"
+    },
+    {
+      "scenario": "demo-ambiguous-no-evidence",
+      "repeat": 3,
+      "strategy": "B",
+      "file": "demo-ambiguous-no-evidence-repeat-3-B.json"
+    },
+    {
+      "scenario": "demo-ambiguous-no-evidence",
+      "repeat": 3,
+      "strategy": "C",
+      "error": "Истекло время ожидания Polza (120000 мс)",
+      "file": "demo-ambiguous-no-evidence-repeat-3-C.json"
+    }
+  ]
+}

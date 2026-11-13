@@ -1,0 +1,781 @@
+{
+  "version": "1.0.0",
+  "scenario": {
+    "id": "upstream-contract-addendum",
+    "description": "Two actual Structured Extraction 1.2.0 outputs; compare agreement, direction and evidence across architectures.",
+    "fixture_files": [
+      "contract-2026-0315.json",
+      "addendum-2026-04.json"
+    ]
+  },
+  "repeat": 1,
+  "strategy": "B",
+  "provider": "Polza AI",
+  "model": "google/gemma-4-26b-a4b-it",
+  "prompt_version": "document-linking-system@ff99509e616a+strategy-prompts@1.0.0",
+  "started_at": "2026-11-13T07:03:33.667Z",
+  "status": "complete",
+  "spend_rub_so_far": 4.89277333,
+  "calls": [
+    {
+      "label": "B.candidate-discovery",
+      "raw_response": {
+        "candidates": [
+          {
+            "relationship_type": "amendment_of",
+            "source_document_id": "addendum-2026-04",
+            "target_document_id": "contract-2026-0315",
+            "source_row_id": null,
+            "target_row_id": null,
+            "explanation": "Дополнительное соглашение (addendum-2026-04) изменяет условия основного договора (contract-2026-0315), что подтверждается полем base_contract и списком изменений (changes).",
+            "confidence": 1,
+            "status": "confirmed",
+            "conflicts": [],
+            "alternatives": []
+          },
+          {
+            "relationship_type": "amends_parameter",
+            "source_document_id": "addendum-2026-04",
+            "target_document_id": "contract-2026-0315",
+            "source_row_id": "addendum-changes-r001",
+            "target_row_id": null,
+            "explanation": "Изменение цены договора с 4 860 000,00 до 5 214 600,00 руб.",
+            "confidence": 1,
+            "status": "confirmed",
+            "conflicts": [],
+            "alternatives": []
+          },
+          {
+            "relationship_type": "amends_parameter",
+            "source_document_id": "addendum-2026-04",
+            "target_document_id": "contract-2026-0315",
+            "source_row_id": "addendum-changes-r002",
+            "target_row_id": null,
+            "explanation": "Изменение срока выполнения этапа 2 с 31.08.2026 на 15.09.2026.",
+            "confidence": 1,
+            "status": "confirmed",
+            "conflicts": [],
+            "alternatives": []
+          },
+          {
+            "relationship_type": "amends_parameter",
+            "source_document_id": "addendum-2026-04",
+            "target_document_id": "contract-2026-0315",
+            "source_row_id": "addendum-changes-r003",
+            "target_row_id": null,
+            "explanation": "Изменение количества крепежей М12 с 12 до 18 комплектов в приложении к договору.",
+            "confidence": 1,
+            "status": "confirmed",
+            "conflicts": [],
+            "alternatives": []
+          }
+        ],
+        "unlinked_document_ids": [],
+        "analysis_summary": "Проведен анализ двух документов: основного договора (contract-2026-0315) и дополнительного соглашения (addendum-2026-04). Установлена прямая связь типа 'amendment_of'. Выявлены три конкретных изменения параметров договора, зафиксированных в таблице изменений дополнительного соглашения: увеличение общей стоимости, продление срока второго этапа и увеличение объема комплектующих."
+      },
+      "model": "google/gemma-4-26b-a4b-it",
+      "input_tokens": 109945,
+      "output_tokens": 668,
+      "cost": 1.21297273,
+      "currency": "RUB",
+      "duration_ms": 7677
+    },
+    {
+      "label": "B.evidence-selection",
+      "raw_response": {
+        "evidence": [
+          {
+            "candidate_index": 0,
+            "evidence": [
+              {
+                "source_reference_id": "r140",
+                "target_reference_id": "rm",
+                "signal": "positive",
+                "explanation": "Поле base_contract в доп. соглашении указывает на номер основного договора."
+              },
+              {
+                "source_reference_id": "r157",
+                "target_reference_id": "r1",
+                "signal": "positive",
+                "explanation": "Причина изменения в доп. соглашении напрямую связана с изменением условий договора."
+              }
+            ]
+          },
+          {
+            "candidate_index": 1,
+            "evidence": [
+              {
+                "source_reference_id": "r1t2",
+                "target_reference_id": "r1s",
+                "signal": "positive",
+                "explanation": "Старая цена (4 860 000,00) соответствует цене в основном договоре."
+              },
+              {
+                "source_reference_id": "r1t7",
+                "target_reference_id": "r1s",
+                "signal": "positive",
+                "explanation": "Новая цена (5 214 600,00) установлена данным соглашением."
+              }
+            ]
+          },
+          {
+            "candidate_index": 2,
+            "evidence": [
+              {
+                "source_reference_id": "r1to",
+                "target_reference_id": "r27",
+                "signal": "positive",
+                "explanation": "Старый срок этапа 2 (31.08.2026) зафиксирован в документе."
+              },
+              {
+                "source_reference_id": "r1tt",
+                "target_reference_id": "r27",
+                "signal": "positive",
+                "explanation": "Новый срок этапа 2 (15.09.2026) зафиксирован в документе."
+              }
+            ]
+          },
+          {
+            "candidate_index": 3,
+            "evidence": [
+              {
+                "source_reference_id": "r1ua",
+                "target_reference_id": "r1omwph7",
+                "signal": "positive",
+                "explanation": "Старое количество (12 комплектов) указано в редакции до."
+              },
+              {
+                "source_reference_id": "r1uf",
+                "target_reference_id": "r1ocx3s8",
+                "signal": "positive",
+                "explanation": "Новое количество (18 комплектов) указано в новой редакции."
+              }
+            ]
+          }
+        ],
+        "unresolved": []
+      },
+      "model": "google/gemma-4-26b-a4b-it",
+      "input_tokens": 110403,
+      "output_tokens": 504,
+      "cost": 1.21240727,
+      "currency": "RUB",
+      "duration_ms": 6095
+    }
+  ],
+  "result": {
+    "strategy": "B",
+    "links": [
+      {
+        "link_id": "be0a98ba-8601-499a-9cd6-989a60e9e3b3",
+        "relationship_type": "amendment_of",
+        "source_document_id": "addendum-2026-04",
+        "target_document_id": "contract-2026-0315",
+        "evidence": [
+          {
+            "source": {
+              "document_id": "addendum-2026-04",
+              "path": "fields.base_contract.value",
+              "raw_value": "КД-24/03-15 от 15.03.2026",
+              "normalized_value": "КД-24/03-15 от 15.03.2026",
+              "provenance": {
+                "document_id": "addendum-2026-04",
+                "source_part_id": "addendum-2026-04:src:18s01j1",
+                "source_ref": "#/tables/0/cells/9",
+                "page_no": 1,
+                "sheet_name": null,
+                "cell_address": null,
+                "bbox": {
+                  "l": 297.64,
+                  "t": 335,
+                  "r": 553.28,
+                  "b": 356,
+                  "coord_origin": "TOPLEFT"
+                },
+                "coordinate_origin": "TOPLEFT",
+                "page_size": {
+                  "width": 595.28,
+                  "height": 841.89,
+                  "unit": "pt"
+                },
+                "column_index": 1,
+                "source_text": "КД-24/03-15 от 15.03.2026",
+                "confidence": 0.985,
+                "source_available": true
+              }
+            },
+            "target": {
+              "document_id": "contract-2026-0315",
+              "path": "fields.contract_number.value",
+              "raw_value": "КД-24/03-15",
+              "normalized_value": "КД-24/03-15",
+              "provenance": {
+                "document_id": "contract-2026-0315",
+                "source_part_id": "contract-2026-0315:src:ib8zvj",
+                "source_ref": "#/tables/0/cells/5",
+                "page_no": 1,
+                "sheet_name": null,
+                "cell_address": null,
+                "bbox": {
+                  "l": 297.64,
+                  "t": 285,
+                  "r": 553.28,
+                  "b": 306,
+                  "coord_origin": "TOPLEFT"
+                },
+                "coordinate_origin": "TOPLEFT",
+                "page_size": {
+                  "width": 595.28,
+                  "height": 841.89,
+                  "unit": "pt"
+                },
+                "column_index": 1,
+                "source_text": "КД-24/03-15",
+                "confidence": 0.985,
+                "source_available": true
+              }
+            },
+            "signal": "positive",
+            "explanation": "Поле base_contract в доп. соглашении указывает на номер основного договора."
+          }
+        ],
+        "explanation": "Дополнительное соглашение (addendum-2026-04) изменяет условия основного договора (contract-2026-0315), что подтверждается полем base_contract и списком изменений (changes).",
+        "confidence": 1,
+        "status": "review",
+        "verification_status": "not_reviewed",
+        "detection_method": "llm",
+        "conflicts": [],
+        "alternatives": []
+      },
+      {
+        "link_id": "90185ef3-79ed-46d5-b630-951cde601836",
+        "relationship_type": "amends_parameter",
+        "source_document_id": "addendum-2026-04",
+        "target_document_id": "contract-2026-0315",
+        "source_row_id": "addendum-changes-r001",
+        "evidence": [
+          {
+            "source": {
+              "document_id": "addendum-2026-04",
+              "path": "changes[0].old_value.value",
+              "raw_value": "4 860 000,00 руб.",
+              "normalized_value": "4 860 000,00 руб.",
+              "provenance": {
+                "document_id": "addendum-2026-04",
+                "source_part_id": "addendum-2026-04:src:11kqlh",
+                "source_ref": "#/tables/1/cells/5",
+                "page_no": 2,
+                "sheet_name": null,
+                "cell_address": null,
+                "bbox": {
+                  "l": 169.82,
+                  "t": 146,
+                  "r": 297.64,
+                  "b": 167,
+                  "coord_origin": "TOPLEFT"
+                },
+                "coordinate_origin": "TOPLEFT",
+                "page_size": {
+                  "width": 595.28,
+                  "height": 841.89,
+                  "unit": "pt"
+                },
+                "column_index": 1,
+                "source_text": "4 860 000,00 руб.",
+                "confidence": 0.985,
+                "source_available": true
+              }
+            },
+            "target": {
+              "document_id": "contract-2026-0315",
+              "path": "fields.contract_amount.value.amount",
+              "raw_value": "4860000.00",
+              "normalized_value": "4860000.00",
+              "provenance": {
+                "document_id": "contract-2026-0315",
+                "source_part_id": "contract-2026-0315:src:12apmoh",
+                "source_ref": "#/tables/0/cells/17",
+                "page_no": 1,
+                "sheet_name": null,
+                "cell_address": null,
+                "bbox": {
+                  "l": 297.64,
+                  "t": 435,
+                  "r": 553.28,
+                  "b": 456,
+                  "coord_origin": "TOPLEFT"
+                },
+                "coordinate_origin": "TOPLEFT",
+                "page_size": {
+                  "width": 595.28,
+                  "height": 841.89,
+                  "unit": "pt"
+                },
+                "column_index": 1,
+                "source_text": "4 860 000,00 руб., включая НДС 20%",
+                "confidence": 0.985,
+                "source_available": true
+              }
+            },
+            "signal": "positive",
+            "explanation": "Старая цена (4 860 000,00) соответствует цене в основном договоре."
+          },
+          {
+            "source": {
+              "document_id": "addendum-2026-04",
+              "path": "changes[0].new_value.value",
+              "raw_value": "5 214 600,00 руб.",
+              "normalized_value": "5 214 600,00 руб.",
+              "provenance": {
+                "document_id": "addendum-2026-04",
+                "source_part_id": "addendum-2026-04:src:rl4wi",
+                "source_ref": "#/tables/1/cells/6",
+                "page_no": 2,
+                "sheet_name": null,
+                "cell_address": null,
+                "bbox": {
+                  "l": 297.64,
+                  "t": 146,
+                  "r": 425.46,
+                  "b": 167,
+                  "coord_origin": "TOPLEFT"
+                },
+                "coordinate_origin": "TOPLEFT",
+                "page_size": {
+                  "width": 595.28,
+                  "height": 841.89,
+                  "unit": "pt"
+                },
+                "column_index": 2,
+                "source_text": "5 214 600,00 руб.",
+                "confidence": 0.985,
+                "source_available": true
+              }
+            },
+            "target": {
+              "document_id": "contract-2026-0315",
+              "path": "fields.contract_amount.value.amount",
+              "raw_value": "4860000.00",
+              "normalized_value": "4860000.00",
+              "provenance": {
+                "document_id": "contract-2026-0315",
+                "source_part_id": "contract-2026-0315:src:12apmoh",
+                "source_ref": "#/tables/0/cells/17",
+                "page_no": 1,
+                "sheet_name": null,
+                "cell_address": null,
+                "bbox": {
+                  "l": 297.64,
+                  "t": 435,
+                  "r": 553.28,
+                  "b": 456,
+                  "coord_origin": "TOPLEFT"
+                },
+                "coordinate_origin": "TOPLEFT",
+                "page_size": {
+                  "width": 595.28,
+                  "height": 841.89,
+                  "unit": "pt"
+                },
+                "column_index": 1,
+                "source_text": "4 860 000,00 руб., включая НДС 20%",
+                "confidence": 0.985,
+                "source_available": true
+              }
+            },
+            "signal": "positive",
+            "explanation": "Новая цена (5 214 600,00) установлена данным соглашением."
+          }
+        ],
+        "explanation": "Изменение цены договора с 4 860 000,00 до 5 214 600,00 руб.",
+        "confidence": 1,
+        "status": "confirmed",
+        "verification_status": "not_reviewed",
+        "detection_method": "llm",
+        "conflicts": [],
+        "alternatives": []
+      },
+      {
+        "link_id": "d0b2e261-70e0-460f-a9ba-9082a0427f7d",
+        "relationship_type": "amends_parameter",
+        "source_document_id": "addendum-2026-04",
+        "target_document_id": "contract-2026-0315",
+        "source_row_id": "addendum-changes-r002",
+        "evidence": [
+          {
+            "source": {
+              "document_id": "addendum-2026-04",
+              "path": "changes[1].old_value.value",
+              "raw_value": "Срок этапа 2 — 31.08.2026",
+              "normalized_value": "Срок этапа 2 — 31.08.2026",
+              "provenance": {
+                "document_id": "addendum-2026-04",
+                "source_part_id": "addendum-2026-04:src:199y6bw",
+                "source_ref": "#/tables/1/cells/9",
+                "page_no": 2,
+                "sheet_name": null,
+                "cell_address": null,
+                "bbox": {
+                  "l": 169.82,
+                  "t": 171,
+                  "r": 297.64,
+                  "b": 192,
+                  "coord_origin": "TOPLEFT"
+                },
+                "coordinate_origin": "TOPLEFT",
+                "page_size": {
+                  "width": 595.28,
+                  "height": 841.89,
+                  "unit": "pt"
+                },
+                "column_index": 1,
+                "source_text": "Срок этапа 2 — 31.08.2026",
+                "confidence": 0.985,
+                "source_available": true
+              }
+            },
+            "target": {
+              "document_id": "contract-2026-0315",
+              "path": "fields.contract_term.value.end",
+              "raw_value": "2026-11-30",
+              "normalized_value": "2026-11-30",
+              "provenance": {
+                "document_id": "contract-2026-0315",
+                "source_part_id": "contract-2026-0315:src:lbr3qy",
+                "source_ref": "#/tables/0/cells/19",
+                "page_no": 1,
+                "sheet_name": null,
+                "cell_address": null,
+                "bbox": {
+                  "l": 297.64,
+                  "t": 460,
+                  "r": 553.28,
+                  "b": 481,
+                  "coord_origin": "TOPLEFT"
+                },
+                "coordinate_origin": "TOPLEFT",
+                "page_size": {
+                  "width": 595.28,
+                  "height": 841.89,
+                  "unit": "pt"
+                },
+                "column_index": 1,
+                "source_text": "с 15.03.2026 по 30.11.2026",
+                "confidence": 0.985,
+                "source_available": true
+              }
+            },
+            "signal": "positive",
+            "explanation": "Старый срок этапа 2 (31.08.2026) зафиксирован в документе."
+          },
+          {
+            "source": {
+              "document_id": "addendum-2026-04",
+              "path": "changes[1].new_value.value",
+              "raw_value": "Срок этапа 2 — 15.09.2026",
+              "normalized_value": "Срок этапа 2 — 15.09.2026",
+              "provenance": {
+                "document_id": "addendum-2026-04",
+                "source_part_id": "addendum-2026-04:src:19jxs0v",
+                "source_ref": "#/tables/1/cells/10",
+                "page_no": 2,
+                "sheet_name": null,
+                "cell_address": null,
+                "bbox": {
+                  "l": 297.64,
+                  "t": 171,
+                  "r": 425.46,
+                  "b": 192,
+                  "coord_origin": "TOPLEFT"
+                },
+                "coordinate_origin": "TOPLEFT",
+                "page_size": {
+                  "width": 595.28,
+                  "height": 841.89,
+                  "unit": "pt"
+                },
+                "column_index": 2,
+                "source_text": "Срок этапа 2 — 15.09.2026",
+                "confidence": 0.985,
+                "source_available": true
+              }
+            },
+            "target": {
+              "document_id": "contract-2026-0315",
+              "path": "fields.contract_term.value.end",
+              "raw_value": "2026-11-30",
+              "normalized_value": "2026-11-30",
+              "provenance": {
+                "document_id": "contract-2026-0315",
+                "source_part_id": "contract-2026-0315:src:lbr3qy",
+                "source_ref": "#/tables/0/cells/19",
+                "page_no": 1,
+                "sheet_name": null,
+                "cell_address": null,
+                "bbox": {
+                  "l": 297.64,
+                  "t": 460,
+                  "r": 553.28,
+                  "b": 481,
+                  "coord_origin": "TOPLEFT"
+                },
+                "coordinate_origin": "TOPLEFT",
+                "page_size": {
+                  "width": 595.28,
+                  "height": 841.89,
+                  "unit": "pt"
+                },
+                "column_index": 1,
+                "source_text": "с 15.03.2026 по 30.11.2026",
+                "confidence": 0.985,
+                "source_available": true
+              }
+            },
+            "signal": "positive",
+            "explanation": "Новый срок этапа 2 (15.09.2026) зафиксирован в документе."
+          }
+        ],
+        "explanation": "Изменение срока выполнения этапа 2 с 31.08.2026 на 15.09.2026.",
+        "confidence": 1,
+        "status": "confirmed",
+        "verification_status": "not_reviewed",
+        "detection_method": "llm",
+        "conflicts": [],
+        "alternatives": []
+      }
+    ],
+    "candidates": [
+      {
+        "relationship_type": "amendment_of",
+        "source_document_id": "addendum-2026-04",
+        "target_document_id": "contract-2026-0315",
+        "explanation": "Дополнительное соглашение (addendum-2026-04) изменяет условия основного договора (contract-2026-0315), что подтверждается полем base_contract и списком изменений (changes).",
+        "confidence": 1,
+        "status": "confirmed",
+        "conflicts": [],
+        "alternatives": []
+      },
+      {
+        "relationship_type": "amends_parameter",
+        "source_document_id": "addendum-2026-04",
+        "target_document_id": "contract-2026-0315",
+        "source_row_id": "addendum-changes-r001",
+        "explanation": "Изменение цены договора с 4 860 000,00 до 5 214 600,00 руб.",
+        "confidence": 1,
+        "status": "confirmed",
+        "conflicts": [],
+        "alternatives": []
+      },
+      {
+        "relationship_type": "amends_parameter",
+        "source_document_id": "addendum-2026-04",
+        "target_document_id": "contract-2026-0315",
+        "source_row_id": "addendum-changes-r002",
+        "explanation": "Изменение срока выполнения этапа 2 с 31.08.2026 на 15.09.2026.",
+        "confidence": 1,
+        "status": "confirmed",
+        "conflicts": [],
+        "alternatives": []
+      },
+      {
+        "relationship_type": "amends_parameter",
+        "source_document_id": "addendum-2026-04",
+        "target_document_id": "contract-2026-0315",
+        "source_row_id": "addendum-changes-r003",
+        "explanation": "Изменение количества крепежей М12 с 12 до 18 комплектов в приложении к договору.",
+        "confidence": 1,
+        "status": "confirmed",
+        "conflicts": [],
+        "alternatives": []
+      }
+    ],
+    "diagnostics": [
+      {
+        "candidate_index": 0,
+        "reason": "evidence reference missing, wrong document, or technically unavailable",
+        "proposal": {
+          "relationship_type": "amendment_of",
+          "source_document_id": "addendum-2026-04",
+          "target_document_id": "contract-2026-0315",
+          "explanation": "Дополнительное соглашение (addendum-2026-04) изменяет условия основного договора (contract-2026-0315), что подтверждается полем base_contract и списком изменений (changes).",
+          "confidence": 1,
+          "status": "confirmed",
+          "conflicts": [],
+          "alternatives": []
+        }
+      },
+      {
+        "candidate_index": 3,
+        "reason": "evidence reference missing, wrong document, or technically unavailable",
+        "proposal": {
+          "relationship_type": "amends_parameter",
+          "source_document_id": "addendum-2026-04",
+          "target_document_id": "contract-2026-0315",
+          "source_row_id": "addendum-changes-r003",
+          "explanation": "Изменение количества крепежей М12 с 12 до 18 комплектов в приложении к договору.",
+          "confidence": 1,
+          "status": "confirmed",
+          "conflicts": [],
+          "alternatives": []
+        }
+      }
+    ],
+    "calls": [
+      {
+        "label": "B.candidate-discovery",
+        "raw_response": {
+          "candidates": [
+            {
+              "relationship_type": "amendment_of",
+              "source_document_id": "addendum-2026-04",
+              "target_document_id": "contract-2026-0315",
+              "source_row_id": null,
+              "target_row_id": null,
+              "explanation": "Дополнительное соглашение (addendum-2026-04) изменяет условия основного договора (contract-2026-0315), что подтверждается полем base_contract и списком изменений (changes).",
+              "confidence": 1,
+              "status": "confirmed",
+              "conflicts": [],
+              "alternatives": []
+            },
+            {
+              "relationship_type": "amends_parameter",
+              "source_document_id": "addendum-2026-04",
+              "target_document_id": "contract-2026-0315",
+              "source_row_id": "addendum-changes-r001",
+              "target_row_id": null,
+              "explanation": "Изменение цены договора с 4 860 000,00 до 5 214 600,00 руб.",
+              "confidence": 1,
+              "status": "confirmed",
+              "conflicts": [],
+              "alternatives": []
+            },
+            {
+              "relationship_type": "amends_parameter",
+              "source_document_id": "addendum-2026-04",
+              "target_document_id": "contract-2026-0315",
+              "source_row_id": "addendum-changes-r002",
+              "target_row_id": null,
+              "explanation": "Изменение срока выполнения этапа 2 с 31.08.2026 на 15.09.2026.",
+              "confidence": 1,
+              "status": "confirmed",
+              "conflicts": [],
+              "alternatives": []
+            },
+            {
+              "relationship_type": "amends_parameter",
+              "source_document_id": "addendum-2026-04",
+              "target_document_id": "contract-2026-0315",
+              "source_row_id": "addendum-changes-r003",
+              "target_row_id": null,
+              "explanation": "Изменение количества крепежей М12 с 12 до 18 комплектов в приложении к договору.",
+              "confidence": 1,
+              "status": "confirmed",
+              "conflicts": [],
+              "alternatives": []
+            }
+          ],
+          "unlinked_document_ids": [],
+          "analysis_summary": "Проведен анализ двух документов: основного договора (contract-2026-0315) и дополнительного соглашения (addendum-2026-04). Установлена прямая связь типа 'amendment_of'. Выявлены три конкретных изменения параметров договора, зафиксированных в таблице изменений дополнительного соглашения: увеличение общей стоимости, продление срока второго этапа и увеличение объема комплектующих."
+        },
+        "model": "google/gemma-4-26b-a4b-it",
+        "input_tokens": 109945,
+        "output_tokens": 668,
+        "cost": 1.21297273,
+        "currency": "RUB",
+        "duration_ms": 7677
+      },
+      {
+        "label": "B.evidence-selection",
+        "raw_response": {
+          "evidence": [
+            {
+              "candidate_index": 0,
+              "evidence": [
+                {
+                  "source_reference_id": "r140",
+                  "target_reference_id": "rm",
+                  "signal": "positive",
+                  "explanation": "Поле base_contract в доп. соглашении указывает на номер основного договора."
+                },
+                {
+                  "source_reference_id": "r157",
+                  "target_reference_id": "r1",
+                  "signal": "positive",
+                  "explanation": "Причина изменения в доп. соглашении напрямую связана с изменением условий договора."
+                }
+              ]
+            },
+            {
+              "candidate_index": 1,
+              "evidence": [
+                {
+                  "source_reference_id": "r1t2",
+                  "target_reference_id": "r1s",
+                  "signal": "positive",
+                  "explanation": "Старая цена (4 860 000,00) соответствует цене в основном договоре."
+                },
+                {
+                  "source_reference_id": "r1t7",
+                  "target_reference_id": "r1s",
+                  "signal": "positive",
+                  "explanation": "Новая цена (5 214 600,00) установлена данным соглашением."
+                }
+              ]
+            },
+            {
+              "candidate_index": 2,
+              "evidence": [
+                {
+                  "source_reference_id": "r1to",
+                  "target_reference_id": "r27",
+                  "signal": "positive",
+                  "explanation": "Старый срок этапа 2 (31.08.2026) зафиксирован в документе."
+                },
+                {
+                  "source_reference_id": "r1tt",
+                  "target_reference_id": "r27",
+                  "signal": "positive",
+                  "explanation": "Новый срок этапа 2 (15.09.2026) зафиксирован в документе."
+                }
+              ]
+            },
+            {
+              "candidate_index": 3,
+              "evidence": [
+                {
+                  "source_reference_id": "r1ua",
+                  "target_reference_id": "r1omwph7",
+                  "signal": "positive",
+                  "explanation": "Старое количество (12 комплектов) указано в редакции до."
+                },
+                {
+                  "source_reference_id": "r1uf",
+                  "target_reference_id": "r1ocx3s8",
+                  "signal": "positive",
+                  "explanation": "Новое количество (18 комплектов) указано в новой редакции."
+                }
+              ]
+            }
+          ],
+          "unresolved": []
+        },
+        "model": "google/gemma-4-26b-a4b-it",
+        "input_tokens": 110403,
+        "output_tokens": 504,
+        "cost": 1.21240727,
+        "currency": "RUB",
+        "duration_ms": 6095
+      }
+    ],
+    "duration_ms": 13792,
+    "model": "google/gemma-4-26b-a4b-it",
+    "analysis_summary": "",
+    "unlinked_document_ids": [],
+    "usage": {
+      "input_tokens": 220348,
+      "output_tokens": 1172,
+      "cost_amount": 2.4253799999999996,
+      "cost_currency": "RUB"
+    }
+  }
+}

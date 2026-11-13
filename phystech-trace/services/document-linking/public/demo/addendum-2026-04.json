@@ -1,0 +1,3024 @@
+{
+  "extraction_id": "real-addendum-2026-04-v1",
+  "document_id": "addendum-2026-04",
+  "version": 1,
+  "schema_version": "1.2.0",
+  "extracted_at": "2026-11-12T10:00:00.000Z",
+  "classification": {
+    "type": "addendum",
+    "label": "Дополнительное соглашение",
+    "confidence": 0.97,
+    "status": "classified"
+  },
+  "extraction_engine": {
+    "rules_executed": true,
+    "llm": {
+      "provider": "not_called",
+      "model": null,
+      "called": false,
+      "response_validated": false,
+      "duration_ms": null,
+      "usage": null,
+      "validation_status": "not_run",
+      "error": null
+    },
+    "parser_adapter": "document-parser-unified/1.1.0"
+  },
+  "mode": "rules_only",
+  "fields": {
+    "addendum_number": {
+      "label": "Номер соглашения",
+      "value": "ДС-1 к КД-24/03-15",
+      "source_value": "ДС-1 к КД-24/03-15",
+      "status": "extracted",
+      "confidence": 0.985,
+      "provenance": {
+        "document_id": "addendum-2026-04",
+        "source_part_id": "addendum-2026-04:src:ib8zvj",
+        "source_ref": "#/tables/0/cells/5",
+        "page_no": 1,
+        "sheet_name": null,
+        "cell_address": null,
+        "bbox": {
+          "l": 297.64,
+          "t": 285,
+          "r": 553.28,
+          "b": 306,
+          "coord_origin": "TOPLEFT"
+        },
+        "coordinate_origin": "TOPLEFT",
+        "page_size": {
+          "width": 595.28,
+          "height": 841.89,
+          "unit": "pt"
+        },
+        "column_index": 1,
+        "source_text": "ДС-1 к КД-24/03-15",
+        "confidence": 0.985,
+        "source_available": true
+      },
+      "normalization_note": null,
+      "source_method": "rules"
+    },
+    "signing_date": {
+      "label": "Дата подписания",
+      "value": null,
+      "source_value": "04/05/2026",
+      "status": "review",
+      "confidence": 0.985,
+      "provenance": {
+        "document_id": "addendum-2026-04",
+        "source_part_id": "addendum-2026-04:src:1lzc0ds",
+        "source_ref": "#/tables/0/cells/7",
+        "page_no": 1,
+        "sheet_name": null,
+        "cell_address": null,
+        "bbox": {
+          "l": 297.64,
+          "t": 310,
+          "r": 553.28,
+          "b": 331,
+          "coord_origin": "TOPLEFT"
+        },
+        "coordinate_origin": "TOPLEFT",
+        "page_size": {
+          "width": 595.28,
+          "height": 841.89,
+          "unit": "pt"
+        },
+        "column_index": 1,
+        "source_text": "04/05/2026",
+        "confidence": 0.985,
+        "source_available": true
+      },
+      "normalization_note": "Порядок дня и месяца неоднозначен",
+      "source_method": "rules"
+    },
+    "base_contract": {
+      "label": "Основной договор",
+      "value": "КД-24/03-15 от 15.03.2026",
+      "source_value": "КД-24/03-15 от 15.03.2026",
+      "status": "extracted",
+      "confidence": 0.985,
+      "provenance": {
+        "document_id": "addendum-2026-04",
+        "source_part_id": "addendum-2026-04:src:18s01j1",
+        "source_ref": "#/tables/0/cells/9",
+        "page_no": 1,
+        "sheet_name": null,
+        "cell_address": null,
+        "bbox": {
+          "l": 297.64,
+          "t": 335,
+          "r": 553.28,
+          "b": 356,
+          "coord_origin": "TOPLEFT"
+        },
+        "coordinate_origin": "TOPLEFT",
+        "page_size": {
+          "width": 595.28,
+          "height": 841.89,
+          "unit": "pt"
+        },
+        "column_index": 1,
+        "source_text": "КД-24/03-15 от 15.03.2026",
+        "confidence": 0.985,
+        "source_available": true
+      },
+      "normalization_note": null,
+      "source_method": "rules"
+    },
+    "party_1": {
+      "label": "Сторона 1",
+      "value": "ООО «ИнжКонтур Бета»",
+      "source_value": "ООО «ИнжКонтур Бета»",
+      "status": "extracted",
+      "confidence": 0.985,
+      "provenance": {
+        "document_id": "addendum-2026-04",
+        "source_part_id": "addendum-2026-04:src:1vag90m",
+        "source_ref": "#/tables/0/cells/11",
+        "page_no": 1,
+        "sheet_name": null,
+        "cell_address": null,
+        "bbox": {
+          "l": 297.64,
+          "t": 360,
+          "r": 553.28,
+          "b": 381,
+          "coord_origin": "TOPLEFT"
+        },
+        "coordinate_origin": "TOPLEFT",
+        "page_size": {
+          "width": 595.28,
+          "height": 841.89,
+          "unit": "pt"
+        },
+        "column_index": 1,
+        "source_text": "ООО «ИнжКонтур Бета»",
+        "confidence": 0.985,
+        "source_available": true
+      },
+      "normalization_note": null,
+      "source_method": "rules"
+    },
+    "party_2": {
+      "label": "Сторона 2",
+      "value": "АО «Городские инженерные системы»",
+      "source_value": "АО «Городские инженерные системы»",
+      "status": "extracted",
+      "confidence": 0.985,
+      "provenance": {
+        "document_id": "addendum-2026-04",
+        "source_part_id": "addendum-2026-04:src:1bcjptf",
+        "source_ref": "#/tables/0/cells/13",
+        "page_no": 1,
+        "sheet_name": null,
+        "cell_address": null,
+        "bbox": {
+          "l": 297.64,
+          "t": 385,
+          "r": 553.28,
+          "b": 406,
+          "coord_origin": "TOPLEFT"
+        },
+        "coordinate_origin": "TOPLEFT",
+        "page_size": {
+          "width": 595.28,
+          "height": 841.89,
+          "unit": "pt"
+        },
+        "column_index": 1,
+        "source_text": "АО «Городские инженерные системы»",
+        "confidence": 0.985,
+        "source_available": true
+      },
+      "normalization_note": null,
+      "source_method": "rules"
+    },
+    "previous_amount": {
+      "label": "Цена до изменения",
+      "value": {
+        "amount": "4860000.00",
+        "currency": "RUB"
+      },
+      "source_value": "4 860 000,00 руб.",
+      "status": "extracted",
+      "confidence": 0.985,
+      "provenance": {
+        "document_id": "addendum-2026-04",
+        "source_part_id": "addendum-2026-04:src:1xw1ymc",
+        "source_ref": "#/tables/0/cells/15",
+        "page_no": 1,
+        "sheet_name": null,
+        "cell_address": null,
+        "bbox": {
+          "l": 297.64,
+          "t": 410,
+          "r": 553.28,
+          "b": 431,
+          "coord_origin": "TOPLEFT"
+        },
+        "coordinate_origin": "TOPLEFT",
+        "page_size": {
+          "width": 595.28,
+          "height": 841.89,
+          "unit": "pt"
+        },
+        "column_index": 1,
+        "source_text": "4 860 000,00 руб.",
+        "confidence": 0.985,
+        "source_available": true
+      },
+      "normalization_note": null,
+      "source_method": "rules"
+    },
+    "new_amount": {
+      "label": "Цена после изменения",
+      "value": {
+        "amount": "5214600.00",
+        "currency": "RUB"
+      },
+      "source_value": "5 214 600,00 руб.",
+      "status": "extracted",
+      "confidence": 0.985,
+      "provenance": {
+        "document_id": "addendum-2026-04",
+        "source_part_id": "addendum-2026-04:src:12apmoh",
+        "source_ref": "#/tables/0/cells/17",
+        "page_no": 1,
+        "sheet_name": null,
+        "cell_address": null,
+        "bbox": {
+          "l": 297.64,
+          "t": 435,
+          "r": 553.28,
+          "b": 456,
+          "coord_origin": "TOPLEFT"
+        },
+        "coordinate_origin": "TOPLEFT",
+        "page_size": {
+          "width": 595.28,
+          "height": 841.89,
+          "unit": "pt"
+        },
+        "column_index": 1,
+        "source_text": "5 214 600,00 руб.",
+        "confidence": 0.985,
+        "source_available": true
+      },
+      "normalization_note": null,
+      "source_method": "rules"
+    },
+    "effective_date": {
+      "label": "Дата вступления в силу",
+      "value": null,
+      "source_value": null,
+      "status": "missing",
+      "confidence": 0.985,
+      "provenance": {
+        "document_id": "addendum-2026-04",
+        "source_part_id": "addendum-2026-04:src:lbr3qy",
+        "source_ref": "#/tables/0/cells/19",
+        "page_no": 1,
+        "sheet_name": null,
+        "cell_address": null,
+        "bbox": {
+          "l": 297.64,
+          "t": 460,
+          "r": 553.28,
+          "b": 481,
+          "coord_origin": "TOPLEFT"
+        },
+        "coordinate_origin": "TOPLEFT",
+        "page_size": {
+          "width": 595.28,
+          "height": 841.89,
+          "unit": "pt"
+        },
+        "table_id": "document-metadata",
+        "row_id": "document-metadata-r009",
+        "column_index": 1,
+        "source_text": "",
+        "confidence": 0.985,
+        "source_available": true
+      },
+      "normalization_note": null
+    },
+    "change_reason": {
+      "label": "Причина изменения",
+      "value": "Дополнительный объём работ и перенос срока поставки оборудования",
+      "source_value": "Дополнительный объём работ и перенос срока поставки оборудования",
+      "status": "extracted",
+      "confidence": 0.985,
+      "provenance": {
+        "document_id": "addendum-2026-04",
+        "source_part_id": "addendum-2026-04:src:1lwr8cs",
+        "source_ref": "#/tables/0/cells/21",
+        "page_no": 1,
+        "sheet_name": null,
+        "cell_address": null,
+        "bbox": {
+          "l": 297.64,
+          "t": 485,
+          "r": 553.28,
+          "b": 506,
+          "coord_origin": "TOPLEFT"
+        },
+        "coordinate_origin": "TOPLEFT",
+        "page_size": {
+          "width": 595.28,
+          "height": 841.89,
+          "unit": "pt"
+        },
+        "column_index": 1,
+        "source_text": "Дополнительный объём работ и перенос срока поставки оборудования",
+        "confidence": 0.985,
+        "source_available": true
+      },
+      "normalization_note": null,
+      "source_method": "rules"
+    }
+  },
+  "tables": [
+    {
+      "id": "document-metadata",
+      "title": "Реквизиты документа",
+      "role": "metadata",
+      "headers": [
+        "Реквизит",
+        "Значение"
+      ],
+      "rows": [
+        {
+          "row_id": "document-metadata-r001",
+          "line_number": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "identifier": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "description": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "plan_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "actual_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit_price": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "amount": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "source_cells": [
+            {
+              "header": "Реквизит",
+              "extracted": {
+                "value": "Вид документа",
+                "source_value": "Вид документа",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "addendum-2026-04",
+                  "source_part_id": "addendum-2026-04:src:9fl9un",
+                  "source_ref": "#/tables/0/cells/2",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 42,
+                    "t": 235,
+                    "r": 297.64,
+                    "b": 256,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 0,
+                  "source_text": "Вид документа",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            },
+            {
+              "header": "Значение",
+              "extracted": {
+                "value": "Дополнительное соглашение № 1",
+                "source_value": "Дополнительное соглашение № 1",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "addendum-2026-04",
+                  "source_part_id": "addendum-2026-04:src:9pkvjm",
+                  "source_ref": "#/tables/0/cells/3",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 297.64,
+                    "t": 260,
+                    "r": 553.28,
+                    "b": 281,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 1,
+                  "source_text": "Дополнительное соглашение № 1",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            }
+          ],
+          "row_status": "extracted"
+        },
+        {
+          "row_id": "document-metadata-r002",
+          "line_number": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "identifier": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "description": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "plan_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "actual_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit_price": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "amount": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "source_cells": [
+            {
+              "header": "Реквизит",
+              "extracted": {
+                "value": "Номер соглашения",
+                "source_value": "Номер соглашения",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "addendum-2026-04",
+                  "source_part_id": "addendum-2026-04:src:il8lki",
+                  "source_ref": "#/tables/0/cells/4",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 42,
+                    "t": 260,
+                    "r": 297.64,
+                    "b": 281,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 0,
+                  "source_text": "Номер соглашения",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            },
+            {
+              "header": "Значение",
+              "extracted": {
+                "value": "ДС-1 к КД-24/03-15",
+                "source_value": "ДС-1 к КД-24/03-15",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "addendum-2026-04",
+                  "source_part_id": "addendum-2026-04:src:ib8zvj",
+                  "source_ref": "#/tables/0/cells/5",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 297.64,
+                    "t": 285,
+                    "r": 553.28,
+                    "b": 306,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 1,
+                  "source_text": "ДС-1 к КД-24/03-15",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            }
+          ],
+          "row_status": "extracted"
+        },
+        {
+          "row_id": "document-metadata-r003",
+          "line_number": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "identifier": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "description": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "plan_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "actual_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit_price": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "amount": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "source_cells": [
+            {
+              "header": "Реквизит",
+              "extracted": {
+                "value": "Дата подписания",
+                "source_value": "Дата подписания",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "addendum-2026-04",
+                  "source_part_id": "addendum-2026-04:src:1mtatgp",
+                  "source_ref": "#/tables/0/cells/6",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 42,
+                    "t": 285,
+                    "r": 297.64,
+                    "b": 306,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 0,
+                  "source_text": "Дата подписания",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            },
+            {
+              "header": "Значение",
+              "extracted": {
+                "value": "04/05/2026",
+                "source_value": "04/05/2026",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "addendum-2026-04",
+                  "source_part_id": "addendum-2026-04:src:1lzc0ds",
+                  "source_ref": "#/tables/0/cells/7",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 297.64,
+                    "t": 310,
+                    "r": 553.28,
+                    "b": 331,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 1,
+                  "source_text": "04/05/2026",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            }
+          ],
+          "row_status": "extracted"
+        },
+        {
+          "row_id": "document-metadata-r004",
+          "line_number": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "identifier": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "description": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "plan_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "actual_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit_price": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "amount": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "source_cells": [
+            {
+              "header": "Реквизит",
+              "extracted": {
+                "value": "Основной договор",
+                "source_value": "Основной договор",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "addendum-2026-04",
+                  "source_part_id": "addendum-2026-04:src:17y18g4",
+                  "source_ref": "#/tables/0/cells/8",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 42,
+                    "t": 310,
+                    "r": 297.64,
+                    "b": 331,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 0,
+                  "source_text": "Основной договор",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            },
+            {
+              "header": "Значение",
+              "extracted": {
+                "value": "КД-24/03-15 от 15.03.2026",
+                "source_value": "КД-24/03-15 от 15.03.2026",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "addendum-2026-04",
+                  "source_part_id": "addendum-2026-04:src:18s01j1",
+                  "source_ref": "#/tables/0/cells/9",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 297.64,
+                    "t": 335,
+                    "r": 553.28,
+                    "b": 356,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 1,
+                  "source_text": "КД-24/03-15 от 15.03.2026",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            }
+          ],
+          "row_status": "extracted"
+        },
+        {
+          "row_id": "document-metadata-r005",
+          "line_number": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "identifier": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "description": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "plan_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "actual_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit_price": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "amount": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "source_cells": [
+            {
+              "header": "Реквизит",
+              "extracted": {
+                "value": "Сторона 1",
+                "source_value": "Сторона 1",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "addendum-2026-04",
+                  "source_part_id": "addendum-2026-04:src:1v0gnbn",
+                  "source_ref": "#/tables/0/cells/10",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 42,
+                    "t": 335,
+                    "r": 297.64,
+                    "b": 356,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 0,
+                  "source_text": "Сторона 1",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            },
+            {
+              "header": "Значение",
+              "extracted": {
+                "value": "ООО «ИнжКонтур Бета»",
+                "source_value": "ООО «ИнжКонтур Бета»",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "addendum-2026-04",
+                  "source_part_id": "addendum-2026-04:src:1vag90m",
+                  "source_ref": "#/tables/0/cells/11",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 297.64,
+                    "t": 360,
+                    "r": 553.28,
+                    "b": 381,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 1,
+                  "source_text": "ООО «ИнжКонтур Бета»",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            }
+          ],
+          "row_status": "extracted"
+        },
+        {
+          "row_id": "document-metadata-r006",
+          "line_number": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "identifier": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "description": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "plan_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "actual_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit_price": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "amount": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "source_cells": [
+            {
+              "header": "Реквизит",
+              "extracted": {
+                "value": "Сторона 2",
+                "source_value": "Сторона 2",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "addendum-2026-04",
+                  "source_part_id": "addendum-2026-04:src:1bmjbie",
+                  "source_ref": "#/tables/0/cells/12",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 42,
+                    "t": 360,
+                    "r": 297.64,
+                    "b": 381,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 0,
+                  "source_text": "Сторона 2",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            },
+            {
+              "header": "Значение",
+              "extracted": {
+                "value": "АО «Городские инженерные системы»",
+                "source_value": "АО «Городские инженерные системы»",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "addendum-2026-04",
+                  "source_part_id": "addendum-2026-04:src:1bcjptf",
+                  "source_ref": "#/tables/0/cells/13",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 297.64,
+                    "t": 385,
+                    "r": 553.28,
+                    "b": 406,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 1,
+                  "source_text": "АО «Городские инженерные системы»",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            }
+          ],
+          "row_status": "extracted"
+        },
+        {
+          "row_id": "document-metadata-r007",
+          "line_number": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "identifier": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "description": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "plan_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "actual_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit_price": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "amount": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "source_cells": [
+            {
+              "header": "Реквизит",
+              "extracted": {
+                "value": "Цена до изменения",
+                "source_value": "Цена до изменения",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "addendum-2026-04",
+                  "source_part_id": "addendum-2026-04:src:1yq0rp9",
+                  "source_ref": "#/tables/0/cells/14",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 42,
+                    "t": 385,
+                    "r": 297.64,
+                    "b": 406,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 0,
+                  "source_text": "Цена до изменения",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            },
+            {
+              "header": "Значение",
+              "extracted": {
+                "value": "4 860 000,00 руб.",
+                "source_value": "4 860 000,00 руб.",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "addendum-2026-04",
+                  "source_part_id": "addendum-2026-04:src:1xw1ymc",
+                  "source_ref": "#/tables/0/cells/15",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 297.64,
+                    "t": 410,
+                    "r": 553.28,
+                    "b": 431,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 1,
+                  "source_text": "4 860 000,00 руб.",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            }
+          ],
+          "row_status": "extracted"
+        },
+        {
+          "row_id": "document-metadata-r008",
+          "line_number": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "identifier": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "description": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "plan_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "actual_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit_price": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "amount": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "source_cells": [
+            {
+              "header": "Реквизит",
+              "extracted": {
+                "value": "Цена после изменения",
+                "source_value": "Цена после изменения",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "addendum-2026-04",
+                  "source_part_id": "addendum-2026-04:src:11gqtlk",
+                  "source_ref": "#/tables/0/cells/16",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 42,
+                    "t": 410,
+                    "r": 297.64,
+                    "b": 431,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 0,
+                  "source_text": "Цена после изменения",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            },
+            {
+              "header": "Значение",
+              "extracted": {
+                "value": "5 214 600,00 руб.",
+                "source_value": "5 214 600,00 руб.",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "addendum-2026-04",
+                  "source_part_id": "addendum-2026-04:src:12apmoh",
+                  "source_ref": "#/tables/0/cells/17",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 297.64,
+                    "t": 435,
+                    "r": 553.28,
+                    "b": 456,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 1,
+                  "source_text": "5 214 600,00 руб.",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            }
+          ],
+          "row_status": "extracted"
+        },
+        {
+          "row_id": "document-metadata-r009",
+          "line_number": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "identifier": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "description": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "plan_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "actual_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit_price": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "amount": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "source_cells": [
+            {
+              "header": "Реквизит",
+              "extracted": {
+                "value": "Дата вступления в силу",
+                "source_value": "Дата вступления в силу",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "addendum-2026-04",
+                  "source_part_id": "addendum-2026-04:src:l1ri1z",
+                  "source_ref": "#/tables/0/cells/18",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 42,
+                    "t": 435,
+                    "r": 297.64,
+                    "b": 456,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 0,
+                  "source_text": "Дата вступления в силу",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            },
+            {
+              "header": "Значение",
+              "extracted": {
+                "value": null,
+                "source_value": null,
+                "status": "missing",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "addendum-2026-04",
+                  "source_part_id": "addendum-2026-04:src:lbr3qy",
+                  "source_ref": "#/tables/0/cells/19",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 297.64,
+                    "t": 460,
+                    "r": 553.28,
+                    "b": 481,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "table_id": "document-metadata",
+                  "row_id": "document-metadata-r009",
+                  "column_index": 1,
+                  "source_text": "",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            }
+          ],
+          "row_status": "extracted"
+        },
+        {
+          "row_id": "document-metadata-r010",
+          "line_number": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "identifier": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "description": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "plan_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "actual_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit_price": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "amount": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "source_cells": [
+            {
+              "header": "Реквизит",
+              "extracted": {
+                "value": "Причина изменения",
+                "source_value": "Причина изменения",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "addendum-2026-04",
+                  "source_part_id": "addendum-2026-04:src:1mqq1fp",
+                  "source_ref": "#/tables/0/cells/20",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 42,
+                    "t": 460,
+                    "r": 297.64,
+                    "b": 481,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 0,
+                  "source_text": "Причина изменения",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            },
+            {
+              "header": "Значение",
+              "extracted": {
+                "value": "Дополнительный объём работ и перенос срока поставки оборудования",
+                "source_value": "Дополнительный объём работ и перенос срока поставки оборудования",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "addendum-2026-04",
+                  "source_part_id": "addendum-2026-04:src:1lwr8cs",
+                  "source_ref": "#/tables/0/cells/21",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 297.64,
+                    "t": 485,
+                    "r": 553.28,
+                    "b": 506,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 1,
+                  "source_text": "Дополнительный объём работ и перенос срока поставки оборудования",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            }
+          ],
+          "row_status": "extracted"
+        }
+      ],
+      "repeated_header_rows": [],
+      "summary_rows": [],
+      "empty_rows": [],
+      "role_source": "rules_or_parser",
+      "source": {
+        "source_type": "logical_tables",
+        "source_ref": "#/logical_tables/0",
+        "page_numbers": [
+          1
+        ],
+        "sheet_name": null
+      }
+    },
+    {
+      "id": "addendum-changes",
+      "title": "Изменяемые условия договора",
+      "role": "amendments",
+      "headers": [
+        "Пункт договора",
+        "Редакция до",
+        "Новая редакция",
+        "Основание"
+      ],
+      "rows": [
+        {
+          "row_id": "addendum-changes-r001",
+          "line_number": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "identifier": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "description": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "plan_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "actual_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit_price": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "amount": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "source_cells": [
+            {
+              "header": "Пункт договора",
+              "extracted": {
+                "value": "п. 2.1",
+                "source_value": "п. 2.1",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "addendum-2026-04",
+                  "source_part_id": "addendum-2026-04:src:7lxik",
+                  "source_ref": "#/tables/1/cells/4",
+                  "page_no": 2,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 42,
+                    "t": 121,
+                    "r": 169.82,
+                    "b": 142,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 0,
+                  "source_text": "п. 2.1",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            },
+            {
+              "header": "Редакция до",
+              "extracted": {
+                "value": "4 860 000,00 руб.",
+                "source_value": "4 860 000,00 руб.",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "addendum-2026-04",
+                  "source_part_id": "addendum-2026-04:src:11kqlh",
+                  "source_ref": "#/tables/1/cells/5",
+                  "page_no": 2,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 169.82,
+                    "t": 146,
+                    "r": 297.64,
+                    "b": 167,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 1,
+                  "source_text": "4 860 000,00 руб.",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            },
+            {
+              "header": "Новая редакция",
+              "extracted": {
+                "value": "5 214 600,00 руб.",
+                "source_value": "5 214 600,00 руб.",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "addendum-2026-04",
+                  "source_part_id": "addendum-2026-04:src:rl4wi",
+                  "source_ref": "#/tables/1/cells/6",
+                  "page_no": 2,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 297.64,
+                    "t": 146,
+                    "r": 425.46,
+                    "b": 167,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 2,
+                  "source_text": "5 214 600,00 руб.",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            },
+            {
+              "header": "Основание",
+              "extracted": {
+                "value": "Дополнительный объём по приложению 1",
+                "source_value": "Дополнительный объём по приложению 1",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "addendum-2026-04",
+                  "source_part_id": "addendum-2026-04:src:1yer6er",
+                  "source_ref": "#/tables/1/cells/7",
+                  "page_no": 2,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 425.46,
+                    "t": 146,
+                    "r": 553.28,
+                    "b": 167,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 3,
+                  "source_text": "Дополнительный объём по приложению 1",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            }
+          ],
+          "row_status": "extracted"
+        },
+        {
+          "row_id": "addendum-changes-r002",
+          "line_number": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "identifier": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "description": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "plan_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "actual_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit_price": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "amount": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "source_cells": [
+            {
+              "header": "Пункт договора",
+              "extracted": {
+                "value": "п. 4.2",
+                "source_value": "п. 4.2",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "addendum-2026-04",
+                  "source_part_id": "addendum-2026-04:src:1a3wzet",
+                  "source_ref": "#/tables/1/cells/8",
+                  "page_no": 2,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 42,
+                    "t": 146,
+                    "r": 169.82,
+                    "b": 167,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 0,
+                  "source_text": "п. 4.2",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            },
+            {
+              "header": "Редакция до",
+              "extracted": {
+                "value": "Срок этапа 2 — 31.08.2026",
+                "source_value": "Срок этапа 2 — 31.08.2026",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "addendum-2026-04",
+                  "source_part_id": "addendum-2026-04:src:199y6bw",
+                  "source_ref": "#/tables/1/cells/9",
+                  "page_no": 2,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 169.82,
+                    "t": 171,
+                    "r": 297.64,
+                    "b": 192,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 1,
+                  "source_text": "Срок этапа 2 — 31.08.2026",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            },
+            {
+              "header": "Новая редакция",
+              "extracted": {
+                "value": "Срок этапа 2 — 15.09.2026",
+                "source_value": "Срок этапа 2 — 15.09.2026",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "addendum-2026-04",
+                  "source_part_id": "addendum-2026-04:src:19jxs0v",
+                  "source_ref": "#/tables/1/cells/10",
+                  "page_no": 2,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 297.64,
+                    "t": 171,
+                    "r": 425.46,
+                    "b": 192,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 2,
+                  "source_text": "Срок этапа 2 — 15.09.2026",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            },
+            {
+              "header": "Основание",
+              "extracted": {
+                "value": "График поставки от 28.04.2026",
+                "source_value": "График поставки от 28.04.2026",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "addendum-2026-04",
+                  "source_part_id": "addendum-2026-04:src:18pyyxy",
+                  "source_ref": "#/tables/1/cells/11",
+                  "page_no": 2,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 425.46,
+                    "t": 171,
+                    "r": 553.28,
+                    "b": 192,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 3,
+                  "source_text": "График поставки от 28.04.2026",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            }
+          ],
+          "row_status": "extracted"
+        },
+        {
+          "row_id": "addendum-changes-r003",
+          "line_number": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "identifier": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "description": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "plan_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "actual_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit_price": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "amount": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "source_cells": [
+            {
+              "header": "Пункт договора",
+              "extracted": {
+                "value": "прил. 2, п. 6",
+                "source_value": "прил. 2, п. 6",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "addendum-2026-04",
+                  "source_part_id": "addendum-2026-04:src:1owwb66",
+                  "source_ref": "#/tables/1/cells/12",
+                  "page_no": 2,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 42,
+                    "t": 171,
+                    "r": 169.82,
+                    "b": 192,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 0,
+                  "source_text": "прил. 2, п. 6",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            },
+            {
+              "header": "Редакция до",
+              "extracted": {
+                "value": "Крепления М12 — 12 комплектов",
+                "source_value": "Крепления М12 — 12 комплектов",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "addendum-2026-04",
+                  "source_part_id": "addendum-2026-04:src:1omwph7",
+                  "source_ref": "#/tables/1/cells/13",
+                  "page_no": 2,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 169.82,
+                    "t": 196,
+                    "r": 297.64,
+                    "b": 217,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 1,
+                  "source_text": "Крепления М12 — 12 комплектов",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            },
+            {
+              "header": "Новая редакция",
+              "extracted": {
+                "value": "Крепления М12 — 18 комплектов",
+                "source_value": "Крепления М12 — 18 комплектов",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "addendum-2026-04",
+                  "source_part_id": "addendum-2026-04:src:1ocx3s8",
+                  "source_ref": "#/tables/1/cells/14",
+                  "page_no": 2,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 297.64,
+                    "t": 196,
+                    "r": 425.46,
+                    "b": 217,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 2,
+                  "source_text": "Крепления М12 — 18 комплектов",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            },
+            {
+              "header": "Основание",
+              "extracted": {
+                "value": "Согласованная ведомость № 4",
+                "source_value": "Согласованная ведомость № 4",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "addendum-2026-04",
+                  "source_part_id": "addendum-2026-04:src:1qaubn1",
+                  "source_ref": "#/tables/1/cells/15",
+                  "page_no": 2,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 425.46,
+                    "t": 196,
+                    "r": 553.28,
+                    "b": 217,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 3,
+                  "source_text": "Согласованная ведомость № 4",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            }
+          ],
+          "row_status": "extracted"
+        }
+      ],
+      "repeated_header_rows": [],
+      "summary_rows": [],
+      "empty_rows": [],
+      "role_source": "rules_or_parser",
+      "source": {
+        "source_type": "logical_tables",
+        "source_ref": "#/logical_tables/1",
+        "page_numbers": [
+          2
+        ],
+        "sheet_name": null
+      }
+    }
+  ],
+  "indicators": [
+    {
+      "key": "new_amount",
+      "label": "Цена после изменения",
+      "extracted": {
+        "label": "Цена после изменения",
+        "value": {
+          "amount": "5214600.00",
+          "currency": "RUB"
+        },
+        "source_value": "5 214 600,00 руб.",
+        "status": "extracted",
+        "confidence": 0.985,
+        "provenance": {
+          "document_id": "addendum-2026-04",
+          "source_part_id": "addendum-2026-04:src:12apmoh",
+          "source_ref": "#/tables/0/cells/17",
+          "page_no": 1,
+          "sheet_name": null,
+          "cell_address": null,
+          "bbox": {
+            "l": 297.64,
+            "t": 435,
+            "r": 553.28,
+            "b": 456,
+            "coord_origin": "TOPLEFT"
+          },
+          "coordinate_origin": "TOPLEFT",
+          "page_size": {
+            "width": 595.28,
+            "height": 841.89,
+            "unit": "pt"
+          },
+          "column_index": 1,
+          "source_text": "5 214 600,00 руб.",
+          "confidence": 0.985,
+          "source_available": true
+        },
+        "normalization_note": null,
+        "source_method": "rules"
+      }
+    },
+    {
+      "key": "extracted_line_count",
+      "label": "Извлечено строк",
+      "extracted": {
+        "value": "0",
+        "source_value": "0",
+        "status": "extracted",
+        "confidence": 1,
+        "provenance": null,
+        "normalization_note": "Количество строк структурированной таблицы"
+      }
+    }
+  ],
+  "missing_fields": [
+    "effective_date"
+  ],
+  "review_required": [
+    {
+      "path": "fields.signing_date",
+      "reason": "Порядок дня и месяца неоднозначен",
+      "source_value": "04/05/2026",
+      "provenance": {
+        "document_id": "addendum-2026-04",
+        "source_part_id": "addendum-2026-04:src:1lzc0ds",
+        "source_ref": "#/tables/0/cells/7",
+        "page_no": 1,
+        "sheet_name": null,
+        "cell_address": null,
+        "bbox": {
+          "l": 297.64,
+          "t": 310,
+          "r": 553.28,
+          "b": 331,
+          "coord_origin": "TOPLEFT"
+        },
+        "coordinate_origin": "TOPLEFT",
+        "page_size": {
+          "width": 595.28,
+          "height": 841.89,
+          "unit": "pt"
+        },
+        "column_index": 1,
+        "source_text": "04/05/2026",
+        "confidence": 0.985,
+        "source_available": true
+      }
+    }
+  ],
+  "document_type": "addendum",
+  "changes": [
+    {
+      "row_id": "addendum-changes-r001",
+      "parameter": {
+        "value": "п. 2.1",
+        "source_value": "п. 2.1",
+        "status": "extracted",
+        "confidence": 0.985,
+        "provenance": {
+          "document_id": "addendum-2026-04",
+          "source_part_id": "addendum-2026-04:src:7lxik",
+          "source_ref": "#/tables/1/cells/4",
+          "page_no": 2,
+          "sheet_name": null,
+          "cell_address": null,
+          "bbox": {
+            "l": 42,
+            "t": 121,
+            "r": 169.82,
+            "b": 142,
+            "coord_origin": "TOPLEFT"
+          },
+          "coordinate_origin": "TOPLEFT",
+          "page_size": {
+            "width": 595.28,
+            "height": 841.89,
+            "unit": "pt"
+          },
+          "column_index": 0,
+          "source_text": "п. 2.1",
+          "confidence": 0.985,
+          "source_available": true
+        },
+        "normalization_note": null
+      },
+      "old_value": {
+        "value": "4 860 000,00 руб.",
+        "source_value": "4 860 000,00 руб.",
+        "status": "extracted",
+        "confidence": 0.985,
+        "provenance": {
+          "document_id": "addendum-2026-04",
+          "source_part_id": "addendum-2026-04:src:11kqlh",
+          "source_ref": "#/tables/1/cells/5",
+          "page_no": 2,
+          "sheet_name": null,
+          "cell_address": null,
+          "bbox": {
+            "l": 169.82,
+            "t": 146,
+            "r": 297.64,
+            "b": 167,
+            "coord_origin": "TOPLEFT"
+          },
+          "coordinate_origin": "TOPLEFT",
+          "page_size": {
+            "width": 595.28,
+            "height": 841.89,
+            "unit": "pt"
+          },
+          "column_index": 1,
+          "source_text": "4 860 000,00 руб.",
+          "confidence": 0.985,
+          "source_available": true
+        },
+        "normalization_note": null
+      },
+      "new_value": {
+        "value": "5 214 600,00 руб.",
+        "source_value": "5 214 600,00 руб.",
+        "status": "extracted",
+        "confidence": 0.985,
+        "provenance": {
+          "document_id": "addendum-2026-04",
+          "source_part_id": "addendum-2026-04:src:rl4wi",
+          "source_ref": "#/tables/1/cells/6",
+          "page_no": 2,
+          "sheet_name": null,
+          "cell_address": null,
+          "bbox": {
+            "l": 297.64,
+            "t": 146,
+            "r": 425.46,
+            "b": 167,
+            "coord_origin": "TOPLEFT"
+          },
+          "coordinate_origin": "TOPLEFT",
+          "page_size": {
+            "width": 595.28,
+            "height": 841.89,
+            "unit": "pt"
+          },
+          "column_index": 2,
+          "source_text": "5 214 600,00 руб.",
+          "confidence": 0.985,
+          "source_available": true
+        },
+        "normalization_note": null
+      },
+      "reason": {
+        "value": "Дополнительный объём по приложению 1",
+        "source_value": "Дополнительный объём по приложению 1",
+        "status": "extracted",
+        "confidence": 0.985,
+        "provenance": {
+          "document_id": "addendum-2026-04",
+          "source_part_id": "addendum-2026-04:src:1yer6er",
+          "source_ref": "#/tables/1/cells/7",
+          "page_no": 2,
+          "sheet_name": null,
+          "cell_address": null,
+          "bbox": {
+            "l": 425.46,
+            "t": 146,
+            "r": 553.28,
+            "b": 167,
+            "coord_origin": "TOPLEFT"
+          },
+          "coordinate_origin": "TOPLEFT",
+          "page_size": {
+            "width": 595.28,
+            "height": 841.89,
+            "unit": "pt"
+          },
+          "column_index": 3,
+          "source_text": "Дополнительный объём по приложению 1",
+          "confidence": 0.985,
+          "source_available": true
+        },
+        "normalization_note": null
+      },
+      "source_cells": [],
+      "row_status": "missing"
+    },
+    {
+      "row_id": "addendum-changes-r002",
+      "parameter": {
+        "value": "п. 4.2",
+        "source_value": "п. 4.2",
+        "status": "extracted",
+        "confidence": 0.985,
+        "provenance": {
+          "document_id": "addendum-2026-04",
+          "source_part_id": "addendum-2026-04:src:1a3wzet",
+          "source_ref": "#/tables/1/cells/8",
+          "page_no": 2,
+          "sheet_name": null,
+          "cell_address": null,
+          "bbox": {
+            "l": 42,
+            "t": 146,
+            "r": 169.82,
+            "b": 167,
+            "coord_origin": "TOPLEFT"
+          },
+          "coordinate_origin": "TOPLEFT",
+          "page_size": {
+            "width": 595.28,
+            "height": 841.89,
+            "unit": "pt"
+          },
+          "column_index": 0,
+          "source_text": "п. 4.2",
+          "confidence": 0.985,
+          "source_available": true
+        },
+        "normalization_note": null
+      },
+      "old_value": {
+        "value": "Срок этапа 2 — 31.08.2026",
+        "source_value": "Срок этапа 2 — 31.08.2026",
+        "status": "extracted",
+        "confidence": 0.985,
+        "provenance": {
+          "document_id": "addendum-2026-04",
+          "source_part_id": "addendum-2026-04:src:199y6bw",
+          "source_ref": "#/tables/1/cells/9",
+          "page_no": 2,
+          "sheet_name": null,
+          "cell_address": null,
+          "bbox": {
+            "l": 169.82,
+            "t": 171,
+            "r": 297.64,
+            "b": 192,
+            "coord_origin": "TOPLEFT"
+          },
+          "coordinate_origin": "TOPLEFT",
+          "page_size": {
+            "width": 595.28,
+            "height": 841.89,
+            "unit": "pt"
+          },
+          "column_index": 1,
+          "source_text": "Срок этапа 2 — 31.08.2026",
+          "confidence": 0.985,
+          "source_available": true
+        },
+        "normalization_note": null
+      },
+      "new_value": {
+        "value": "Срок этапа 2 — 15.09.2026",
+        "source_value": "Срок этапа 2 — 15.09.2026",
+        "status": "extracted",
+        "confidence": 0.985,
+        "provenance": {
+          "document_id": "addendum-2026-04",
+          "source_part_id": "addendum-2026-04:src:19jxs0v",
+          "source_ref": "#/tables/1/cells/10",
+          "page_no": 2,
+          "sheet_name": null,
+          "cell_address": null,
+          "bbox": {
+            "l": 297.64,
+            "t": 171,
+            "r": 425.46,
+            "b": 192,
+            "coord_origin": "TOPLEFT"
+          },
+          "coordinate_origin": "TOPLEFT",
+          "page_size": {
+            "width": 595.28,
+            "height": 841.89,
+            "unit": "pt"
+          },
+          "column_index": 2,
+          "source_text": "Срок этапа 2 — 15.09.2026",
+          "confidence": 0.985,
+          "source_available": true
+        },
+        "normalization_note": null
+      },
+      "reason": {
+        "value": "График поставки от 28.04.2026",
+        "source_value": "График поставки от 28.04.2026",
+        "status": "extracted",
+        "confidence": 0.985,
+        "provenance": {
+          "document_id": "addendum-2026-04",
+          "source_part_id": "addendum-2026-04:src:18pyyxy",
+          "source_ref": "#/tables/1/cells/11",
+          "page_no": 2,
+          "sheet_name": null,
+          "cell_address": null,
+          "bbox": {
+            "l": 425.46,
+            "t": 171,
+            "r": 553.28,
+            "b": 192,
+            "coord_origin": "TOPLEFT"
+          },
+          "coordinate_origin": "TOPLEFT",
+          "page_size": {
+            "width": 595.28,
+            "height": 841.89,
+            "unit": "pt"
+          },
+          "column_index": 3,
+          "source_text": "График поставки от 28.04.2026",
+          "confidence": 0.985,
+          "source_available": true
+        },
+        "normalization_note": null
+      },
+      "source_cells": [],
+      "row_status": "missing"
+    },
+    {
+      "row_id": "addendum-changes-r003",
+      "parameter": {
+        "value": "прил. 2, п. 6",
+        "source_value": "прил. 2, п. 6",
+        "status": "extracted",
+        "confidence": 0.985,
+        "provenance": {
+          "document_id": "addendum-2026-04",
+          "source_part_id": "addendum-2026-04:src:1owwb66",
+          "source_ref": "#/tables/1/cells/12",
+          "page_no": 2,
+          "sheet_name": null,
+          "cell_address": null,
+          "bbox": {
+            "l": 42,
+            "t": 171,
+            "r": 169.82,
+            "b": 192,
+            "coord_origin": "TOPLEFT"
+          },
+          "coordinate_origin": "TOPLEFT",
+          "page_size": {
+            "width": 595.28,
+            "height": 841.89,
+            "unit": "pt"
+          },
+          "column_index": 0,
+          "source_text": "прил. 2, п. 6",
+          "confidence": 0.985,
+          "source_available": true
+        },
+        "normalization_note": null
+      },
+      "old_value": {
+        "value": "Крепления М12 — 12 комплектов",
+        "source_value": "Крепления М12 — 12 комплектов",
+        "status": "extracted",
+        "confidence": 0.985,
+        "provenance": {
+          "document_id": "addendum-2026-04",
+          "source_part_id": "addendum-2026-04:src:1omwph7",
+          "source_ref": "#/tables/1/cells/13",
+          "page_no": 2,
+          "sheet_name": null,
+          "cell_address": null,
+          "bbox": {
+            "l": 169.82,
+            "t": 196,
+            "r": 297.64,
+            "b": 217,
+            "coord_origin": "TOPLEFT"
+          },
+          "coordinate_origin": "TOPLEFT",
+          "page_size": {
+            "width": 595.28,
+            "height": 841.89,
+            "unit": "pt"
+          },
+          "column_index": 1,
+          "source_text": "Крепления М12 — 12 комплектов",
+          "confidence": 0.985,
+          "source_available": true
+        },
+        "normalization_note": null
+      },
+      "new_value": {
+        "value": "Крепления М12 — 18 комплектов",
+        "source_value": "Крепления М12 — 18 комплектов",
+        "status": "extracted",
+        "confidence": 0.985,
+        "provenance": {
+          "document_id": "addendum-2026-04",
+          "source_part_id": "addendum-2026-04:src:1ocx3s8",
+          "source_ref": "#/tables/1/cells/14",
+          "page_no": 2,
+          "sheet_name": null,
+          "cell_address": null,
+          "bbox": {
+            "l": 297.64,
+            "t": 196,
+            "r": 425.46,
+            "b": 217,
+            "coord_origin": "TOPLEFT"
+          },
+          "coordinate_origin": "TOPLEFT",
+          "page_size": {
+            "width": 595.28,
+            "height": 841.89,
+            "unit": "pt"
+          },
+          "column_index": 2,
+          "source_text": "Крепления М12 — 18 комплектов",
+          "confidence": 0.985,
+          "source_available": true
+        },
+        "normalization_note": null
+      },
+      "reason": {
+        "value": "Согласованная ведомость № 4",
+        "source_value": "Согласованная ведомость № 4",
+        "status": "extracted",
+        "confidence": 0.985,
+        "provenance": {
+          "document_id": "addendum-2026-04",
+          "source_part_id": "addendum-2026-04:src:1qaubn1",
+          "source_ref": "#/tables/1/cells/15",
+          "page_no": 2,
+          "sheet_name": null,
+          "cell_address": null,
+          "bbox": {
+            "l": 425.46,
+            "t": 196,
+            "r": 553.28,
+            "b": 217,
+            "coord_origin": "TOPLEFT"
+          },
+          "coordinate_origin": "TOPLEFT",
+          "page_size": {
+            "width": 595.28,
+            "height": 841.89,
+            "unit": "pt"
+          },
+          "column_index": 3,
+          "source_text": "Согласованная ведомость № 4",
+          "confidence": 0.985,
+          "source_available": true
+        },
+        "normalization_note": null
+      },
+      "source_cells": [],
+      "row_status": "missing"
+    }
+  ],
+  "input_version": 1,
+  "input_hash": "c13b6aef2e3c363e7b08fb800ecc183cc6592dda462bcd9922d31d80af78db0b",
+  "model_version": null
+}

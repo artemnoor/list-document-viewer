@@ -1,0 +1,107 @@
+services:
+  config-check:
+    build: .
+    restart: "no"
+    command: ["node", "build/server/config-check.mjs"]
+    environment:
+      NODE_ENV: production
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set a generated POSTGRES_PASSWORD in .env}
+      API_BEARER_TOKEN: ${API_BEARER_TOKEN:?Set a generated API_BEARER_TOKEN in .env}
+
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-document_linking}
+      POSTGRES_USER: ${POSTGRES_USER:-document_linking}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set a generated POSTGRES_PASSWORD in .env}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:${PG_PORT:-55432}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    depends_on:
+      config-check:
+        condition: service_completed_successfully
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis_data:/data
+    ports:
+      - "127.0.0.1:${REDIS_PORT:-56379}:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  migrate:
+    build: .
+    restart: "no"
+    command: ["node", "build/server/migrate.mjs"]
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER:-document_linking}:${POSTGRES_PASSWORD:?Set a generated POSTGRES_PASSWORD in .env}@postgres:5432/${POSTGRES_DB:-document_linking}
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  api:
+    build: .
+    restart: unless-stopped
+    command: ["node", "build/server/index.mjs"]
+    environment: &app_environment
+      NODE_ENV: production
+      PORT: 3000
+      HOST: 0.0.0.0
+      DATABASE_URL: postgres://${POSTGRES_USER:-document_linking}:${POSTGRES_PASSWORD:?Set a generated POSTGRES_PASSWORD in .env}@postgres:5432/${POSTGRES_DB:-document_linking}
+      REDIS_URL: redis://redis:6379
+      API_BEARER_TOKEN: ${API_BEARER_TOKEN:?Set a generated API_BEARER_TOKEN in .env}
+      POLZA_API_KEY: ${POLZA_API_KEY:-${POLZA_AI_API_KEY:-}}
+      LLM_ENABLED: ${LLM_ENABLED:-true}
+      LLM_MAX_CALLS_PER_RUN: ${LLM_MAX_CALLS_PER_RUN:-52}
+      LLM_TIMEOUT_MS: ${LLM_TIMEOUT_MS:-90000}
+      LLM_MAX_INPUT_TOKENS: ${LLM_MAX_INPUT_TOKENS:-180000}
+      LLM_MAX_RUN_MS: ${LLM_MAX_RUN_MS:-900000}
+      MAX_REQUEST_SIZE_MB: ${MAX_REQUEST_SIZE_MB:-32}
+      MAX_DOCUMENT_SIZE_MB: ${MAX_DOCUMENT_SIZE_MB:-16}
+      MAX_DOCUMENT_SET_SIZE_MB: ${MAX_DOCUMENT_SET_SIZE_MB:-30}
+      MAX_DOCUMENTS: ${MAX_DOCUMENTS:-100}
+    ports:
+      - "${PORT:-3000}:3000"
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/health').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  worker:
+    build: .
+    restart: unless-stopped
+    command: ["node", "build/server/worker-main.mjs"]
+    environment: *app_environment
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+  redis_data:

@@ -1,0 +1,87 @@
+{
+  "version": "1.0.0",
+  "plan_sha256": "1e3f3f0f9020d1986827c3bb3fb4b2597f1d5d6e28bc933225df0542d5bbc5bb",
+  "experiment_parameters": {
+    "timeout_ms": 120000,
+    "max_run_ms": 600000,
+    "max_calls_per_strategy": 8,
+    "max_input_tokens": 180000,
+    "max_evidence_correction_attempts": 2
+  },
+  "model": "google/gemma-4-26b-a4b-it",
+  "provider": "Polza AI",
+  "budget_rub": 10,
+  "actual_or_estimated_spend_rub": 7.25479187,
+  "reserved_spend_rub": 0.75393864,
+  "requests_attempted": 23,
+  "responses_with_usage": 22,
+  "requests_without_usage": 1,
+  "stopped_for_budget": true,
+  "external_live_checks": [],
+  "pricing_source": "https://polza.ai/models/google/gemma-4-26b-a4b-it",
+  "input_rate_rub_per_million": 14.52,
+  "output_rate_rub_per_million": 79.8,
+  "system_prompt_sha256": "9c7ac83555cc3fa9d83aed70e18c5d68a9e95b47c959d5de24065e5a48da5a63",
+  "strategy_prompts_version": "1.1.0",
+  "strategy_prompts_sha256": "bc5ec24601bd0bcaede9a17f3bc054d5907b7662a9da43aa87c7b03768372ea9",
+  "strategy_source_sha256": "654acd3ba3cea61dc1c295173a5aa536423475511372bc9a8e73f098363f2885",
+  "results": [
+    {
+      "scenario": "demo-ambiguous-review-regression",
+      "repeat": 1,
+      "strategy": "A",
+      "file": "demo-ambiguous-review-regression-repeat-1-A.json"
+    },
+    {
+      "scenario": "demo-ambiguous-review-regression",
+      "repeat": 1,
+      "strategy": "B",
+      "file": "demo-ambiguous-review-regression-repeat-1-B.json"
+    },
+    {
+      "scenario": "demo-ambiguous-review-regression",
+      "repeat": 1,
+      "strategy": "C",
+      "file": "demo-ambiguous-review-regression-repeat-1-C.json"
+    },
+    {
+      "scenario": "demo-ambiguous-review-regression",
+      "repeat": 2,
+      "strategy": "A",
+      "error": "Истекло время ожидания Polza (120000 мс)",
+      "file": "demo-ambiguous-review-regression-repeat-2-A.json"
+    },
+    {
+      "scenario": "demo-ambiguous-review-regression",
+      "repeat": 2,
+      "strategy": "B",
+      "file": "demo-ambiguous-review-regression-repeat-2-B.json"
+    },
+    {
+      "scenario": "demo-ambiguous-review-regression",
+      "repeat": 2,
+      "strategy": "C",
+      "error": "Gemma вернула невалидный JSON",
+      "file": "demo-ambiguous-review-regression-repeat-2-C.json"
+    },
+    {
+      "scenario": "upstream-contract-addendum-v1_1",
+      "repeat": 1,
+      "strategy": "A",
+      "file": "upstream-contract-addendum-v1_1-repeat-1-A.json"
+    },
+    {
+      "scenario": "upstream-contract-addendum-v1_1",
+      "repeat": 1,
+      "strategy": "B",
+      "file": "upstream-contract-addendum-v1_1-repeat-1-B.json"
+    },
+    {
+      "scenario": "upstream-contract-addendum-v1_1",
+      "repeat": 1,
+      "strategy": "C",
+      "error": "BUDGET_STOP: резерв 2.760130 RUB для C.critic превысит лимит 10 RUB (учтено 7.254792 + резерв 0.753939)",
+      "file": "upstream-contract-addendum-v1_1-repeat-1-C.json"
+    }
+  ]
+}

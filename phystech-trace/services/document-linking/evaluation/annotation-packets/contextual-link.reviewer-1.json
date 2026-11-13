@@ -1,0 +1,57 @@
+{
+  "packet_version": "1.0.0",
+  "scenario_id": "contextual-link",
+  "source_bundle_sha256": "de587f605be30af39e6bd1bee615964036030344f7e110d9abe205494aa92a50",
+  "reviewer_id": "reviewer-1-pending",
+  "review_status": "pending",
+  "source_documents": [
+    {
+      "path": "fixtures/upstream-structured-extraction-1.2.0/act-2026-0424.json",
+      "sha256": "57a13a1f883ae6a05d6b3c72e99c5336fa066fbb4ccbba3017a7347606ba444b",
+      "document_id": "act-2026-0424",
+      "extraction_id": "real-act-2026-0424-v1",
+      "schema_version": "1.2.0"
+    },
+    {
+      "path": "fixtures/upstream-structured-extraction-1.2.0/invoice-2026-0408.json",
+      "sha256": "3d78355654c78acecbdf7936679cfdb2feb8781559bada85195cc1fa298d0ef8",
+      "document_id": "invoice-2026-0408",
+      "extraction_id": "real-invoice-2026-0408-v1",
+      "schema_version": "1.2.0"
+    },
+    {
+      "path": "fixtures/upstream-structured-extraction-1.2.0/registry-2026-04.json",
+      "sha256": "a923dd884c96961b2c8b2a70545795c3938958624ed9aea45e83f3e8034b8500",
+      "document_id": "registry-2026-04",
+      "extraction_id": "real-registry-2026-04-v1",
+      "schema_version": "1.2.0"
+    }
+  ],
+  "instruction": "Review only these original Structured Extraction JSON files. Do not inspect model predictions. Decide every unordered document pair, record direction for each supported relation, annotate row matches and supporting/contradictory source paths, and mark genuine ambiguity explicitly.",
+  "document_pair_decisions": [
+    {
+      "left_document_id": "act-2026-0424",
+      "right_document_id": "invoice-2026-0408",
+      "decision": "pending",
+      "relationship_instances": [],
+      "contradicting_evidence": [],
+      "ambiguity_notes": ""
+    },
+    {
+      "left_document_id": "act-2026-0424",
+      "right_document_id": "registry-2026-04",
+      "decision": "pending",
+      "relationship_instances": [],
+      "contradicting_evidence": [],
+      "ambiguity_notes": ""
+    },
+    {
+      "left_document_id": "invoice-2026-0408",
+      "right_document_id": "registry-2026-04",
+      "decision": "pending",
+      "relationship_instances": [],
+      "contradicting_evidence": [],
+      "ambiguity_notes": ""
+    }
+  ]
+}

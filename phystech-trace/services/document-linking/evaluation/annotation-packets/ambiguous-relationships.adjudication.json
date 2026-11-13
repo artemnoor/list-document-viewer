@@ -1,0 +1,57 @@
+{
+  "packet_version": "1.0.0",
+  "scenario_id": "ambiguous-relationships",
+  "source_bundle_sha256": "69758f13c390dbb677073a38058525fbf9a3c519fec295155fb3932d75dd524d",
+  "reviewer_id": "adjudicator-pending",
+  "review_status": "pending",
+  "source_documents": [
+    {
+      "path": "fixtures/demo-structured-extraction/contract-ambiguous-a.json",
+      "sha256": "a80a1c60931e89424e5d1f876c78e78efc4f2ea84eecd27c9b5061672e5c939a",
+      "document_id": "contract-ambiguous-a",
+      "extraction_id": "ext-contract-ambiguous-a-v1",
+      "schema_version": "1.2.0"
+    },
+    {
+      "path": "fixtures/demo-structured-extraction/contract-ambiguous-b.json",
+      "sha256": "e2dd70b73dffcaad3be4235f16cdb1a40fc6c711297932e2ef818c96e65081f5",
+      "document_id": "contract-ambiguous-b",
+      "extraction_id": "ext-contract-ambiguous-b-v1",
+      "schema_version": "1.2.0"
+    },
+    {
+      "path": "fixtures/demo-structured-extraction/act-ambiguous-1.json",
+      "sha256": "2d87306dbcf4fa2d1dc365c6f934d081ebeebb6c000c7410525cbcad6c14930e",
+      "document_id": "act-ambiguous-1",
+      "extraction_id": "ext-act-ambiguous-1-v1",
+      "schema_version": "1.2.0"
+    }
+  ],
+  "instruction": "After both independent reviews are complete, adjudicate every disagreement against the original JSON. Preserve uncertainty; do not consult model outputs until labels are frozen.",
+  "document_pair_decisions": [
+    {
+      "left_document_id": "contract-ambiguous-a",
+      "right_document_id": "contract-ambiguous-b",
+      "decision": "pending",
+      "relationship_instances": [],
+      "contradicting_evidence": [],
+      "ambiguity_notes": ""
+    },
+    {
+      "left_document_id": "contract-ambiguous-a",
+      "right_document_id": "act-ambiguous-1",
+      "decision": "pending",
+      "relationship_instances": [],
+      "contradicting_evidence": [],
+      "ambiguity_notes": ""
+    },
+    {
+      "left_document_id": "contract-ambiguous-b",
+      "right_document_id": "act-ambiguous-1",
+      "decision": "pending",
+      "relationship_instances": [],
+      "contradicting_evidence": [],
+      "ambiguity_notes": ""
+    }
+  ]
+}

@@ -1,0 +1,115 @@
+{
+  "version": "1.0.0",
+  "scenarios": [
+    {
+      "scenario_id": "indirect-link-no-shared-number",
+      "reviewer_packets": [
+        "indirect-link-no-shared-number.reviewer-1.json",
+        "indirect-link-no-shared-number.reviewer-2.json"
+      ],
+      "adjudication_packet": "indirect-link-no-shared-number.adjudication.json",
+      "document_count": 3,
+      "pair_count": 3,
+      "source_bundle_sha256": "d5cd31278756ae9372642dbfc2f70e51877c641dbba9b5966f940629ca19ae9d"
+    },
+    {
+      "scenario_id": "organization-alias",
+      "reviewer_packets": [
+        "organization-alias.reviewer-1.json",
+        "organization-alias.reviewer-2.json"
+      ],
+      "adjudication_packet": "organization-alias.adjudication.json",
+      "document_count": 2,
+      "pair_count": 1,
+      "source_bundle_sha256": "5a4b500580f0396c23e218011e3a666f202f4d0daea49a45372fbd9250d5915f"
+    },
+    {
+      "scenario_id": "contextual-link",
+      "reviewer_packets": [
+        "contextual-link.reviewer-1.json",
+        "contextual-link.reviewer-2.json"
+      ],
+      "adjudication_packet": "contextual-link.adjudication.json",
+      "document_count": 3,
+      "pair_count": 3,
+      "source_bundle_sha256": "de587f605be30af39e6bd1bee615964036030344f7e110d9abe205494aa92a50"
+    },
+    {
+      "scenario_id": "amendment-changes-contract",
+      "reviewer_packets": [
+        "amendment-changes-contract.reviewer-1.json",
+        "amendment-changes-contract.reviewer-2.json"
+      ],
+      "adjudication_packet": "amendment-changes-contract.adjudication.json",
+      "document_count": 2,
+      "pair_count": 1,
+      "source_bundle_sha256": "7529237074c1508c6c02ad4da0d64804cb894888b8fdf6cac7ffb7e38d1784b7"
+    },
+    {
+      "scenario_id": "line-item-cross-document",
+      "reviewer_packets": [
+        "line-item-cross-document.reviewer-1.json",
+        "line-item-cross-document.reviewer-2.json"
+      ],
+      "adjudication_packet": "line-item-cross-document.adjudication.json",
+      "document_count": 2,
+      "pair_count": 1,
+      "source_bundle_sha256": "204635c4d57d9545ed9252b567cc7952ed59044b111b731193add80ffdb7ef66"
+    },
+    {
+      "scenario_id": "same-amount-unrelated",
+      "reviewer_packets": [
+        "same-amount-unrelated.reviewer-1.json",
+        "same-amount-unrelated.reviewer-2.json"
+      ],
+      "adjudication_packet": "same-amount-unrelated.adjudication.json",
+      "document_count": 2,
+      "pair_count": 1,
+      "source_bundle_sha256": "2edd473456941577672f99287fcdacc6b13396ad8a0ddd3b81c713b3e3e43e40"
+    },
+    {
+      "scenario_id": "same-counterparty-different-operation",
+      "reviewer_packets": [
+        "same-counterparty-different-operation.reviewer-1.json",
+        "same-counterparty-different-operation.reviewer-2.json"
+      ],
+      "adjudication_packet": "same-counterparty-different-operation.adjudication.json",
+      "document_count": 3,
+      "pair_count": 3,
+      "source_bundle_sha256": "119257b660d0a8a092a62a647a348725513c775dc0acddfbbc2c1d70f2cc62ca"
+    },
+    {
+      "scenario_id": "many-documents-one-contract",
+      "reviewer_packets": [
+        "many-documents-one-contract.reviewer-1.json",
+        "many-documents-one-contract.reviewer-2.json"
+      ],
+      "adjudication_packet": "many-documents-one-contract.adjudication.json",
+      "document_count": 5,
+      "pair_count": 10,
+      "source_bundle_sha256": "d601d53d60a66e79bb9cfa7528239b3dd245a4d1eca0ad558c889f01e6dd874e"
+    },
+    {
+      "scenario_id": "ambiguous-relationships",
+      "reviewer_packets": [
+        "ambiguous-relationships.reviewer-1.json",
+        "ambiguous-relationships.reviewer-2.json"
+      ],
+      "adjudication_packet": "ambiguous-relationships.adjudication.json",
+      "document_count": 3,
+      "pair_count": 3,
+      "source_bundle_sha256": "69758f13c390dbb677073a38058525fbf9a3c519fec295155fb3932d75dd524d"
+    },
+    {
+      "scenario_id": "unlinked-documents",
+      "reviewer_packets": [
+        "unlinked-documents.reviewer-1.json",
+        "unlinked-documents.reviewer-2.json"
+      ],
+      "adjudication_packet": "unlinked-documents.adjudication.json",
+      "document_count": 2,
+      "pair_count": 1,
+      "source_bundle_sha256": "c5f56b759bf61d084792eabcf543f3b83a0bd4ca689e458dd6042263e5faaaa2"
+    }
+  ]
+}

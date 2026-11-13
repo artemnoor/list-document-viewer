@@ -1,0 +1,127 @@
+{
+  "packet_version": "1.0.0",
+  "scenario_id": "many-documents-one-contract",
+  "source_bundle_sha256": "d601d53d60a66e79bb9cfa7528239b3dd245a4d1eca0ad558c889f01e6dd874e",
+  "reviewer_id": "reviewer-2-pending",
+  "review_status": "pending",
+  "source_documents": [
+    {
+      "path": "fixtures/upstream-structured-extraction-1.2.0/contract-2026-0315.json",
+      "sha256": "237324eb12181125b9b60076852de1d4c8f0bf3cebc61c41d39af4ce6757e3a2",
+      "document_id": "contract-2026-0315",
+      "extraction_id": "real-contract-2026-0315-v1",
+      "schema_version": "1.2.0"
+    },
+    {
+      "path": "fixtures/upstream-structured-extraction-1.2.0/addendum-2026-04.json",
+      "sha256": "9d1033912386b09b27b443b241e151537fd49f47866912f6e9c8ae331f6ae60c",
+      "document_id": "addendum-2026-04",
+      "extraction_id": "real-addendum-2026-04-v1",
+      "schema_version": "1.2.0"
+    },
+    {
+      "path": "fixtures/upstream-structured-extraction-1.2.0/act-2026-0424.json",
+      "sha256": "57a13a1f883ae6a05d6b3c72e99c5336fa066fbb4ccbba3017a7347606ba444b",
+      "document_id": "act-2026-0424",
+      "extraction_id": "real-act-2026-0424-v1",
+      "schema_version": "1.2.0"
+    },
+    {
+      "path": "fixtures/upstream-structured-extraction-1.2.0/invoice-2026-0408.json",
+      "sha256": "3d78355654c78acecbdf7936679cfdb2feb8781559bada85195cc1fa298d0ef8",
+      "document_id": "invoice-2026-0408",
+      "extraction_id": "real-invoice-2026-0408-v1",
+      "schema_version": "1.2.0"
+    },
+    {
+      "path": "fixtures/upstream-structured-extraction-1.2.0/registry-2026-04.json",
+      "sha256": "a923dd884c96961b2c8b2a70545795c3938958624ed9aea45e83f3e8034b8500",
+      "document_id": "registry-2026-04",
+      "extraction_id": "real-registry-2026-04-v1",
+      "schema_version": "1.2.0"
+    }
+  ],
+  "instruction": "Review only these original Structured Extraction JSON files. Do not inspect model predictions. Decide every unordered document pair, record direction for each supported relation, annotate row matches and supporting/contradictory source paths, and mark genuine ambiguity explicitly.",
+  "document_pair_decisions": [
+    {
+      "left_document_id": "contract-2026-0315",
+      "right_document_id": "addendum-2026-04",
+      "decision": "pending",
+      "relationship_instances": [],
+      "contradicting_evidence": [],
+      "ambiguity_notes": ""
+    },
+    {
+      "left_document_id": "contract-2026-0315",
+      "right_document_id": "act-2026-0424",
+      "decision": "pending",
+      "relationship_instances": [],
+      "contradicting_evidence": [],
+      "ambiguity_notes": ""
+    },
+    {
+      "left_document_id": "contract-2026-0315",
+      "right_document_id": "invoice-2026-0408",
+      "decision": "pending",
+      "relationship_instances": [],
+      "contradicting_evidence": [],
+      "ambiguity_notes": ""
+    },
+    {
+      "left_document_id": "contract-2026-0315",
+      "right_document_id": "registry-2026-04",
+      "decision": "pending",
+      "relationship_instances": [],
+      "contradicting_evidence": [],
+      "ambiguity_notes": ""
+    },
+    {
+      "left_document_id": "addendum-2026-04",
+      "right_document_id": "act-2026-0424",
+      "decision": "pending",
+      "relationship_instances": [],
+      "contradicting_evidence": [],
+      "ambiguity_notes": ""
+    },
+    {
+      "left_document_id": "addendum-2026-04",
+      "right_document_id": "invoice-2026-0408",
+      "decision": "pending",
+      "relationship_instances": [],
+      "contradicting_evidence": [],
+      "ambiguity_notes": ""
+    },
+    {
+      "left_document_id": "addendum-2026-04",
+      "right_document_id": "registry-2026-04",
+      "decision": "pending",
+      "relationship_instances": [],
+      "contradicting_evidence": [],
+      "ambiguity_notes": ""
+    },
+    {
+      "left_document_id": "act-2026-0424",
+      "right_document_id": "invoice-2026-0408",
+      "decision": "pending",
+      "relationship_instances": [],
+      "contradicting_evidence": [],
+      "ambiguity_notes": ""
+    },
+    {
+      "left_document_id": "act-2026-0424",
+      "right_document_id": "registry-2026-04",
+      "decision": "pending",
+      "relationship_instances": [],
+      "contradicting_evidence": [],
+      "ambiguity_notes": ""
+    },
+    {
+      "left_document_id": "invoice-2026-0408",
+      "right_document_id": "registry-2026-04",
+      "decision": "pending",
+      "relationship_instances": [],
+      "contradicting_evidence": [],
+      "ambiguity_notes": ""
+    }
+  ]
+}

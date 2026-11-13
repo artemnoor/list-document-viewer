@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Independent Document Linking evaluation annotations",
+  "type": "object",
+  "required": ["version", "annotations_complete", "reviewer_ids", "scenarios"],
+  "properties": {
+    "version": { "type": "string" },
+    "instructions": { "type": "string" },
+    "annotations_complete": { "type": "boolean" },
+    "reviewer_ids": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+    "scenarios": {
+      "type": "array", "items": {
+        "type": "object", "required": ["id", "gold_links"],
+        "anyOf": [{ "required": ["predictions_file"] }, { "required": ["predictions_files"] }],
+        "properties": {
+          "id": { "type": "string" },
+          "predictions_file": { "type": "string" },
+          "predictions_files": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+          "gold_links": { "type": "array", "items": {
+            "type": "object", "required": ["relationship_type", "source_document_id", "target_document_id", "evidence"],
+            "properties": {
+              "relationship_type": { "type": "string" },
+              "source_document_id": { "type": "string" },
+              "target_document_id": { "type": "string" },
+              "source_row_id": { "type": ["string", "null"] },
+              "target_row_id": { "type": ["string", "null"] },
+              "evidence": { "type": "array", "items": { "type": "object", "required": ["source", "target"], "properties": {
+                "source": { "$ref": "#/$defs/reference" }, "target": { "$ref": "#/$defs/reference" }
+              } } }
+            }
+          } }
+        }
+      }
+    }
+  },
+  "$defs": { "reference": { "type": "object", "required": ["document_id", "path"], "properties": { "document_id": { "type": "string" }, "path": { "type": "string" }, "raw_value": {} } } }
+}

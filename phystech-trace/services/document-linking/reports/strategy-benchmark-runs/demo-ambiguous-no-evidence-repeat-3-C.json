@@ -1,0 +1,132 @@
+{
+  "version": "1.0.0",
+  "scenario": {
+    "id": "demo-ambiguous-no-evidence",
+    "description": "Four Structured Extraction-shaped demo outputs covering ambiguous duplicate identifiers, a possible act relation and an unsupported unknown document; provenance is intentionally absent, so evidence should remain unconfirmed.",
+    "fixture_files": [
+      "contract-ambiguous-a.json",
+      "contract-ambiguous-b.json",
+      "act-ambiguous-1.json",
+      "receipt-unknown-1.json"
+    ]
+  },
+  "repeat": 3,
+  "strategy": "C",
+  "provider": "Polza AI",
+  "model": "google/gemma-4-26b-a4b-it",
+  "prompt_version": "document-linking-system@ff99509e616a+strategy-prompts@1.0.0",
+  "started_at": "2026-11-13T07:13:59.888Z",
+  "status": "failed",
+  "spend_rub_so_far": 6.92838085,
+  "calls": [
+    {
+      "label": "C.independent-agent-1",
+      "raw_response": {
+        "candidates": [
+          {
+            "relationship_type": "direct_reference",
+            "source_document_id": "act-ambiguous-1",
+            "target_document_id": "contract-ambiguous-b",
+            "source_row_id": "fields.contract_reference.value",
+            "target_row_id": "fields.contract_number.value",
+            "explanation": "Акт (act-ambiguous-1) содержит ссылку на номер договора 'КД-77-11-09', который полностью совпадает с номером договора в документе contract-ambiguous-b.",
+            "confidence": 1,
+            "status": "verified",
+            "conflicts": [],
+            "alternatives": []
+          },
+          {
+            "relationship_type": "potential_reference_ambiguous",
+            "source_document_id": "act-ambiguous-1",
+            "target_document_id": "contract-ambiguous-a",
+            "source_row_id": "fields.contract_reference.value",
+            "target_row_id": "fields.contract_number.value",
+            "explanation": "Существует высокая вероятность, что акт относится к contract-ambiguous-a, так как номера 'КД-77-11-09' (в акте) и 'КД-77/11-09' (в контракте A) отличаются только типом разделителя (дефис против слеша), что часто является ошибкой ввода или опечаткой.",
+            "confidence": 0.6,
+            "status": "ambiguous",
+            "conflicts": [],
+            "alternatives": []
+          },
+          {
+            "relationship_type": "possible_missing_link",
+            "source_document_id": "receipt-unknown-1",
+            "target_document_id": null,
+            "source_row_id": "fields.title.value",
+            "target_row_id": null,
+            "explanation": "Документ receipt-unknown-1 прямо заявляет в поле title, что он является кассовым документом без номера договора, что исключает автоматическую связь с представленными контрактами на основе метаданных.",
+            "confidence": 0.9,
+            "status": "unlinked",
+            "conflicts": [],
+            "alternatives": []
+          }
+        ],
+        "unlinked_document_ids": [
+          "receipt-unknown-1"
+        ],
+        "analysis_summary": "Проведен анализ четырех документов. Выявлена прямая связь между актом (act-ambiguous-1) и контрактом (contract-ambiguous-b) на основе идентичного номера договора. Обнаружена косвенная/неоднозначная связь между актом и контрактом (contract-ambiguous-a) из-за минимального различия в пунктуации номера (слеш vs дефис). Документ receipt-unknown-1 не имеет связей с другими документами в наборе."
+      },
+      "model": "google/gemma-4-26b-a4b-it",
+      "input_tokens": 2629,
+      "output_tokens": 605,
+      "cost": 0.04884692,
+      "currency": "RUB",
+      "duration_ms": 2629
+    },
+    {
+      "label": "C.independent-agent-2",
+      "raw_response": {
+        "candidates": [
+          {
+            "relationship_type": "direct_reference",
+            "source_document_id": "act-ambiguous-1",
+            "target_document_id": "contract-ambiguous-b",
+            "source_row_id": "fields.contract_reference.value",
+            "target_row_id": "fields.contract_number.value",
+            "explanation": "Акт (act-ambiguous-1) содержит ссылку на номер договора 'КД-77-11-09', который полностью совпадает с полем contract_number в документе contract-ambiguous-b.",
+            "confidence": 0.95,
+            "status": "confirmed",
+            "conflicts": [],
+            "alternatives": []
+          },
+          {
+            "relationship_type": "potential_reference_ambiguous",
+            "source_document_id": "act-ambiguous-1",
+            "target_document_id": "contract-ambiguous-a",
+            "source_row_id": "fields.contract_reference.value",
+            "target_row_id": "fields.contract_number.value",
+            "explanation": "Акт (act-ambiguous-1) ссылается на 'КД-77-11-09'. В документе contract-ambiguous-a номер указан как 'КД-77/11-09'. Различие в одном символе (дефис против слеша) может указывать на опечатку в одном из документов, что делает связь косвенной и неоднозначной.",
+            "confidence": 0.6,
+            "status": "ambiguous",
+            "conflicts": [],
+            "alternatives": []
+          },
+          {
+            "relationship_type": "unlinked_document_relation",
+            "source_document_id": "receipt-unknown-1",
+            "target_document_id": "null",
+            "source_row_id": "fields.title.value",
+            "target_row_id": "null",
+            "explanation": "Документ receipt-unknown-1 прямо заявляет в поле title, что он является 'Кассовым документом без номера договора', что исключает явную связь с другими документами в наборе.",
+            "confidence": 0.9,
+            "status": "unlinked",
+            "conflicts": [],
+            "alternatives": []
+          }
+        ],
+        "unlinked_document_ids": [
+          "receipt-unknown-1"
+        ],
+        "analysis_summary": "Проведен анализ четырех документов. Выявлена прямая связь между актом (act-ambiguous-1) и контрактом (contract-ambiguous-b) на основе идентичного номера договора. Обнаружена потенциальная (но неоднозначная) связь между актом и контрактом (contract-ambiguous-a) из-за незначительного расхождения в написании номера (символ '/' вместо '-'). Документ receipt-unknown-1 не имеет связей с остальными документами."
+      },
+      "model": "google/gemma-4-26b-a4b-it",
+      "input_tokens": 2629,
+      "output_tokens": 612,
+      "cost": 0.03645503,
+      "currency": "RUB",
+      "duration_ms": 3255
+    }
+  ],
+  "error": "Истекло время ожидания Polza (120000 мс)",
+  "attempted_calls": 3,
+  "unpriced_reserved_rub": 0.5741442
+}

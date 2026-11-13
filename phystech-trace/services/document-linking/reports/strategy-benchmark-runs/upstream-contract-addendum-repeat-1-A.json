@@ -1,0 +1,1156 @@
+{
+  "version": "1.0.0",
+  "scenario": {
+    "id": "upstream-contract-addendum",
+    "description": "Two actual Structured Extraction 1.2.0 outputs; compare agreement, direction and evidence across architectures.",
+    "fixture_files": [
+      "contract-2026-0315.json",
+      "addendum-2026-04.json"
+    ]
+  },
+  "repeat": 1,
+  "strategy": "A",
+  "provider": "Polza AI",
+  "model": "google/gemma-4-26b-a4b-it",
+  "prompt_version": "document-linking-system@ff99509e616a+strategy-prompts@1.0.0",
+  "started_at": "2026-11-13T07:03:19.872Z",
+  "status": "complete",
+  "spend_rub_so_far": 2.46739333,
+  "calls": [
+    {
+      "label": "baseline.relationship-analysis",
+      "raw_response": {
+        "links": [
+          {
+            "relationship_type": "amends",
+            "source_document_id": "addendum-2026-04",
+            "target_document_id": "contract-2026-0315",
+            "evidence": [
+              {
+                "source_reference_id": "r140",
+                "target_reference_id": "rm",
+                "signal": "base contract identifier",
+                "explanation": "The addendum explicitly identifies 'КД-24/03-15' as the base contract."
+              },
+              {
+                "source_reference_id": "r141",
+                "target_reference_id": "ru",
+                "signal": "base contract date",
+                "explanation": "The addendum references the contract date 15.03.2026, which matches the contract's date."
+              }
+            ],
+            "explanation": "The document 'addendum-2026-04' is a supplementary agreement (ДС-1) that modifies the terms of the original contract 'contract-2026-0315'.",
+            "confidence": 1,
+            "status": "confirmed",
+            "conflicts": [],
+            "alternatives": []
+          },
+          {
+            "relationship_type": "modifies_amount",
+            "source_document_id": "addendum-2026-04",
+            "target_document_id": "contract-2026-0315",
+            "source_row_id": "addendum-changes-r001",
+            "target_row_id": "document-metadata-r008",
+            "evidence": [
+              {
+                "source_reference_id": "r1t2",
+                "target_reference_id": "r1u",
+                "signal": "old amount value",
+                "explanation": "The addendum's 'old value' for the price (4 860 000,00 руб.) matches the original contract amount."
+              },
+              {
+                "source_reference_id": "r1t7",
+                "target_reference_id": "r1s",
+                "signal": "new amount value",
+                "explanation": "The addendum sets a new price of 5 214 600,00 руб., replacing the original amount."
+              }
+            ],
+            "explanation": "The addendum changes the total contract price from 4,860,000.00 RUB to 5,214,600.00 RUB due to additional work volume.",
+            "confidence": 1,
+            "status": "confirmed",
+            "conflicts": [],
+            "alternatives": []
+          },
+          {
+            "relationship_type": "modifies_schedule",
+            "source_document_id": "addendum-2026-04",
+            "target_document_id": "contract-2026-0315",
+            "source_row_id": "addendum-changes-r002",
+            "target_row_id": "contract-schedule-r002",
+            "evidence": [
+              {
+                "source_reference_id": "r1to",
+                "target_reference_id": "r199y6bw",
+                "signal": "old stage 2 deadline",
+                "explanation": "The addendum's old value for stage 2 deadline (31.08.2026) matches the original contract schedule for stage 2."
+              },
+              {
+                "source_reference_id": "r1tt",
+                "target_reference_id": "z1l55b",
+                "signal": "new stage 2 deadline",
+                "explanation": "The addendum extends the stage 2 deadline to 15.09.2026."
+              }
+            ],
+            "explanation": "The addendum modifies the execution deadline for Stage 2 of the contract from 31.08.2026 to 15.09.2026.",
+            "confidence": 1,
+            "status": "confirmed",
+            "conflicts": [],
+            "alternatives": []
+          }
+        ],
+        "unlinked_document_ids": [],
+        "analysis_summary": "The document set consists of a primary construction/maintenance contract (КД-24/03-15) and one subsequent addendum (ДС-1). The addendum modifies the total contract value (increasing it from 4.86M to 5.21M RUB) and extends the deadline for the second stage of work. The parties involved (ООО «ИнжКонтур Бета» and АО «Городские инженерные системы») remain consistent across both documents.",
+        "context_requests": []
+      },
+      "model": "google/gemma-4-26b-a4b-it",
+      "input_tokens": 110675,
+      "output_tokens": 1152,
+      "cost": 1.23995337,
+      "duration_ms": 20091
+    },
+    {
+      "label": "baseline.evidence-correction:1",
+      "raw_response": {
+        "corrections": [
+          {
+            "proposal_index": 1,
+            "action": "replace",
+            "link": {
+              "relationship_type": "modifies_amount",
+              "source_document_id": "addendum-2026-04",
+              "target_document_id": "contract-2026-0315",
+              "source_row_id": "addendum-changes-r001",
+              "target_row_id": "document-metadata-r008",
+              "evidence": [
+                {
+                  "source_reference_id": "r1t2",
+                  "target_reference_id": "r1u",
+                  "signal": "old amount value",
+                  "explanation": "The addendum's 'old value' for the price (4 860 000,00 руб.) matches the original contract amount."
+                },
+                {
+                  "source_reference_id": "r1t7",
+                  "target_reference_id": "r1s",
+                  "signal": "new amount value",
+                  "explanation": "The addendum sets a new price of 5 214 600,00 руб., replacing the original amount."
+                }
+              ],
+              "explanation": "The addendum changes the total contract price from 4,860,000.00 RUB to 5,214,600.00 RUB due to additional work volume.",
+              "confidence": 1,
+              "status": "confirmed",
+              "conflicts": [],
+              "alternatives": []
+            }
+          },
+          {
+            "proposal_index": 2,
+            "action": "replace",
+            "link": {
+              "relationship_type": "modifies_schedule",
+              "source_document_id": "addendum-2026-04",
+              "target_document_id": "contract-2026-0315",
+              "source_row_id": "addendum-changes-r002",
+              "target_row_id": "contract-schedule-r002",
+              "evidence": [
+                {
+                  "source_reference_id": "r1to",
+                  "target_reference_id": "r199y6bw",
+                  "signal": "old stage 2 deadline",
+                  "explanation": "The addendum's old value for stage 2 deadline (31.08.2026) matches the original contract schedule for stage 2."
+                },
+                {
+                  "source_reference_id": "r1tt",
+                  "target_reference_id": "z1l55b",
+                  "signal": "new stage 2 deadline",
+                  "explanation": "The addendum extends the stage 2 deadline to 15.09.2026."
+                }
+              ],
+              "explanation": "The addendum modifies the execution deadline for Stage 2 of the contract from 31.08.2026 to 15.09.2026.",
+              "confidence": 1,
+              "status": "confirmed",
+              "conflicts": [],
+              "alternatives": []
+            }
+          }
+        ]
+      },
+      "model": "google/gemma-4-26b-a4b-it",
+      "input_tokens": 111506,
+      "output_tokens": 556,
+      "cost": 1.22743996,
+      "duration_ms": 13949
+    }
+  ],
+  "result": {
+    "strategy": "A",
+    "links": [
+      {
+        "link_id": "b4f75a2d-1968-4051-88ef-d8ba6916c546",
+        "relationship_type": "amends",
+        "source_document_id": "addendum-2026-04",
+        "target_document_id": "contract-2026-0315",
+        "evidence": [
+          {
+            "source": {
+              "document_id": "addendum-2026-04",
+              "path": "fields.base_contract.value",
+              "raw_value": "КД-24/03-15 от 15.03.2026",
+              "normalized_value": "КД-24/03-15 от 15.03.2026",
+              "provenance": {
+                "document_id": "addendum-2026-04",
+                "source_part_id": "addendum-2026-04:src:18s01j1",
+                "source_ref": "#/tables/0/cells/9",
+                "page_no": 1,
+                "sheet_name": null,
+                "cell_address": null,
+                "bbox": {
+                  "l": 297.64,
+                  "t": 335,
+                  "r": 553.28,
+                  "b": 356,
+                  "coord_origin": "TOPLEFT"
+                },
+                "coordinate_origin": "TOPLEFT",
+                "page_size": {
+                  "width": 595.28,
+                  "height": 841.89,
+                  "unit": "pt"
+                },
+                "column_index": 1,
+                "source_text": "КД-24/03-15 от 15.03.2026",
+                "confidence": 0.985,
+                "source_available": true
+              }
+            },
+            "target": {
+              "document_id": "contract-2026-0315",
+              "path": "fields.contract_number.value",
+              "raw_value": "КД-24/03-15",
+              "normalized_value": "КД-24/03-15",
+              "provenance": {
+                "document_id": "contract-2026-0315",
+                "source_part_id": "contract-2026-0315:src:ib8zvj",
+                "source_ref": "#/tables/0/cells/5",
+                "page_no": 1,
+                "sheet_name": null,
+                "cell_address": null,
+                "bbox": {
+                  "l": 297.64,
+                  "t": 285,
+                  "r": 553.28,
+                  "b": 306,
+                  "coord_origin": "TOPLEFT"
+                },
+                "coordinate_origin": "TOPLEFT",
+                "page_size": {
+                  "width": 595.28,
+                  "height": 841.89,
+                  "unit": "pt"
+                },
+                "column_index": 1,
+                "source_text": "КД-24/03-15",
+                "confidence": 0.985,
+                "source_available": true
+              }
+            },
+            "signal": "base contract identifier",
+            "explanation": "The addendum explicitly identifies 'КД-24/03-15' as the base contract."
+          },
+          {
+            "source": {
+              "document_id": "addendum-2026-04",
+              "path": "fields.base_contract.source_value",
+              "raw_value": "КД-24/03-15 от 15.03.2026",
+              "normalized_value": "КД-24/03-15 от 15.03.2026",
+              "provenance": {
+                "document_id": "addendum-2026-04",
+                "source_part_id": "addendum-2026-04:src:18s01j1",
+                "source_ref": "#/tables/0/cells/9",
+                "page_no": 1,
+                "sheet_name": null,
+                "cell_address": null,
+                "bbox": {
+                  "l": 297.64,
+                  "t": 335,
+                  "r": 553.28,
+                  "b": 356,
+                  "coord_origin": "TOPLEFT"
+                },
+                "coordinate_origin": "TOPLEFT",
+                "page_size": {
+                  "width": 595.28,
+                  "height": 841.89,
+                  "unit": "pt"
+                },
+                "column_index": 1,
+                "source_text": "КД-24/03-15 от 15.03.2026",
+                "confidence": 0.985,
+                "source_available": true
+              }
+            },
+            "target": {
+              "document_id": "contract-2026-0315",
+              "path": "fields.contract_date.source_value",
+              "raw_value": "15.03.2026 г.",
+              "normalized_value": "15.03.2026 г.",
+              "provenance": {
+                "document_id": "contract-2026-0315",
+                "source_part_id": "contract-2026-0315:src:1lzc0ds",
+                "source_ref": "#/tables/0/cells/7",
+                "page_no": 1,
+                "sheet_name": null,
+                "cell_address": null,
+                "bbox": {
+                  "l": 297.64,
+                  "t": 310,
+                  "r": 553.28,
+                  "b": 331,
+                  "coord_origin": "TOPLEFT"
+                },
+                "coordinate_origin": "TOPLEFT",
+                "page_size": {
+                  "width": 595.28,
+                  "height": 841.89,
+                  "unit": "pt"
+                },
+                "column_index": 1,
+                "source_text": "15.03.2026 г.",
+                "confidence": 0.985,
+                "source_available": true
+              }
+            },
+            "signal": "base contract date",
+            "explanation": "The addendum references the contract date 15.03.2026, which matches the contract's date."
+          }
+        ],
+        "explanation": "The document 'addendum-2026-04' is a supplementary agreement (ДС-1) that modifies the terms of the original contract 'contract-2026-0315'.",
+        "confidence": 1,
+        "status": "confirmed",
+        "verification_status": "not_reviewed",
+        "detection_method": "llm",
+        "conflicts": [],
+        "alternatives": []
+      }
+    ],
+    "candidates": [
+      {
+        "link_id": "b4f75a2d-1968-4051-88ef-d8ba6916c546",
+        "relationship_type": "amends",
+        "source_document_id": "addendum-2026-04",
+        "target_document_id": "contract-2026-0315",
+        "evidence": [
+          {
+            "source": {
+              "document_id": "addendum-2026-04",
+              "path": "fields.base_contract.value",
+              "raw_value": "КД-24/03-15 от 15.03.2026",
+              "normalized_value": "КД-24/03-15 от 15.03.2026",
+              "provenance": {
+                "document_id": "addendum-2026-04",
+                "source_part_id": "addendum-2026-04:src:18s01j1",
+                "source_ref": "#/tables/0/cells/9",
+                "page_no": 1,
+                "sheet_name": null,
+                "cell_address": null,
+                "bbox": {
+                  "l": 297.64,
+                  "t": 335,
+                  "r": 553.28,
+                  "b": 356,
+                  "coord_origin": "TOPLEFT"
+                },
+                "coordinate_origin": "TOPLEFT",
+                "page_size": {
+                  "width": 595.28,
+                  "height": 841.89,
+                  "unit": "pt"
+                },
+                "column_index": 1,
+                "source_text": "КД-24/03-15 от 15.03.2026",
+                "confidence": 0.985,
+                "source_available": true
+              }
+            },
+            "target": {
+              "document_id": "contract-2026-0315",
+              "path": "fields.contract_number.value",
+              "raw_value": "КД-24/03-15",
+              "normalized_value": "КД-24/03-15",
+              "provenance": {
+                "document_id": "contract-2026-0315",
+                "source_part_id": "contract-2026-0315:src:ib8zvj",
+                "source_ref": "#/tables/0/cells/5",
+                "page_no": 1,
+                "sheet_name": null,
+                "cell_address": null,
+                "bbox": {
+                  "l": 297.64,
+                  "t": 285,
+                  "r": 553.28,
+                  "b": 306,
+                  "coord_origin": "TOPLEFT"
+                },
+                "coordinate_origin": "TOPLEFT",
+                "page_size": {
+                  "width": 595.28,
+                  "height": 841.89,
+                  "unit": "pt"
+                },
+                "column_index": 1,
+                "source_text": "КД-24/03-15",
+                "confidence": 0.985,
+                "source_available": true
+              }
+            },
+            "signal": "base contract identifier",
+            "explanation": "The addendum explicitly identifies 'КД-24/03-15' as the base contract."
+          },
+          {
+            "source": {
+              "document_id": "addendum-2026-04",
+              "path": "fields.base_contract.source_value",
+              "raw_value": "КД-24/03-15 от 15.03.2026",
+              "normalized_value": "КД-24/03-15 от 15.03.2026",
+              "provenance": {
+                "document_id": "addendum-2026-04",
+                "source_part_id": "addendum-2026-04:src:18s01j1",
+                "source_ref": "#/tables/0/cells/9",
+                "page_no": 1,
+                "sheet_name": null,
+                "cell_address": null,
+                "bbox": {
+                  "l": 297.64,
+                  "t": 335,
+                  "r": 553.28,
+                  "b": 356,
+                  "coord_origin": "TOPLEFT"
+                },
+                "coordinate_origin": "TOPLEFT",
+                "page_size": {
+                  "width": 595.28,
+                  "height": 841.89,
+                  "unit": "pt"
+                },
+                "column_index": 1,
+                "source_text": "КД-24/03-15 от 15.03.2026",
+                "confidence": 0.985,
+                "source_available": true
+              }
+            },
+            "target": {
+              "document_id": "contract-2026-0315",
+              "path": "fields.contract_date.source_value",
+              "raw_value": "15.03.2026 г.",
+              "normalized_value": "15.03.2026 г.",
+              "provenance": {
+                "document_id": "contract-2026-0315",
+                "source_part_id": "contract-2026-0315:src:1lzc0ds",
+                "source_ref": "#/tables/0/cells/7",
+                "page_no": 1,
+                "sheet_name": null,
+                "cell_address": null,
+                "bbox": {
+                  "l": 297.64,
+                  "t": 310,
+                  "r": 553.28,
+                  "b": 331,
+                  "coord_origin": "TOPLEFT"
+                },
+                "coordinate_origin": "TOPLEFT",
+                "page_size": {
+                  "width": 595.28,
+                  "height": 841.89,
+                  "unit": "pt"
+                },
+                "column_index": 1,
+                "source_text": "15.03.2026 г.",
+                "confidence": 0.985,
+                "source_available": true
+              }
+            },
+            "signal": "base contract date",
+            "explanation": "The addendum references the contract date 15.03.2026, which matches the contract's date."
+          }
+        ],
+        "explanation": "The document 'addendum-2026-04' is a supplementary agreement (ДС-1) that modifies the terms of the original contract 'contract-2026-0315'.",
+        "confidence": 1,
+        "status": "confirmed",
+        "verification_status": "not_reviewed",
+        "detection_method": "llm",
+        "conflicts": [],
+        "alternatives": []
+      }
+    ],
+    "diagnostics": [
+      {
+        "candidate_index": 0,
+        "reason": "row_id_not_cited_by_path",
+        "proposal": {
+          "proposal_index": 1,
+          "relationship_type": "modifies_amount",
+          "source_document_id": "addendum-2026-04",
+          "target_document_id": "contract-2026-0315",
+          "reason_codes": [
+            "row_id_not_cited_by_path"
+          ],
+          "evidence_issues": [
+            {
+              "evidence_index": 1,
+              "reason_codes": [
+                "source_text_value_mismatch"
+              ],
+              "source_path": "changes[0].new_value.value",
+              "target_path": "fields.contract_amount.value.amount",
+              "source_reference_id": "r1t7",
+              "target_reference_id": "r1s"
+            }
+          ],
+          "proposal": {
+            "relationship_type": "modifies_amount",
+            "source_document_id": "addendum-2026-04",
+            "target_document_id": "contract-2026-0315",
+            "source_row_id": "addendum-changes-r001",
+            "target_row_id": "document-metadata-r008",
+            "evidence": [
+              {
+                "source_reference_id": "r1t2",
+                "target_reference_id": "r1u",
+                "signal": "old amount value",
+                "explanation": "The addendum's 'old value' for the price (4 860 000,00 руб.) matches the original contract amount."
+              },
+              {
+                "source_reference_id": "r1t7",
+                "target_reference_id": "r1s",
+                "signal": "new amount value",
+                "explanation": "The addendum sets a new price of 5 214 600,00 руб., replacing the original amount."
+              }
+            ],
+            "explanation": "The addendum changes the total contract price from 4,860,000.00 RUB to 5,214,600.00 RUB due to additional work volume.",
+            "confidence": 1,
+            "status": "confirmed",
+            "conflicts": [],
+            "alternatives": []
+          },
+          "resolution": "unresolved",
+          "current_proposal": {
+            "relationship_type": "modifies_amount",
+            "source_document_id": "addendum-2026-04",
+            "target_document_id": "contract-2026-0315",
+            "source_row_id": "addendum-changes-r001",
+            "target_row_id": "document-metadata-r008",
+            "evidence": [
+              {
+                "source_reference_id": "r1t2",
+                "target_reference_id": "r1u",
+                "signal": "old amount value",
+                "explanation": "The addendum's 'old value' for the price (4 860 000,00 руб.) matches the original contract amount."
+              },
+              {
+                "source_reference_id": "r1t7",
+                "target_reference_id": "r1s",
+                "signal": "new amount value",
+                "explanation": "The addendum sets a new price of 5 214 600,00 руб., replacing the original amount."
+              }
+            ],
+            "explanation": "The addendum changes the total contract price from 4,860,000.00 RUB to 5,214,600.00 RUB due to additional work volume.",
+            "confidence": 1,
+            "status": "confirmed",
+            "conflicts": [],
+            "alternatives": []
+          },
+          "correction_attempts": 1
+        }
+      },
+      {
+        "candidate_index": 1,
+        "reason": "evidence_reference_not_found,row_id_not_cited_by_path",
+        "proposal": {
+          "proposal_index": 2,
+          "relationship_type": "modifies_schedule",
+          "source_document_id": "addendum-2026-04",
+          "target_document_id": "contract-2026-0315",
+          "reason_codes": [
+            "evidence_reference_not_found",
+            "row_id_not_cited_by_path"
+          ],
+          "evidence_issues": [
+            {
+              "evidence_index": 0,
+              "reason_codes": [
+                "evidence_reference_not_found"
+              ],
+              "source_path": "changes[1].old_value.value",
+              "source_reference_id": "r1to",
+              "target_reference_id": "r199y6bw"
+            },
+            {
+              "evidence_index": 1,
+              "reason_codes": [
+                "evidence_reference_not_found"
+              ],
+              "source_path": "changes[1].new_value.value",
+              "source_reference_id": "r1tt",
+              "target_reference_id": "z1l55b"
+            }
+          ],
+          "proposal": {
+            "relationship_type": "modifies_schedule",
+            "source_document_id": "addendum-2026-04",
+            "target_document_id": "contract-2026-0315",
+            "source_row_id": "addendum-changes-r002",
+            "target_row_id": "contract-schedule-r002",
+            "evidence": [
+              {
+                "source_reference_id": "r1to",
+                "target_reference_id": "r199y6bw",
+                "signal": "old stage 2 deadline",
+                "explanation": "The addendum's old value for stage 2 deadline (31.08.2026) matches the original contract schedule for stage 2."
+              },
+              {
+                "source_reference_id": "r1tt",
+                "target_reference_id": "z1l55b",
+                "signal": "new stage 2 deadline",
+                "explanation": "The addendum extends the stage 2 deadline to 15.09.2026."
+              }
+            ],
+            "explanation": "The addendum modifies the execution deadline for Stage 2 of the contract from 31.08.2026 to 15.09.2026.",
+            "confidence": 1,
+            "status": "confirmed",
+            "conflicts": [],
+            "alternatives": []
+          },
+          "resolution": "unresolved",
+          "current_proposal": {
+            "relationship_type": "modifies_schedule",
+            "source_document_id": "addendum-2026-04",
+            "target_document_id": "contract-2026-0315",
+            "source_row_id": "addendum-changes-r002",
+            "target_row_id": "contract-schedule-r002",
+            "evidence": [
+              {
+                "source_reference_id": "r1to",
+                "target_reference_id": "r199y6bw",
+                "signal": "old stage 2 deadline",
+                "explanation": "The addendum's old value for stage 2 deadline (31.08.2026) matches the original contract schedule for stage 2."
+              },
+              {
+                "source_reference_id": "r1tt",
+                "target_reference_id": "z1l55b",
+                "signal": "new stage 2 deadline",
+                "explanation": "The addendum extends the stage 2 deadline to 15.09.2026."
+              }
+            ],
+            "explanation": "The addendum modifies the execution deadline for Stage 2 of the contract from 31.08.2026 to 15.09.2026.",
+            "confidence": 1,
+            "status": "confirmed",
+            "conflicts": [],
+            "alternatives": []
+          },
+          "correction_attempts": 1
+        }
+      }
+    ],
+    "calls": [
+      {
+        "label": "baseline.relationship-analysis",
+        "raw_response": {
+          "links": [
+            {
+              "relationship_type": "amends",
+              "source_document_id": "addendum-2026-04",
+              "target_document_id": "contract-2026-0315",
+              "evidence": [
+                {
+                  "source_reference_id": "r140",
+                  "target_reference_id": "rm",
+                  "signal": "base contract identifier",
+                  "explanation": "The addendum explicitly identifies 'КД-24/03-15' as the base contract."
+                },
+                {
+                  "source_reference_id": "r141",
+                  "target_reference_id": "ru",
+                  "signal": "base contract date",
+                  "explanation": "The addendum references the contract date 15.03.2026, which matches the contract's date."
+                }
+              ],
+              "explanation": "The document 'addendum-2026-04' is a supplementary agreement (ДС-1) that modifies the terms of the original contract 'contract-2026-0315'.",
+              "confidence": 1,
+              "status": "confirmed",
+              "conflicts": [],
+              "alternatives": []
+            },
+            {
+              "relationship_type": "modifies_amount",
+              "source_document_id": "addendum-2026-04",
+              "target_document_id": "contract-2026-0315",
+              "source_row_id": "addendum-changes-r001",
+              "target_row_id": "document-metadata-r008",
+              "evidence": [
+                {
+                  "source_reference_id": "r1t2",
+                  "target_reference_id": "r1u",
+                  "signal": "old amount value",
+                  "explanation": "The addendum's 'old value' for the price (4 860 000,00 руб.) matches the original contract amount."
+                },
+                {
+                  "source_reference_id": "r1t7",
+                  "target_reference_id": "r1s",
+                  "signal": "new amount value",
+                  "explanation": "The addendum sets a new price of 5 214 600,00 руб., replacing the original amount."
+                }
+              ],
+              "explanation": "The addendum changes the total contract price from 4,860,000.00 RUB to 5,214,600.00 RUB due to additional work volume.",
+              "confidence": 1,
+              "status": "confirmed",
+              "conflicts": [],
+              "alternatives": []
+            },
+            {
+              "relationship_type": "modifies_schedule",
+              "source_document_id": "addendum-2026-04",
+              "target_document_id": "contract-2026-0315",
+              "source_row_id": "addendum-changes-r002",
+              "target_row_id": "contract-schedule-r002",
+              "evidence": [
+                {
+                  "source_reference_id": "r1to",
+                  "target_reference_id": "r199y6bw",
+                  "signal": "old stage 2 deadline",
+                  "explanation": "The addendum's old value for stage 2 deadline (31.08.2026) matches the original contract schedule for stage 2."
+                },
+                {
+                  "source_reference_id": "r1tt",
+                  "target_reference_id": "z1l55b",
+                  "signal": "new stage 2 deadline",
+                  "explanation": "The addendum extends the stage 2 deadline to 15.09.2026."
+                }
+              ],
+              "explanation": "The addendum modifies the execution deadline for Stage 2 of the contract from 31.08.2026 to 15.09.2026.",
+              "confidence": 1,
+              "status": "confirmed",
+              "conflicts": [],
+              "alternatives": []
+            }
+          ],
+          "unlinked_document_ids": [],
+          "analysis_summary": "The document set consists of a primary construction/maintenance contract (КД-24/03-15) and one subsequent addendum (ДС-1). The addendum modifies the total contract value (increasing it from 4.86M to 5.21M RUB) and extends the deadline for the second stage of work. The parties involved (ООО «ИнжКонтур Бета» and АО «Городские инженерные системы») remain consistent across both documents.",
+          "context_requests": []
+        },
+        "model": "google/gemma-4-26b-a4b-it",
+        "input_tokens": 110675,
+        "output_tokens": 1152,
+        "cost": 1.23995337,
+        "duration_ms": 20091
+      },
+      {
+        "label": "baseline.evidence-correction:1",
+        "raw_response": {
+          "corrections": [
+            {
+              "proposal_index": 1,
+              "action": "replace",
+              "link": {
+                "relationship_type": "modifies_amount",
+                "source_document_id": "addendum-2026-04",
+                "target_document_id": "contract-2026-0315",
+                "source_row_id": "addendum-changes-r001",
+                "target_row_id": "document-metadata-r008",
+                "evidence": [
+                  {
+                    "source_reference_id": "r1t2",
+                    "target_reference_id": "r1u",
+                    "signal": "old amount value",
+                    "explanation": "The addendum's 'old value' for the price (4 860 000,00 руб.) matches the original contract amount."
+                  },
+                  {
+                    "source_reference_id": "r1t7",
+                    "target_reference_id": "r1s",
+                    "signal": "new amount value",
+                    "explanation": "The addendum sets a new price of 5 214 600,00 руб., replacing the original amount."
+                  }
+                ],
+                "explanation": "The addendum changes the total contract price from 4,860,000.00 RUB to 5,214,600.00 RUB due to additional work volume.",
+                "confidence": 1,
+                "status": "confirmed",
+                "conflicts": [],
+                "alternatives": []
+              }
+            },
+            {
+              "proposal_index": 2,
+              "action": "replace",
+              "link": {
+                "relationship_type": "modifies_schedule",
+                "source_document_id": "addendum-2026-04",
+                "target_document_id": "contract-2026-0315",
+                "source_row_id": "addendum-changes-r002",
+                "target_row_id": "contract-schedule-r002",
+                "evidence": [
+                  {
+                    "source_reference_id": "r1to",
+                    "target_reference_id": "r199y6bw",
+                    "signal": "old stage 2 deadline",
+                    "explanation": "The addendum's old value for stage 2 deadline (31.08.2026) matches the original contract schedule for stage 2."
+                  },
+                  {
+                    "source_reference_id": "r1tt",
+                    "target_reference_id": "z1l55b",
+                    "signal": "new stage 2 deadline",
+                    "explanation": "The addendum extends the stage 2 deadline to 15.09.2026."
+                  }
+                ],
+                "explanation": "The addendum modifies the execution deadline for Stage 2 of the contract from 31.08.2026 to 15.09.2026.",
+                "confidence": 1,
+                "status": "confirmed",
+                "conflicts": [],
+                "alternatives": []
+              }
+            }
+          ]
+        },
+        "model": "google/gemma-4-26b-a4b-it",
+        "input_tokens": 111506,
+        "output_tokens": 556,
+        "cost": 1.22743996,
+        "duration_ms": 13949
+      }
+    ],
+    "duration_ms": 34069,
+    "model": "google/gemma-4-26b-a4b-it",
+    "analysis_summary": "The document set consists of a primary construction/maintenance contract (КД-24/03-15) and one subsequent addendum (ДС-1). The addendum modifies the total contract value (increasing it from 4.86M to 5.21M RUB) and extends the deadline for the second stage of work. The parties involved (ООО «ИнжКонтур Бета» and АО «Городские инженерные системы») remain consistent across both documents.",
+    "unlinked_document_ids": [],
+    "usage": {
+      "input_tokens": 222181,
+      "output_tokens": 1708,
+      "cost_amount": 2.46739333,
+      "cost_currency": "RUB"
+    },
+    "baseline": {
+      "complete": true,
+      "phase": "complete",
+      "links": [
+        {
+          "link_id": "b4f75a2d-1968-4051-88ef-d8ba6916c546",
+          "relationship_type": "amends",
+          "source_document_id": "addendum-2026-04",
+          "target_document_id": "contract-2026-0315",
+          "evidence": [
+            {
+              "source": {
+                "document_id": "addendum-2026-04",
+                "path": "fields.base_contract.value",
+                "raw_value": "КД-24/03-15 от 15.03.2026",
+                "normalized_value": "КД-24/03-15 от 15.03.2026",
+                "provenance": {
+                  "document_id": "addendum-2026-04",
+                  "source_part_id": "addendum-2026-04:src:18s01j1",
+                  "source_ref": "#/tables/0/cells/9",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 297.64,
+                    "t": 335,
+                    "r": 553.28,
+                    "b": 356,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 1,
+                  "source_text": "КД-24/03-15 от 15.03.2026",
+                  "confidence": 0.985,
+                  "source_available": true
+                }
+              },
+              "target": {
+                "document_id": "contract-2026-0315",
+                "path": "fields.contract_number.value",
+                "raw_value": "КД-24/03-15",
+                "normalized_value": "КД-24/03-15",
+                "provenance": {
+                  "document_id": "contract-2026-0315",
+                  "source_part_id": "contract-2026-0315:src:ib8zvj",
+                  "source_ref": "#/tables/0/cells/5",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 297.64,
+                    "t": 285,
+                    "r": 553.28,
+                    "b": 306,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 1,
+                  "source_text": "КД-24/03-15",
+                  "confidence": 0.985,
+                  "source_available": true
+                }
+              },
+              "signal": "base contract identifier",
+              "explanation": "The addendum explicitly identifies 'КД-24/03-15' as the base contract."
+            },
+            {
+              "source": {
+                "document_id": "addendum-2026-04",
+                "path": "fields.base_contract.source_value",
+                "raw_value": "КД-24/03-15 от 15.03.2026",
+                "normalized_value": "КД-24/03-15 от 15.03.2026",
+                "provenance": {
+                  "document_id": "addendum-2026-04",
+                  "source_part_id": "addendum-2026-04:src:18s01j1",
+                  "source_ref": "#/tables/0/cells/9",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 297.64,
+                    "t": 335,
+                    "r": 553.28,
+                    "b": 356,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 1,
+                  "source_text": "КД-24/03-15 от 15.03.2026",
+                  "confidence": 0.985,
+                  "source_available": true
+                }
+              },
+              "target": {
+                "document_id": "contract-2026-0315",
+                "path": "fields.contract_date.source_value",
+                "raw_value": "15.03.2026 г.",
+                "normalized_value": "15.03.2026 г.",
+                "provenance": {
+                  "document_id": "contract-2026-0315",
+                  "source_part_id": "contract-2026-0315:src:1lzc0ds",
+                  "source_ref": "#/tables/0/cells/7",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 297.64,
+                    "t": 310,
+                    "r": 553.28,
+                    "b": 331,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 1,
+                  "source_text": "15.03.2026 г.",
+                  "confidence": 0.985,
+                  "source_available": true
+                }
+              },
+              "signal": "base contract date",
+              "explanation": "The addendum references the contract date 15.03.2026, which matches the contract's date."
+            }
+          ],
+          "explanation": "The document 'addendum-2026-04' is a supplementary agreement (ДС-1) that modifies the terms of the original contract 'contract-2026-0315'.",
+          "confidence": 1,
+          "status": "confirmed",
+          "verification_status": "not_reviewed",
+          "detection_method": "llm",
+          "conflicts": [],
+          "alternatives": []
+        }
+      ],
+      "unlinkedDocumentIds": [],
+      "invalidRelationshipDiagnostics": [
+        {
+          "proposal_index": 1,
+          "relationship_type": "modifies_amount",
+          "source_document_id": "addendum-2026-04",
+          "target_document_id": "contract-2026-0315",
+          "reason_codes": [
+            "row_id_not_cited_by_path"
+          ],
+          "evidence_issues": [
+            {
+              "evidence_index": 1,
+              "reason_codes": [
+                "source_text_value_mismatch"
+              ],
+              "source_path": "changes[0].new_value.value",
+              "target_path": "fields.contract_amount.value.amount",
+              "source_reference_id": "r1t7",
+              "target_reference_id": "r1s"
+            }
+          ],
+          "proposal": {
+            "relationship_type": "modifies_amount",
+            "source_document_id": "addendum-2026-04",
+            "target_document_id": "contract-2026-0315",
+            "source_row_id": "addendum-changes-r001",
+            "target_row_id": "document-metadata-r008",
+            "evidence": [
+              {
+                "source_reference_id": "r1t2",
+                "target_reference_id": "r1u",
+                "signal": "old amount value",
+                "explanation": "The addendum's 'old value' for the price (4 860 000,00 руб.) matches the original contract amount."
+              },
+              {
+                "source_reference_id": "r1t7",
+                "target_reference_id": "r1s",
+                "signal": "new amount value",
+                "explanation": "The addendum sets a new price of 5 214 600,00 руб., replacing the original amount."
+              }
+            ],
+            "explanation": "The addendum changes the total contract price from 4,860,000.00 RUB to 5,214,600.00 RUB due to additional work volume.",
+            "confidence": 1,
+            "status": "confirmed",
+            "conflicts": [],
+            "alternatives": []
+          },
+          "resolution": "unresolved",
+          "current_proposal": {
+            "relationship_type": "modifies_amount",
+            "source_document_id": "addendum-2026-04",
+            "target_document_id": "contract-2026-0315",
+            "source_row_id": "addendum-changes-r001",
+            "target_row_id": "document-metadata-r008",
+            "evidence": [
+              {
+                "source_reference_id": "r1t2",
+                "target_reference_id": "r1u",
+                "signal": "old amount value",
+                "explanation": "The addendum's 'old value' for the price (4 860 000,00 руб.) matches the original contract amount."
+              },
+              {
+                "source_reference_id": "r1t7",
+                "target_reference_id": "r1s",
+                "signal": "new amount value",
+                "explanation": "The addendum sets a new price of 5 214 600,00 руб., replacing the original amount."
+              }
+            ],
+            "explanation": "The addendum changes the total contract price from 4,860,000.00 RUB to 5,214,600.00 RUB due to additional work volume.",
+            "confidence": 1,
+            "status": "confirmed",
+            "conflicts": [],
+            "alternatives": []
+          },
+          "correction_attempts": 1
+        },
+        {
+          "proposal_index": 2,
+          "relationship_type": "modifies_schedule",
+          "source_document_id": "addendum-2026-04",
+          "target_document_id": "contract-2026-0315",
+          "reason_codes": [
+            "evidence_reference_not_found",
+            "row_id_not_cited_by_path"
+          ],
+          "evidence_issues": [
+            {
+              "evidence_index": 0,
+              "reason_codes": [
+                "evidence_reference_not_found"
+              ],
+              "source_path": "changes[1].old_value.value",
+              "source_reference_id": "r1to",
+              "target_reference_id": "r199y6bw"
+            },
+            {
+              "evidence_index": 1,
+              "reason_codes": [
+                "evidence_reference_not_found"
+              ],
+              "source_path": "changes[1].new_value.value",
+              "source_reference_id": "r1tt",
+              "target_reference_id": "z1l55b"
+            }
+          ],
+          "proposal": {
+            "relationship_type": "modifies_schedule",
+            "source_document_id": "addendum-2026-04",
+            "target_document_id": "contract-2026-0315",
+            "source_row_id": "addendum-changes-r002",
+            "target_row_id": "contract-schedule-r002",
+            "evidence": [
+              {
+                "source_reference_id": "r1to",
+                "target_reference_id": "r199y6bw",
+                "signal": "old stage 2 deadline",
+                "explanation": "The addendum's old value for stage 2 deadline (31.08.2026) matches the original contract schedule for stage 2."
+              },
+              {
+                "source_reference_id": "r1tt",
+                "target_reference_id": "z1l55b",
+                "signal": "new stage 2 deadline",
+                "explanation": "The addendum extends the stage 2 deadline to 15.09.2026."
+              }
+            ],
+            "explanation": "The addendum modifies the execution deadline for Stage 2 of the contract from 31.08.2026 to 15.09.2026.",
+            "confidence": 1,
+            "status": "confirmed",
+            "conflicts": [],
+            "alternatives": []
+          },
+          "resolution": "unresolved",
+          "current_proposal": {
+            "relationship_type": "modifies_schedule",
+            "source_document_id": "addendum-2026-04",
+            "target_document_id": "contract-2026-0315",
+            "source_row_id": "addendum-changes-r002",
+            "target_row_id": "contract-schedule-r002",
+            "evidence": [
+              {
+                "source_reference_id": "r1to",
+                "target_reference_id": "r199y6bw",
+                "signal": "old stage 2 deadline",
+                "explanation": "The addendum's old value for stage 2 deadline (31.08.2026) matches the original contract schedule for stage 2."
+              },
+              {
+                "source_reference_id": "r1tt",
+                "target_reference_id": "z1l55b",
+                "signal": "new stage 2 deadline",
+                "explanation": "The addendum extends the stage 2 deadline to 15.09.2026."
+              }
+            ],
+            "explanation": "The addendum modifies the execution deadline for Stage 2 of the contract from 31.08.2026 to 15.09.2026.",
+            "confidence": 1,
+            "status": "confirmed",
+            "conflicts": [],
+            "alternatives": []
+          },
+          "correction_attempts": 1
+        }
+      ],
+      "calls": 2,
+      "errors": 0,
+      "inputTokens": 222181,
+      "outputTokens": 1708,
+      "costAmount": 2.46739333,
+      "costCurrency": "RUB",
+      "durationMs": 34059,
+      "model": "google/gemma-4-26b-a4b-it",
+      "provider": "Polza AI",
+      "analysisSummary": "The document set consists of a primary construction/maintenance contract (КД-24/03-15) and one subsequent addendum (ДС-1). The addendum modifies the total contract value (increasing it from 4.86M to 5.21M RUB) and extends the deadline for the second stage of work. The parties involved (ООО «ИнжКонтур Бета» and АО «Городские инженерные системы») remain consistent across both documents.",
+      "strategy": "full_set",
+      "estimatedInputTokens": 155804
+    }
+  }
+}
