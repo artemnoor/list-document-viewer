@@ -3,6 +3,8 @@ from __future__ import annotations
 import copy
 import hashlib
 import json
+import time
+from concurrent.futures import ThreadPoolExecutor
 from decimal import Decimal
 from pathlib import Path
 
@@ -65,6 +67,110 @@ def test_explicit_absolute_tolerance_accepts_boundary_and_is_recorded():
     assert value.difference.absolute == "-10.25"
 
 
+def test_tolerance_acceptance_never_claims_a_proven_amount_difference():
+    payload = base_payload()
+    set_source_amount(payload, {"amount": "110.25", "currency": "RUB"}, "110.25 RUB")
+    set_expected(payload, "110.25")
+    payload["context"]["tolerance"]["absolute"] = "10.25"
+    payload["context"]["tolerance"]["absolute_unit"] = "RUB"
+    value = indicator(verify(payload))
+    assert value.status.value == "matched"
+    assert value.difference.absolute == "-10.25"
+    assert value.difference.accepted_by == "absolute_tolerance"
+    assert not any(item.category.value == "amount_difference" and item.established for item in value.discrepancies)
+
+
+def test_aggregate_status_exposes_not_applicable_coverage_instead_of_matched():
+    payload = base_payload()
+    payload["reconciliation_result"]["targets"][1]["result"]["calculation_status"] = "not_applicable"
+    result = verify(payload)
+    assert indicator(result).status.value == "matched"
+    assert result.overall_status.value == "not_applicable"
+    assert result.completeness.complete is False
+    assert result.completeness.not_applicable_indicators == 1
+    assert result.completeness.verified_indicators == 1
+
+
+def test_actual_period_comes_from_extraction_not_reconciliation_or_context():
+    payload = base_payload()
+    value = {"start": "2025-10-01", "end": "2025-12-31"}
+    wrapper = payload["extraction"]["fields"]["reporting_period"]
+    wrapper["value"] = value
+    wrapper["source_value"] = "2025 Q4"
+    wrapper["provenance"]["source_text"] = "2025 Q4"
+    period_indicator = payload["extraction"]["indicators"][1]["extracted"]
+    period_indicator["value"] = copy.deepcopy(value)
+    period_indicator["source_value"] = "2025 Q4"
+    period_indicator["provenance"]["source_text"] = "2025 Q4"
+    payload["reconciliation_result"]["targets"][0]["target"]["period"] = {"start": "2026-01-01", "end": "2026-03-31"}
+    payload["context"]["period"] = {"start": "2026-01-01", "end": "2026-03-31"}
+    value_result = indicator(verify(payload))
+    assert value_result.actual.period.start == "2025-10-01"
+    assert value_result.status.value == "mismatch"
+    assert any(item["code"] == "period_mismatch" for item in value_result.diagnostics)
+
+
+def test_reconciliation_input_hash_mismatch_blocks_final_status():
+    payload = base_payload()
+    payload["reconciliation_result"]["run_metadata"]["input_data"]["extraction_hash"] = "0" * 64
+    value = indicator(verify(payload))
+    assert value.status.value == "insufficient_data"
+    assert value.trust.calculation_trust == "invalid"
+    assert any(item["code"] == "extraction_hash_mismatch" for item in value.diagnostics)
+
+
+def test_missing_reconciliation_input_hash_is_not_treated_as_verified():
+    payload = base_payload()
+    payload["reconciliation_result"]["run_metadata"]["input_data"]["extraction_hash"] = None
+    value = indicator(verify(payload))
+    assert value.status.value == "insufficient_data"
+    assert any(item["code"] == "extraction_hash_missing" for item in value.diagnostics)
+
+
+def test_incompatible_reconciliation_extraction_version_blocks_final_status():
+    payload = base_payload()
+    payload["reconciliation_result"]["run_metadata"]["input_data"]["extraction_schema_version"] = "1.1.0"
+    value = indicator(verify(payload))
+    assert value.status.value == "insufficient_data"
+    assert any(item["code"] == "extraction_version_mismatch" for item in value.diagnostics)
+
+
+def test_operation_output_must_match_reconciliation_expected_value():
+    payload = base_payload()
+    payload["reconciliation_result"]["targets"][0]["result"]["operations"][0]["output_value"] = "999.00"
+    value = indicator(verify(payload))
+    assert value.status.value == "insufficient_data"
+    assert value.trust.calculation_trust == "invalid"
+    assert any(item["code"] == "calculation_output_mismatch" for item in value.diagnostics)
+
+
+def test_operation_formula_must_reference_the_declared_inputs():
+    payload = base_payload()
+    payload["reconciliation_result"]["targets"][0]["result"]["operations"][0]["input_source_ids"] = []
+    value = indicator(verify(payload))
+    assert value.status.value == "insufficient_data"
+    assert any(item["code"] == "calculation_formula_input_mismatch" for item in value.diagnostics)
+
+
+def test_missing_calculation_operations_remains_unproven():
+    payload = base_payload()
+    payload["reconciliation_result"]["targets"][0]["result"]["operations"] = []
+    value = indicator(verify(payload))
+    assert value.status.value == "needs_review"
+    assert value.trust.calculation_trust == "unproven"
+    assert any(item["code"] == "calculation_proof_unverified" for item in value.diagnostics)
+
+
+def test_system_validated_source_can_support_automatic_result():
+    payload = base_payload()
+    payload["reconciliation_result"]["targets"][0]["result"]["used_sources"][0]["evidence_status"] = "system_validated"
+    value = indicator(verify(payload))
+    assert value.status.value == "matched"
+    assert value.trust.technical_validity == "valid"
+    assert value.trust.human_confirmation == "unconfirmed"
+    assert value.trust.calculation_trust == "proven"
+
+
 def test_difference_above_explicit_tolerance_remains_mismatch():
     payload = base_payload()
     set_source_amount(payload, {"amount": "110.25", "currency": "RUB"}, "110.25 RUB")
@@ -119,6 +225,9 @@ def test_confirmed_duplicate_requires_two_resolved_sources_and_repeated_operatio
     })
     target_result["expected_value"] = {"amount": "200.00", "currency": "RUB"}
     target_result["operations"][0]["output_value"] = "200.00"
+    target_result["operations"][0]["input_source_ids"] = ["src-invoice-total", "src-invoice-duplicate"]
+    target_result["formula"] = "SUM(src-invoice-total, src-invoice-duplicate)"
+    target_result["operations"][0]["formula"] = target_result["formula"]
     target_result["diagnostics"] = [{
         "code": "duplicate_confirmed", "message": "The same source operation was included twice.", "confirmed": True,
         "source_ids": ["src-invoice-total", "src-invoice-duplicate"],
@@ -188,7 +297,8 @@ def test_rounding_difference_without_policy_is_not_silently_tolerated():
     value = indicator(verify(payload))
     assert value.status.value == "mismatch"
     assert "no_rounding_rule_or_tolerance_was_supplied" in value.uncertainty.reasons
-    assert value.uncertainty.manual_review_required
+    assert not value.uncertainty.manual_review_required
+    assert value.trust.calculation_trust == "proven"
 
 
 def test_explicit_tolerance_for_another_unit_is_not_applied():
@@ -271,7 +381,7 @@ def test_invalid_upstream_json_is_rejected_with_contract_path():
     payload["extraction"].pop("document_id")
     with pytest.raises(ContractValidationError) as caught:
         verify(payload)
-    assert any("document_id" in issue["message"] for issue in caught.value.as_list())
+    assert any(issue["path"].endswith("document_id") for issue in caught.value.as_list())
 
 
 def test_incompatible_upstream_major_version_is_rejected():
@@ -294,6 +404,39 @@ def test_repeated_request_is_idempotent_and_retrievable(tmp_path: Path):
     assert first.model_dump(mode="json") == second.model_dump(mode="json")
     assert store.get(first.verification_id).model_dump(mode="json") == first.model_dump(mode="json")
     assert store.history(project_id="synthetic-project").items[0].verification_id == first.verification_id
+    store.close()
+
+
+def test_parallel_identical_requests_store_one_idempotent_run(tmp_path: Path):
+    from app.storage import SQLiteVerificationStore
+
+    store = SQLiteVerificationStore(tmp_path / "parallel-runs.sqlite3")
+    request = make_request()
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        results = list(pool.map(lambda _: store.create(request), range(16)))
+    assert len({result.verification_id for result in results}) == 1
+    assert len({result.created_at for result in results}) == 1
+    assert store._db.execute("SELECT COUNT(*) FROM verification_runs").fetchone()[0] == 1
+    store.close()
+
+
+def test_optional_llm_call_runs_outside_sqlite_transaction(tmp_path: Path):
+    from app.storage import SQLiteVerificationStore
+
+    store = None
+
+    class Provider:
+        def suggest(self, _case):
+            assert store is not None and not store._db.in_transaction
+            time.sleep(0.02)
+            return []
+
+    store = SQLiteVerificationStore(tmp_path / "polza-transaction.sqlite3", explanation_provider=Provider())
+    payload = base_payload()
+    set_expected(payload, "110.25")
+    set_source_amount(payload, {"amount": "110.25", "currency": "RUB"}, "110.25 RUB")
+    result = store.create(make_request(payload))
+    assert result.overall_status.value == "mismatch"
     store.close()
 
 
@@ -334,6 +477,7 @@ def test_non_numeric_string_indicator_is_supported():
     target = payload["reconciliation_result"]["targets"][0]
     target["target"].update({"value_type": "string", "vat_basis": "not_applicable", "currency": None})
     target["result"].update({"value_type": "string", "vat_basis": "not_applicable", "currency": None, "expected_value": "Approved"})
+    target["result"]["operations"][0]["output_value"] = "Approved"
     value = indicator(verify(payload))
     assert value.status.value == EXPECTED["text_value_equal"]
     assert value.difference.accepted_by == "exact"
@@ -349,12 +493,40 @@ def test_human_confirmed_linking_evidence_is_resolved_and_preserved():
     assert value.evidence.linking_references[0]["evidence"][0]["endpoint"] == "source"
 
 
-def test_equal_value_with_only_machine_confirmed_link_stays_in_review():
+def test_complete_machine_validated_link_does_not_require_human_review():
     payload = confirmed_linking_payload()
     payload["linking_result"]["links"][0]["verification_status"] = "not_reviewed"
     value = indicator(verify(payload))
-    assert value.status.value == "needs_review"
-    assert any(item.category.value == "incorrect_document_link" and item.hypothesis for item in value.discrepancies)
+    assert value.status.value == "matched"
+    assert value.trust.automatic_link_confirmation == "confirmed"
+    assert value.trust.human_confirmation == "unconfirmed"
+
+
+def test_confirmed_link_status_without_matching_evidence_is_not_accepted():
+    payload = confirmed_linking_payload()
+    payload["linking_result"]["links"][0]["evidence"][0]["source"]["raw_value"] = "forged value"
+    value = indicator(verify(payload))
+    assert value.status.value == "insufficient_data"
+    assert value.trust.automatic_link_confirmation == "unconfirmed"
+    assert any(item["code"] == "link_evidence_value_mismatch" for item in value.diagnostics)
+
+
+def test_confirmed_link_does_not_accept_forged_target_endpoint():
+    payload = confirmed_linking_payload()
+    payload["linking_result"]["links"][0]["evidence"][0]["target"]["raw_value"] = "forged value"
+    value = indicator(verify(payload))
+    assert value.status.value == "insufficient_data"
+    assert value.trust.automatic_link_confirmation == "unconfirmed"
+    assert any(item["code"] == "link_evidence_value_mismatch" for item in value.diagnostics)
+
+
+def test_link_input_hash_mismatch_blocks_automatic_link_confirmation():
+    payload = confirmed_linking_payload()
+    payload["linking_result"]["input_documents"][1]["input_hash"] = "f" * 64
+    value = indicator(verify(payload))
+    assert value.status.value == "insufficient_data"
+    assert value.trust.automatic_link_confirmation == "unconfirmed"
+    assert any(item["code"] == "link_input_hash_mismatch" for item in value.diagnostics)
 
 
 def test_link_evidence_that_does_not_resolve_is_insufficient():
@@ -407,12 +579,12 @@ def test_upstream_linking_example_is_detected_as_incompatible_with_declared_12_s
 
 
 def test_output_schema_file_matches_pydantic_contract():
-    output_schema = load_schema("verification-result-1.0.0.schema.json")
+    output_schema = load_schema("verification-result-1.1.0.schema.json")
     Draft202012Validator.check_schema(output_schema)
     result = verify()
     validate_result_contract(result)
     Draft202012Validator(output_schema).validate(result.model_dump(mode="json"))
-    assert output_schema["$id"].endswith("verification-result-1.0.0.schema.json")
+    assert output_schema["$id"].endswith("verification-result-1.1.0.schema.json")
 
 
 def test_optional_explanation_provider_receives_deidentified_data_and_only_adds_hypotheses():

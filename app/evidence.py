@@ -24,11 +24,37 @@ class SourceCheck:
     link: dict[str, Any] | None = None
     link_evidence: list[dict[str, Any]] = field(default_factory=list)
 
+    _TRUST_ONLY_CODES = {
+        "source_not_validated",
+        "source_rejected",
+        "link_not_confirmed",
+        "link_human_rejected",
+    }
+
+    @property
+    def is_technically_valid(self) -> bool:
+        return self.reference_resolved and not any(
+            issue.get("code") not in self._TRUST_ONLY_CODES for issue in self.issues
+        )
+
+    @property
+    def is_automatically_confirmed(self) -> bool:
+        source_status = self.source.get("evidence_status")
+        if not self.is_technically_valid or source_status not in {"system_validated", "human_confirmed"}:
+            return False
+        if self.link is None:
+            return True
+        return (
+            self.link.get("status") == "confirmed"
+            and self.link.get("verification_status") != "human_rejected"
+            and bool(self.link_evidence)
+            and not self.link.get("conflicts")
+        )
+
     @property
     def is_human_confirmed(self) -> bool:
         return (
-            self.reference_resolved
-            and not self.issues
+            self.is_automatically_confirmed
             and self.source.get("evidence_status") == "human_confirmed"
             and (self.link is None or self.link.get("verification_status") == "human_confirmed")
         )
@@ -46,6 +72,9 @@ class SourceCheck:
             "raw_value": self.resolved_raw_value,
             "declared_evidence_status": self.source.get("evidence_status"),
             "reference_resolved": self.reference_resolved,
+            "technical_validity": "valid" if self.is_technically_valid else "invalid",
+            "automatic_confirmation": "confirmed" if self.is_automatically_confirmed else "unconfirmed",
+            "human_confirmation": "confirmed" if self.is_human_confirmed else "unconfirmed",
             "provenance": self.provenance,
             "link_id": self.source.get("link_id"),
             "linking_evidence": self.link_evidence,
@@ -69,7 +98,12 @@ def _matching_link_evidence(
     evidence = link.get("evidence")
     if not isinstance(evidence, list):
         return []
-    indexed = [(index, evidence[index])] if index is not None and index < len(evidence) else list(enumerate(evidence))
+    if index is not None:
+        if index < 0 or index >= len(evidence):
+            return []
+        indexed = [(index, evidence[index])]
+    else:
+        indexed = list(enumerate(evidence))
     matches: list[dict[str, Any]] = []
     for evidence_index, item in indexed:
         if not isinstance(item, dict):
@@ -91,6 +125,100 @@ def _matching_link_evidence(
             matches.append({"evidence_index": evidence_index, "endpoint": endpoint_name, **item})
             break
     return matches
+
+
+def _validate_link_input_document(
+    document_id: str,
+    extraction: dict[str, Any] | None,
+    linking_inputs: dict[str, dict[str, Any]],
+    issues: list[dict[str, Any]],
+) -> None:
+    declared_input = linking_inputs.get(document_id)
+    if declared_input is None:
+        issues.append({"code": "link_input_document_missing", "message": "A linked document is absent from Linking input_documents"})
+        return
+    if extraction is None:
+        issues.append({"code": "link_evidence_unresolved", "message": "A linked document Extraction is not present in the request"})
+        return
+    if extraction.get("document_id") != document_id:
+        issues.append({"code": "link_evidence_document_mismatch", "message": "Supplied Extraction document_id differs from the linked document"})
+    if declared_input.get("extraction_id") != extraction.get("extraction_id"):
+        issues.append({"code": "link_input_extraction_mismatch", "message": "Linking input extraction_id differs from the supplied Extraction"})
+    if declared_input.get("document_type") != extraction.get("document_type"):
+        issues.append({"code": "link_input_document_type_mismatch", "message": "Linking input document_type differs from the supplied Extraction"})
+    if declared_input.get("schema_version") != extraction.get("schema_version"):
+        issues.append({"code": "link_input_schema_version_mismatch", "message": "Linking input schema_version differs from the supplied Extraction"})
+    if declared_input.get("version") != extraction.get("version"):
+        issues.append({"code": "link_input_version_mismatch", "message": "Linking input version differs from the supplied Extraction"})
+    if declared_input.get("input_version") is not None and declared_input.get("input_version") != extraction.get("version"):
+        issues.append({"code": "link_input_version_mismatch", "message": "Linking input_version differs from the supplied Extraction"})
+    declared_input_hash = declared_input.get("input_hash")
+    actual_input_hash = extraction.get("input_hash")
+    if declared_input_hash is None:
+        issues.append({"code": "link_input_fingerprint_missing", "message": "Linking did not bind this document to an Extraction input hash"})
+    elif actual_input_hash is None or declared_input_hash != actual_input_hash:
+        issues.append({"code": "link_input_hash_mismatch", "message": "Linking input hash differs from the supplied Extraction"})
+
+
+def _validate_link_evidence_pair(
+    link: dict[str, Any],
+    evidence: dict[str, Any],
+    extractions: dict[str, dict[str, Any]],
+    issues: list[dict[str, Any]],
+) -> None:
+    for side in ("source", "target"):
+        endpoint = evidence.get(side)
+        declared_document_id = link.get(f"{side}_document_id")
+        if not isinstance(endpoint, dict):
+            issues.append({"code": "link_evidence_unresolved", "message": f"Linking evidence has no {side} endpoint"})
+            continue
+        document_id = endpoint.get("document_id")
+        if not isinstance(document_id, str) or document_id != declared_document_id:
+            issues.append({"code": "link_evidence_document_mismatch", "message": f"Linking evidence {side} endpoint does not match the link document"})
+            continue
+        extraction = extractions.get(document_id)
+        if extraction is None or extraction.get("document_id") != document_id:
+            issues.append({"code": "link_evidence_unresolved", "message": f"Linking evidence {side} document Extraction is not supplied"})
+            continue
+        path = endpoint.get("path")
+        if not isinstance(path, str):
+            issues.append({"code": "link_evidence_unresolved", "message": f"Linking evidence {side} endpoint has no value path"})
+            continue
+        try:
+            reference = resolve_extracted_reference(extraction, _dotted_path_pointer(path))
+        except (ReferenceResolutionError, ValueError, TypeError):
+            issues.append({"code": "link_evidence_unresolved", "message": f"Linking evidence {side} path does not resolve in its Extraction"})
+            continue
+        if reference.container is None or reference.status != "extracted" or reference.value is None:
+            issues.append({"code": "link_evidence_unresolved", "message": f"Linking evidence {side} value is not a resolved extracted value"})
+            continue
+        provenance = reference.provenance
+        if (
+            not provenance
+            or provenance.get("document_id") != document_id
+            or provenance.get("source_available") is False
+            or not any(provenance.get(key) for key in ("source_ref", "page_no", "sheet_name", "cell_address"))
+        ):
+            issues.append({"code": "link_evidence_unresolved", "message": f"Linking evidence {side} Extraction value has incomplete provenance"})
+        if endpoint.get("raw_value") != reference.raw_value:
+            issues.append({"code": "link_evidence_value_mismatch", "message": f"Linking evidence {side} raw_value differs from the referenced Extraction source_value"})
+        declared_provenance = endpoint.get("provenance")
+        if isinstance(declared_provenance, dict):
+            if declared_provenance.get("document_id") not in (None, document_id):
+                issues.append({"code": "link_evidence_provenance_mismatch", "message": f"Linking evidence {side} provenance document_id differs from its endpoint"})
+            locator_keys = ("source_part_id", "source_ref", "page_no", "sheet_name", "cell_address", "bbox", "source_text")
+            if any(
+                declared_provenance.get(key) is not None
+                and provenance is not None
+                and provenance.get(key) != declared_provenance.get(key)
+                for key in locator_keys
+            ):
+                issues.append({"code": "link_evidence_provenance_mismatch", "message": f"Linking evidence {side} provenance differs from its Extraction value"})
+        expected_row_id = link.get(f"{side}_row_id")
+        if expected_row_id:
+            actual_row_id = row_id_for_pointer(extraction, _dotted_path_pointer(path))
+            if actual_row_id != expected_row_id:
+                issues.append({"code": "link_row_id_mismatch", "message": f"Link {side}_row_id differs from the referenced Extraction row"})
 
 
 def validate_source_references(
@@ -130,6 +258,8 @@ def validate_source_references(
                 check.extraction_status = extracted.status
                 check.provenance = extracted.provenance
                 check.reference_resolved = True
+                if isinstance(extracted.container, dict) and extracted.container.get("conflict"):
+                    check.issues.append({"code": "source_conflict", "message": "Extraction marks the referenced source value as conflicting"})
                 if extracted.container is None:
                     check.issues.append({"code": "source_wrapper_missing", "message": "The source pointer does not address an Extraction value wrapper"})
                 tokens = pointer_tokens(pointer)
@@ -154,13 +284,15 @@ def validate_source_references(
                 elif not any(extracted.provenance.get(key) for key in ("source_ref", "page_no", "sheet_name", "cell_address")):
                     check.issues.append({"code": "source_locator_missing", "message": "No PDF/XLSX/source locator is present in provenance"})
                 found_row_id = row_id_for_pointer(extraction, pointer)
-                if source.get("row_id") and found_row_id and source["row_id"] != found_row_id:
+                if source.get("row_id") and source["row_id"] != found_row_id:
                     check.issues.append({"code": "row_id_mismatch", "message": "The supplied row_id does not match the referenced line item"})
             except ReferenceResolutionError as exc:
                 check.issues.append({"code": "source_reference_unresolved", "message": str(exc)})
 
-        if source.get("evidence_status") != "human_confirmed":
-            check.issues.append({"code": "source_not_human_confirmed", "message": "Reconciliation source is not explicitly marked human_confirmed"})
+        if source.get("evidence_status") in {"unconfirmed", "unknown"}:
+            check.issues.append({"code": "source_not_validated", "message": "Reconciliation source has no human or system validation claim"})
+        elif source.get("evidence_status") == "rejected":
+            check.issues.append({"code": "source_rejected", "message": "Reconciliation source was explicitly rejected"})
 
         link_id = source.get("link_id")
         if link_id:
@@ -171,22 +303,31 @@ def validate_source_references(
             else:
                 if document_id not in {link.get("source_document_id"), link.get("target_document_id")}:
                     check.issues.append({"code": "link_document_mismatch", "message": "Referenced link does not connect the used source document"})
-                declared_input = linking_inputs.get(document_id)
-                if declared_input is None:
-                    check.issues.append({"code": "link_input_document_missing", "message": "Referenced source document is absent from Linking input_documents"})
-                elif declared_input.get("extraction_id") != source.get("extraction_id"):
-                    check.issues.append({"code": "link_input_extraction_mismatch", "message": "Linking input extraction_id differs from the used source"})
+                else:
+                    row_field = "source_row_id" if document_id == link.get("source_document_id") else "target_row_id"
+                    if source.get("row_id") and link.get(row_field) != source.get("row_id"):
+                        check.issues.append({"code": "link_row_id_mismatch", "message": "Link row ID differs from the used Extraction row_id"})
+                for side in ("source", "target"):
+                    linked_document_id = link.get(f"{side}_document_id")
+                    if isinstance(linked_document_id, str):
+                        _validate_link_input_document(
+                            linked_document_id,
+                            extractions.get(linked_document_id),
+                            linking_inputs,
+                            check.issues,
+                        )
                 evidence_index = source.get("evidence_index")
                 matches = _matching_link_evidence(link, source, evidence_index)
                 check.link_evidence = matches
                 if not matches:
                     check.issues.append({"code": "link_evidence_unresolved", "message": "No supplied Linking evidence resolves to the referenced source document and value path"})
-                elif check.reference_resolved:
-                    endpoint = matches[0].get(matches[0].get("endpoint"), {})
-                    if endpoint.get("raw_value") != check.resolved_raw_value:
-                        check.issues.append({"code": "link_evidence_value_mismatch", "message": "Linking evidence raw_value differs from the referenced Extraction source_value"})
-                if link.get("status") != "confirmed" or link.get("verification_status") != "human_confirmed":
-                    check.issues.append({"code": "link_not_human_confirmed", "message": "Linked evidence is not both confirmed and human_confirmed"})
+                else:
+                    for match in matches:
+                        _validate_link_evidence_pair(link, match, extractions, check.issues)
+                if link.get("status") != "confirmed":
+                    check.issues.append({"code": "link_not_confirmed", "message": "Link status is not confirmed"})
+                if link.get("verification_status") == "human_rejected":
+                    check.issues.append({"code": "link_human_rejected", "message": "The relationship was explicitly rejected by a reviewer"})
                 if link.get("conflicts"):
                     check.issues.append({"code": "link_has_conflicts", "message": "Linking result declares conflicts for this relationship"})
                 unresolved_diagnostics = [

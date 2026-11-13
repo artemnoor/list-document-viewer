@@ -26,7 +26,7 @@ Verification принимает исходные JSON предыдущих эт�
 | `app/comparison.py` | Decimal арифметика и типизированное сравнение |
 | `app/classification.py` | Категории доказанных причин и гипотез |
 | `app/engine.py` | Порядок проверок, статусы, неопределённость, provenance цепочка |
-| `app/storage.py` | SQLite, история, fingerprint идемпотентности |
+| `app/storage.py` | SQLite, короткие транзакции, уникальный fingerprint идемпотентности |
 | `contracts/` | Версионированные входные и выходные JSON Schema |
 
 ## Поток запроса
@@ -34,15 +34,18 @@ Verification принимает исходные JSON предыдущих эт�
 1. API валидирует структуру запроса Pydantic.
 2. Contract validator применяет Extraction 1.2.0, Linking 1.2.0 (если передан) и provisional Reconciliation 1.0.0 JSON Schema.
 3. Адаптер разрешает точный target JSON Pointer в основном Extraction и каждый `used_sources[].json_pointer` в поддерживающих Extraction.
-4. Evidence validator сверяет document/extraction/row IDs, provenance locator, Linking input document, link ID, verification status и путь evidence.
-5. Comparison engine проверяет периоды, экономический смысл, валюту, VAT basis, единицы и только затем сравнивает значения.
-6. Classification сохраняет факты отдельно от гипотез. SQLite сохраняет исходный результат и fingerprint входов.
+4. Evidence validator сверяет document/extraction/row IDs, provenance locator, Linking input versions/hashes, link ID, path и исходное evidence value.
+5. Calculation proof checks сверяют IDs, operation inputs/outputs, formula references и completeness без пересчёта финансовой формулы.
+6. Comparison engine берёт фактический период только из Extraction, проверяет экономический смысл, валюту, VAT basis, единицы и затем сравнивает значения.
+7. Classification сохраняет факты отдельно от гипотез и выдаёт trust dimensions. SQLite сохраняет результат и fingerprint входов.
 
 При неразрешённой ссылке результат содержит диагностику и остаётся `insufficient_data` или `needs_review`. Математически вычисленная разница может быть сохранена и при недоказанной базе; она не превращается в установленный `mismatch`.
 
 ## Хранение и повторный запуск
 
-SQLite файл по умолчанию `data/verification.sqlite3`; путь задаётся через `VERIFICATION_DB_PATH`. SHA-256 fingerprint строится из канонического JSON всего запроса. Повторный идентичный запрос возвращает сохранённый результат с тем же `verification_id` и timestamp.
+SQLite файл по умолчанию `data/verification.sqlite3`; путь задаётся через `VERIFICATION_DB_PATH`. SHA-256 fingerprint строится из канонического JSON всего запроса. Детерминированная обработка и optional Polza вызов идут до write transaction. Короткая транзакция и unique fingerprint разрешают гонку повторных запросов; повтор возвращает сохранённый результат с тем же `verification_id` и timestamp.
+
+REST routes требуют project-scoped token, когда `VERIFICATION_AUTH_MODE=required`. Local Compose использует `development` только вместе с loopback bind `127.0.0.1`; история и чтение результата всегда ограничены project ID.
 
 ## Reconciliation adapter и LLM extension point
 

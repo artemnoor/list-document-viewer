@@ -133,6 +133,26 @@ class Uncertainty(BaseModel):
     status_reason: str
 
 
+class EvidenceTrust(BaseModel):
+    """Independent trust dimensions; a declared status alone is never proof."""
+
+    technical_validity: Literal["valid", "invalid", "incomplete", "not_checked"]
+    automatic_link_confirmation: Literal["not_required", "confirmed", "unconfirmed", "rejected"]
+    human_confirmation: Literal["not_required", "confirmed", "unconfirmed", "rejected"]
+    calculation_trust: Literal["proven", "unproven", "invalid", "not_applicable"]
+
+
+class VerificationCompleteness(BaseModel):
+    total_indicators: int = Field(ge=0)
+    applicable_indicators: int = Field(ge=0)
+    verified_indicators: int = Field(ge=0)
+    matched_indicators: int = Field(ge=0)
+    mismatched_indicators: int = Field(ge=0)
+    not_applicable_indicators: int = Field(ge=0)
+    unresolved_indicators: int = Field(ge=0)
+    complete: bool
+
+
 class IndicatorResult(BaseModel):
     target_id: str
     semantic_key: str | None = None
@@ -144,6 +164,12 @@ class IndicatorResult(BaseModel):
     difference: Difference = Field(default_factory=Difference)
     discrepancies: list[Discrepancy] = Field(default_factory=list)
     evidence: EvidenceTrace = Field(default_factory=EvidenceTrace)
+    trust: EvidenceTrust = Field(default_factory=lambda: EvidenceTrust(
+        technical_validity="not_checked",
+        automatic_link_confirmation="not_required",
+        human_confirmation="not_required",
+        calculation_trust="unproven",
+    ))
     comparison_rules: dict[str, Any] = Field(default_factory=dict)
     diagnostics: list[dict[str, Any]] = Field(default_factory=list)
     uncertainty: Uncertainty
@@ -162,7 +188,7 @@ class VerificationSummary(BaseModel):
 class VerificationResult(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    schema_version: Literal["1.0.0"] = "1.0.0"
+    schema_version: Literal["1.1.0"] = "1.1.0"
     verification_id: str
     project_id: str
     calculation_id: str
@@ -171,6 +197,7 @@ class VerificationResult(BaseModel):
     input_metadata: dict[str, Any]
     overall_status: VerificationStatus
     summary: dict[str, int]
+    completeness: VerificationCompleteness
     indicators: list[IndicatorResult]
     diagnostics: list[dict[str, Any]] = Field(default_factory=list)
 

@@ -115,7 +115,8 @@
     "missing_fields": [],
     "review_required": [],
     "document_type": "kfz_report",
-    "line_items": []
+    "line_items": [],
+    "input_hash": "8c8e1c024bb7db0728d75c57d2ebb70d916ee41b271d7f0755502f6b9c0ff6b9"
   },
   "supporting_extractions": [
     {
@@ -188,7 +189,8 @@
       "missing_fields": [],
       "review_required": [],
       "document_type": "invoice",
-      "line_items": []
+      "line_items": [],
+      "input_hash": "f4cdaba5950e1e04e781f481d3d08ea6620cffbbb2999d3c389015ad535b530c"
     }
   ],
   "reconciliation_result": {
@@ -201,10 +203,12 @@
       "input_data": {
         "extraction_id": "synthetic-kfz-extraction-v1",
         "extraction_schema_version": "1.2.0",
-        "extraction_hash": null,
+        "extraction_hash": "8c8e1c024bb7db0728d75c57d2ebb70d916ee41b271d7f0755502f6b9c0ff6b9",
         "linking_run_id": null,
         "linking_contract_version": null,
-        "supporting_extraction_hashes": {}
+        "supporting_extraction_hashes": {
+          "synthetic-invoice-001": "f4cdaba5950e1e04e781f481d3d08ea6620cffbbb2999d3c389015ad535b530c"
+        }
       },
       "reconciliation_engine_version": "synthetic-reconciliation/1.0"
     },

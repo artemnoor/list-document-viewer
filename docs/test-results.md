@@ -1,27 +1,30 @@
 # Результаты тестирования
 
-Последний полный зафиксированный прогон `pytest` до подключения Polza provider: 13 ноября 2026.
+## Verification Engine 1.1.0 — 13 ноября 2026
+
+Полный набор `pytest`:
 
 ```text
-43 passed, 1 warning in 9.62s
+60 passed, 1 warning in 6.54s
 ```
 
-Набор включает 43 автоматических test cases (плюс 60 Hypothesis примеров Decimal арифметики):
+В наборе есть unit, upstream/schema contract, property-based Decimal, regression, API, security, idempotence и concurrency checks. Property test выполняет 60 Hypothesis examples. Проверяются несовпадающие и отсутствующие hashes/версии, отсутствие operation proof, противоречивые formula/input/output, Extraction period, неподтверждённые ссылки, tolerance, `not_applicable` coverage и ложные подтверждения. Проверяется, что SQLite не держит транзакцию во время optional provider call.
 
-- совпадение, mismatch, границы допуска, округление, отрицательные суммы, expected=0;
-- отсутствующие значения, partial calculation, unit/currency/VAT/basis/period mismatch;
-- confirmed/suspected duplicate, missing document, unconfirmed source и Linking evidence;
-- Extraction 1.2.0 fixtures, контрактно валидный synthetic Linking 1.2.0, конфликт raw Linking fixture и объявленной схемы;
-- provenance и unresolved pointers, совместимость версий и проверки output JSON Schema;
-- API create/get/history/diagnostics/health/docs/OpenAPI, SQLite идемпотентность и чтение записей старого формата;
-- необязательные de-identified LLM suggestions, schema-bound только к гипотезам и разрешённым evidence tokens.
+Текущие upstream Extraction 1.2.0 и Linking 1.2.0 схемы сверены с commit в `contracts/upstream-sources.json`; доступные Extraction fixtures и synthetic Linking 1.2.0 проходят контрактные проверки. Старый upstream Linking sample с payload version 1.0.0 намеренно остаётся несовместимым с декларированной схемой 1.2.0.
 
-**Предупреждения среды:** в сводке pytest присутствует предупреждение установленного Starlette о будущей замене `httpx` на `httpx2` в `TestClient`; тесты завершились успешно. До сводки глобальный pytest-asyncio выводит предупреждение о loop scope, хотя проект не использует async fixtures.
+Docker Compose smoke после пересборки:
 
-Docker image собран и оставлен запущенным через Compose на `http://127.0.0.1:8000`. Smoke-проверка контейнера подтвердила health, Swagger и OpenAPI (`200`), сценарии `matched` и `mismatch` (`100.00` против `110.25`, разница `-10.25`), повтор с тем же fingerprint и выдачу истории. Записи SQLite, созданные более ранней версией результата, читаются с явной пометкой об отсутствии исторической `input_metadata`.
+- `docker compose config --quiet` — успешно.
+- Образ 1.1.0 собран, сервис healthy; внешний порт привязан только к `127.0.0.1:8000`.
+- `/health`, `/docs` и `/openapi.json` отвечают успешно; OpenAPI сообщает версию 1.1.0.
+- Синтетический matched request вернул `matched`, schema 1.1.0 и `completeness.complete=true`; scoped GET и project history доступны.
 
-После подключения Polza AI выполнен один live-запрос с синтетическим mismatch: API вернул `mismatch`, Gemma вернула три schema-валидные гипотезы, ошибок provider не записано. Внешний запрос содержал только `ReviewCase` с псевдонимными tokens и кодами. Автоматический `pytest` после этого подключения не запускался.
+В этом smoke использовался только синтетический matched запрос, поэтому внешний вызов Polza не выполнялся. Provider проверяется unit-тестами на псевдонимном payload и на независимость статуса от его ошибок.
 
-Это не полный E2E Phystech Trace: реальные Reconciliation output и Reporting не подключены.
+Предупреждение тестовой среды: установленный Starlette сообщает о будущем переходе с `httpx` на `httpx2` в `TestClient`. Также `pytest-asyncio` предупреждает о неустановленном scope event loop; тесты приложения используют синхронные fixtures.
 
-Сценарии синтетического набора и предполагаемые статусы независимо записаны в `tests/fixtures/synthetic/expected-statuses.json`. Upstream Linking sample ожидаемо не проходит интеграционную schema 1.2.0; тест закрепляет наблюдаемую несовместимость, а не исправляет исходный JSON.
+## Историческая live-проверка Polza
+
+Ранее был отправлен один синтетический mismatch. Gemma 4 26B A4B вернула три schema-валидные гипотезы, которые не меняли детерминированный статус. В запросе были только pseudonymous tokens и коды; финансовые значения и документы не отправлялись. Этот единичный live-запуск не является частью текущего `pytest` прогона.
+
+Полный E2E Parser → Reconciliation → Verification → Reporting не заявляется: Reconciliation 1.0.0 остаётся предварительным, а Reporting не подключён.

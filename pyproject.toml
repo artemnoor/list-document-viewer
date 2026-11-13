@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "phystech-trace-verification-engine"
-version = "1.0.0"
+version = "1.1.0"
 description = "Evidence-first verification of KFZ metrics against Reconciliation results"
 readme = "README.md"
 requires-python = ">=3.11"

@@ -2,7 +2,7 @@
   "integration_repository": {
     "url": "https://github.com/artemnoor/list-document-viewer",
     "ref": "feat/phystech-trace-integration",
-    "commit": "2e6da4b2b3b57b5c4e9137d8657770beba65ffdf"
+    "commit": "b71f06b074869c7343feb143556c5ad101c3fb4e"
   },
   "structured_extraction": {
     "url": "https://github.com/artemnoor/kfz-structured-extraction-",
@@ -10,7 +10,7 @@
     "commit": "1e922e284805f2c1b343b4cb369813c8073b67dd",
     "schema_version": "1.2.0",
     "schema_path_in_integration": "phystech-trace/contracts/structured-extraction-1.2.0.schema.json",
-    "schema_sha256": "9c976a36f103843dd5c93a7e9daf5d8361e43db4ab2d0b64f02732c42aba5bb7"
+    "schema_sha256": "fca942339fee08c3d577891cec78343c8958d88d1896f01ad055881d6ad50be6"
   },
   "document_linking": {
     "url": "https://github.com/artemnoor/kfz-document-linking",
@@ -18,11 +18,11 @@
     "commit": "28a3662cc0597093ad6264f70f591db19c37e061",
     "schema_version": "1.2.0",
     "schema_path_in_integration": "phystech-trace/contracts/document-linking-1.2.0.schema.json",
-    "schema_sha256": "cf18e734116cb50cd50da783b0598e094ab5f0cda71ada55281a071c59b026d5",
+    "schema_sha256": "70fd997069ea1339aa6263c8170315bc661214a881d578c3391581a4742fb96b",
     "payload_contract_version_observed_in_fixture": "1.0.0"
   },
   "upstream_fixtures": {
-    "integration_commit": "2e6da4b2b3b57b5c4e9137d8657770beba65ffdf",
+    "integration_commit": "b71f06b074869c7343feb143556c5ad101c3fb4e",
     "kfz_extraction_fixture_sha256": "0ad738f6d9cfe8e6586a13096e69e5aabb0e2ef669651f6a0abdbe4513c6f5e4",
     "linking_result_fixture_sha256": "5e5df41942e987166b012d4d6802fd1ca39d3b607c4d97f51679afa31096f437"
   }

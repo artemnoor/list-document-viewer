@@ -4,11 +4,11 @@
 
 | Category | Когда выставляется |
 | --- | --- |
-| `amount_difference` | Decimal разница доказана на полной и подтверждённой базе |
+| `amount_difference` | Decimal разница доказана на полной и автоматически или человечески проверенной базе; принятая tolerance не создаёт эту категорию |
 | `wrong_period` | Actual и expected period явно заданы и различаются |
 | `duplicate_operation` | Reconciliation указал confirmed duplicate; минимум два разрешённых source IDs используют один и тот же operation ID |
 | `missing_supporting_document` | Диагностика подтверждена, document ID указан в `excluded_sources`, а подтверждающие ссылки разрешаются |
-| `incorrect_document_link` | Link отвергнут человеком (установленная причина) либо связь ещё не подтверждена (гипотеза/review) |
+| `incorrect_document_link` | Link отвергнут человеком либо status не confirmed; `status=confirmed` без валидного evidence не считается подтверждением |
 | `quantity_or_indicator_difference` | Отличается поддерживаемое числовое значение, не являющееся money |
 | `incompatible_unit` | Currency или unit явно несовместимы; сравнение не выполняется |
 | `rounding_problem` | Явное rounding rule объясняет raw difference, либо неизвестное правило сохранено как гипотеза |

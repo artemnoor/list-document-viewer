@@ -52,10 +52,25 @@ def _validate(payload: Any, schema: dict[str, Any], contract: str) -> list[Contr
             if missing:
                 path.append(missing.group(1))
         unique[(tuple(path), error.message)] = (path, error)
+    safe_messages = {
+        "required": "Required property is missing.",
+        "type": "Value has an invalid type.",
+        "enum": "Value is not in the allowed set.",
+        "const": "Value does not match the required constant.",
+        "format": "Value has an invalid format.",
+        "pattern": "Value has an invalid format.",
+        "additionalProperties": "Unexpected property.",
+        "minimum": "Value is below the allowed minimum.",
+        "maximum": "Value is above the allowed maximum.",
+        "minLength": "Value is shorter than allowed.",
+        "maxLength": "Value is longer than allowed.",
+        "oneOf": "Value does not match exactly one allowed shape.",
+        "anyOf": "Value does not match an allowed shape.",
+    }
     return [
         ContractIssue(
             path="/" + "/".join(path),
-            message=error.message,
+            message=safe_messages.get(error.validator, "Value violates the input contract."),
             contract=contract,
         )
         for path, error in list(unique.values())[:50]
@@ -89,6 +104,8 @@ def validate_request_contracts(request: VerificationRequest) -> None:
     issues.extend(_validate(request.reconciliation_result, reconciliation_schema, "reconciliation-result-1.0.0"))
     if request.linking_result is not None:
         issues.extend(_validate(request.linking_result, linking_schema, "document-linking-1.2.0"))
+        if request.linking_result.get("contract_version") != "1.2.0":
+            issues.append(ContractIssue("/linking_result/contract_version", "Only Document Linking contract 1.2.0 is supported", "document-linking-1.2.0"))
 
     if issues:
         raise ContractValidationError(issues)
@@ -106,8 +123,8 @@ class ContractValidationError(ValueError):
 def validate_result_contract(result: VerificationResult) -> None:
     schema = VerificationResult.model_json_schema()
     schema["$schema"] = "https://json-schema.org/draft/2020-12/schema"
-    schema["$id"] = "https://phystech-trace.local/contracts/verification-result-1.0.0.schema.json"
-    schema["title"] = "Phystech Trace Verification Result 1.0.0"
-    errors = _validate(result.model_dump(mode="json"), schema, "verification-result-1.0.0")
+    schema["$id"] = "https://phystech-trace.local/contracts/verification-result-1.1.0.schema.json"
+    schema["title"] = "Phystech Trace Verification Result 1.1.0"
+    errors = _validate(result.model_dump(mode="json"), schema, "verification-result-1.1.0")
     if errors:
         raise ContractValidationError(errors)

@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import json
+import os
 import sqlite3
 import threading
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -16,6 +18,7 @@ from app.models import (
     VerificationResult,
     VerificationStatus,
     VerificationSummary,
+    VerificationCompleteness,
 )
 
 
@@ -29,12 +32,14 @@ class SQLiteVerificationStore:
     def __init__(self, path: str | Path, explanation_provider: ReviewExplanationProvider | None = None):
         self.path = str(path)
         self.explanation_provider = explanation_provider
+        self.max_processing_seconds = max(1.0, float(os.getenv("VERIFICATION_MAX_PROCESSING_SECONDS", "30")))
         if self.path != ":memory:":
             Path(self.path).parent.mkdir(parents=True, exist_ok=True)
         self._lock = threading.RLock()
         self._db = sqlite3.connect(self.path, check_same_thread=False, isolation_level=None)
         self._db.row_factory = sqlite3.Row
         self._db.execute("PRAGMA foreign_keys = ON")
+        self._db.execute("PRAGMA busy_timeout = 5000")
         if self.path != ":memory:":
             self._db.execute("PRAGMA journal_mode = WAL")
         self._db.execute(
@@ -52,8 +57,33 @@ class SQLiteVerificationStore:
 
     @staticmethod
     def _deserialize_result(serialized: str) -> VerificationResult:
-        """Read current results and add an explicit marker to pre-metadata records."""
+        """Adapt v1.0.0 rows into the additive v1.1.0 result contract."""
         data = json.loads(serialized)
+        if data.get("schema_version") == "1.0.0":
+            counts = data.get("summary", {})
+            statuses = [indicator.get("status") for indicator in data.get("indicators", [])]
+            total = len(statuses)
+            not_applicable = statuses.count(VerificationStatus.NOT_APPLICABLE.value)
+            matched = statuses.count(VerificationStatus.MATCHED.value)
+            mismatched = statuses.count(VerificationStatus.MISMATCH.value)
+            data["schema_version"] = "1.1.0"
+            data["completeness"] = VerificationCompleteness(
+                total_indicators=total,
+                applicable_indicators=total - not_applicable,
+                verified_indicators=matched + mismatched,
+                matched_indicators=matched,
+                mismatched_indicators=mismatched,
+                not_applicable_indicators=not_applicable,
+                unresolved_indicators=total - matched - mismatched - not_applicable,
+                complete=bool(total) and matched + mismatched == total,
+            ).model_dump(mode="json")
+            for indicator in data.get("indicators", []):
+                indicator.setdefault("trust", {
+                    "technical_validity": "not_checked",
+                    "automatic_link_confirmation": "unconfirmed",
+                    "human_confirmation": "unconfirmed",
+                    "calculation_trust": "unproven",
+                })
         if "input_metadata" not in data:
             data["input_metadata"] = {
                 "available": False,
@@ -64,7 +94,28 @@ class SQLiteVerificationStore:
     def create(self, request: VerificationRequest) -> VerificationResult:
         fingerprint = canonical_fingerprint(request)
         verification_id = f"ver_{fingerprint[:24]}"
-        existing_result: str | None = None
+        with self._lock:
+            row = self._db.execute(
+                "SELECT result_json FROM verification_runs WHERE input_fingerprint = ?",
+                (fingerprint,),
+            ).fetchone()
+        if row:
+            return self._deserialize_result(row["result_json"])
+
+        # Deterministic processing and optional Polza calls happen with no DB
+        # lock or write transaction held. The unique fingerprint handles races.
+        created_at = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+        result = run_verification(
+            request,
+            verification_id,
+            created_at,
+            fingerprint,
+            self.explanation_provider,
+            deadline=time.monotonic() + self.max_processing_seconds,
+        )
+        validate_result_contract(result)
+        serialized = result.model_dump_json(exclude_none=False)
+
         with self._lock:
             self._db.execute("BEGIN IMMEDIATE")
             try:
@@ -73,38 +124,46 @@ class SQLiteVerificationStore:
                     (fingerprint,),
                 ).fetchone()
                 if row:
-                    existing_result = row["result_json"]
                     self._db.execute("COMMIT")
-                else:
-                    created_at = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
-                    result = run_verification(request, verification_id, created_at, fingerprint, self.explanation_provider)
-                    validate_result_contract(result)
-                    serialized = result.model_dump_json(exclude_none=False)
-                    self._db.execute(
-                        "INSERT INTO verification_runs VALUES (?, ?, ?, ?, ?, ?, ?)",
-                        (
-                            result.verification_id,
-                            fingerprint,
-                            result.project_id,
-                            result.calculation_id,
-                            result.created_at,
-                            result.overall_status.value,
-                            serialized,
-                        ),
-                    )
-                    self._db.execute("COMMIT")
-                    return result
+                    return self._deserialize_result(row["result_json"])
+                self._db.execute(
+                    "INSERT INTO verification_runs VALUES (?, ?, ?, ?, ?, ?, ?) ON CONFLICT(input_fingerprint) DO NOTHING",
+                    (
+                        result.verification_id,
+                        fingerprint,
+                        result.project_id,
+                        result.calculation_id,
+                        result.created_at,
+                        result.overall_status.value,
+                        serialized,
+                    ),
+                )
+                row = self._db.execute(
+                    "SELECT result_json FROM verification_runs WHERE input_fingerprint = ?",
+                    (fingerprint,),
+                ).fetchone()
+                self._db.execute("COMMIT")
             except Exception:
                 if self._db.in_transaction:
                     self._db.execute("ROLLBACK")
                 raise
-        assert existing_result is not None
-        return self._deserialize_result(existing_result)
+        assert row is not None
+        return self._deserialize_result(row["result_json"])
 
     def get(self, verification_id: str) -> VerificationResult:
         with self._lock:
             row = self._db.execute(
                 "SELECT result_json FROM verification_runs WHERE verification_id = ?", (verification_id,)
+            ).fetchone()
+        if not row:
+            raise RunNotFound(verification_id)
+        return self._deserialize_result(row["result_json"])
+
+    def get_for_project(self, verification_id: str, project_id: str) -> VerificationResult:
+        with self._lock:
+            row = self._db.execute(
+                "SELECT result_json FROM verification_runs WHERE verification_id = ? AND project_id = ?",
+                (verification_id, project_id),
             ).fetchone()
         if not row:
             raise RunNotFound(verification_id)

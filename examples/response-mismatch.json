@@ -1,24 +1,24 @@
 {
-  "schema_version": "1.0.0",
-  "verification_id": "ver_48f73e04f6250d269a463844",
+  "schema_version": "1.1.0",
+  "verification_id": "ver_cf16d7a536c9bc7ff733fd65",
   "project_id": "synthetic-project",
   "calculation_id": "synthetic-calculation-001",
   "created_at": "2026-11-13T10:00:00Z",
-  "input_fingerprint": "48f73e04f6250d269a463844cf3c78e4c2dd8cb7f6dd3c1d5a33af05fc926c05",
+  "input_fingerprint": "cf16d7a536c9bc7ff733fd65b31e4bc8065c75693951470fa5a6f0db6ebab34b",
   "input_metadata": {
     "structured_extraction": {
       "primary": {
         "document_id": "synthetic-kfz-001",
         "extraction_id": "synthetic-kfz-extraction-v1",
         "schema_version": "1.2.0",
-        "input_hash": null
+        "input_hash": "8c8e1c024bb7db0728d75c57d2ebb70d916ee41b271d7f0755502f6b9c0ff6b9"
       },
       "supporting": [
         {
           "document_id": "synthetic-invoice-001",
           "extraction_id": "synthetic-invoice-extraction-v1",
           "schema_version": "1.2.0",
-          "input_hash": null
+          "input_hash": "f4cdaba5950e1e04e781f481d3d08ea6620cffbbb2999d3c389015ad535b530c"
         }
       ]
     },
@@ -41,6 +41,16 @@
     "insufficient_data": 0,
     "needs_review": 0,
     "not_applicable": 0
+  },
+  "completeness": {
+    "total_indicators": 2,
+    "applicable_indicators": 2,
+    "verified_indicators": 2,
+    "matched_indicators": 1,
+    "mismatched_indicators": 1,
+    "not_applicable_indicators": 0,
+    "unresolved_indicators": 0,
+    "complete": true
   },
   "indicators": [
     {
@@ -202,6 +212,9 @@
             "raw_value": "110.25 RUB",
             "declared_evidence_status": "human_confirmed",
             "reference_resolved": true,
+            "technical_validity": "valid",
+            "automatic_confirmation": "confirmed",
+            "human_confirmation": "confirmed",
             "provenance": {
               "document_id": "synthetic-invoice-001",
               "source_ref": "#/synthetic/invoice/page-1/total",
@@ -267,6 +280,9 @@
                 "raw_value": "110.25 RUB",
                 "declared_evidence_status": "human_confirmed",
                 "reference_resolved": true,
+                "technical_validity": "valid",
+                "automatic_confirmation": "confirmed",
+                "human_confirmation": "confirmed",
                 "provenance": {
                   "document_id": "synthetic-invoice-001",
                   "source_ref": "#/synthetic/invoice/page-1/total",
@@ -283,6 +299,12 @@
             ]
           }
         ]
+      },
+      "trust": {
+        "technical_validity": "valid",
+        "automatic_link_confirmation": "not_required",
+        "human_confirmation": "confirmed",
+        "calculation_trust": "proven"
       },
       "comparison_rules": {
         "value_type": "money",
@@ -309,7 +331,8 @@
           "expected": {
             "start": "2026-01-01",
             "end": "2026-03-31"
-          }
+          },
+          "expected_source": "reconciliation"
         },
         "applied_rules": [
           "Synthetic source value supplied as complete"
@@ -322,8 +345,8 @@
         "reasons": [
           "no_rounding_rule_or_tolerance_was_supplied"
         ],
-        "manual_review_required": true,
-        "status_reason": "A reproducible difference or period mismatch is established using a complete, human-confirmed calculation basis."
+        "manual_review_required": false,
+        "status_reason": "A reproducible difference or period mismatch is established using a complete, validated calculation basis."
       }
     },
     {
@@ -463,6 +486,9 @@
             "raw_value": "2026 Q1",
             "declared_evidence_status": "human_confirmed",
             "reference_resolved": true,
+            "technical_validity": "valid",
+            "automatic_confirmation": "confirmed",
+            "human_confirmation": "confirmed",
             "provenance": {
               "document_id": "synthetic-invoice-001",
               "source_ref": "#/synthetic/invoice/page-1/period",
@@ -531,6 +557,9 @@
                 "raw_value": "2026 Q1",
                 "declared_evidence_status": "human_confirmed",
                 "reference_resolved": true,
+                "technical_validity": "valid",
+                "automatic_confirmation": "confirmed",
+                "human_confirmation": "confirmed",
                 "provenance": {
                   "document_id": "synthetic-invoice-001",
                   "source_ref": "#/synthetic/invoice/page-1/period",
@@ -547,6 +576,12 @@
             ]
           }
         ]
+      },
+      "trust": {
+        "technical_validity": "valid",
+        "automatic_link_confirmation": "not_required",
+        "human_confirmation": "confirmed",
+        "calculation_trust": "proven"
       },
       "comparison_rules": {
         "value_type": "period",
@@ -573,7 +608,8 @@
           "expected": {
             "start": "2026-01-01",
             "end": "2026-03-31"
-          }
+          },
+          "expected_source": "reconciliation"
         },
         "applied_rules": [],
         "formula": "type-specific equality"
@@ -583,7 +619,7 @@
         "level": "none",
         "reasons": [],
         "manual_review_required": false,
-        "status_reason": "Values are compatible and equal under explicit rules, and all used source references are human-confirmed."
+        "status_reason": "Values are compatible and equal under explicit rules, with a complete calculation proof and validated source references."
       }
     }
   ],
@@ -591,7 +627,7 @@
     {
       "code": "indicator_requires_review",
       "target_id": "target-reported-total",
-      "message": "A reproducible difference or period mismatch is established using a complete, human-confirmed calculation basis."
+      "message": "A reproducible difference or period mismatch is established using a complete, validated calculation basis."
     }
   ]
 }

@@ -36,7 +36,7 @@ def classify_reconciliation_diagnostics(
         source_ids = diagnostic.get("source_ids", [])
         confirmed = diagnostic.get("confirmed") is True
         sources_resolve = bool(source_ids) and all(
-            source_id in by_id and by_id[source_id].is_human_confirmed for source_id in source_ids
+            source_id in by_id and by_id[source_id].is_automatically_confirmed for source_id in source_ids
         )
         has_refs = bool(refs) and all(
             ref in by_id or any(ref == operation_id for check in source_checks for operation_id in check.source.get("operation_ids", []))
@@ -129,10 +129,10 @@ def classify_linking_issue(source_checks: list[SourceCheck]) -> list[Discrepancy
                 [str(link_id)],
                 established=True,
             ))
-        elif link.get("status") in {"review", "proposed"} or link.get("verification_status") != "human_confirmed":
+        elif link.get("status") != "confirmed":
             results.append(_item(
                 DiscrepancyCategory.INCORRECT_DOCUMENT_LINK,
-                "The referenced document relationship has not been human-confirmed.",
+                "The referenced document relationship has not been confirmed with resolvable evidence.",
                 [str(link_id)],
                 established=False,
                 hypothesis=True,
@@ -169,6 +169,10 @@ def classify_value_difference(
             established=evidence_valid,
             hypothesis=not evidence_valid,
         )]
+    if difference.get("accepted_by") in {"absolute_tolerance", "relative_tolerance"}:
+        # The raw amount remains visible in Difference, but a permitted tolerance
+        # is not evidence of an established financial error.
+        return []
     return [_item(
         category,
         "Actual and expected values differ under the declared comparison rules.",
@@ -181,14 +185,16 @@ def classify_value_difference(
 def aggregate_status(statuses: list[VerificationStatus]) -> VerificationStatus:
     if not statuses:
         return VerificationStatus.INSUFFICIENT_DATA
-    # A run-level green result is only possible when every indicator is proven.
+    # A run-level conclusion requires complete coverage. N/A indicators do not
+    # count as successful checks and prevent both aggregate green and red claims.
     for status in (
-        VerificationStatus.NEEDS_REVIEW,
         VerificationStatus.INSUFFICIENT_DATA,
-        VerificationStatus.MISMATCH,
+        VerificationStatus.NEEDS_REVIEW,
     ):
         if status in statuses:
             return status
-    if all(status == VerificationStatus.NOT_APPLICABLE for status in statuses):
+    if VerificationStatus.NOT_APPLICABLE in statuses:
         return VerificationStatus.NOT_APPLICABLE
+    if VerificationStatus.MISMATCH in statuses:
+        return VerificationStatus.MISMATCH
     return VerificationStatus.MATCHED

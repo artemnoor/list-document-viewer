@@ -120,10 +120,13 @@ def provider_from_environment() -> ReviewExplanationProvider | None:
     api_key = os.getenv("POLZA_AI_API_KEY", "").strip()
     if not api_key:
         return None
+    processing_budget = max(1.0, float(os.getenv("VERIFICATION_MAX_PROCESSING_SECONDS", "30")))
+    provider_timeout = max(0.2, min(float(os.getenv("POLZA_AI_TIMEOUT_SECONDS", "10")), processing_budget - 0.1))
     return PolzaGemmaProvider(
         api_key=api_key,
         model=os.getenv("POLZA_AI_MODEL", PolzaGemmaProvider.DEFAULT_MODEL).strip(),
         base_url=os.getenv("POLZA_AI_BASE_URL", PolzaGemmaProvider.DEFAULT_BASE_URL).strip(),
+        timeout_seconds=provider_timeout,
     )
 
 
