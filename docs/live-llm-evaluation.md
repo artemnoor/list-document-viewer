@@ -8,6 +8,8 @@ The live evaluation was run on 14 November 2026 against `google/gemma-4-26b-a4b-
 
 After the dimension and response-echo fixes, the same bounded benchmark was repeated: 29 responses, two timeouts, mean source F1 0.810, formula accuracy 0.947 (19 scored), and expected-value accuracy 0.625 (16 scored). Formula scoring treats `add` and `sum` as equivalent when their leaves and count match. See the current aggregate in [`evaluation-summary.json`](../tests/results/live_e2e/evaluation-summary.json).
 
+The 320-candidate case did not pass model evaluation: two of its three attempts timed out. The only returned plan identified the target row but included one extra source and described its Linking relation as human-confirmed even though the fixture marks that relation unreviewed. The engine kept the outcome in manual review with no published value. This run therefore verifies the safety gate, not reliable model performance on the large candidate set.
+
 The evaluation harness has ten synthetic, contract-validated cases with independent golden references prepared under [`tests/results/live_e2e/`](../tests/results/live_e2e/):
 
 1. One act confirms a КФЗ indicator.
