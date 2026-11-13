@@ -13,7 +13,7 @@ from .models import TargetIndicator
 from .plans import CalculationPlan, PlanExclusion, PlanStep
 from .security import is_trusted_internal_endpoint
 
-PROMPT_PATH = Path(__file__).resolve().parents[1] / "prompts" / "calculation-plan.v1.0.2.txt"
+PROMPT_PATH = Path(__file__).resolve().parents[1] / "prompts" / "calculation-plan.v1.0.3.txt"
 
 
 class PlannerUnavailable(Exception):

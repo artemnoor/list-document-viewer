@@ -14,6 +14,8 @@ After fixing batch boundaries to preserve Extraction order and continuing after 
 
 The run's initial engine metrics cover only the 27 returned scenario responses: source F1 0.889, formula accuracy 1.000 (20 scored), and expected-value accuracy 0.529 (17 scored). They exclude the 320-candidate case because it received no valid model response. Replaying those same genuine plans offline after the row-aware review-gate fix raised published-value accuracy to 0.765 (17 scored) and pass count to 14; all three actual-versus-planned repeats now calculate the expected `900.00`. Source F1 and formula accuracy are unchanged. The replay made no provider calls; full per-scenario results are in [`evaluation-summary.post-fix.json`](../tests/results/live_e2e/evaluation-summary.post-fix.json).
 
+Review of the saved plans also exposed missing formula trees, unnecessary assumptions that repeated explicit evidence, and confusion between a selected row and another row in its document. Prompt `calculation-plan.v1.0.3` now states row-reference matching, evidence-backed assumptions, sign preservation, complete reachable formulas, and the manual-review invariant. The latest genuine model responses were generated with prompt 1.0.2; the new prompt has not yet had a live run because the provider returned HTTP 402 for the final scenario's batch calls.
+
 The evaluation harness has ten synthetic, contract-validated cases with independent golden references prepared under [`tests/results/live_e2e/`](../tests/results/live_e2e/):
 
 1. One act confirms a КФЗ indicator.

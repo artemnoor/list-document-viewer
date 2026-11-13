@@ -269,9 +269,15 @@ def run() -> dict[str, Any]:
 
     formula_scores = [item["formula_correct"] for item in model_metrics if item.get("formula_applicable")]
     value_scores = [item["value_correct"] for item in model_metrics if item.get("value_applicable")]
-    prompt_text = PROMPT_PATH.read_text(encoding="utf-8")
-    current_prompt_version = next((line.split(":", 1)[1].strip() for line in prompt_text.splitlines() if line.startswith("Prompt version:")), None)
-    current_prompt_sha256 = hashlib.sha256(prompt_text.encode("utf-8")).hexdigest()
+    prompt_versions_by_hash = {}
+    for prompt_path in (ROOT / "prompts").glob("calculation-plan.v*.txt"):
+        prompt_text = prompt_path.read_text(encoding="utf-8")
+        version = next((line.split(":", 1)[1].strip() for line in prompt_text.splitlines() if line.startswith("Prompt version:")), None)
+        if version:
+            prompt_versions_by_hash[hashlib.sha256(prompt_text.encode("utf-8")).hexdigest()] = version
+    current_prompt_text = PROMPT_PATH.read_text(encoding="utf-8")
+    current_prompt_version = next((line.split(":", 1)[1].strip() for line in current_prompt_text.splitlines() if line.startswith("Prompt version:")), None)
+    current_prompt_sha256 = hashlib.sha256(current_prompt_text.encode("utf-8")).hexdigest()
     live_prompt_hashes = sorted({
         call.get("prompt_sha256")
         for case_id in scenario_ids
@@ -279,11 +285,13 @@ def run() -> dict[str, Any]:
         for call in _read(RESULTS / case_id / f"repeat-{repeat_index:02d}.json").get("llm_calls", [])
         if call.get("prompt_sha256")
     })
+    observed_live_prompt_versions = sorted({prompt_versions_by_hash[value] for value in live_prompt_hashes if value in prompt_versions_by_hash})
     live_prompt_matches_current = bool(live_prompt_hashes) and live_prompt_hashes == [current_prompt_sha256]
     summary = {
         "evaluated_at": datetime.now(timezone.utc).isoformat(),
         "replay_type": "offline re-execution of saved genuine model plans through the patched engine; no provider calls",
-        "live_run_prompt_version": current_prompt_version if live_prompt_matches_current else None,
+        "live_run_prompt_version": observed_live_prompt_versions[0] if len(observed_live_prompt_versions) == 1 else None,
+        "live_run_prompt_versions": observed_live_prompt_versions,
         "live_run_prompt_sha256": live_prompt_hashes,
         "live_prompt_matches_current": live_prompt_matches_current,
         "current_prompt_version": current_prompt_version,

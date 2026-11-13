@@ -1,13 +1,16 @@
 {
-  "evaluated_at": "2026-11-13T23:39:02.962726+00:00",
+  "evaluated_at": "2026-11-13T23:46:24.429883+00:00",
   "replay_type": "offline re-execution of saved genuine model plans through the patched engine; no provider calls",
   "live_run_prompt_version": "1.0.2",
+  "live_run_prompt_versions": [
+    "1.0.2"
+  ],
   "live_run_prompt_sha256": [
     "6fb4d82f5da97954e5cc79641933c0ff182ca0e166113f5855f49c03ec9dfa20"
   ],
-  "live_prompt_matches_current": true,
-  "current_prompt_version": "1.0.2",
-  "current_prompt_sha256": "6fb4d82f5da97954e5cc79641933c0ff182ca0e166113f5855f49c03ec9dfa20",
+  "live_prompt_matches_current": false,
+  "current_prompt_version": "1.0.3",
+  "current_prompt_sha256": "fd38a67cec0169d8baf5281e6f5e4c92705fff8e9bc406565c32df4484d0de9b",
   "provider": "Polza OpenAI-compatible API",
   "model_id": "google/gemma-4-26b-a4b-it",
   "available_model_count": 396,
@@ -58,7 +61,7 @@
     "mode_b_snapshot_bound_human_confirmation": {
       "explanation": "The same LLM plan and modified Linking snapshot were confirmed with accepted fact/link IDs and binding hashes, then executed by the Decimal engine.",
       "request_snapshot_sha256": "d6a695e7e4843b95a5fca89a466393e4174811ea9f3f8576ef72cc35efd321e0",
-      "confirmed_decision_sha256": "b05c504df90b9ca97d395576e9197583206083a2346c5e2ac08950a55ec56576",
+      "confirmed_decision_sha256": "a68119e51367511685b5e63734b1961a47aeff6f5ae83bec89f2c0bb96d212c2",
       "status": "calculated",
       "expected_value": "550.00",
       "reference_value": "550.00",
@@ -136,7 +139,7 @@
               "human_confirmation": {
                 "decision_id": "offline-policy-confirmation",
                 "reviewer_id": "synthetic-evaluator",
-                "confirmed_at": "2026-11-13T23:39:01.643919+00:00",
+                "confirmed_at": "2026-11-13T23:46:22.948074+00:00",
                 "link_sha256": "ad8b9b7467bdbc0c812bca7ebdf354235e2061de32bf754332e25d5772c597ff"
               }
             }
@@ -146,7 +149,7 @@
           "human_confirmation": {
             "decision_id": "offline-policy-confirmation",
             "reviewer_id": "synthetic-evaluator",
-            "confirmed_at": "2026-11-13T23:39:01.643919+00:00",
+            "confirmed_at": "2026-11-13T23:46:22.948074+00:00",
             "snapshot_sha256": "d6a695e7e4843b95a5fca89a466393e4174811ea9f3f8576ef72cc35efd321e0",
             "fact_sha256": "3e65b6c16c6f3b8b9d0830234fd6914615fae3952c1e48d61786018a041f1ce9"
           }

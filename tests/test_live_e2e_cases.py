@@ -20,7 +20,7 @@ from reconciliation_engine.engine import execute_plan, validate_plan
 from reconciliation_engine.facts import extract_facts, numeric_value
 from reconciliation_engine.models import ReconciliationRequest
 from reconciliation_engine.plans import CalculationPlan, PlanExclusion, PlanInclusion, PlanStep
-from reconciliation_engine.planner import IncompatibleChunkPlans, LLMPlanner, PlannerUnavailable, _dimension_mismatch, _validated_plan
+from reconciliation_engine.planner import IncompatibleChunkPlans, LLMPlanner, PROMPT_PATH, PlannerUnavailable, _dimension_mismatch, _validated_plan
 from reconciliation_engine.service import reconcile
 
 
@@ -160,6 +160,15 @@ def test_live_evaluation_is_pinned_to_the_requested_gemma_model(monkeypatch):
     assert REQUESTED_MODEL_ID == "google/gemma-4-26b-a4b-it"
     with pytest.raises(RuntimeError, match="pinned to google/gemma-4-26b-a4b-it"):
         _runtime_settings()
+
+
+def test_current_planner_prompt_has_general_evidence_and_formula_integrity_rules():
+    prompt = PROMPT_PATH.read_text(encoding="utf-8")
+
+    assert "Prompt version: 1.0.3" in prompt
+    assert "relationship for another" in prompt
+    assert "Every included fact must appear exactly once" in prompt
+    assert "Preserve each candidate's signed amount" in prompt
 
 
 def test_live_evaluation_rejects_unverified_or_different_response_model():
