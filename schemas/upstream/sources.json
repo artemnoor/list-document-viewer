@@ -1,0 +1,19 @@
+{
+  "checked_at": "2026-11-13",
+  "repositories": {
+    "integrated_system": {
+      "url": "https://github.com/artemnoor/list-document-viewer/tree/feat/phystech-trace-integration",
+      "commit": "2e6da4b2b3b57b5c4e9137d8657770beba65ffdf"
+    },
+    "structured_extraction": {
+      "url": "https://github.com/artemnoor/kfz-structured-extraction-",
+      "commit": "1e922e284805f2c1b343b4cb369813c8073b67dd",
+      "schema_version": "1.2.0"
+    },
+    "document_linking": {
+      "url": "https://github.com/artemnoor/kfz-document-linking",
+      "commit": "28a3662cc0597093ad6264f70f591db19c37e061",
+      "contract_version": "1.2.0"
+    }
+  }
+}
