@@ -13,11 +13,12 @@ from prepare_cases import build_cases
 from run_live_evaluation import REQUESTED_MODEL_ID, _aggregate, _formula_matches, _runtime_settings, _source_metrics, _validate_response_models
 
 from reconciliation_engine.contracts import validate_upstream_inputs
+from reconciliation_engine.config import Settings
 from reconciliation_engine.engine import execute_plan, validate_plan
 from reconciliation_engine.facts import extract_facts, numeric_value
 from reconciliation_engine.models import ReconciliationRequest
-from reconciliation_engine.plans import CalculationPlan, PlanInclusion, PlanStep
-from reconciliation_engine.planner import IncompatibleChunkPlans, LLMPlanner
+from reconciliation_engine.plans import CalculationPlan, PlanExclusion, PlanInclusion, PlanStep
+from reconciliation_engine.planner import IncompatibleChunkPlans, LLMPlanner, _dimension_mismatch
 
 
 def test_live_e2e_cases_are_synthetic_contract_valid_and_have_independent_references():
@@ -191,6 +192,45 @@ def test_chunk_merge_checks_included_fact_dimensions_not_only_plan_labels():
         steps=[PlanStep(step_id="sum_quantity", operation="sum", inputs=[quantity.fact_id])], result_step_id="sum_quantity")
     with pytest.raises(IncompatibleChunkPlans, match="select facts with incompatible currency, unit, or amount basis"):
         LLMPlanner._merge_chunk_plans(target, [(0, base), (1, other)], 2, [amount, quantity])
+
+
+def test_explicitly_incompatible_fact_dimensions_are_filtered_without_key_rules():
+    case = next(item for item in build_cases() if item["reference"]["case_id"] == "01_single_act")
+    request = ReconciliationRequest.model_validate(case["request"])
+    target = request.context.targets[0]
+    act = json.loads((ROOT / "fixtures" / "upstream-structured-extraction-1.2.0" / "act-2026-0424.json").read_text(encoding="utf-8"))
+    facts = extract_facts([act])
+    monetary_fact = next(f for f in facts if f.currency == target.currency and f.unit is None)
+    dimensional_fact = next(f for f in facts if f.unit is not None)
+
+    assert _dimension_mismatch(monetary_fact, target) == []
+    assert _dimension_mismatch(dimensional_fact, target)
+
+
+def test_planner_does_not_send_explicitly_incompatible_candidates_to_llm(monkeypatch):
+    request = ReconciliationRequest.model_validate(json.loads((ROOT / "examples" / "act-reconciliation-request.json").read_text(encoding="utf-8")))
+    facts = extract_facts(request.extraction_results)
+    target = request.context.targets[0]
+    source_groups = {fact.document_id: f"source_{index}" for index, fact in enumerate(facts)}
+    planner = LLMPlanner(Settings(llm_enabled=True, llm_api_key="unit-test"))
+    sent_candidate_ids = []
+
+    def review_compatible_candidates(payload, sensitive_data):
+        sent_candidate_ids.extend(item["fact_id"] for item in payload["candidates"])
+        return CalculationPlan(
+            target_id="target_001",
+            method_description="Review compatible candidates.",
+            excluded=[PlanExclusion(fact_id=item["fact_id"], reason="Not selected in this deterministic test.") for item in payload["candidates"]],
+        )
+
+    monkeypatch.setattr(planner, "_request_plan", review_compatible_candidates)
+    result = planner.plan(target, facts, source_groups, request.linking_result)
+    incompatible_ids = {fact.fact_id for fact in facts if fact.document_type != "kfz_report" and fact.document_id != target.kfz_document_id and numeric_value(fact) is not None and _dimension_mismatch(fact, target)}
+    sent_ids = {fact.fact_id for fact in facts if fact.fact_id not in incompatible_ids and fact.document_type != "kfz_report" and numeric_value(fact) is not None}
+
+    assert len(sent_candidate_ids) == len(sent_ids)
+    assert {item.fact_id for item in result.excluded} >= incompatible_ids
+    assert not incompatible_ids.intersection({item.fact_id for item in result.included})
 
 
 def test_source_identification_counts_candidates_the_model_explicitly_left_unprocessed():

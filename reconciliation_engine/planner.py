@@ -10,7 +10,7 @@ import httpx
 from .config import Settings
 from .facts import Fact, numeric_value
 from .models import TargetIndicator
-from .plans import CalculationPlan, PlanStep
+from .plans import CalculationPlan, PlanExclusion, PlanStep
 from .security import is_trusted_internal_endpoint
 
 PROMPT_PATH = Path(__file__).resolve().parents[1] / "prompts" / "calculation-plan.v1.0.2.txt"
@@ -22,6 +22,16 @@ class PlannerUnavailable(Exception):
 
 class IncompatibleChunkPlans(ValueError):
     """Chunk plans cannot be combined without mixing measurement dimensions."""
+
+
+def _dimension_mismatch(fact: Fact, target: TargetIndicator) -> list[str]:
+    mismatches = []
+    if target.currency and fact.currency and fact.currency != target.currency:
+        mismatches.append(f"currency {fact.currency} does not match target currency {target.currency}")
+    if fact.unit is not None and fact.unit != target.unit:
+        target_unit = target.unit if target.unit is not None else "unspecified"
+        mismatches.append(f"unit {fact.unit} does not match target unit {target_unit}")
+    return mismatches
 
 
 def _json_content(content: str) -> dict[str, Any]:
@@ -298,7 +308,26 @@ class LLMPlanner:
             and fact.document_id != target.kfz_document_id
             and numeric_value(fact) is not None
         ]
-        group_by_document, fact_aliases = self._aliases(facts, source_groups, candidates)
+        dimension_exclusions = [
+            PlanExclusion(
+                fact_id=fact.fact_id,
+                reason="; ".join(_dimension_mismatch(fact, target)) + "; no unit or currency conversion was supplied.",
+            )
+            for fact in candidates
+            if _dimension_mismatch(fact, target)
+        ]
+        dimension_excluded_ids = {item.fact_id for item in dimension_exclusions}
+        compatible_candidates = [fact for fact in candidates if fact.fact_id not in dimension_excluded_ids]
+        if not compatible_candidates:
+            return CalculationPlan(
+                target_id=target.target_id,
+                method_description="No candidate has dimensions compatible with the target indicator.",
+                excluded=dimension_exclusions,
+                rounding_scale=target.rounding_scale,
+                information_gaps=["No dimension-compatible source candidate remains after deterministic currency and unit checks."],
+                requires_manual_review=True,
+            )
+        group_by_document, fact_aliases = self._aliases(facts, source_groups, compatible_candidates)
         alias_to_fact = {alias: fact_id for fact_id, alias in fact_aliases.items()}
         alias_to_document = {alias: document_id for document_id, alias in group_by_document.items()}
         candidate_limit = max(1, self.settings.llm_max_candidates)
@@ -315,7 +344,7 @@ class LLMPlanner:
             score = sum(1 for term in terms if term and term in text)
             return (-score, group_by_document.get(fact.document_id, "source_unknown"), fact.source_path)
 
-        ordered = sorted(candidates, key=relevance)
+        ordered = sorted(compatible_candidates, key=relevance)
         chunks = [ordered[index:index + candidate_limit] for index in range(0, len(ordered), candidate_limit)]
         plans: list[tuple[int, CalculationPlan]] = []
         for chunk_index, chunk in enumerate(chunks, start=1):
@@ -342,7 +371,11 @@ class LLMPlanner:
             decoded["unprocessed_fact_ids"] = [alias_to_fact.get(value, value) for value in decoded.get("unprocessed_fact_ids", [])]
             plans.append((chunk_index, CalculationPlan.model_validate(decoded)))
 
-        return self._merge_chunk_plans(target, plans, len(candidates), candidates)
+        merged = self._merge_chunk_plans(target, plans, len(candidates), compatible_candidates)
+        merged.excluded.extend(dimension_exclusions)
+        if dimension_exclusions:
+            merged.method_description += f" Deterministically excluded {len(dimension_exclusions)} candidates with incompatible currency or unit metadata."
+        return merged
 
     @staticmethod
     def _merge_chunk_plans(
