@@ -1,0 +1,95 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Phystech Trace Document Parser API",
+    "version": "1.0.0",
+    "description": "Original Python Document Parser API. Uploads and analysis results are stored on the parser volume. Files are processed asynchronously with the existing Docling and OCR pipeline."
+  },
+  "servers": [{ "url": "http://localhost:18765" }],
+  "paths": {
+    "/health": {
+      "get": {
+        "summary": "Parser and upload storage health",
+        "responses": {
+          "200": { "description": "Service and storage are available", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Health" } } } },
+          "503": { "$ref": "#/components/responses/Unavailable" }
+        }
+      }
+    },
+    "/api/documents": {
+      "get": {
+        "summary": "List uploaded parser documents",
+        "responses": { "200": { "description": "Documents currently stored by the parser", "content": { "application/json": { "schema": { "type": "object", "required": ["documents"], "properties": { "documents": { "type": "array", "items": { "$ref": "#/components/schemas/ParserDocument" } } } } } } } }
+      },
+      "post": {
+        "summary": "Upload a file for asynchronous parsing",
+        "parameters": [{ "name": "X-File-Name", "in": "header", "required": true, "schema": { "type": "string", "maxLength": 200 } }],
+        "requestBody": { "required": true, "content": { "application/octet-stream": { "schema": { "type": "string", "format": "binary" } } } },
+        "responses": {
+          "201": { "description": "File accepted; poll its analysis endpoint", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ParserDocument" } } } },
+          "200": { "description": "Identical file already exists; existing parser ID is returned" },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "413": { "description": "File exceeds the 25 MiB parser limit" }
+        }
+      }
+    },
+    "/api/documents/{id}/analysis": {
+      "get": {
+        "summary": "Read parser state or the completed analysis JSON",
+        "parameters": [{ "$ref": "#/components/parameters/DocumentId" }],
+        "responses": {
+          "200": { "description": "Processing state or complete analysis", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/AnalysisState" } } } },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/api/documents/{id}/retry": {
+      "post": {
+        "summary": "Retry parsing a stored file",
+        "parameters": [{ "$ref": "#/components/parameters/DocumentId" }],
+        "responses": { "202": { "description": "Parsing was queued" }, "404": { "$ref": "#/components/responses/NotFound" } }
+      }
+    },
+    "/api/documents/{id}/pages/{page}": {
+      "get": {
+        "summary": "Render a PDF page as PNG for evidence review",
+        "parameters": [{ "$ref": "#/components/parameters/DocumentId" }, { "name": "page", "in": "path", "required": true, "schema": { "type": "integer", "minimum": 1 } }],
+        "responses": { "200": { "description": "Page image", "content": { "image/png": { "schema": { "type": "string", "format": "binary" } } } }, "404": { "$ref": "#/components/responses/NotFound" } }
+      }
+    },
+    "/api/documents/{id}/source": {
+      "get": {
+        "summary": "Read the exact original bytes for any uploaded format",
+        "description": "Use this endpoint to resolve stored XLSX, DOCX, images, PDFs, and other uploaded source files without converting them to preview text.",
+        "parameters": [{ "$ref": "#/components/parameters/DocumentId" }],
+        "responses": {
+          "200": { "description": "Original uploaded file bytes with the detected media type", "content": { "application/octet-stream": { "schema": { "type": "string", "format": "binary" } }, "application/pdf": { "schema": { "type": "string", "format": "binary" } }, "image/png": { "schema": { "type": "string", "format": "binary" } } } },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/api/documents/{id}/content": {
+      "get": {
+        "summary": "Read preview content when supported; use /source for exact original bytes",
+        "parameters": [{ "$ref": "#/components/parameters/DocumentId" }],
+        "responses": { "200": { "description": "Original file bytes" }, "404": { "$ref": "#/components/responses/NotFound" } }
+      }
+    },
+    "/docs": { "get": { "summary": "Swagger UI", "responses": { "200": { "description": "Interactive API documentation" } } } },
+    "/openapi.json": { "get": { "summary": "OpenAPI document", "responses": { "200": { "description": "This API document" } } } }
+  },
+  "components": {
+    "parameters": { "DocumentId": { "name": "id", "in": "path", "required": true, "schema": { "type": "string", "pattern": "^[a-f0-9]{32}$" } } },
+    "responses": {
+      "BadRequest": { "description": "Invalid request", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
+      "NotFound": { "description": "Document or page not found", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
+      "Unavailable": { "description": "Parser storage is unavailable", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } }
+    },
+    "schemas": {
+      "Health": { "type": "object", "required": ["status", "service", "storage", "active_jobs"], "properties": { "status": { "const": "ok" }, "service": { "const": "document-parser" }, "storage": { "const": "available" }, "active_jobs": { "type": "integer", "minimum": 0 } } },
+      "ParserDocument": { "type": "object", "required": ["id", "name", "extension", "size"], "properties": { "id": { "type": "string" }, "name": { "type": "string" }, "extension": { "type": "string" }, "size": { "type": "integer", "minimum": 0 } }, "additionalProperties": true },
+      "AnalysisState": { "type": "object", "required": ["state"], "properties": { "state": { "type": "string", "enum": ["queued", "processing", "ready", "error"] }, "result": { "type": "object", "description": "Original parser result; see parser-to-extraction contract. Fields are preserved as produced by Document Parser." }, "error": { "type": "string" }, "processing_status": { "type": "string" } }, "additionalProperties": true },
+      "Error": { "type": "object", "required": ["error"], "properties": { "error": { "type": "string" } }, "additionalProperties": true }
+    }
+  }
+}

@@ -74,6 +74,13 @@ class ServerAudit(unittest.TestCase):
         self.assertEqual(headers.get('Access-Control-Allow-Origin'), 'http://localhost:3000')
         self.assertIn('Origin', headers.get('Vary', ''))
 
+    def test_source_endpoint_returns_exact_office_file_bytes(self):
+        self.save_document('.xlsx')
+        status, headers, body = self.request(f'/api/documents/{self.ident}/source')
+        self.assertEqual(status, 200)
+        self.assertEqual(headers.get('Content-Type'), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        self.assertEqual(body, b'document')
+
     def test_retry_recovers_failed_job_without_duplicate_runs(self):
         entered, release = threading.Event(), threading.Event()
         attempts = []

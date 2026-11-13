@@ -12,11 +12,30 @@ components:
       scheme: bearer
       bearerFormat: API_BEARER_TOKEN
 servers:
-  - url: http://127.0.0.1:3000
+  - url: http://localhost:8083
 paths:
   /api/health:
     get:
       summary: Проверка готовности
+      security: []
+      responses:
+        '200': { description: PostgreSQL and Redis доступны }
+        '503': { description: Зависимость недоступна }
+  /docs:
+    get:
+      summary: Swagger UI
+      security: []
+      responses:
+        '200': { description: Интерактивная документация API }
+  /openapi.json:
+    get:
+      summary: Актуальная OpenAPI спецификация (JSON)
+      security: []
+      responses:
+        '200': { description: OpenAPI document parsed from openapi.yaml }
+  /health:
+    get:
+      summary: Проверка готовности (Healthcheck alias)
       security: []
       responses:
         '200': { description: PostgreSQL and Redis доступны }
@@ -38,11 +57,14 @@ paths:
                   required: [documents]
                   properties:
                     documents: { type: array, items: { $ref: './contracts/input.schema.json' } }
+                    data_classification: { type: string, enum: [public, synthetic, anonymized] }
+                    allow_external_llm: { type: boolean, const: true }
       responses:
         '202': { description: Задание поставлено в BullMQ очередь }
         '200': { description: Возвращено существующее задание с тем же Idempotency-Key }
         '409': { description: Idempotency-Key повторно использован с другим содержимым }
         '422': { description: Вход несовместим со Structured Extraction }
+        '403': { description: Внешняя модель запрещена политикой данных или нет явного согласия }
   /api/linking-jobs/{id}:
     get:
       summary: Получить прогресс или результат задания

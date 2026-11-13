@@ -8,6 +8,7 @@ import re
 import uuid
 import hashlib
 import math
+import mimetypes
 import logging
 import zipfile
 import xml.etree.ElementTree as ET
@@ -116,6 +117,8 @@ def process_document(ident, name):
 
 STORAGE = Path(__file__).resolve().parent / 'uploads'
 STORAGE.mkdir(exist_ok=True)
+TRACE_SERVICE_DIR = Path(__file__).resolve().parent.parent / 'phystech-trace' / 'services' / 'document-parser'
+SWAGGER_HTML = b'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Document Parser API</title><link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css"></head><body><div id="swagger-ui"></div><script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js"></script><script>SwaggerUIBundle({url:'/openapi.json',dom_id:'#swagger-ui'});</script></body></html>'''
 MAX_SIZE = 25 * 1024 * 1024
 UPLOAD_LOCK = Lock()
 CONTENT_INDEX = {}
@@ -347,14 +350,32 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         if not self.check_origin():
             return
-        if urlparse(self.path).path == '/api/documents':
+        request_path = urlparse(self.path).path
+        if request_path == '/health':
+            with JOB_LOCK:
+                active = sum(1 for job in JOBS.values() if job.get('state') in {'queued', 'processing'})
+            available = STORAGE.is_dir() and os.access(STORAGE, os.W_OK)
+            return self.reply(200 if available else 503, {
+                'status': 'ok' if available else 'unavailable',
+                'service': 'document-parser',
+                'storage': 'available' if available else 'unavailable',
+                'active_jobs': active,
+            })
+        if request_path in {'/docs', '/docs/'}:
+            return self.reply(200, SWAGGER_HTML, 'text/html; charset=utf-8')
+        if request_path == '/openapi.json':
+            try:
+                return self.reply(200, (TRACE_SERVICE_DIR / 'openapi.json').read_bytes(), 'application/json; charset=utf-8')
+            except OSError:
+                return self.reply(503, {'error': 'OpenAPI specification is unavailable'})
+        if request_path == '/api/documents':
             with UPLOAD_LOCK:
                 documents = []
                 for ident in dict.fromkeys(CONTENT_INDEX.values()):
                     meta = json.loads((STORAGE / (ident + '.json')).read_text(encoding='utf-8'))
                     documents.append(document_info(ident, meta))
             return self.reply(200, {'documents': documents})
-        page_match = re.fullmatch(r'/api/documents/([a-f0-9]{32})/pages/([1-9][0-9]*)', urlparse(self.path).path)
+        page_match = re.fullmatch(r'/api/documents/([a-f0-9]{32})/pages/([1-9][0-9]*)', request_path)
         if page_match:
             ident, number = page_match.groups()
             path = STORAGE / ident
@@ -389,7 +410,19 @@ class Handler(BaseHTTPRequestHandler):
             except Exception:
                 logging.getLogger(__name__).exception('[FIX:preview] Failed to render document=%s page=%s', ident, number)
                 return self.reply(422, {'error': 'Не удалось отобразить страницу'})
-        match = re.fullmatch(r'/api/documents/([a-f0-9]{32})(/content|/analysis)?', urlparse(self.path).path)
+        source_match = re.fullmatch(r'/api/documents/([a-f0-9]{32})/source', request_path)
+        if source_match:
+            ident = source_match.group(1)
+            path, meta_path = STORAGE / ident, STORAGE / (ident + '.json')
+            if not path.is_file() or not meta_path.is_file():
+                return self.reply(404, {'error': 'Документ не найден'})
+            try:
+                name = json.loads(meta_path.read_text(encoding='utf-8')).get('name', 'document')
+            except (OSError, ValueError, TypeError):
+                return self.reply(422, {'error': 'Не удалось прочитать метаданные исходного файла'})
+            content_type = mimetypes.guess_type(name)[0] or 'application/octet-stream'
+            return self.reply(200, path.read_bytes(), content_type)
+        match = re.fullmatch(r'/api/documents/([a-f0-9]{32})(/content|/analysis)?', request_path)
         if not match:
             return self.reply(404, {'error': 'Не найдено'})
         ident, content = match.groups()
@@ -478,5 +511,6 @@ class Handler(BaseHTTPRequestHandler):
 if __name__ == '__main__':
     logging.basicConfig(level=getattr(logging, os.environ.get('LOG_LEVEL', 'INFO').upper(), logging.INFO))
     port = int(os.environ.get('PORT', '18765'))
+    host = os.environ.get('BIND_HOST', '127.0.0.1')
     print(f'API: http://localhost:{port}', flush=True)
-    ThreadingHTTPServer(('127.0.0.1', port), Handler).serve_forever()
+    ThreadingHTTPServer((host, port), Handler).serve_forever()

@@ -1,0 +1,53 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Phystech Trace Structured Extraction API",
+    "version": "1.2.0",
+    "description": "Adapts the original Document Parser JSON and runs the upstream 1.2.0 extraction and provenance algorithms. Rules mode is local. LLM modes require explicit external-processing consent for public, synthetic, or anonymized data."
+  },
+  "servers": [{ "url": "http://localhost:8082" }],
+  "paths": {
+    "/health": { "get": { "summary": "Health and storage readiness", "responses": { "200": { "description": "Service and PostgreSQL are available" }, "503": { "$ref": "#/components/responses/Unavailable" } } } },
+    "/api/extractions": {
+      "get": { "summary": "List extraction results or history for a document", "parameters": [{ "name": "document_id", "in": "query", "required": false, "schema": { "type": "string" } }], "responses": { "200": { "description": "Stored extraction result list" } } },
+      "post": {
+        "summary": "Extract structured values from a parser result",
+        "description": "Input must satisfy the parser-to-extraction v1 contract and the original parser adapter. The parser document_id is preserved. LLM modes are blocked unless data is public, synthetic or anonymized and allow_external_llm is true.",
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ExtractionRequest" }, "example": { "mode": "rules_only", "data_classification": "synthetic", "parser_result": { "document_id": "sample-doc-001", "source_extension": ".pdf", "parts": [{ "kind": "text", "text": "Синтетический документ" }], "markdown": "Синтетический документ" } } } } },
+        "responses": {
+          "201": { "description": "Validated extraction stored in PostgreSQL", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ExtractionResponse" } } } },
+          "403": { "$ref": "#/components/responses/Forbidden" }, "422": { "$ref": "#/components/responses/InvalidContract" }, "503": { "$ref": "#/components/responses/Unavailable" }
+        }
+      }
+    },
+    "/api/extractions/{id}": { "get": { "summary": "Read one stored extraction result", "parameters": [{ "$ref": "#/components/parameters/ExtractionId" }], "responses": { "200": { "description": "Stored result" }, "404": { "$ref": "#/components/responses/NotFound" } } } },
+    "/api/documents": { "get": { "summary": "List latest extraction per document", "responses": { "200": { "description": "Stored document results" } } } },
+    "/api/documents/{document_id}": { "get": { "summary": "Read latest extraction for a stable parser document ID", "parameters": [{ "$ref": "#/components/parameters/DocumentId" }], "responses": { "200": { "description": "Latest stored extraction" }, "404": { "$ref": "#/components/responses/NotFound" } } } },
+    "/docs": { "get": { "summary": "Swagger UI", "responses": { "200": { "description": "Interactive API documentation" } } } },
+    "/openapi.json": { "get": { "summary": "OpenAPI document", "responses": { "200": { "description": "This API document" } } } }
+  },
+  "components": {
+    "parameters": {
+      "ExtractionId": { "name": "id", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } },
+      "DocumentId": { "name": "document_id", "in": "path", "required": true, "schema": { "type": "string", "minLength": 1 } }
+    },
+    "responses": {
+      "Unavailable": { "description": "Storage or requested provider is unavailable", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
+      "NotFound": { "description": "Stored extraction was not found", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
+      "Forbidden": { "description": "External processing policy denied the request", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
+      "InvalidContract": { "description": "Parser input or extraction output failed its JSON Schema", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } }
+    },
+    "schemas": {
+      "ExtractionRequest": {
+        "type": "object", "required": ["parser_result"], "properties": {
+          "parser_result": { "$ref": "/contracts/parser-to-extraction-v1.schema.json" },
+          "mode": { "type": "string", "enum": ["rules_only", "llm_assisted", "compare"], "default": "rules_only" },
+          "data_classification": { "type": "string", "enum": ["confidential", "public", "synthetic", "anonymized"], "default": "confidential" },
+          "allow_external_llm": { "type": "boolean", "default": false }
+        }, "additionalProperties": false
+      },
+      "ExtractionResponse": { "type": "object", "required": ["extraction", "stored", "status"], "properties": { "extraction": { "$ref": "/contracts/structured-extraction-1.2.0.schema.json" }, "stored": { "type": "boolean" }, "status": { "const": "completed" } } },
+      "Error": { "type": "object", "required": ["error", "code"], "properties": { "error": { "type": "string" }, "code": { "type": "string" }, "diagnostics": { "type": "array", "items": { "type": "object" } } }, "additionalProperties": true }
+    }
+  }
+}

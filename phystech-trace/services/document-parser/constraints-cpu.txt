@@ -1,0 +1,3 @@
+# Docling and Accelerate require PyTorch. Pin the official CPU-only wheel so a
+# CPU deployment never installs the much larger CUDA toolkit and runtime.
+torch==2.15.0+cpu

@@ -1,0 +1,165 @@
+name: phystech-trace
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: trace
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-trace_db_dev_pass_2026_7f4a2c91b6}
+      POSTGRES_DB: phystech_trace
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U trace -d phystech_trace"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+    restart: unless-stopped
+
+  document-parser:
+    build:
+      context: ..
+      dockerfile: phystech-trace/services/document-parser/Dockerfile
+    environment:
+      BIND_HOST: 0.0.0.0
+      PORT: 18765
+      FRONTEND_PORT: 3000,8081
+      DOCLING_OCR_CACHE: /models
+      DOCLING_DEVICE: cpu
+      POLZA_OCR_ENABLED: "0"
+      POLZA_DOCUMENT_REVIEW_ENABLED: "0"
+    volumes:
+      - parser-uploads:/app/backend/uploads
+      - parser-models:/models
+    ports:
+      - "127.0.0.1:8081:18765"
+    restart: unless-stopped
+
+  structured-extraction:
+    build:
+      context: ..
+      dockerfile: phystech-trace/services/structured-extraction/Dockerfile
+    environment:
+      PORT: 8082
+      DATABASE_URL: postgres://trace:${POSTGRES_PASSWORD:-trace_db_dev_pass_2026_7f4a2c91b6}@postgres:5432/phystech_trace
+      POLZA_API_KEY: ${POLZA_API_KEY:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:8082:8082"
+    restart: unless-stopped
+
+  document-linking:
+    build:
+      context: ./services/document-linking
+      dockerfile: Dockerfile
+    environment:
+      NODE_ENV: development
+      HOST: 0.0.0.0
+      PORT: 3000
+      DATABASE_URL: postgres://trace:${POSTGRES_PASSWORD:-trace_db_dev_pass_2026_7f4a2c91b6}@postgres:5432/phystech_trace
+      REDIS_URL: redis://redis:6379
+      API_BEARER_TOKEN: ${API_BEARER_TOKEN:-trace_api_local_token_2026_do_not_expose}
+      REQUIRE_EXTERNAL_LLM_CONSENT: "true"
+      LLM_ENABLED: ${LLM_ENABLED:-true}
+      POLZA_API_KEY: ${POLZA_API_KEY:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:8083:3000"
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    restart: unless-stopped
+
+  linking-worker:
+    build:
+      context: ./services/document-linking
+      dockerfile: Dockerfile
+    command: ["node", "build/server/worker-main.mjs"]
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: postgres://trace:${POSTGRES_PASSWORD:-trace_db_dev_pass_2026_7f4a2c91b6}@postgres:5432/phystech_trace
+      REDIS_URL: redis://redis:6379
+      API_BEARER_TOKEN: ${API_BEARER_TOKEN:-trace_api_local_token_2026_do_not_expose}
+      REQUIRE_EXTERNAL_LLM_CONSENT: "true"
+      LLM_ENABLED: ${LLM_ENABLED:-true}
+      POLZA_API_KEY: ${POLZA_API_KEY:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      document-linking:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "process.kill(1,0)"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+  gateway:
+    build:
+      context: ..
+      dockerfile: phystech-trace/gateway/Dockerfile
+    environment:
+      PORT: 8084
+      DATABASE_URL: postgres://trace:${POSTGRES_PASSWORD:-trace_db_dev_pass_2026_7f4a2c91b6}@postgres:5432/phystech_trace
+      PARSER_URL: http://document-parser:18765
+      EXTRACTION_URL: http://structured-extraction:8082
+      LINKING_URL: http://document-linking:3000
+      API_BEARER_TOKEN: ${API_BEARER_TOKEN:-trace_api_local_token_2026_do_not_expose}
+      POLL_INTERVAL_SECONDS: 2
+      PARSER_TIMEOUT_SECONDS: 1800
+      LINKING_TIMEOUT_SECONDS: 1800
+    depends_on:
+      postgres:
+        condition: service_healthy
+      document-parser:
+        condition: service_healthy
+      structured-extraction:
+        condition: service_healthy
+      document-linking:
+        condition: service_healthy
+      linking-worker:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:8084:8084"
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    depends_on:
+      gateway:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:8080:80"
+    restart: unless-stopped
+
+volumes:
+  postgres-data:
+  redis-data:
+  parser-uploads:
+  parser-models:

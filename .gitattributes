@@ -1,0 +1,3 @@
+# Imported source fixtures include byte-pinned checksums; preserve their blob bytes on Windows.
+phystech-trace/services/structured-extraction/**/*.json text eol=lf
+phystech-trace/services/document-linking/**/*.json text eol=lf

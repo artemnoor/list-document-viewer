@@ -1,0 +1,103 @@
+{
+  "started_at": "2026-11-13T12:47:24.649695+00:00",
+  "dataset": "synthetic-only",
+  "external_llm_consent": true,
+  "checks": [
+    "Parser, Extraction and Linking health/OpenAPI/Swagger endpoints",
+    "Vue production frontend is served",
+    "Multipart upload for PDF/XLSX/DOCX/PNG and duplicate detection",
+    "Persisted parser/extraction results, stable IDs, XLSX cell and PDF bbox provenance, source file and page re-resolution",
+    "Invalid Parser payload is rejected with a diagnostic contract error",
+    "Linking failure is visible; retry preserves completed Parser and Extraction results"
+  ],
+  "project_id": "f4ecde31-6d02-42f8-b475-27c727f289ca",
+  "document_results": [
+    {
+      "name": "10_mixed_native_and_scan.pdf",
+      "role": "kfz",
+      "document_id": "05efe8f9ba194d1480930a1bf7374d45",
+      "parts": 5,
+      "extraction_id": "6a04b0ce-3546-43e2-8c4f-4afedc863117",
+      "schema_version": "1.2.0",
+      "classification": {
+        "type": "unknown",
+        "label": "Тип не определён",
+        "status": "review",
+        "confidence": 0.42
+      },
+      "locators": {
+        "pdf_page_bbox": true,
+        "xlsx_cell_address": false,
+        "parser_provenance": true
+      }
+    },
+    {
+      "name": "synthetic_primary_register.xlsx",
+      "role": "primary",
+      "document_id": "99dc8da2c64e4bdb8fb2a0fe24de9758",
+      "parts": 16,
+      "extraction_id": "0c7bf3e6-5dc6-48b0-8f24-b861d225701d",
+      "schema_version": "1.2.0",
+      "classification": {
+        "type": "unknown",
+        "label": "Тип не определён",
+        "status": "review",
+        "confidence": 0.42
+      },
+      "locators": {
+        "pdf_page_bbox": true,
+        "xlsx_cell_address": true,
+        "parser_provenance": true
+      }
+    },
+    {
+      "name": "synthetic_acceptance_act.docx",
+      "role": "primary",
+      "document_id": "1ca7ef2d002643829d0932057bce1203",
+      "parts": 6,
+      "extraction_id": "b03f6811-e975-4591-b593-ac7597e855f6",
+      "schema_version": "1.2.0",
+      "classification": {
+        "type": "act",
+        "label": "Акт",
+        "status": "classified",
+        "confidence": 0.95
+      },
+      "locators": {
+        "pdf_page_bbox": false,
+        "xlsx_cell_address": false,
+        "parser_provenance": true
+      }
+    },
+    {
+      "name": "01_borderless.png",
+      "role": "primary",
+      "document_id": "f876ac4a331d4efbbc5f08f2d4b80bdd",
+      "parts": 29,
+      "extraction_id": "d5522837-8b5c-4fd5-8239-c0e3d497e670",
+      "schema_version": "1.2.0",
+      "classification": {
+        "type": "unknown",
+        "label": "Тип не определён",
+        "status": "review",
+        "confidence": 0.42
+      },
+      "locators": {
+        "pdf_page_bbox": true,
+        "xlsx_cell_address": false,
+        "parser_provenance": true
+      }
+    }
+  ],
+  "status": "partial-e2e-passed-linking-unavailable",
+  "linking": {
+    "status": "failed",
+    "error": {
+      "code": "LINKING_STAGE_FAILED",
+      "message": "{\"http_status\": 503, \"error\": \"Задайте POLZA_API_KEY для создания задания анализа\"}"
+    },
+    "reason": "External Polza credentials/consent are unavailable in this environment"
+  },
+  "finished_at": "2026-11-13T12:47:38.378892+00:00",
+  "elapsed_seconds": 13.73
+}

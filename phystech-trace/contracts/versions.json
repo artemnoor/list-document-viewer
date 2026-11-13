@@ -1,0 +1,29 @@
+{
+  "contract_set": "1.0.0",
+  "parser_to_extraction": {
+    "version": "1.0.0",
+    "schema": "parser-to-extraction-v1.schema.json",
+    "source_repository": "https://github.com/artemnoor/list-document-viewer",
+    "source_commit": "e6bb15e1fd4581d810d3426ea6558c9bb61231f6",
+    "compatibility": "Additive parser fields are retained; document_id, source_extension and parts are required. Unsupported or malformed locator values are rejected with diagnostics."
+  },
+  "extraction_to_linking": {
+    "version": "1.2.0",
+    "schema": "structured-extraction-1.2.0.schema.json",
+    "source_repository": "https://github.com/artemnoor/kfz-structured-extraction-",
+    "source_commit": "1e922e284805f2c1b343b4cb369813c8073b67dd",
+    "compatibility": "Document Linking accepts schema_version 1.2.x and additive 1.x; major version 2 requires a new adapter."
+  },
+  "linking_output": {
+    "version": "1.2.0",
+    "schema": "document-linking-1.2.0.schema.json",
+    "source_repository": "https://github.com/artemnoor/kfz-document-linking",
+    "source_commit": "28a3662cc0597093ad6264f70f591db19c37e061"
+  },
+  "provenance": {
+    "document_id": "Parser-generated stable ID, forwarded unchanged through extraction_id lineage and linking input_documents.",
+    "row_id": "Structured Extraction row_id, retained on link endpoints and evidence paths.",
+    "pdf": "page_no, bbox, coordinate_origin, and page_size are retained in provenance.",
+    "xlsx": "sheet_name and cell_address are retained in provenance."
+  }
+}

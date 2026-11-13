@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://phystech-trace.local/contracts/parser-to-extraction/v1",
+  "title": "Document Parser analysis result passed to Structured Extraction",
+  "description": "The original Document Parser JSON result with a stable parser document_id and trace metadata added by Gateway. Unknown parser fields are preserved because the upstream analysis contains Docling, OCR, visual layout, and native Office data that evolve independently.",
+  "type": "object",
+  "required": ["document_id", "source_extension", "parts"],
+  "properties": {
+    "document_id": { "type": "string", "minLength": 1, "description": "Stable Document Parser ID retained by Extraction and Linking." },
+    "source_file_id": { "type": "string", "pattern": "^[a-f0-9]{32}$", "description": "Parser storage ID used to reopen the uploaded source file." },
+    "source_extension": { "type": "string", "pattern": "^\\.[a-z0-9]+$" },
+    "analysis_version": { "type": "string" },
+    "native_structure_version": { "type": "integer" },
+    "status": { "type": ["string", "null"] },
+    "parts": { "type": "array", "items": { "$ref": "#/$defs/part" } },
+    "model_parts": { "type": "array", "items": { "$ref": "#/$defs/part" } },
+    "visual_layout": { "$ref": "#/$defs/layout" },
+    "logical_tables": { "type": "array", "items": { "type": "object", "additionalProperties": true } },
+    "document": { "type": ["object", "null"], "additionalProperties": true },
+    "markdown": { "type": "string" },
+    "chunks": { "type": "array", "items": { "type": "object", "additionalProperties": true } },
+    "warnings": { "type": "array", "items": { "type": "string" } },
+    "phystech_trace": {
+      "type": "object",
+      "properties": {
+        "contract_version": { "const": "1.0.0" },
+        "project_id": { "type": "string" },
+        "source_file_id": { "type": "string" },
+        "source_file_name": { "type": "string" },
+        "document_role": { "enum": ["kfz", "primary"] }
+      },
+      "required": ["contract_version", "project_id", "source_file_id", "source_file_name", "document_role"],
+      "additionalProperties": true
+    }
+  },
+  "$defs": {
+    "bbox": {
+      "type": "object",
+      "properties": {
+        "l": { "type": "number" }, "t": { "type": "number" }, "r": { "type": "number" }, "b": { "type": "number" },
+        "x": { "type": "number" }, "y": { "type": "number" }, "width": { "type": "number" }, "height": { "type": "number" },
+        "coord_origin": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "provenance": {
+      "type": "object",
+      "properties": {
+        "page_no": { "type": ["number", "null"] }, "bbox": { "oneOf": [{ "$ref": "#/$defs/bbox" }, { "type": "array", "minItems": 4, "maxItems": 4, "items": { "type": "number" } }, { "type": "null" }] },
+        "sheet_name": { "type": ["string", "null"] }, "cell_address": { "type": ["string", "null"] },
+        "coordinate_origin": { "type": ["string", "null"] }, "source_ref": { "type": "string" },
+        "table_id": { "type": "string" }, "row_id": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "part": {
+      "type": "object",
+      "properties": {
+        "kind": { "type": "string" }, "id": { "type": ["string", "number"] }, "text": { "type": "string" },
+        "value": {}, "display_value": {}, "formula": { "type": ["string", "null"] },
+        "page_no": { "type": ["number", "null"] }, "bbox": { "oneOf": [{ "$ref": "#/$defs/bbox" }, { "type": "array", "minItems": 4, "maxItems": 4, "items": { "type": "number" } }, { "type": "null" }] },
+        "sheet": { "type": "string" }, "sheet_name": { "type": "string" }, "coordinate": { "type": "string" },
+        "address": { "type": "string" }, "row": { "type": "integer" }, "column": { "type": "integer" },
+        "provenance": { "oneOf": [{ "$ref": "#/$defs/provenance" }, { "type": "array", "items": { "$ref": "#/$defs/provenance" } }] },
+        "source_ref": { "type": "string" }, "data": { "type": "object", "additionalProperties": true },
+        "rows": { "type": "array" }, "cells": { "type": "array" }
+      },
+      "required": ["kind"],
+      "additionalProperties": true
+    },
+    "layout": {
+      "type": "object",
+      "properties": {
+        "parts": { "type": "array", "items": { "$ref": "#/$defs/part" } },
+        "pages": { "type": ["object", "array"], "additionalProperties": true },
+        "version": { "type": ["string", "number"] }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

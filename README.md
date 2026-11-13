@@ -1,4 +1,10 @@
-# Лист
+# Phystech Trace и Document Parser
+
+Основной репозиторий содержит интеграцию трёх сервисов в каталоге [`phystech-trace/`](phystech-trace/README.md). Запуск системы: `cd phystech-trace` → `docker compose up --build`. Там находятся Gateway, общий Vue-интерфейс, Extraction/Linking, контракты и сквозные проверки.
+
+## Document Parser
+
+Ниже сохранена исходная документация локального приложения Parser и его API.
 
 Локальное приложение для просмотра документов. Фронтенд и API находятся в отдельных каталогах и запускаются независимо. Требуется Python 3.
 

@@ -12,6 +12,8 @@ COPY package.json package-lock.json ./
 RUN npm ci --omit=dev && npm cache clean --force
 COPY --from=build --chown=node:node /app/build ./build
 COPY --from=build --chown=node:node /app/dist ./dist
+COPY --from=build --chown=node:node /app/openapi.yaml ./openapi.yaml
+COPY --from=build --chown=node:node /app/contracts ./contracts
 COPY --from=build --chown=node:node /app/prompts ./prompts
 COPY --from=build --chown=node:node /app/migrations/postgres ./migrations/postgres
 USER node

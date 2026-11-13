@@ -1,6 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { timingSafeEqual } from "node:crypto";
+import { parse as parseYaml } from "yaml";
 import { Hono } from "hono";
 import { serveStatic } from "@hono/node-server/serve-static";
 import { linkDocuments } from "../src/linking/link-resolver";
@@ -15,7 +16,7 @@ import type { PostgresStorage } from "./storage";
 export type AppDependencies = {
   storage: PostgresStorage;
   queue: AnalysisQueue;
-  config: { apiToken?: string; polzaApiKey?: string; llmEnabled: boolean; maxCalls: number; timeoutMs: number; maxInputTokens: number; maxRunMs: number; systemPrompt?: string; maxRequestBytes?: number; maxDocumentBytes?: number; maxDocumentSetBytes?: number; maxDocuments?: number };
+  config: { apiToken?: string; polzaApiKey?: string; llmEnabled: boolean; requireExternalLlmConsent?: boolean; maxCalls: number; timeoutMs: number; maxInputTokens: number; maxRunMs: number; systemPrompt?: string; maxRequestBytes?: number; maxDocumentBytes?: number; maxDocumentSetBytes?: number; maxDocuments?: number };
 };
 const MIB = 1024 * 1024;
 const DEFAULT_LIMITS = { maxRequestBytes: 32 * MIB, maxDocumentBytes: 16 * MIB, maxDocumentSetBytes: 30 * MIB, maxDocuments: 100 };
@@ -74,9 +75,19 @@ export function createApp(deps: AppDependencies) {
     return c.json({ error: message, ...(status === 422 ? { diagnostics: (error as any).diagnostics ?? [] } : []) }, status as any);
   });
 
-  app.get("/api/health", async c => {
+  const health = async (c: any) => {
     try { await deps.storage.health(); await deps.queue.health(); return c.json({ status: "ok", service: "kfz-document-linking", contract_version: OUTPUT_CONTRACT_VERSION, database: "ok", queue: "ok", llm: { provider: "Polza AI", model: GEMMA_MODEL, configured: deps.config.llmEnabled && Boolean(deps.config.polzaApiKey) } }); }
     catch { return c.json({ status: "unavailable", service: "kfz-document-linking", contract_version: OUTPUT_CONTRACT_VERSION, database: "unknown", queue: "unknown", llm: { provider: "Polza AI", model: GEMMA_MODEL, configured: deps.config.llmEnabled && Boolean(deps.config.polzaApiKey) } }, 503); }
+  };
+  app.get("/health", health);
+  app.get("/api/health", health);
+  app.get("/docs", c => c.html(`<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Document Linking API</title><link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css"></head><body><div id="swagger-ui"></div><script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js"></script><script>SwaggerUIBundle({url:'/openapi.json',dom_id:'#swagger-ui'});</script></body></html>`));
+  app.get("/openapi.json", async c => c.json(parseYaml(await readFile(resolve(process.cwd(), "openapi.yaml"), "utf8"))));
+  app.get("/contracts/:name", async c => {
+    const name = c.req.param("name");
+    if (!['input.schema.json', 'output.schema.json'].includes(name)) return c.json({ error: "Contract not found" }, 404);
+    c.header("Content-Type", "application/schema+json; charset=utf-8");
+    return c.body(await readFile(resolve(process.cwd(), "contracts", name)));
   });
 
   app.get("/api/demo", auth, limit("read"), async c => {
@@ -89,6 +100,7 @@ export function createApp(deps: AppDependencies) {
   app.post("/api/linking-runs", limit("run"), async c => {
     const parsed = await jsonBody(c.req.raw, deps.config.maxRequestBytes ?? DEFAULT_LIMITS.maxRequestBytes); if (parsed.error) return c.json({ error: parsed.error }, parsed.status as any);
     const body = parsed.body, documents = documentsFrom(body);
+    if (deps.config.requireExternalLlmConsent && (body?.allow_external_llm !== true || !["public", "synthetic", "anonymized"].includes(body?.data_classification))) return c.json({ error: "Вызов внешней модели требует явного согласия и публичных, синтетических или обезличенных данных", code: "LLM_EXTERNAL_PROCESSING_DENIED" }, 403);
     if (!Array.isArray(documents)) return c.json({ error: "Ожидается массив документов" }, 422);
     if (documents.length > (deps.config.maxDocuments ?? DEFAULT_LIMITS.maxDocuments)) return c.json({ error: `Количество документов превышает лимит ${deps.config.maxDocuments ?? DEFAULT_LIMITS.maxDocuments}` }, 413);
     const sizeError = documentSizeError(documents, deps.config); if (sizeError) return c.json({ error: sizeError }, 413);
@@ -122,6 +134,7 @@ export function createApp(deps: AppDependencies) {
   app.post("/api/linking-jobs", limit("run"), async c => {
     const parsed = await jsonBody(c.req.raw, deps.config.maxRequestBytes ?? DEFAULT_LIMITS.maxRequestBytes); if (parsed.error) return c.json({ error: parsed.error }, parsed.status as any);
     const body = parsed.body, input = documentsFrom(body);
+    if (deps.config.requireExternalLlmConsent && (body?.allow_external_llm !== true || !["public", "synthetic", "anonymized"].includes(body?.data_classification))) return c.json({ error: "Вызов внешней модели требует явного согласия и публичных, синтетических или обезличенных данных", code: "LLM_EXTERNAL_PROCESSING_DENIED" }, 403);
     if (!Array.isArray(input)) return c.json({ error: "Ожидается массив документов" }, 422);
     if (input.length > (deps.config.maxDocuments ?? DEFAULT_LIMITS.maxDocuments)) return c.json({ error: `Количество документов превышает лимит ${deps.config.maxDocuments ?? DEFAULT_LIMITS.maxDocuments}` }, 413);
     const sizeError = documentSizeError(input, deps.config); if (sizeError) return c.json({ error: sizeError }, 413);
