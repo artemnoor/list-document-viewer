@@ -244,10 +244,15 @@ function validateGrounding(result, context, parsed) {
   });
   const tableMappings = result.table_mappings.map((mapping) => {
     const table = tables.get(mapping.table_id);
-    if (!table) throw new PolzaAiError(`Polza AI сослался на неизвестную таблицу ${mapping.table_id}`, "POLZA_UNGROUNDED_OUTPUT");
-  const headerIds = new Set((table.header_cells ?? []).filter((cell) => cell.source_available !== false).flatMap((cell) => [cell.id, ...(cell.source_element_ids ?? [])]));
-    const columns = mapping.columns.filter((column) => headerIds.has(column.source_element_id));
-    if (columns.length !== mapping.columns.length) throw new PolzaAiError("Polza AI сослался на неизвестный заголовок таблицы", "POLZA_UNGROUNDED_OUTPUT");
+    const visibleTable = context.tables.find((item) => item.table_id === mapping.table_id);
+    const allowedTables = context.tables.map((item) => ({ table_id: item.table_id, header_source_element_ids: [...new Set(item.headers.flatMap((header) => header.source_element_ids ?? [header.source_element_id]))] }));
+    if (!table || !visibleTable) throw new PolzaAiError(`Polza AI сослался на неизвестную или не показанную таблицу ${mapping.table_id}`, "POLZA_UNGROUNDED_OUTPUT", 502, { table_id: mapping.table_id, allowed_tables: allowedTables });
+    const originalHeaderIds = new Set((table.header_cells ?? []).filter((cell) => cell.source_available !== false).flatMap((cell) => [cell.id, ...(cell.source_element_ids ?? [])]));
+    const visibleHeaderIds = new Set(visibleTable.headers.flatMap((header) => header.source_element_ids ?? [header.source_element_id]));
+    const allowedHeaderIds = [...originalHeaderIds].filter((id) => visibleHeaderIds.has(id));
+    const invalid = mapping.columns.filter((column) => !originalHeaderIds.has(column.source_element_id) || !visibleHeaderIds.has(column.source_element_id));
+    if (invalid.length) throw new PolzaAiError("Polza AI сослался на неизвестный или не показанный заголовок таблицы", "POLZA_UNGROUNDED_OUTPUT", 502, { table_id: mapping.table_id, invalid_source_element_ids: invalid.map((column) => column.source_element_id), allowed_header_source_element_ids: allowedHeaderIds, allowed_tables: allowedTables });
+    const columns = mapping.columns;
     return { ...mapping, columns };
   });
   const availableElementIds = new Set(source.elements.filter((element) => element.source_available !== false).map((element) => element.id));
@@ -284,7 +289,7 @@ async function callPolzaFragment(parsed, env = {}, context) {
     messages: [
       {
         role: "system",
-        content: "Ты извлекаешь реквизиты и семантическую структуру финансовых документов на русском языке. Используй только приведённые source_element_id. Для поля верни точную подстроку текста источника, без перефразирования и нормализации. Не придумывай ID, координаты, страницы, адреса ячеек и отсутствующие значения. Для таблиц сопоставляй смысл заголовков; неизвестные колонки помечай unknown, а роли определяй как metadata, line_items, payment_schedule, amendments, reference, summary, appendix или table. Таблицы могут продолжаться на разных страницах внутри одного table_id: используй представительные строки только для понимания схемы, не смешивай разные table_id. Для изменений выделяй parameter, old_value, new_value и reason. Самооценка confidence не является доказательством. Если доказательства нет, не создавай запись. Верни только JSON по схеме.",
+        content: "Ты извлекаешь реквизиты и семантическую структуру финансовых документов на русском языке. Используй только приведённые source_element_id. Для поля верни точную подстроку текста источника, без перефразирования и нормализации. Не придумывай ID, координаты, страницы, адреса ячеек и отсутствующие значения. Идентификаторы table_id и source_element_id — непрозрачные машинные строки: копируй их посимвольно только из текущего контекста. Не выводи table_id из названия роли/заголовка, не создавай псевдо-ID и не используй ID из другой таблицы. source_element_id столбца должен быть одним из ID в headers[].source_element_ids той же таблицы; ID строки/cell не является ID заголовка. Если корректный mapping нельзя построить, опусти его. Для таблиц сопоставляй смысл заголовков; неизвестные колонки помечай unknown, а роли определяй как metadata, line_items, payment_schedule, amendments, reference, summary, appendix или table. Таблицы могут продолжаться на разных страницах внутри одного table_id: используй представительные строки только для понимания схемы, не смешивай разные table_id. Для изменений выделяй parameter, old_value, new_value и reason. Самооценка confidence не является доказательством. Если доказательства нет, не создавай запись. Верни только JSON по схеме.",
       },
       { role: "user", content: JSON.stringify(context) },
     ],
@@ -439,7 +444,7 @@ export async function callPolzaForExtraction(parsed, env = {}) {
       catch (error) {
         if (!(error instanceof PolzaAiError) || !['POLZA_UNGROUNDED_OUTPUT','POLZA_INVALID_JSON','POLZA_SCHEMA_INVALID'].includes(error.code)) throw error;
         await env.POLZA_ON_PROGRESS?.({ completed_fragments: diagnostics, total_fragments: contexts.length, model_attempts: attempts, usage: measuredUsage(), repairing_fragment: index, failure: error.details });
-        result = await callPolzaFragment(parsed, env, { ...context, validation_feedback: { code: error.code, reason: error.message, instruction: 'Исправь только этот фрагмент. Используй ровно показанные source_element_id и table_id. Значения — точные подстроки исходного текста. Верни полный JSON, без сокращений.' } });
+        result = await callPolzaFragment(parsed, env, { ...context, validation_feedback: { code: error.code, reason: error.message, ...(error.details.table_id ? { table_id: error.details.table_id } : {}), ...(error.details.allowed_tables ? { allowed_tables: error.details.allowed_tables } : {}), ...(error.details.allowed_header_source_element_ids ? { allowed_header_source_element_ids: error.details.allowed_header_source_element_ids } : {}), ...(error.details.invalid_source_element_ids ? { invalid_source_element_ids: error.details.invalid_source_element_ids } : {}), instruction: 'Исправь только grounded table_mappings этого фрагмента. Выбери table_id только из allowed_tables[].table_id и source_element_id заголовка только из allowed_header_source_element_ids, точным копированием. Не назначай новый ID по смыслу. Если корректный заголовок не найден, опусти mapping. Не меняй обоснованные поля. Верни полный JSON без сокращений.' } });
       }
       if (result.grounding_rejections.length) {
         const rejected = result.grounding_rejections;

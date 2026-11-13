@@ -37,6 +37,28 @@ test('all native PDF XLSX DOCX available elements survive bounded planning',asyn
   for(const e of source.elements.filter(e=>e.source_available!==false&&e.text.trim())) assert.ok(texts.has(e.id),`${kind}: ${e.id} omitted`);
  }
 });
+test('ungrounded table and header IDs are repaired from the exact Parser allowlist',async()=>{
+ const input={document_id:'table-id-grounding',title:'Акт',parts:[{id:'p1',kind:'paragraph',text:'Акт выполненных работ.'}],logical_tables:[{id:'parser-table-17',caption:'Работы',headers:['Наименование','Сумма'],rows:[{row_id:'row-1',cells:[{id:'name-1',column:0,text:'Монтаж'},{id:'amount-1',column:1,text:'1250'}]}]}]};
+ const grounded=buildGroundedContext(input), expected=grounded.tables[0], headerIds=expected.headers.flatMap(header=>header.source_element_ids);
+ assert.ok(headerIds.length>=2);
+ let calls=0,mockFailure='';
+ const result=await callPolzaForExtraction(input,{POLZA_API_KEY:'offline',POLZA_FETCH:async(_url,init)=>{
+  try {
+   calls++;const context=JSON.parse(JSON.parse(init.body).messages[1].content);
+   if(calls===1)return new Response(JSON.stringify({choices:[{message:{content:JSON.stringify({document_type:'act',classification_confidence:.9,field_candidates:[],table_mappings:[{table_id:expected.table_id,role:'line_items',confidence:.9,columns:[{source_element_id:'invented-header-id',semantic_key:'description',label:'Наименование',confidence:.9}]}]})}}]}));
+   assert.deepEqual(context.validation_feedback.allowed_tables.map(table=>table.table_id),[expected.table_id]);
+   assert.equal(context.validation_feedback.table_id,expected.table_id);
+   assert.deepEqual(context.validation_feedback.allowed_header_source_element_ids,headerIds);
+   assert.deepEqual(context.validation_feedback.allowed_tables[0].header_source_element_ids,headerIds);
+   assert.deepEqual(context.validation_feedback.invalid_source_element_ids,['invented-header-id']);
+   return new Response(JSON.stringify({choices:[{message:{content:JSON.stringify({document_type:'act',classification_confidence:.9,field_candidates:[],table_mappings:[{table_id:expected.table_id,role:'line_items',confidence:.9,columns:expected.headers.map((header,index)=>({source_element_id:header.source_element_ids[0],semantic_key:index===0?'description':'amount',label:header.label,confidence:.9}))}]})}}]}));
+  } catch(error) { mockFailure=String(error?.stack??error); return new Response(JSON.stringify({choices:[{message:{content:JSON.stringify(valid)}}]})); }
+ }});
+ assert.equal(mockFailure,'',mockFailure);
+ assert.equal(calls,2);
+ assert.equal(result.table_mappings[0].table_id,expected.table_id);
+ assert.deepEqual(result.table_mappings[0].columns.map(column=>column.source_element_id),headerIds);
+});
 test('failed LLM fragments stay failures with retained checkpoints and no rules fallback',async()=>{
  let calls=0;
  await assert.rejects(callPolzaForExtraction({document_id:'broken',parts:[{id:'p',kind:'paragraph',text:'Договор Д-1'}]},{POLZA_API_KEY:'offline',POLZA_FETCH:async()=>{

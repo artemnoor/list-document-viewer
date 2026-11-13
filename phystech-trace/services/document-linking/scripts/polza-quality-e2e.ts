@@ -1,8 +1,9 @@
 import { createHash } from "node:crypto";
-import { mkdir, readFile, writeFile, access } from "node:fs/promises";
+import { appendFile, mkdir, readFile, writeFile, access } from "node:fs/promises";
 import { dirname, relative, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { isDeepStrictEqual } from "node:util";
+import { config as loadEnv } from "dotenv";
 import { analyzeDocumentSet, GEMMA_MODEL } from "../src/linking/llm-matcher";
 import { buildLinkingResult } from "../src/linking/link-resolver";
 import { buildEvidenceRegistry, resolveEvidenceReference } from "../src/linking/evidence-registry";
@@ -13,10 +14,13 @@ import { createQualityTransport, QUALITY_Q1, type QualityLedger } from "./qualit
 
 const serviceRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const extractionRoot = resolve(serviceRoot, "../structured-extraction");
+loadEnv({ path: resolve(serviceRoot, ".env.local"), quiet: true });
 const hash = (value: string | Buffer) => createHash("sha256").update(value).digest("hex");
 const json = async (path: string) => JSON.parse(await readFile(path, "utf8"));
 const exists = async (path: string) => access(path).then(() => true, () => false);
 const saveJson = async (path: string, value: unknown) => { await mkdir(dirname(path), { recursive: true }); await writeFile(path, `${JSON.stringify(value, null, 2)}\n`, { mode: 0o600 }); };
+const redact = (value: unknown, secret: string) => JSON.parse(JSON.stringify(value, (_key, item) => typeof item === "string" ? item.replaceAll(secret, "[REDACTED]").replace(/Bearer\s+[^\s"']+/gi, "Bearer [REDACTED]") : item));
+const appendJsonl = async (path: string, value: unknown, secret: string) => { await mkdir(dirname(path), { recursive: true }); await appendFile(path, `${JSON.stringify(redact(value, secret))}\n`, { encoding: "utf8", mode: 0o600 }); };
 type Config = { live: boolean; resume: boolean; linkingOnly: boolean; manifest: string; out: string; repeats: number; linkingGold?: string; extractionGold?: string };
 
 export function parseQualityArgs(args: string[]): Config {
@@ -123,7 +127,16 @@ export async function runQualityE2E(config: Config) {
     if (await exists(ledgerPath) && !config.resume) throw new Error("QUALITY_EXISTING_ATTEMPTS_USE_RESUME");
     const ledger: QualityLedger = await exists(ledgerPath) ? await json(ledgerPath) : { started_at: new Date().toISOString(), attempts: [] };
     let stage = "starting";
-    const transport = createQualityTransport({ fetcher: realFetch, ledger, stage: () => stage, save: () => saveJson(ledgerPath, ledger) });
+    const requestLogPath = resolve(runDir, "requests.jsonl"), responseLogPath = resolve(runDir, "responses.jsonl");
+    const auditedFetch: typeof fetch = async (url, init) => {
+      const body = JSON.parse(String(init?.body));
+      await appendJsonl(requestLogPath, { timestamp: new Date().toISOString(), stage, model: body.model, max_tokens: body.max_tokens, messages: body.messages }, apiKey);
+      const response = await realFetch(url, init);
+      const payload = await response.clone().json().catch(async () => ({ raw_text: await response.clone().text().catch(() => "[unreadable response]") }));
+      await appendJsonl(responseLogPath, { timestamp: new Date().toISOString(), status: response.status, ok: response.ok, body: payload }, apiKey);
+      return response;
+    };
+    const transport = createQualityTransport({ fetcher: auditedFetch, ledger, stage: () => stage, save: () => saveJson(ledgerPath, redact(ledger, apiKey)) });
     const extractions: any[] = []; const started = Date.now();
     try {
       if (config.linkingOnly) extractions.push(...linkingInputs.map(item => item.parsed));
@@ -132,7 +145,7 @@ export async function runQualityE2E(config: Config) {
         const outputPath = resolve(runDir, "extraction", `${encodeURIComponent(item.document_id)}.json`);
         if (config.resume && await exists(outputPath)) { const old = await json(outputPath); if (old.input_hash !== item.input_hash || old.mode !== "llm_assisted") throw new Error("QUALITY_RESUME_EXTRACTION_IDENTITY_MISMATCH"); extractions.push(old); continue; }
         const llm = await extraction!.callPolzaForExtraction(item.parsed, { POLZA_API_KEY: apiKey, POLZA_FETCH: transport.fetcher, POLZA_CONTEXT_MAX_CHARS: extractionContextChars, POLZA_MAX_OUTPUT_TOKENS: QUALITY_Q1.outputPerCall,
-          POLZA_ON_PROGRESS: async (state: unknown) => saveJson(resolve(runDir, "extraction-checkpoints", `${encodeURIComponent(item.document_id)}.json`), state) });
+          POLZA_ON_PROGRESS: async (state: unknown) => saveJson(resolve(runDir, "extraction-checkpoints", `${encodeURIComponent(item.document_id)}.json`), redact(state, apiKey)) });
         const output = structured!.extractStructuredDocument(item.parsed, { mode: "llm_assisted", llm, extractionId: `quality-${item.input_hash.slice(0, 16)}-${repeat}`, extractedAt: ledger.started_at });
         output.input_hash = item.input_hash;
         if (output.mode !== "llm_assisted" || !output.extraction_engine.llm.called || !output.extraction_engine.llm.response_validated) throw new Error("QUALITY_EXTRACTION_LLM_REQUIRED");
@@ -141,17 +154,17 @@ export async function runQualityE2E(config: Config) {
       const checked = validateInput(extractions); if (!checked.success) throw new Error("QUALITY_EXTRACTION_LINKING_CONTRACT_INVALID");
       stage = "linking"; globalThis.fetch = transport.fetcher;
       const analysis = await analyzeDocumentSet(checked.documents, { apiKey, timeoutMs: 120000, maxRunMs: QUALITY_Q1.runMs - (Date.now() - Date.parse(ledger.started_at)), maxCalls: QUALITY_Q1.calls - ledger.attempts.filter(attempt => attempt.stage.startsWith("extraction:")).length, maxInputTokens: QUALITY_Q1.inputPerCall, systemPrompt: prompt,
-        ...(config.resume && await exists(statePath) ? { resumeProgress: await json(statePath) } : {}), onProgress: async state => saveJson(statePath, state) });
+        ...(config.resume && await exists(statePath) ? { resumeProgress: await json(statePath) } : {}), onProgress: async state => saveJson(statePath, redact(state, apiKey)) });
       if (!analysis.complete) throw new Error("QUALITY_LINKING_INCOMPLETE");
       const result = buildLinkingResult(checked.documents, analysis), parsed = linkingOutputSchema.safeParse(result); if (!parsed.success) throw new Error("QUALITY_LINKING_RESULT_CONTRACT_INVALID");
       const evidence = checkPublishedEvidence(result, checked.documents); if (!evidence.passed) throw new Error(`QUALITY_PUBLISHED_EVIDENCE_INVALID:${JSON.stringify(evidence.technical_issues)}`);
-      const report = { repeat, state: "completed", duration_ms: Date.now() - started, evidence, totals: transport.totals(), linking_diagnostics: result.link_validation_diagnostics,
+      const report = redact({ repeat, state: "completed", duration_ms: Date.now() - started, evidence, totals: transport.totals(), linking_diagnostics: result.link_validation_diagnostics,
         extraction_grounding: extractions.map(doc => ({ document_id: doc.document_id, mode: doc.mode, validation_status: doc.extraction_engine.llm.validation_status, review_required: doc.review_required, quality_analysis: doc.extraction_engine.llm.usage?.quality_analysis ?? null })),
-        semantic_metrics: { precision: null, recall: null, f1: null, reason: "independent_gold_not_scored_yet" } };
-      await saveJson(resolve(runDir, "input-extractions.json"), extractions); await saveJson(resultPath, result); Object.assign(report, { result_sha256: hash(await readFile(resultPath)) }); await saveJson(resolve(runDir, "report.json"), report);
+        semantic_metrics: { precision: null, recall: null, f1: null, reason: "independent_gold_not_scored_yet" } }, apiKey);
+      await saveJson(resolve(runDir, "input-extractions.json"), redact(extractions, apiKey)); await saveJson(resultPath, redact(result, apiKey)); Object.assign(report, { result_sha256: hash(await readFile(resultPath)) }); await saveJson(resolve(runDir, "report.json"), report);
       successful.push(result); reports.push(report);
     } catch (error: any) {
-      const report = { repeat, state: "failed", stage, duration_ms: Date.now() - started, error: String(error?.message ?? error), details: error?.details ?? null, totals: transport.totals() };
+      const report = redact({ repeat, state: "failed", stage, duration_ms: Date.now() - started, error: String(error?.message ?? error), details: error?.details ?? null, totals: transport.totals() }, apiKey);
       await saveJson(resolve(runDir, "report.json"), report); reports.push(report);
     } finally { globalThis.fetch = realFetch; }
   }
