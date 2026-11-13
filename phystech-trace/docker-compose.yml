@@ -54,7 +54,7 @@ services:
     environment:
       PORT: 8082
       DATABASE_URL: postgres://trace:${POSTGRES_PASSWORD:-trace_db_dev_pass_2026_7f4a2c91b6}@postgres:5432/phystech_trace
-      POLZA_API_KEY: ${POLZA_API_KEY:-}
+      POLZA_API_KEY: ${POLZA_API_KEY:-${POLZA_AI_API_KEY:-}}
     depends_on:
       postgres:
         condition: service_healthy
@@ -75,7 +75,9 @@ services:
       API_BEARER_TOKEN: ${API_BEARER_TOKEN:-trace_api_local_token_2026_do_not_expose}
       REQUIRE_EXTERNAL_LLM_CONSENT: "true"
       LLM_ENABLED: ${LLM_ENABLED:-true}
-      POLZA_API_KEY: ${POLZA_API_KEY:-}
+      LLM_TIMEOUT_MS: ${LLM_TIMEOUT_MS:-120000}
+      LLM_MAX_INPUT_TOKENS: ${LLM_MAX_INPUT_TOKENS:-230000}
+      POLZA_API_KEY: ${POLZA_API_KEY:-${POLZA_AI_API_KEY:-}}
     depends_on:
       postgres:
         condition: service_healthy
@@ -103,7 +105,9 @@ services:
       API_BEARER_TOKEN: ${API_BEARER_TOKEN:-trace_api_local_token_2026_do_not_expose}
       REQUIRE_EXTERNAL_LLM_CONSENT: "true"
       LLM_ENABLED: ${LLM_ENABLED:-true}
-      POLZA_API_KEY: ${POLZA_API_KEY:-}
+      LLM_TIMEOUT_MS: ${LLM_TIMEOUT_MS:-120000}
+      LLM_MAX_INPUT_TOKENS: ${LLM_MAX_INPUT_TOKENS:-230000}
+      POLZA_API_KEY: ${POLZA_API_KEY:-${POLZA_AI_API_KEY:-}}
     depends_on:
       postgres:
         condition: service_healthy

@@ -1,0 +1,16 @@
+{
+  "status": "saved-project-verified",
+  "project_id": "ab5f2d87-1759-450d-a3dd-38c33b9ec91f",
+  "model_provider": "Polza AI",
+  "model": "google/gemma-4-26b-a4b-it",
+  "model_calls": 3,
+  "known_relations": [
+    "act_contains_line_item",
+    "act_validates_registry",
+    "report_summarizes_registry"
+  ],
+  "evidence_sides_resolved": 16,
+  "source_documents_resolved": 3,
+  "pdf_page_preview": "passed",
+  "verified_at": "2026-11-13T15:40:04.211312+00:00"
+}

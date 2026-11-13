@@ -1,0 +1,50 @@
+{
+  "started_at": "2026-11-13T15:11:38.445650+00:00",
+  "dataset": "synthetic-only",
+  "external_llm_consent": true,
+  "reused_project": true,
+  "project_id": "f99e7097-2004-4a3c-a2fb-2ec05ad88e1e",
+  "checks": [
+    "Linking retried through Gateway while saved Parser/Extraction stages were reused",
+    "Linking retry failure was persisted while completed Parser/Extraction results and IDs remained unchanged"
+  ],
+  "status": "linking-retry-failed",
+  "linking": {
+    "status": "failed",
+    "error": {
+      "code": "LINKING_STAGE_FAILED",
+      "message": "Gemma вернула невалидный JSON"
+    },
+    "parser_extraction_retained": true
+  },
+  "extraction_mode": "rules_only",
+  "document_results": [
+    {
+      "name": "synthetic_kfz_report.pdf",
+      "document_id": "722c4f29d85f46f0a212cd2b402e18f4",
+      "extraction_id": "e6310be9-48fd-4620-814c-40ca3722dc3f"
+    },
+    {
+      "name": "10_mixed_native_and_scan.pdf",
+      "document_id": "05efe8f9ba194d1480930a1bf7374d45",
+      "extraction_id": "2bffaf6a-5636-4b29-aa5f-db87b741b475"
+    },
+    {
+      "name": "synthetic_primary_register.xlsx",
+      "document_id": "27500688180342e8987c17e362b8ab5e",
+      "extraction_id": "72103a2a-9ad5-4205-be63-9144b02e2f02"
+    },
+    {
+      "name": "synthetic_acceptance_act.docx",
+      "document_id": "6fd8d5b9b3c347c8adc45ce77b91db71",
+      "extraction_id": "9b570f26-eb93-491f-bc1f-09c2208a509c"
+    },
+    {
+      "name": "01_borderless.png",
+      "document_id": "f876ac4a331d4efbbc5f08f2d4b80bdd",
+      "extraction_id": "7019fe8d-50c1-46a2-8fa6-9a7d4e87a776"
+    }
+  ],
+  "finished_at": "2026-11-13T15:23:21.787066+00:00",
+  "elapsed_seconds": 703.34
+}

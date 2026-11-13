@@ -28,6 +28,7 @@ EXTRACTION_URL = os.getenv("EXTRACTION_URL", "http://structured-extraction:8082"
 LINKING_URL = os.getenv("LINKING_URL", "http://document-linking:3000").rstrip("/")
 LINKING_TOKEN = os.getenv("API_BEARER_TOKEN", "phystech_trace_local_api_token_32_chars")
 POLL_INTERVAL = max(0.25, float(os.getenv("POLL_INTERVAL_SECONDS", "2")))
+LINKING_POLL_INTERVAL = max(5.0, float(os.getenv("LINKING_POLL_INTERVAL_SECONDS", "10")))
 PARSER_TIMEOUT = max(60, int(os.getenv("PARSER_TIMEOUT_SECONDS", "1800")))
 MAX_UPLOAD_BYTES = min(25 * 1024 * 1024, int(os.getenv("MAX_UPLOAD_BYTES", str(25 * 1024 * 1024))))
 ALLOWED_CLASSIFICATIONS = {"public", "synthetic", "anonymized"}
@@ -332,12 +333,12 @@ async def process_project(project_id: str, retry_stage: str | None = None):
                         raise ValueError(json.dumps({"code": "LINKING_CONTRACT_INVALID", "diagnostics": issues}, ensure_ascii=False))
                     if any(item.get("document_id") not in {doc["parser_document_id"] for doc in docs} for item in linking_result.get("input_documents", [])):
                         raise ValueError("Document Linking result refers to a document outside this project")
-                    set_project_status(project_id, "completed", linking_result=linking_result)
                     update_stage(project_id, "linking", status="completed", completed=1, total=1, error=None)
+                    set_project_status(project_id, "completed", linking_result=linking_result)
                     return
                 if state.get("status") == "failed":
                     raise RuntimeError(state.get("last_error") or "Document Linking job failed")
-                await asyncio.sleep(POLL_INTERVAL)
+                await asyncio.sleep(LINKING_POLL_INTERVAL)
             raise TimeoutError("Document Linking exceeded the configured timeout")
         except Exception as exc:
             error = {"code": "LINKING_STAGE_FAILED", "message": str(exc)[:2000]}

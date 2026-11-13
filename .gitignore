@@ -22,3 +22,6 @@ phystech-trace/gateway/__pycache__/
 phystech-trace/gateway/.venv/
 phystech-trace/tests/e2e/results/*
 !phystech-trace/tests/e2e/results/latest-run.json
+!phystech-trace/tests/e2e/results/full-set-live-attempt.json
+!phystech-trace/tests/e2e/results/review-decisions.json
+!phystech-trace/tests/e2e/results/saved-project-verification.json

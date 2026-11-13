@@ -27,7 +27,7 @@ docker compose up --build
 
 ## Конфигурация и приватность
 
-Compose запускается без `.env`. Чтобы задать свои секреты, скопируйте `.env.example` в `.env`. `POLZA_API_KEY` необязателен: без него локальный Parser и rules-only Extraction доступны, а Linking сообщает диагностируемую ошибку отсутствующего ключа.
+Compose запускается без `.env`. Чтобы задать свои секреты, скопируйте `.env.example` в `.env`. `POLZA_API_KEY` необязателен: без него локальный Parser и rules-only Extraction доступны, а Linking сообщает диагностируемую ошибку отсутствующего ключа. На Windows Compose также автоматически читает уже заданный `POLZA_AI_API_KEY` из переменных среды.
 
 Внешняя модель не вызывается для конфиденциальных документов. Для проекта с открытыми, синтетическими или обезличенными данными требуется явно включить согласие при создании проекта. Gateway и Linking API проверяют это разрешение. Parser контейнер не получает Polza key; parser-side AI review в Compose отключён.
 
@@ -38,10 +38,13 @@ Compose запускается без `.env`. Чтобы задать свои �
 ```powershell
 python -m unittest discover -s tests/contracts -v
 python tests/e2e/run_e2e.py --base-url http://localhost:8084
+python tests/e2e/run_e2e.py --compact-linking --base-url http://localhost:8084
+python tests/e2e/review_decisions.py --project-id <project-id>
+python tests/e2e/verify_saved_project.py --project-id <project-id>
 ```
 
-E2E использует HTTP API настоящих сервисов и синтетические fixtures. Результат проверки Linking и реального вызова внешней модели фиксируется отдельно. Mock LLM тесты не являются проверкой Polza.
+E2E использует HTTP API настоящих сервисов и синтетические fixtures. Компактный профиль проверяет реальные вызовы Polza, ожидаемые отношения и evidence PDF/XLSX/DOCX. `review_decisions.py` отдельно подтверждает одну связь и отклоняет другую через Gateway API, проверяя сохранность evidence и решений. Стандартный профиль дополнительно включает fixtures изображения и сложного сканированного PDF, дубликат и более крупный пакет; его Linker результат записывается отдельно и может быть ограничен контекстом/форматом ответа модели. Mock LLM тесты не являются проверкой Polza.
 
-В текущем окружении Parser и Extraction прошли E2E на PDF/XLSX/DOCX/PNG, но полный Linking этап не завершился: `POLZA_API_KEY` не задан. Точный статус и сохранённые IDs см. в [`docs/integration-report.md`](docs/integration-report.md) и [`tests/e2e/results/latest-run.json`](tests/e2e/results/latest-run.json).
+Последний компактный E2E прошёл через Parser, Extraction и Linking с реальной Polza-моделью на синтетических данных; широкий комплект из пяти документов прошёл Parser и Extraction, но Linking вернул диагностируемую ошибку контекста/формата ответа. Точные результаты и ограничения записаны в [`docs/integration-report.md`](docs/integration-report.md), [`tests/e2e/results/latest-run.json`](tests/e2e/results/latest-run.json) и [`tests/e2e/results/full-set-live-attempt.json`](tests/e2e/results/full-set-live-attempt.json).
 
 См. [`docs/architecture.md`](docs/architecture.md), [`docs/data-flow.md`](docs/data-flow.md), [`docs/contracts.md`](docs/contracts.md) и [`docs/integration-report.md`](docs/integration-report.md).

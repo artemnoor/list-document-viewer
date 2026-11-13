@@ -1,0 +1,26 @@
+{
+  "status": "review-api-passed",
+  "project_id": "ab5f2d87-1759-450d-a3dd-38c33b9ec91f",
+  "decisions": [
+    {
+      "link_id": "4cbe5d46-dbc0-4402-b248-38a2377ca8aa",
+      "relationship_type": "report_summarizes_registry",
+      "status": "confirmed",
+      "verification_status": "human_confirmed",
+      "evidence_count": 2
+    },
+    {
+      "link_id": "1f1fd0d1-ce15-404f-b618-b0d6e1596300",
+      "relationship_type": "act_validates_registry",
+      "status": "rejected",
+      "verification_status": "human_rejected",
+      "evidence_count": 3
+    }
+  ],
+  "checks": [
+    "Gateway PATCH confirmed one reviewable link",
+    "Gateway PATCH rejected one reviewable link",
+    "Evidence remained unchanged and both decisions persisted on reread"
+  ],
+  "finished_at": "2026-11-13T15:30:57.907747+00:00"
+}
