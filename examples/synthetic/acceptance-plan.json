@@ -1,0 +1,57 @@
+{
+  "plan_version": "1.0.0",
+  "target_id": "synthetic-april-total",
+  "method_description": "Sum the five independently generated synthetic service-line values.",
+  "included": [
+    {
+      "fact_id": "fact_165d791e35dc56c617a5",
+      "reason": "Synthetic source amount for a distinct test operation row."
+    },
+    {
+      "fact_id": "fact_491ca2c1ae8e0ace0552",
+      "reason": "Synthetic source amount for a distinct test operation row."
+    },
+    {
+      "fact_id": "fact_7954b8287b3b1fad7939",
+      "reason": "Synthetic source amount for a distinct test operation row."
+    },
+    {
+      "fact_id": "fact_cca76aed74cc88064def",
+      "reason": "Synthetic source amount for a distinct test operation row."
+    },
+    {
+      "fact_id": "fact_5954052461312fa9ba3b",
+      "reason": "Synthetic source amount for a distinct test operation row."
+    }
+  ],
+  "excluded": [
+    {
+      "reason": "Not a source amount for the requested synthetic total.",
+      "fact_id": "fact_c08a637bae724fc38cb0",
+      "source_group_id": null
+    }
+  ],
+  "unprocessed_fact_ids": [],
+  "steps": [
+    {
+      "step_id": "synthetic_sum",
+      "operation": "sum",
+      "inputs": [
+        "fact_165d791e35dc56c617a5",
+        "fact_491ca2c1ae8e0ace0552",
+        "fact_7954b8287b3b1fad7939",
+        "fact_cca76aed74cc88064def",
+        "fact_5954052461312fa9ba3b"
+      ],
+      "scale": null
+    }
+  ],
+  "result_step_id": "synthetic_sum",
+  "currency": "RUB",
+  "unit": null,
+  "amount_basis": "unspecified",
+  "rounding_scale": 2,
+  "assumptions": [],
+  "information_gaps": [],
+  "requires_manual_review": false
+}

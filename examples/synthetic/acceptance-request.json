@@ -1,0 +1,761 @@
+{
+  "contract_version": "1.0.0",
+  "extraction_results": [
+    {
+      "extraction_id": "synthetic-extraction-act-v1",
+      "document_id": "synthetic-act-april",
+      "version": 1,
+      "schema_version": "1.2.0",
+      "extracted_at": "2026-11-13T00:00:00Z",
+      "classification": {
+        "type": "act",
+        "label": "Synthetic act",
+        "confidence": 1.0,
+        "status": "classified"
+      },
+      "extraction_engine": {
+        "rules_executed": true,
+        "llm": {
+          "provider": "not_called",
+          "model": null,
+          "called": false,
+          "response_validated": false,
+          "duration_ms": null,
+          "usage": null,
+          "validation_status": "not_run",
+          "error": null
+        },
+        "parser_adapter": "document-parser-unified/1.1.0"
+      },
+      "mode": "rules_only",
+      "fields": {
+        "execution_period": {
+          "value": {
+            "start": "2026-04-01",
+            "end": "2026-04-06"
+          },
+          "source_value": "Synthetic test period",
+          "status": "extracted",
+          "confidence": 1.0,
+          "provenance": {
+            "document_id": "synthetic-act-april",
+            "source_ref": "#/fields/execution_period",
+            "source_text": "Synthetic test period",
+            "source_available": true
+          },
+          "normalization_note": null
+        }
+      },
+      "tables": [],
+      "indicators": [],
+      "missing_fields": [],
+      "review_required": [],
+      "document_type": "act",
+      "line_items": [
+        {
+          "line_number": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "identifier": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "description": {
+            "value": "Synthetic service 1",
+            "source_value": "Synthetic service 1",
+            "status": "extracted",
+            "confidence": 1.0,
+            "provenance": {
+              "document_id": "synthetic-act-april",
+              "source_ref": "#/line_items/0/description",
+              "source_text": "Synthetic service 1",
+              "source_available": true
+            },
+            "normalization_note": null
+          },
+          "unit": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "plan_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "actual_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit_price": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "amount": {
+            "value": {
+              "amount": "102.00",
+              "currency": "RUB"
+            },
+            "source_value": "102.00",
+            "status": "extracted",
+            "confidence": 1.0,
+            "provenance": {
+              "document_id": "synthetic-act-april",
+              "source_ref": "#/line_items/0/amount",
+              "source_text": "102.00",
+              "source_available": true
+            },
+            "normalization_note": null,
+            "economic_measure": "actual"
+          },
+          "row_id": "synthetic-service-row-01",
+          "source_cells": [],
+          "row_status": "extracted"
+        },
+        {
+          "line_number": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "identifier": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "description": {
+            "value": "Synthetic service 2",
+            "source_value": "Synthetic service 2",
+            "status": "extracted",
+            "confidence": 1.0,
+            "provenance": {
+              "document_id": "synthetic-act-april",
+              "source_ref": "#/line_items/1/description",
+              "source_text": "Synthetic service 2",
+              "source_available": true
+            },
+            "normalization_note": null
+          },
+          "unit": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "plan_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "actual_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit_price": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "amount": {
+            "value": {
+              "amount": "103.00",
+              "currency": "RUB"
+            },
+            "source_value": "103.00",
+            "status": "extracted",
+            "confidence": 1.0,
+            "provenance": {
+              "document_id": "synthetic-act-april",
+              "source_ref": "#/line_items/1/amount",
+              "source_text": "103.00",
+              "source_available": true
+            },
+            "normalization_note": null,
+            "economic_measure": "actual"
+          },
+          "row_id": "synthetic-service-row-02",
+          "source_cells": [],
+          "row_status": "extracted"
+        },
+        {
+          "line_number": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "identifier": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "description": {
+            "value": "Synthetic service 3",
+            "source_value": "Synthetic service 3",
+            "status": "extracted",
+            "confidence": 1.0,
+            "provenance": {
+              "document_id": "synthetic-act-april",
+              "source_ref": "#/line_items/2/description",
+              "source_text": "Synthetic service 3",
+              "source_available": true
+            },
+            "normalization_note": null
+          },
+          "unit": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "plan_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "actual_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit_price": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "amount": {
+            "value": {
+              "amount": "105.00",
+              "currency": "RUB"
+            },
+            "source_value": "105.00",
+            "status": "extracted",
+            "confidence": 1.0,
+            "provenance": {
+              "document_id": "synthetic-act-april",
+              "source_ref": "#/line_items/2/amount",
+              "source_text": "105.00",
+              "source_available": true
+            },
+            "normalization_note": null,
+            "economic_measure": "actual"
+          },
+          "row_id": "synthetic-service-row-03",
+          "source_cells": [],
+          "row_status": "extracted"
+        },
+        {
+          "line_number": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "identifier": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "description": {
+            "value": "Synthetic service 4",
+            "source_value": "Synthetic service 4",
+            "status": "extracted",
+            "confidence": 1.0,
+            "provenance": {
+              "document_id": "synthetic-act-april",
+              "source_ref": "#/line_items/3/description",
+              "source_text": "Synthetic service 4",
+              "source_available": true
+            },
+            "normalization_note": null
+          },
+          "unit": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "plan_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "actual_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit_price": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "amount": {
+            "value": {
+              "amount": "110.00",
+              "currency": "RUB"
+            },
+            "source_value": "110.00",
+            "status": "extracted",
+            "confidence": 1.0,
+            "provenance": {
+              "document_id": "synthetic-act-april",
+              "source_ref": "#/line_items/3/amount",
+              "source_text": "110.00",
+              "source_available": true
+            },
+            "normalization_note": null,
+            "economic_measure": "actual"
+          },
+          "row_id": "synthetic-service-row-04",
+          "source_cells": [],
+          "row_status": "extracted"
+        },
+        {
+          "line_number": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "identifier": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "description": {
+            "value": "Synthetic service 5",
+            "source_value": "Synthetic service 5",
+            "status": "extracted",
+            "confidence": 1.0,
+            "provenance": {
+              "document_id": "synthetic-act-april",
+              "source_ref": "#/line_items/4/description",
+              "source_text": "Synthetic service 5",
+              "source_available": true
+            },
+            "normalization_note": null
+          },
+          "unit": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "plan_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "actual_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit_price": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "amount": {
+            "value": {
+              "amount": "130.00",
+              "currency": "RUB"
+            },
+            "source_value": "130.00",
+            "status": "extracted",
+            "confidence": 1.0,
+            "provenance": {
+              "document_id": "synthetic-act-april",
+              "source_ref": "#/line_items/4/amount",
+              "source_text": "130.00",
+              "source_available": true
+            },
+            "normalization_note": null,
+            "economic_measure": "actual"
+          },
+          "row_id": "synthetic-service-row-05",
+          "source_cells": [],
+          "row_status": "extracted"
+        }
+      ],
+      "model_version": null,
+      "synthetic": true
+    },
+    {
+      "extraction_id": "synthetic-extraction-kfz-v1",
+      "document_id": "synthetic-kfz-report",
+      "version": 1,
+      "schema_version": "1.2.0",
+      "extracted_at": "2026-11-13T00:00:00Z",
+      "classification": {
+        "type": "kfz_report",
+        "label": "Synthetic KФЗ report",
+        "confidence": 1.0,
+        "status": "classified"
+      },
+      "extraction_engine": {
+        "rules_executed": true,
+        "llm": {
+          "provider": "not_called",
+          "model": null,
+          "called": false,
+          "response_validated": false,
+          "duration_ms": null,
+          "usage": null,
+          "validation_status": "not_run",
+          "error": null
+        },
+        "parser_adapter": "document-parser-unified/1.1.0"
+      },
+      "mode": "rules_only",
+      "fields": {},
+      "tables": [],
+      "indicators": [
+        {
+          "key": "reported_total",
+          "label": "Synthetic reported total",
+          "extracted": {
+            "value": {
+              "amount": "550.00",
+              "currency": "RUB"
+            },
+            "source_value": "550.00",
+            "status": "extracted",
+            "confidence": 1.0,
+            "provenance": {
+              "document_id": "synthetic-kfz-report",
+              "source_ref": "#/indicators/0/extracted",
+              "source_text": "550.00",
+              "source_available": true
+            },
+            "normalization_note": null
+          }
+        },
+        {
+          "key": "reporting_period",
+          "label": "Synthetic reporting period",
+          "extracted": {
+            "value": {
+              "start": "2026-04-01",
+              "end": "2026-04-06"
+            },
+            "source_value": "Synthetic test period",
+            "status": "extracted",
+            "confidence": 1.0,
+            "provenance": {
+              "document_id": "synthetic-kfz-report",
+              "source_ref": "#/indicators/1/extracted",
+              "source_text": "Synthetic test period",
+              "source_available": true
+            },
+            "normalization_note": null
+          }
+        }
+      ],
+      "missing_fields": [],
+      "review_required": [],
+      "document_type": "kfz_report",
+      "line_items": [],
+      "model_version": null,
+      "synthetic": true
+    }
+  ],
+  "linking_result": {
+    "linking_run_id": "synthetic-linking-snapshot-v1",
+    "contract_version": "1.2.0",
+    "created_at": "2026-11-13T00:00:00Z",
+    "input_documents": [
+      {
+        "document_id": "synthetic-act-april",
+        "extraction_id": "synthetic-extraction-act-v1",
+        "document_type": "act",
+        "version": 1,
+        "schema_version": "1.2.0",
+        "input_version": 1
+      },
+      {
+        "document_id": "synthetic-kfz-report",
+        "extraction_id": "synthetic-extraction-kfz-v1",
+        "document_type": "kfz_report",
+        "version": 1,
+        "schema_version": "1.2.0",
+        "input_version": 1
+      }
+    ],
+    "links": [],
+    "review_required": [],
+    "unlinked_documents": [],
+    "warnings": [
+      "Synthetic test graph; no real upstream relationship evidence."
+    ],
+    "link_validation_diagnostics": [],
+    "analysis_summary": "Synthetic empty graph; human-reviewed calculation plan is bound to this exact snapshot.",
+    "processing_metadata": {
+      "engine_version": "synthetic-test",
+      "llm": {
+        "enabled": false,
+        "provider": "not_called",
+        "model": "not_called",
+        "strategy": "full_set",
+        "estimated_input_tokens": 0,
+        "calls": 0,
+        "errors": 0,
+        "duration_ms": 0
+      },
+      "duration_ms": 0
+    }
+  },
+  "context": {
+    "period_start": "2026-04-01",
+    "period_end": "2026-04-06",
+    "targets": [
+      {
+        "target_id": "synthetic-april-total",
+        "target_fact_id": "fact_c08a637bae724fc38cb0",
+        "kfz_document_id": "synthetic-kfz-report",
+        "kfz_source_path": "#/indicators/0/extracted",
+        "kfz_row_id": null,
+        "label": "Synthetic April operation total",
+        "description": "Test-only indicator; the inputs are generated synthetic records.",
+        "unit": null,
+        "currency": "RUB",
+        "amount_basis": "unspecified",
+        "economic_measure": "actual",
+        "rounding_scale": 2,
+        "period_basis": "document_period",
+        "required_document_types": []
+      }
+    ],
+    "data_classification": "open",
+    "external_llm_allowed": false,
+    "rounding_mode": "ROUND_HALF_UP"
+  },
+  "prior_decisions": [
+    {
+      "decision_id": "synthetic-review-decision-v1",
+      "target_id": "synthetic-april-total",
+      "reviewer_id": "synthetic-acceptance-runner",
+      "confirmed_at": "2026-11-13T00:00:00Z",
+      "plan": {
+        "plan_version": "1.0.0",
+        "target_id": "synthetic-april-total",
+        "method_description": "Sum the five independently generated synthetic service-line values.",
+        "included": [
+          {
+            "fact_id": "fact_165d791e35dc56c617a5",
+            "reason": "Synthetic source amount for a distinct test operation row."
+          },
+          {
+            "fact_id": "fact_491ca2c1ae8e0ace0552",
+            "reason": "Synthetic source amount for a distinct test operation row."
+          },
+          {
+            "fact_id": "fact_7954b8287b3b1fad7939",
+            "reason": "Synthetic source amount for a distinct test operation row."
+          },
+          {
+            "fact_id": "fact_cca76aed74cc88064def",
+            "reason": "Synthetic source amount for a distinct test operation row."
+          },
+          {
+            "fact_id": "fact_5954052461312fa9ba3b",
+            "reason": "Synthetic source amount for a distinct test operation row."
+          }
+        ],
+        "excluded": [
+          {
+            "reason": "Not a source amount for the requested synthetic total.",
+            "fact_id": "fact_c08a637bae724fc38cb0",
+            "source_group_id": null
+          }
+        ],
+        "unprocessed_fact_ids": [],
+        "steps": [
+          {
+            "step_id": "synthetic_sum",
+            "operation": "sum",
+            "inputs": [
+              "fact_165d791e35dc56c617a5",
+              "fact_491ca2c1ae8e0ace0552",
+              "fact_7954b8287b3b1fad7939",
+              "fact_cca76aed74cc88064def",
+              "fact_5954052461312fa9ba3b"
+            ],
+            "scale": null
+          }
+        ],
+        "result_step_id": "synthetic_sum",
+        "currency": "RUB",
+        "unit": null,
+        "amount_basis": "unspecified",
+        "rounding_scale": 2,
+        "assumptions": [],
+        "information_gaps": [],
+        "requires_manual_review": false
+      },
+      "accepted_fact_ids": [],
+      "accepted_link_ids": [],
+      "snapshot_sha256": "07c5c934f36f924ac2254080a64d87cacc68b28fc10b496be1e86175635c9c02",
+      "linking_sha256": "0be2a0bdfdb85aa14a76e3428052e9fb13fe331b2b13395dddc90833bd5b2a3e",
+      "extraction_versions": {
+        "synthetic-act-april": {
+          "extraction_id": "synthetic-extraction-act-v1",
+          "version": 1,
+          "schema_version": "1.2.0",
+          "input_version": 1,
+          "input_hash": null,
+          "sha256": "d617126200970591a39e0482fca8e6dd816f82956d9ef60d26b03855e4820b2c"
+        },
+        "synthetic-kfz-report": {
+          "extraction_id": "synthetic-extraction-kfz-v1",
+          "version": 1,
+          "schema_version": "1.2.0",
+          "input_version": 1,
+          "input_hash": null,
+          "sha256": "058a99dfc61a754efaf0784ddb43ec9d9f32baa709fafcf92e502130fa1b956a"
+        }
+      },
+      "confirmed_fact_hashes": {
+        "fact_165d791e35dc56c617a5": "cd3bf2a03bfdb8178491e893e59c5fac1359d292971f5395f584292b72d1c2c8",
+        "fact_491ca2c1ae8e0ace0552": "4718fce6735550111d9655b3ecbfaaf731c65473a277bc4091d14b6367c17001",
+        "fact_7954b8287b3b1fad7939": "6472182f9a81913a86ffa4afbd7e7504addeeb74c8534fe002f6b8a004ecd058",
+        "fact_cca76aed74cc88064def": "484efdcd599d0c99cb4b12269e2c4989ac4a56e6c947c239d7eae73a346f374d",
+        "fact_5954052461312fa9ba3b": "4e5335d41eb88c7b6115cbc6f151807187de79bdc483c851894d7980fea55341"
+      },
+      "accepted_fact_hashes": {},
+      "accepted_link_hashes": {},
+      "independence_confirmed": false,
+      "decision_sha256": "ee3682c2f8315fb7e52956f60f6ab184601553ec54048f72cd237a6f890b9e49"
+    }
+  ]
+}

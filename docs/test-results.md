@@ -1,4 +1,4 @@
-# Результаты проверок
+# Исходный baseline до hardening
 
 Проверено 13 ноября 2026 года.
 
@@ -9,3 +9,12 @@
 - Сквозной LLM-прогон не выполнялся: в среде не настроены `LLM_API_KEY`, `OPENAI_API_KEY` или `POLZA_API_KEY`. Тест проверяет только блокировку закрытых данных и разрешение локального режима при явной настройке, не имитирует модель.
 
 Тесты проверяют опубликованный JSON Schema напрямую и не зависят от Pydantic-модели реализации при contract validation. AI-планирование в реальном внешнем endpoint остаётся отдельной непроверенной интеграцией до появления разрешённой конфигурации. Docker smoke после изменения result contract не запускался.
+
+## Текущий прогон после hardening
+
+- Полный набор с тестами безопасности, snapshot binding, изоляции API, DAG и synthetic acceptance: **64 passed** (`pytest --durations=10`, 67.82 s). Включает разрешение provenance synthetic источников обратно в строки Extraction.
+- `python examples/build_synthetic_acceptance.py`: **успешно**, синтетический результат `550.00 RUB`; в комплекте сохранены request, plan, result и golden reference.
+- `docker build -t reconciliation-engine:smoke .`: **успешно**.
+- Запущенный контейнер: `/health` → `ok`, `/docs` → HTTP 200, `/openapi.json` содержит reconciliation API route.
+- Настроенного OpenAI-compatible API key или разрешённого endpoint нет; реальный LLM-прогон не выполнялся. Закрытые данные на внешний endpoint не отправлялись.
+- Реальный upstream fixture остаётся `manual_review`: доступный акт относится к апрелю, целевой КФЗ — к Q1; единственный сохранённый Linking output имеет legacy версию 1.0.0. Синтетический acceptance не считается upstream-подтверждением.

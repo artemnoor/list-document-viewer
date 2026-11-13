@@ -73,10 +73,19 @@ def validate_upstream_inputs(extractions: list[dict[str, Any]], linking: dict[st
                 "extraction_id": extraction.get("extraction_id"),
                 "version": extraction.get("version"),
                 "schema_version": extraction.get("schema_version"),
+                "input_version": extraction.get("version"),
             }
             for key, expected in checks.items():
+                if key == "input_version" and key not in linked:
+                    continue
                 if linked.get(key) != expected:
                     diagnostics.append(Diagnostic("linking_snapshot_version_mismatch", f"{path}[document_id={document_id}].{key}", "Linking input snapshot does not match the supplied extraction", {"expected": expected, "actual": linked.get(key)}))
+            linked_hash = linked.get("input_hash")
+            source_hash = extraction.get("input_hash") or extraction.get("source_hash")
+            if linked_hash is not None and (not isinstance(linked_hash, str) or len(linked_hash) != 64 or any(char not in "0123456789abcdefABCDEF" for char in linked_hash)):
+                diagnostics.append(Diagnostic("invalid_linking_input_hash", f"{path}[document_id={document_id}].input_hash", "input_hash must be a 64-character SHA-256 digest when supplied"))
+            if source_hash is not None and linked_hash != source_hash:
+                diagnostics.append(Diagnostic("linking_input_hash_mismatch", f"{path}[document_id={document_id}].input_hash", "Linking input hash differs from the source hash recorded by Extraction", {"expected": source_hash, "actual": linked_hash}))
         for document_id in link_docs:
             if document_id not in extraction_by_id:
                 diagnostics.append(Diagnostic("extraction_missing_from_linking_snapshot", "$.extraction_results", "Linking snapshot contains a document without its extraction result", {"document_id": document_id}))

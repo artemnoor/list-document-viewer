@@ -12,11 +12,11 @@ from reconciliation_engine.facts import extract_facts
 from conftest import UPSTREAM_FIXTURES, load_upstream, make_request, plan_for
 
 
-def _request(method: str, path: str, payload=None):
+def _request(method: str, path: str, payload=None, headers=None):
     async def run():
         transport = httpx.ASGITransport(app=app)
         async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
-            return await client.request(method, path, json=payload)
+            return await client.request(method, path, json=payload, headers=headers)
 
     return asyncio.run(run())
 
@@ -41,9 +41,36 @@ def test_post_and_get_result_round_trip_and_output_schema(tmp_path):
     assert response.status_code == 201, response.text
     result = response.json()
     assert result["calculations"][0]["expected_value"] == "1180300.00"
+    duplicate = _request("POST", "/api/v1/reconciliations", request.model_dump(mode="json"))
+    assert duplicate.status_code == 200
+    assert duplicate.json()["created_at"] == result["created_at"]
     fetched = _request("GET", f"/api/v1/reconciliations/{result['reconciliation_id']}")
     assert fetched.status_code == 200
     assert fetched.json()["reconciliation_id"] == result["reconciliation_id"]
+
+
+def test_project_authentication_and_result_isolation(tmp_path, monkeypatch):
+    from reconciliation_engine import api
+    from reconciliation_engine.config import Settings
+
+    api_settings = Settings(api_auth_enabled=True, api_project_tokens={"project-secret": "project-a"}, result_store_dir=str(tmp_path / "store"))
+    monkeypatch.setattr(api, "settings", api_settings)
+    app.state.result_store = ResultStore(str(tmp_path / "store"))
+    act = load_upstream("act-2026-0424.json")
+    source = next(fact for fact in extract_facts([act]) if fact.role == "indicator" and fact.key == "amount_due")
+    payload = make_request([act], plan_for([act], [source])).model_dump(mode="json")
+    unauthorized = _request("POST", "/api/v1/reconciliations", payload)
+    assert unauthorized.status_code == 401
+
+    headers = {"Authorization": "Bearer project-secret", "X-Project-ID": "project-a"}
+    created = _request("POST", "/api/v1/reconciliations", payload, headers=headers)
+    assert created.status_code == 201, created.text
+    result_id = created.json()["reconciliation_id"]
+    wrong_scope = _request("GET", f"/api/v1/reconciliations/{result_id}", headers={"Authorization": "Bearer project-secret", "X-Project-ID": "project-b"})
+    assert wrong_scope.status_code == 403
+    fetched = _request("GET", f"/api/v1/reconciliations/{result_id}", headers=headers)
+    assert fetched.status_code == 200
+    result = fetched.json()
 
     schema_path = Path(__file__).resolve().parents[1] / "schemas/reconciliation-result-1.0.0.schema.json"
     schema = json.loads(schema_path.read_text(encoding="utf-8"))
@@ -88,31 +115,19 @@ def test_confidential_context_skips_external_model_calls(tmp_path, monkeypatch):
     assert any(item["code"] == "external_llm_not_authorized" for item in result["calculations"][0]["diagnostics"])
 
 
-def test_confidential_context_can_use_only_an_explicitly_trusted_local_model(tmp_path, monkeypatch):
+def test_trusted_local_flag_never_sends_confidential_data_to_an_external_api(tmp_path, monkeypatch):
     from reconciliation_engine.config import Settings
-    from reconciliation_engine.models import ReconciliationContext, ReconciliationRequest
     from reconciliation_engine.service import reconcile
-    from reconciliation_engine.planner import LLMPlanner, PlannerUnavailable
-    from conftest import make_linking
+    import httpx
+    from conftest import make_request
 
     calls = []
-
-    def observe_call(self, target, facts, groups, linking):
-        calls.append((target.target_id, len(facts)))
-        raise PlannerUnavailable("local test endpoint intentionally not run")
-
-    monkeypatch.setattr(LLMPlanner, "plan", observe_call)
+    monkeypatch.setattr(httpx.Client, "post", lambda *args, **kwargs: calls.append((args, kwargs)))
     act = load_upstream("act-2026-0424.json")
-    target_fact = next(fact for fact in extract_facts([act]) if fact.role == "indicator")
-    request = ReconciliationRequest(
-        contract_version="1.0.0",
-        extraction_results=[act],
-        linking_result=make_linking([act]),
-        context=ReconciliationContext(targets=[{"target_id": "private", "label": "Private", "kfz_document_id": target_fact.document_id, "kfz_source_path": target_fact.source_path, "target_fact_id": target_fact.fact_id}], data_classification="confidential", external_llm_allowed=False),
-    )
-    result = reconcile(request, Settings(llm_enabled=True, llm_trusted_local=True, llm_api_key="configured", result_store_dir=str(tmp_path)))
-    assert calls and calls[0][0] == "private"
-    assert any(item["code"] == "planner_unavailable" for item in result["calculations"][0]["diagnostics"])
+    request = make_request([act], None)
+    result = reconcile(request, Settings(llm_enabled=True, llm_trusted_local=True, llm_api_key="configured", llm_base_url="https://api.openai.com/v1", result_store_dir=str(tmp_path)))
+    assert calls == []
+    assert any(item["code"] == "trusted_llm_endpoint_not_local" for item in result["calculations"][0]["diagnostics"])
 
 
 def test_recorded_upstream_example_remains_reproducible():

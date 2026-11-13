@@ -30,7 +30,10 @@ def test_planner_payload_contains_pseudonymized_link_graph_without_raw_locators_
     assert "linking_graph" in payload
     assert payload["linking_graph"]["relationships"][0]["relationship_type"] == "line_item_correspondence"
     assert payload["linking_graph"]["relationships"][0]["verification_status"] == "not_reviewed"
-    assert payload["linking_graph"]["review_required"][0]["link_ref"] == "link_001"
-    assert payload["linking_graph"]["unlinked_source_groups"] == [{"source_group_id": "source_002"}]
+    assert payload["linking_graph"]["review_required"][0]["link_ref"] == "link_00001"
+    assert payload["linking_graph"]["unlinked_source_groups"][0]["source_group_id"] in payload["source_groups"]
     assert payload["document_date_facts"]
     assert all("source_value" not in candidate and "provenance" not in candidate for candidate in payload["candidates"])
+    assert "source_unknown" not in serialized
+    assert all(fact.fact_id not in serialized for fact in facts)
+    assert all("value" not in candidate for candidate in payload["candidates"])

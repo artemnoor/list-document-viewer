@@ -29,6 +29,7 @@ class Fact:
     period_start: date | None
     period_end: date | None
     amount_basis: str | None
+    economic_measure: str | None
 
     def as_dict(self) -> dict[str, Any]:
         result = asdict(self)
@@ -63,9 +64,46 @@ def _period(extraction: dict[str, Any]) -> tuple[date | None, date | None]:
     return None, None
 
 
+def _row_period(row: dict[str, Any], document_period: tuple[date | None, date | None]) -> tuple[date | None, date | None]:
+    """Prefer an operation-level date/period when the Extraction provides one."""
+    for key in ("operation_date", "service_date", "operation_period", "service_period", "period"):
+        wrapper = row.get(key)
+        value = wrapper.get("value") if isinstance(wrapper, dict) else wrapper
+        if isinstance(value, dict):
+            start, end = _as_date(value.get("start")), _as_date(value.get("end"))
+            if start or end:
+                return start, end
+        parsed = _as_date(value)
+        if parsed:
+            return parsed, parsed
+    return document_period
+
+
+def _measure_type(key: str, wrapper: dict[str, Any], row_value: Any = None) -> str | None:
+    declared = wrapper.get("economic_measure") or wrapper.get("measure_type") or wrapper.get("amount_type")
+    allowed = {"planned", "actual", "accrued", "paid"}
+    if isinstance(declared, str) and declared in allowed:
+        return declared
+    normalized_key = key.lower()
+    for prefix, measure in (("planned_", "planned"), ("plan_", "planned"), ("actual_", "actual"), ("accrued_", "accrued"), ("paid_", "paid")):
+        if normalized_key.startswith(prefix):
+            return measure
+    if normalized_key in {"planned_amount", "plan_amount", "actual_amount", "accrued_amount", "paid_amount"}:
+        return {
+            "planned_amount": "planned", "plan_amount": "planned", "actual_amount": "actual",
+            "accrued_amount": "accrued", "paid_amount": "paid",
+        }[normalized_key]
+    if isinstance(row_value, dict):
+        row_measure = row_value.get("economic_measure")
+        if isinstance(row_measure, str) and row_measure in allowed:
+            return row_measure
+    return None
+
+
 def _fact(
     extraction: dict[str, Any], path: str, role: str, key: str, wrapper: Any,
     row_id: str | None, period: tuple[date | None, date | None], unit_override: str | None = None,
+    row_value: Any = None,
 ) -> Fact | None:
     if not isinstance(wrapper, dict) or "value" not in wrapper:
         return None
@@ -78,6 +116,7 @@ def _fact(
     if unit is not None and not isinstance(unit, str):
         unit = str(unit)
     basis = wrapper.get("amount_basis") or wrapper.get("basis")
+    economic_measure = _measure_type(key, wrapper, row_value)
     provenance = wrapper.get("provenance")
     doc_id = extraction["document_id"]
     identity = f"{doc_id}|{path}"
@@ -103,6 +142,7 @@ def _fact(
         period_start=period[0],
         period_end=period[1],
         amount_basis=str(basis) if basis is not None else None,
+        economic_measure=economic_measure,
     )
 
 
@@ -135,7 +175,7 @@ def extract_facts(extractions: list[dict[str, Any]]) -> list[Fact]:
                 if key in {"row_id", "row_status", "source_cells"}:
                     continue
                 unit_override = row_unit if key in {"quantity", "plan_quantity", "actual_quantity"} else None
-                fact = _fact(extraction, f"#/line_items/{index}/{key}", "line_item", key, wrapper, row_id, period, unit_override)
+                fact = _fact(extraction, f"#/line_items/{index}/{key}", "line_item", key, wrapper, row_id, _row_period(row, period), unit_override, row)
                 if fact:
                     facts.append(fact)
         # Contract schedules and payment schedules are separate from completed operations.
@@ -147,7 +187,7 @@ def extract_facts(extractions: list[dict[str, Any]]) -> list[Fact]:
             for key, wrapper in row.items():
                 if key in {"row_id", "row_status", "source_cells"}:
                     continue
-                fact = _fact(extraction, f"#/payment_schedule/{index}/{key}", "payment_schedule", key, wrapper, row_id, period)
+                fact = _fact(extraction, f"#/payment_schedule/{index}/{key}", "payment_schedule", key, wrapper, row_id, _row_period(row, period), row_value=row)
                 if fact:
                     facts.append(fact)
     # Extraction may expose the same cell as both a field and an indicator. Keep

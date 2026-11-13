@@ -76,14 +76,15 @@
         "unit": { "type": ["string", "null"] },
         "currency": { "type": ["string", "null"], "pattern": "^[A-Z]{3}$" },
         "amount_basis": { "enum": ["gross", "net", "unspecified"] },
+        "economic_measure": { "enum": ["planned", "actual", "accrued", "paid", "unspecified"] },
         "period_basis": { "enum": ["document_period", "operation_date", "none"] },
         "kfz_origin": {
           "type": "object",
           "required": ["document_id", "extraction_id", "fact_id", "row_id", "source_path", "source_ref"],
           "properties": {
             "document_id": { "type": "string", "minLength": 1 },
-            "extraction_id": { "type": "string", "minLength": 1 },
-            "fact_id": { "type": "string", "minLength": 1 },
+            "extraction_id": { "type": ["string", "null"], "minLength": 1 },
+            "fact_id": { "type": ["string", "null"], "minLength": 1 },
             "row_id": { "type": ["string", "null"] },
             "source_path": { "type": "string", "pattern": "^#/" },
             "source_ref": { "type": ["string", "null"] }
@@ -133,6 +134,7 @@
         "confidence": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
         "currency": { "type": ["string", "null"] },
         "unit": { "type": ["string", "null"] },
+        "economic_measure": { "type": ["string", "null"], "enum": ["planned", "actual", "accrued", "paid", null] },
         "provenance": { "type": ["object", "null"] },
         "input_hash": { "$ref": "#/$defs/sha256" },
         "related_links": { "type": "array" },

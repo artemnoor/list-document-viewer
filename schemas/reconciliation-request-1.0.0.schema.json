@@ -40,6 +40,50 @@
           },
           "title": "Accepted Link Ids",
           "type": "array"
+        },
+        "snapshot_sha256": {
+          "anyOf": [{"type": "string", "pattern": "^[0-9a-f]{64}$"}, {"type": "null"}],
+          "default": null,
+          "title": "Snapshot Sha256"
+        },
+        "linking_sha256": {
+          "anyOf": [{"type": "string", "pattern": "^[0-9a-f]{64}$"}, {"type": "null"}],
+          "default": null,
+          "title": "Linking Sha256"
+        },
+        "extraction_versions": {
+          "additionalProperties": {"type": "object"},
+          "default": {},
+          "title": "Extraction Versions",
+          "type": "object"
+        },
+        "confirmed_fact_hashes": {
+          "additionalProperties": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "default": {},
+          "title": "Confirmed Fact Hashes",
+          "type": "object"
+        },
+        "accepted_fact_hashes": {
+          "additionalProperties": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "default": {},
+          "title": "Accepted Fact Hashes",
+          "type": "object"
+        },
+        "accepted_link_hashes": {
+          "additionalProperties": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "default": {},
+          "title": "Accepted Link Hashes",
+          "type": "object"
+        },
+        "independence_confirmed": {
+          "default": false,
+          "title": "Independence Confirmed",
+          "type": "boolean"
+        },
+        "decision_sha256": {
+          "anyOf": [{"type": "string", "pattern": "^[0-9a-f]{64}$"}, {"type": "null"}],
+          "default": null,
+          "title": "Decision Sha256"
         }
       },
       "required": [
@@ -206,6 +250,12 @@
             "unspecified"
           ],
           "title": "Amount Basis",
+          "type": "string"
+        },
+        "economic_measure": {
+          "default": "unspecified",
+          "enum": ["planned", "actual", "accrued", "paid", "unspecified"],
+          "title": "Economic Measure",
           "type": "string"
         },
         "rounding_scale": {

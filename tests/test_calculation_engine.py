@@ -48,7 +48,7 @@ def test_independent_documents_are_summed_with_decimal(settings):
     set_amount(second, 0, "50.20")
     extractions = [first, second]
     sources = [_fact(extract_facts([doc]), doc["document_id"], "line_item", "amount", doc["line_items"][0]["row_id"]) for doc in extractions]
-    result = reconcile(make_request(extractions, plan_for(extractions, sources)), settings)["calculations"][0]
+    result = reconcile(make_request(extractions, plan_for(extractions, sources), independence_confirmed=True), settings)["calculations"][0]
 
     assert result["expected_value"] == "150.30"
     assert len(result["included_sources"]) == 2
@@ -97,7 +97,7 @@ def test_negative_adjustment_keeps_its_sign(settings):
     docs = [original, correction]
     facts = extract_facts(docs)
     selected = [_fact(facts, doc["document_id"], "line_item", "amount", doc["line_items"][0]["row_id"]) for doc in docs]
-    result = reconcile(make_request(docs, plan_for(docs, selected)), settings)["calculations"][0]
+    result = reconcile(make_request(docs, plan_for(docs, selected), independence_confirmed=True), settings)["calculations"][0]
 
     assert result["expected_value"] == "80.00"
 
@@ -185,7 +185,7 @@ def test_human_decision_can_confirm_a_review_link(settings):
     other_row = right["line_items"][0]["row_id"]
     source = _fact(extract_facts(docs), left["document_id"], "line_item", "amount", row)
     link = correspondence_link(left, row, right, other_row, status="review")
-    target = make_target(kfz_document_id=left["document_id"], kfz_row_id=row)
+    target = make_target()
     result = reconcile(make_request(docs, plan_for(docs, [source]), target, links=[link], accepted_link_ids=[link["link_id"]]), settings)["calculations"][0]
 
     assert result["expected_value"] == "286500.00"
@@ -234,7 +234,7 @@ def test_decimal_fractional_sum_and_half_up_rounding_are_exact(settings):
     set_amount(docs[1], 0, "0.20")
     facts = extract_facts(docs)
     selected = [_fact(facts, doc["document_id"], "line_item", "amount", doc["line_items"][0]["row_id"]) for doc in docs]
-    result = reconcile(make_request(docs, plan_for(docs, selected)), settings)["calculations"][0]
+    result = reconcile(make_request(docs, plan_for(docs, selected), independence_confirmed=True), settings)["calculations"][0]
     assert result["expected_value"] == "0.30"
 
     single = clone_extraction(load_upstream("act-2026-0424.json"), "half-cent")

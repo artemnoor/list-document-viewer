@@ -17,8 +17,9 @@ class TargetIndicator(StrictModel):
     label: str = Field(min_length=1)
     description: str = ""
     unit: str | None = None
-    currency: str | None = None
+    currency: str | None = Field(default=None, pattern=r"^[A-Z]{3}$")
     amount_basis: Literal["gross", "net", "unspecified"] = "unspecified"
+    economic_measure: Literal["planned", "actual", "accrued", "paid", "unspecified"] = "unspecified"
     rounding_scale: int = Field(default=2, ge=0, le=8)
     period_basis: Literal["document_period", "operation_date", "none"] = "document_period"
     required_document_types: list[str] = Field(default_factory=list)
@@ -52,6 +53,14 @@ class ConfirmedDecision(StrictModel):
     plan: dict[str, Any]
     accepted_fact_ids: list[str] = Field(default_factory=list)
     accepted_link_ids: list[str] = Field(default_factory=list)
+    snapshot_sha256: str | None = None
+    linking_sha256: str | None = None
+    extraction_versions: dict[str, dict[str, Any]] = Field(default_factory=dict)
+    confirmed_fact_hashes: dict[str, str] = Field(default_factory=dict)
+    accepted_fact_hashes: dict[str, str] = Field(default_factory=dict)
+    accepted_link_hashes: dict[str, str] = Field(default_factory=dict)
+    independence_confirmed: bool = False
+    decision_sha256: str | None = None
 
     @model_validator(mode="after")
     def require_timezone(self) -> "ConfirmedDecision":
@@ -97,6 +106,7 @@ class ResultSource(BaseModel):
     confidence: float | None
     currency: str | None
     unit: str | None
+    economic_measure: str | None
     provenance: dict[str, Any] | None
     input_hash: str
     related_links: list[dict[str, Any]]

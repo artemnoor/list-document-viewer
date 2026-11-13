@@ -75,7 +75,7 @@ def _link_input(extraction: dict[str, Any]) -> dict[str, Any]:
         "version": extraction["version"],
         "schema_version": extraction["schema_version"],
         "input_version": extraction["version"],
-        "input_hash": "a" * 64,
+        "input_hash": extraction.get("input_hash") or extraction.get("source_hash") or "a" * 64,
     }
 
 
@@ -135,6 +135,7 @@ def make_target(
     currency: str | None = "RUB",
     unit: str | None = None,
     amount_basis: str = "unspecified",
+    economic_measure: str = "unspecified",
     period_basis: str = "none",
     required_document_types: list[str] | None = None,
     target_fact_id: str | None = None,
@@ -153,6 +154,7 @@ def make_target(
         unit=unit,
         currency=currency,
         amount_basis=amount_basis,
+        economic_measure=economic_measure,
         period_basis=period_basis,
         required_document_types=required_document_types or [],
     )
@@ -180,16 +182,19 @@ def plan_for(extractions: list[dict[str, Any]], selected: list[Fact], target_id:
     )
 
 
-def make_request(extractions: list[dict[str, Any]], plan: CalculationPlan | None, target: TargetIndicator | None = None, *, period_start: str | None = None, period_end: str | None = None, links: list[dict[str, Any]] | None = None, review: list[dict[str, Any]] | None = None, accepted_fact_ids: list[str] | None = None, accepted_link_ids: list[str] | None = None) -> ReconciliationRequest:
+def make_request(extractions: list[dict[str, Any]], plan: CalculationPlan | None, target: TargetIndicator | None = None, *, period_start: str | None = None, period_end: str | None = None, links: list[dict[str, Any]] | None = None, review: list[dict[str, Any]] | None = None, accepted_fact_ids: list[str] | None = None, accepted_link_ids: list[str] | None = None, independence_confirmed: bool = False) -> ReconciliationRequest:
     target = target or make_target()
+    extractions = list(extractions)
     facts = extract_facts(extractions)
     target_fact = next((fact for fact in facts if fact.fact_id == target.target_fact_id), None)
     if target_fact is None and target.kfz_row_id is not None:
         target_fact = next((fact for fact in facts if fact.document_id == target.kfz_document_id and fact.row_id == target.kfz_row_id), None)
     if target_fact is None:
         target_fact = next((fact for fact in facts if fact.document_id == target.kfz_document_id and fact.source_path == target.kfz_source_path), None)
-    if target_fact is None and facts:
-        target_fact = next((fact for fact in facts if fact.role == "indicator" and fact.key == "amount_due"), facts[0])
+    if target_fact is None and target.kfz_document_id == "test-kfz" and not any(item.get("document_id") == "test-kfz" for item in extractions):
+        extractions.append(clone_extraction(load_upstream("kfz-2026-q1.json"), "test-kfz"))
+        facts = extract_facts(extractions)
+        target_fact = next((fact for fact in facts if fact.document_id == "test-kfz" and fact.source_path == target.kfz_source_path), None)
     if target_fact is not None:
         target = target.model_copy(update={
             "target_fact_id": target_fact.fact_id,
@@ -199,12 +204,17 @@ def make_request(extractions: list[dict[str, Any]], plan: CalculationPlan | None
         })
     decisions = []
     if plan is not None:
-        decisions = [ConfirmedDecision(decision_id="decision-1", target_id=target.target_id, reviewer_id="test-reviewer", confirmed_at=datetime(2026, 11, 13, tzinfo=timezone.utc), plan=plan.as_dict(), accepted_fact_ids=accepted_fact_ids or [], accepted_link_ids=accepted_link_ids or [])]
-    return ReconciliationRequest(
+        decision = ConfirmedDecision(decision_id="decision-1", target_id=target.target_id, reviewer_id="test-reviewer", confirmed_at=datetime(2026, 11, 13, tzinfo=timezone.utc), plan=plan.as_dict(), accepted_fact_ids=accepted_fact_ids or [], accepted_link_ids=accepted_link_ids or [], independence_confirmed=independence_confirmed)
+        decisions = [decision]
+    request = ReconciliationRequest(
         contract_version="1.0.0",
         extraction_results=extractions,
         linking_result=make_linking(extractions, links=links, review=review),
         context=ReconciliationContext(period_start=period_start, period_end=period_end, targets=[target]),
-        prior_decisions=decisions,
+        prior_decisions=[],
     )
+    if decisions:
+        from reconciliation_engine.service import bind_decision_to_request
+        request = request.model_copy(update={"prior_decisions": [bind_decision_to_request(request, decisions[0], plan)]})
+    return request
 

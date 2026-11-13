@@ -65,3 +65,11 @@ docker run --rm -p 8000:8000 --env-file .env -v ${PWD}/data:/app/data phystech-t
 - [Контракты](docs/contracts.md)
 - [Модель расчёта](docs/calculation-model.md)
 - [Результаты проверок](docs/test-results.md)
+
+## Синтетический acceptance и текущие ограничения
+
+`examples/synthetic/` содержит отдельный сквозной acceptance-набор с явно синтетическими Extraction, snapshot-bound планом, результатом и эталоном. Его успешный расчёт проверяет вычислительный путь, но не считается успешным upstream fixture.
+
+Для закрытого контекста `LLM_TRUSTED_LOCAL=true` недостаточно: endpoint также должен быть loopback/private или использовать точный hostname из `LLM_TRUSTED_HOSTS`. Внешние API доступны только для открытых или разрешённых обезличенных данных при `external_llm_allowed=true`. Prompt не включает исходные денежные значения, `source_value` и полную provenance; он использует псевдонимы документов, строк и связей.
+
+GitHub Actions запускает тесты, пересобирает синтетический acceptance-набор, собирает Docker-образ и проверяет `/health`, `/openapi.json` и `/docs`.

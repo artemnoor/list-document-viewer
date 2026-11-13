@@ -29,10 +29,11 @@ class CalculationPlan(PlanModel):
     plan_version: Literal["1.0.0"] = "1.0.0"
     target_id: str
     method_description: str = Field(min_length=1)
-    included: list[PlanInclusion] = Field(min_length=1)
+    included: list[PlanInclusion] = Field(default_factory=list)
     excluded: list[PlanExclusion] = Field(default_factory=list)
-    steps: list[PlanStep] = Field(min_length=1, max_length=50)
-    result_step_id: str
+    unprocessed_fact_ids: list[str] = Field(default_factory=list)
+    steps: list[PlanStep] = Field(default_factory=list, max_length=10000)
+    result_step_id: str | None = None
     currency: str | None = None
     unit: str | None = None
     amount_basis: Literal["gross", "net", "unspecified"] = "unspecified"

@@ -9,7 +9,8 @@ import httpx
 from .config import Settings
 from .facts import Fact, numeric_value
 from .models import TargetIndicator
-from .plans import CalculationPlan
+from .plans import CalculationPlan, PlanStep
+from .security import is_trusted_internal_endpoint
 
 PROMPT_PATH = Path(__file__).resolve().parents[1] / "prompts" / "calculation-plan.v1.0.0.txt"
 
@@ -36,39 +37,61 @@ class LLMPlanner:
         raw = f"{document_id}|{row_id}".encode("utf-8")
         return "row_" + hashlib.sha256(raw).hexdigest()[:12]
 
+    @staticmethod
+    def _aliases(
+        facts: list[Fact], source_groups: dict[str, str], candidates: list[Fact]
+    ) -> tuple[dict[str, str], dict[str, str]]:
+        document_ids = {fact.document_id for fact in facts}
+        for key, value in source_groups.items():
+            document_ids.add(key if key in document_ids else value)
+        document_order = sorted(document_ids, key=lambda value: hashlib.sha256(value.encode("utf-8")).hexdigest())
+        group_by_document = {document_id: f"source_{index:03d}" for index, document_id in enumerate(document_order, start=1)}
+        fact_order = sorted(
+            candidates,
+            key=lambda fact: (group_by_document.get(fact.document_id, "source_unknown"), fact.source_path, fact.key, fact.fact_id),
+        )
+        fact_aliases = {fact.fact_id: f"candidate_{index:05d}" for index, fact in enumerate(fact_order, start=1)}
+        return group_by_document, fact_aliases
+
     def build_payload(
         self,
         target: TargetIndicator,
         facts: list[Fact],
         source_groups: dict[str, str],
         linking: dict[str, Any],
+        candidate_facts: list[Fact] | None = None,
+        fact_aliases: dict[str, str] | None = None,
     ) -> dict[str, Any]:
-        candidates = [fact for fact in facts if numeric_value(fact) is not None or fact.status in {"review", "missing"}]
-        candidate_limit = self.settings.llm_max_candidates
-        if len(candidates) > candidate_limit:
-            raise PlannerUnavailable(f"Candidate limit exceeded ({len(candidates)} > {candidate_limit})")
-
-        group_aliases: dict[str, str] = {}
-        for group_id, document_id in source_groups.items():
-            group_aliases[group_id] = f"source_{len(group_aliases) + 1:03d}"
-        group_by_document = {document_id: alias for group_id, alias in group_aliases.items() for document_id in [source_groups[group_id]]}
+        candidates = candidate_facts if candidate_facts is not None else [
+            fact for fact in facts
+            if fact.document_type != "kfz_report"
+            and fact.document_id != target.kfz_document_id
+            and (numeric_value(fact) is not None or fact.status in {"review", "missing"})
+        ]
+        group_by_document, locally_assigned_fact_aliases = self._aliases(facts, source_groups, candidates)
+        fact_aliases = fact_aliases or locally_assigned_fact_aliases
         row_descriptions = {
             (fact.document_id, fact.row_id): str(fact.normalized_value)
             for fact in facts
             if fact.row_id and fact.key == "description" and isinstance(fact.normalized_value, str)
         }
+        candidate_documents = {fact.document_id for fact in candidates}
+        target_documents = {target.kfz_document_id}
+        relevant_documents = candidate_documents | target_documents
         compact_facts = []
         for fact in candidates:
             compact_facts.append({
-                "fact_id": fact.fact_id,
-                "source_group_id": group_aliases.get(fact.document_id, "unknown"),
+                "fact_id": fact_aliases[fact.fact_id],
+                "source_group_id": group_by_document.get(fact.document_id, "source_unknown"),
                 "document_type": fact.document_type,
                 "role": fact.role,
                 "key": fact.key,
                 "label": fact.label,
-                "value": str(fact.value) if numeric_value(fact) is not None else None,
+                "value_available": numeric_value(fact) is not None,
                 "currency": fact.currency,
                 "unit": fact.unit,
+                "amount_basis": fact.amount_basis,
+                "economic_measure": fact.economic_measure,
                 "status": fact.status,
                 "period_start": fact.period_start.isoformat() if fact.period_start else None,
                 "period_end": fact.period_end.isoformat() if fact.period_end else None,
@@ -83,43 +106,39 @@ class LLMPlanner:
                 "date": str(fact.value),
             }
             for fact in facts
-            if fact.document_id in group_by_document
+            if fact.document_id in relevant_documents
+            and fact.document_id in group_by_document
             and fact.role in {"field", "indicator"}
             and fact.status == "extracted"
             and isinstance(fact.value, str)
             and re.fullmatch(r"\d{4}-\d{2}-\d{2}", fact.value)
         ]
-        link_aliases = {link.get("link_id"): f"link_{index + 1:03d}" for index, link in enumerate(linking.get("links", []))}
+        links = sorted(linking.get("links", []), key=lambda item: str(item.get("link_id", "")))
+        link_aliases = {link.get("link_id"): f"link_{index + 1:05d}" for index, link in enumerate(links)}
         safe_links = []
-        for link in linking.get("links", []):
+        for link in links:
+            source_document = link.get("source_document_id")
+            target_document = link.get("target_document_id")
+            if not ({source_document, target_document} & relevant_documents):
+                continue
             evidence = []
             for item in link.get("evidence", []):
                 source = item.get("source") or {}
                 target_evidence = item.get("target") or {}
                 source_doc = source.get("document_id") or link.get("source_document_id")
                 target_doc = target_evidence.get("document_id") or link.get("target_document_id")
-
-                def safe_path(value: Any, document_id: str | None, row_id: str | None) -> Any:
-                    if not isinstance(value, str):
-                        return value
-                    if document_id:
-                        value = value.replace(document_id, group_by_document.get(document_id, "source_unknown"))
-                    if document_id and row_id:
-                        value = value.replace(row_id, self._row_alias(document_id, row_id) or "row_unknown")
-                    return value
-
                 evidence.append({
-                    "source_path": safe_path(source.get("path"), source_doc, link.get("source_row_id")),
-                    "target_path": safe_path(target_evidence.get("path"), target_doc, link.get("target_row_id")),
+                    "source_group_id": group_by_document.get(source_doc, "source_unknown"),
+                    "target_group_id": group_by_document.get(target_doc, "source_unknown"),
+                    "source_row_ref": self._row_alias(source_doc or "", link.get("source_row_id")),
+                    "target_row_ref": self._row_alias(target_doc or "", link.get("target_row_id")),
                     "signal": item.get("signal"),
-                    "source_normalized_value": source.get("normalized_value"),
-                    "target_normalized_value": target_evidence.get("normalized_value"),
                 })
             safe_links.append({
                 "link_ref": link_aliases.get(link.get("link_id")),
                 "relationship_type": link.get("relationship_type"),
-                "source_group_id": group_by_document.get(link.get("source_document_id"), "unknown"),
-                "target_group_id": group_by_document.get(link.get("target_document_id"), "unknown"),
+                "source_group_id": group_by_document.get(source_document, "source_unknown"),
+                "target_group_id": group_by_document.get(target_document, "source_unknown"),
                 "source_row_ref": self._row_alias(link.get("source_document_id", ""), link.get("source_row_id")),
                 "target_row_ref": self._row_alias(link.get("target_document_id", ""), link.get("target_row_id")),
                 "status": link.get("status"),
@@ -130,31 +149,36 @@ class LLMPlanner:
         safe_review = [
             {
                 "link_ref": link_aliases.get(item.get("link_id")),
-                "candidate_source_groups": [group_by_document.get(doc_id, "unknown") for doc_id in item.get("candidate_document_ids", [])],
+                "candidate_source_groups": [group_by_document.get(doc_id, "source_unknown") for doc_id in item.get("candidate_document_ids", [])],
             }
             for item in linking.get("review_required", [])
+            if any(doc_id in relevant_documents for doc_id in item.get("candidate_document_ids", []))
         ]
         safe_diagnostics = [
             {
                 "relationship_type": item.get("relationship_type"),
-                "source_group_id": group_by_document.get(item.get("source_document_id"), "unknown"),
-                "target_group_id": group_by_document.get(item.get("target_document_id"), "unknown"),
+                "source_group_id": group_by_document.get(item.get("source_document_id"), "source_unknown"),
+                "target_group_id": group_by_document.get(item.get("target_document_id"), "source_unknown"),
                 "reason_codes": item.get("reason_codes", []),
                 "candidate_status": item.get("candidate_status"),
             }
             for item in linking.get("link_validation_diagnostics", [])
+            if {item.get("source_document_id"), item.get("target_document_id")} & relevant_documents
         ]
         safe_unlinked = [
-            {"source_group_id": group_by_document.get(item.get("document_id"), "unknown")}
+            {"source_group_id": group_by_document.get(item.get("document_id"), "source_unknown")}
             for item in linking.get("unlinked_documents", [])
+            if item.get("document_id") in relevant_documents
         ]
         target_payload = target.model_dump(mode="json")
         for private_locator in ("target_fact_id", "kfz_document_id", "kfz_row_id"):
             target_payload.pop(private_locator, None)
+        target_payload["target_id"] = "target_001"
         return {
             "target": target_payload,
             "candidates": compact_facts,
-            "source_groups": list(group_aliases.values()),
+            "source_groups": sorted({item["source_group_id"] for item in compact_facts}),
+            "candidate_count": len(compact_facts),
             "document_date_facts": date_facts,
             "linking_graph": {
                 "relationships": safe_links,
@@ -166,14 +190,16 @@ class LLMPlanner:
             "output_contract": CalculationPlan.model_json_schema(),
         }
 
-    def plan(self, target: TargetIndicator, facts: list[Fact], source_groups: dict[str, str], linking: dict[str, Any]) -> CalculationPlan:
-        if not self.settings.llm_enabled or (not self.settings.llm_api_key and not self.settings.llm_trusted_local):
-            raise PlannerUnavailable("LLM planner is not configured")
-        payload = self.build_payload(target, facts, source_groups, linking)
+    def _request_plan(self, payload: dict[str, Any], sensitive_data: bool) -> CalculationPlan:
+        if sensitive_data:
+            if not self.settings.llm_trusted_local:
+                raise PlannerUnavailable("Confidential inputs require LLM_TRUSTED_LOCAL=true")
+            if not is_trusted_internal_endpoint(self.settings.llm_base_url, self.settings.llm_trusted_hosts):
+                raise PlannerUnavailable("Confidential inputs cannot be sent to an endpoint outside localhost or the configured internal host allowlist")
         system_prompt = PROMPT_PATH.read_text(encoding="utf-8")
         headers = {"Authorization": f"Bearer {self.settings.llm_api_key}"} if self.settings.llm_api_key else {}
         url = self.settings.llm_base_url.rstrip("/") + "/chat/completions"
-        with httpx.Client(timeout=self.settings.llm_timeout_seconds) as client:
+        with httpx.Client(timeout=self.settings.llm_timeout_seconds, follow_redirects=False) as client:
             response = client.post(
                 url,
                 headers=headers,
@@ -191,13 +217,113 @@ class LLMPlanner:
             result = response.json()
         try:
             content = result["choices"][0]["message"]["content"]
-            parsed = _json_content(content)
-            for exclusion in parsed.get("excluded", []):
-                alias = exclusion.get("source_group_id")
-                if alias in {f"source_{index:03d}" for index in range(1, len(payload["source_groups"]) + 1)}:
-                    reverse_groups = {f"source_{index:03d}": document_id for index, document_id in enumerate(source_groups.values(), start=1)}
-                    exclusion["source_group_id"] = reverse_groups[alias]
-            return CalculationPlan.model_validate(parsed)
+            return CalculationPlan.model_validate(_json_content(content))
         except (KeyError, IndexError, TypeError, ValueError) as exc:
             raise PlannerUnavailable(f"LLM returned an invalid plan: {exc}") from exc
+
+    def plan(
+        self,
+        target: TargetIndicator,
+        facts: list[Fact],
+        source_groups: dict[str, str],
+        linking: dict[str, Any],
+        *,
+        sensitive_data: bool = False,
+    ) -> CalculationPlan:
+        if not self.settings.llm_enabled or (not self.settings.llm_api_key and not self.settings.llm_trusted_local):
+            raise PlannerUnavailable("LLM planner is not configured")
+        candidates = [
+            fact for fact in facts
+            if fact.document_type != "kfz_report"
+            and fact.document_id != target.kfz_document_id
+            and (numeric_value(fact) is not None or fact.status in {"review", "missing"})
+        ]
+        group_by_document, fact_aliases = self._aliases(facts, source_groups, candidates)
+        alias_to_fact = {alias: fact_id for fact_id, alias in fact_aliases.items()}
+        alias_to_document = {alias: document_id for document_id, alias in group_by_document.items()}
+        candidate_limit = max(1, self.settings.llm_max_candidates)
+
+        terms = set(re.findall(r"[\w-]+", f"{target.label} {target.description}".casefold()))
+        row_descriptions = {
+            (fact.document_id, fact.row_id): str(fact.normalized_value)
+            for fact in facts
+            if fact.row_id and fact.key == "description" and isinstance(fact.normalized_value, str)
+        }
+
+        def relevance(fact: Fact) -> tuple[int, str, str]:
+            text = " ".join((fact.key, fact.label, row_descriptions.get((fact.document_id, fact.row_id), ""))).casefold()
+            score = sum(1 for term in terms if term and term in text)
+            return (-score, group_by_document.get(fact.document_id, "source_unknown"), fact.source_path)
+
+        ordered = sorted(candidates, key=relevance)
+        chunks = [ordered[index:index + candidate_limit] for index in range(0, len(ordered), candidate_limit)]
+        plans: list[tuple[int, CalculationPlan]] = []
+        for chunk_index, chunk in enumerate(chunks, start=1):
+            payload = self.build_payload(target, facts, source_groups, linking, chunk, fact_aliases)
+            plan = self._request_plan(payload, sensitive_data)
+            decoded = plan.model_dump(mode="python")
+            decoded["target_id"] = target.target_id
+            for inclusion in decoded.get("included", []):
+                inclusion["fact_id"] = alias_to_fact.get(inclusion.get("fact_id"), inclusion.get("fact_id"))
+            for step in decoded.get("steps", []):
+                step["inputs"] = [alias_to_fact.get(value, value) for value in step.get("inputs", [])]
+            for exclusion in decoded.get("excluded", []):
+                exclusion["fact_id"] = alias_to_fact.get(exclusion.get("fact_id"), exclusion.get("fact_id"))
+                alias = exclusion.get("source_group_id")
+                if alias in alias_to_document:
+                    exclusion["source_group_id"] = alias_to_document[alias]
+            decoded["unprocessed_fact_ids"] = [alias_to_fact.get(value, value) for value in decoded.get("unprocessed_fact_ids", [])]
+            plans.append((chunk_index, CalculationPlan.model_validate(decoded)))
+
+        return self._merge_chunk_plans(target, plans, len(candidates))
+
+    @staticmethod
+    def _merge_chunk_plans(
+        target: TargetIndicator,
+        plans: list[tuple[int, CalculationPlan]],
+        candidate_count: int,
+    ) -> CalculationPlan:
+        if len(plans) == 1:
+            return plans[0][1]
+        included = []
+        excluded = []
+        unprocessed: list[str] = []
+        steps: list[PlanStep] = []
+        roots: list[str] = []
+        assumptions: list[str] = []
+        gaps: list[str] = []
+        for chunk_index, plan in plans:
+            step_ids = {step.step_id: f"chunk_{chunk_index}_{step.step_id}" for step in plan.steps}
+            included.extend(plan.included)
+            excluded.extend(plan.excluded)
+            unprocessed.extend(plan.unprocessed_fact_ids)
+            assumptions.extend(plan.assumptions)
+            gaps.extend(plan.information_gaps)
+            for step in plan.steps:
+                steps.append(step.model_copy(update={"step_id": step_ids[step.step_id], "inputs": [step_ids.get(item, item) for item in step.inputs]}))
+            if plan.result_step_id and plan.result_step_id in step_ids:
+                roots.append(step_ids[plan.result_step_id])
+        result_step_id: str | None = None
+        if len(roots) == 1:
+            result_step_id = roots[0]
+        elif roots:
+            result_step_id = "combined_result"
+            steps.append(PlanStep(step_id=result_step_id, operation="sum", inputs=roots))
+        first = plans[0][1] if plans else None
+        return CalculationPlan(
+            target_id=target.target_id,
+            method_description=(first.method_description if first else "No calculation plan was produced.") + f" Reviewed {candidate_count} candidates across {len(plans)} batches.",
+            included=included,
+            excluded=excluded,
+            unprocessed_fact_ids=list(dict.fromkeys(unprocessed)),
+            steps=steps,
+            result_step_id=result_step_id,
+            currency=first.currency if first else None,
+            unit=first.unit if first else None,
+            amount_basis=first.amount_basis if first else "unspecified",
+            rounding_scale=target.rounding_scale,
+            assumptions=list(dict.fromkeys(assumptions)),
+            information_gaps=list(dict.fromkeys(gaps)),
+            requires_manual_review=any(plan.requires_manual_review for _, plan in plans) or not roots or bool(unprocessed),
+        )
 
