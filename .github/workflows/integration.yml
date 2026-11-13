@@ -1,0 +1,112 @@
+name: Phystech Trace Integration
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  backend-unit:
+    name: Backend unit tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: backend/requirements.txt
+      - name: Install backend dependencies
+        run: python -m pip install -r backend/requirements.txt
+      - name: Run backend unit tests
+        run: python -m unittest discover -s backend/tests
+
+  shared-contracts:
+    name: Shared contract tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install contract test dependency
+        run: python -m pip install jsonschema
+      - name: Run shared contract tests
+        run: python -m unittest discover -s phystech-trace/tests/contracts -v
+
+  extraction-unit:
+    name: Structured Extraction unit tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: phystech-trace/services/structured-extraction/package-lock.json
+      - name: Install standalone runtime dependencies
+        working-directory: phystech-trace/services/structured-extraction
+        run: npm run install:ci
+      - name: Run Extraction unit tests
+        working-directory: phystech-trace/services/structured-extraction
+        run: npm test
+
+  linking:
+    name: Document Linking unit tests, typecheck, and build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: phystech-trace/services/document-linking/package-lock.json
+      - name: Install dependencies
+        working-directory: phystech-trace/services/document-linking
+        run: npm ci
+      - name: Run Linking unit tests
+        working-directory: phystech-trace/services/document-linking
+        run: npm test
+      - name: Typecheck Linking
+        working-directory: phystech-trace/services/document-linking
+        run: npm run typecheck
+      - name: Build Linking
+        working-directory: phystech-trace/services/document-linking
+        run: npm run build
+
+  frontend:
+    name: Vue frontend typecheck and build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: phystech-trace/frontend/package-lock.json
+      - name: Install dependencies
+        working-directory: phystech-trace/frontend
+        run: npm ci
+      - name: Typecheck frontend
+        working-directory: phystech-trace/frontend
+        run: npm run typecheck
+      - name: Build frontend
+        working-directory: phystech-trace/frontend
+        run: npm run build
