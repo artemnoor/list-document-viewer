@@ -2,6 +2,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import unquote, urlparse
 import json
+import copy
 import os
 import re
 import uuid
@@ -23,8 +24,15 @@ JOBS = {}
 JOB_LOCK = Lock()
 CACHE_LOCK = RLock()
 TRUSTED_ORIGINS = {'http://localhost:3000', 'http://127.0.0.1:3000'}
+for _port_value in os.environ.get('FRONTEND_PORT', '').split(','):
+    try:
+        _port = int(_port_value.strip())
+        if 1 <= _port <= 65535:
+            TRUSTED_ORIGINS.update({f'http://localhost:{_port}', f'http://127.0.0.1:{_port}'})
+    except ValueError:
+        pass
 MAX_RENDER_PIXELS = 12_000_000
-EXPECTED_ANALYSIS_VERSION = 'audit-2026-11-v1'
+EXPECTED_ANALYSIS_VERSION = 'audit-2026-11-v2'
 
 def set_job(ident, state, **extra):
     with JOB_LOCK:
@@ -62,7 +70,7 @@ def normalize_tables(parts):
                     if not (0 <= row < height and 0 <= column < width):
                         continue
                     rows[row][column] = str(cell.get('text', ''))
-                    cells.append({'row': row, 'column': column, 'text': str(cell.get('text', '')), 'row_span': max(1, min(height - row, int(cell.get('row_span', 1)))), 'col_span': max(1, min(width - column, int(cell.get('col_span', 1))))})
+                    cells.append({'row': row, 'column': column, 'text': str(cell.get('text', '')), 'row_span': max(1, min(height - row, int(cell.get('row_span', 1)))), 'col_span': max(1, min(width - column, int(cell.get('col_span', 1)))), **({'bbox': cell['bbox']} if cell.get('bbox') else {})})
                 part.update(rows=rows, cells=cells)
             except (KeyError, ValueError, TypeError):
                 part['table_warning'] = 'Таблица превышает лимит сетки или содержит некорректные координаты.'
@@ -74,6 +82,8 @@ def process_document(ident, name):
     set_job(ident, 'processing')
     try:
         result = analyze(STORAGE / ident, name)
+        from quality_gate import prepare_result
+        prepare_result(result)
         with CACHE_LOCK:
             if (STORAGE / ident).is_file():
                 atomic_write_json(STORAGE / (ident + '.analysis.json'), result)
@@ -85,14 +95,24 @@ def process_document(ident, name):
             parts = native_parts(STORAGE / ident, Path(name).suffix.lower())
         except Exception:
             parts = []
-        if parts:
-            result = {'analysis_version': EXPECTED_ANALYSIS_VERSION, 'source_extension': Path(name).suffix.lower(), 'native_structure_version': NATIVE_STRUCTURE_VERSION, 'status': 'partial', 'parts': parts, 'warnings': ['Docling не завершил обработку: ' + str(error)], 'document': None, 'markdown': '', 'chunks': []}
+        extension = Path(name).suffix.lower()
+        if (STORAGE / ident).is_file() and (parts or extension in {'.pdf', '.png', '.jpg', '.jpeg', '.bmp', '.tiff', '.tif', '.webp'}):
+            result = {'analysis_version': EXPECTED_ANALYSIS_VERSION, 'source_extension': extension, 'native_structure_version': NATIVE_STRUCTURE_VERSION, 'status': 'partial', 'parts': parts, 'warnings': ['Docling не завершил обработку: ' + str(error)], 'document': None, 'markdown': '', 'chunks': []}
+            try:
+                from polza_document_review import review_document
+                result['document_review'] = review_document(STORAGE / ident, extension, result)
+            except Exception:
+                result['document_review'] = {'status': 'failed', 'pages_total': 0, 'pages_checked': 0,
+                                             'suggestions': [], 'error': 'Повторная проверка документа через ИИ не завершилась.'}
+            from quality_gate import prepare_result
+            prepare_result(result)
             with CACHE_LOCK:
                 if (STORAGE / ident).is_file():
                     atomic_write_json(STORAGE / (ident + '.analysis.json'), result)
             set_job(ident, 'ready')
         else:
-            set_job(ident, 'error', error=str(error))
+            set_job(ident, 'error', error=str(error), processing_status='failed',
+                    quality={'status': 'not_available', 'reasons': []})
 
 STORAGE = Path(__file__).resolve().parent / 'uploads'
 STORAGE.mkdir(exist_ok=True)
@@ -155,6 +175,124 @@ class Handler(BaseHTTPRequestHandler):
     def do_POST(self):
         if not self.check_origin():
             return
+        accept_all = re.fullmatch(r'/api/documents/([a-f0-9]{32})/document-review/accept-all', urlparse(self.path).path)
+        if accept_all:
+            ident = accept_all.group(1)
+            path = STORAGE / ident
+            result_path = STORAGE / (ident + '.analysis.json')
+            if not path.is_file() or not result_path.is_file():
+                return self.reply(404, {'error': 'Документ или результат проверки не найден'})
+            try:
+                size = int(self.headers.get('Content-Length', '0'))
+                if size < 0 or size > 8192:
+                    return self.reply(400, {'error': 'Размер решения превышает лимит'})
+                payload = json.loads(self.rfile.read(size) or b'{}')
+                if not isinstance(payload, dict):
+                    raise ValueError('invalid decision')
+                with CACHE_LOCK:
+                    result = read_json(result_path)
+                    if result is None:
+                        return self.reply(404, {'error': 'Результат анализа не найден'})
+                    result = copy.deepcopy(result)
+                    review = result.get('document_review') or {}
+                    pending = [item for item in review.get('suggestions', []) if item.get('status') == 'pending']
+                    from polza_document_review import apply_suggestion
+                    from datetime import datetime, timezone
+                    accepted, skipped = [], []
+                    for suggestion in pending:
+                        proposed = suggestion.get('proposed')
+                        if not apply_suggestion(result, suggestion, proposed):
+                            # Accept-all is one transaction: never persist a half-applied batch.
+                            return self.reply(409, {'error': 'Набор предложений изменился или содержит неприменимую правку; ничего не сохранено.'})
+                        suggestion['status'] = 'accepted'
+                        suggestion['accepted_proposed'] = proposed
+                        suggestion['accepted_at'] = datetime.now(timezone.utc).isoformat()
+                        accepted.append(suggestion)
+                        result.setdefault('accepted_document_edits', []).append({**suggestion, 'proposed': proposed})
+                        if result.get('source_extension') in {'.txt', '.md', '.log', '.json', '.xml'} and suggestion.get('action') == 'replace_text':
+                            original = suggestion.get('original', '')
+                            if original and original in result.get('markdown', ''):
+                                result['markdown'] = result['markdown'].replace(original, proposed, 1)
+                    review['last_batch_accept'] = {'accepted': len(accepted), 'skipped': len(skipped)}
+                    result['document_review'] = review
+                    from quality_gate import prepare_result
+                    prepare_result(result)
+                    from markdown_export import structured_markdown, preview_html
+                    result['export_markdown'] = structured_markdown(result)
+                    result['markdown_preview'] = preview_html(result['export_markdown'])
+                    if not result['export_markdown'].strip() or not result['markdown_preview'].strip():
+                        return self.reply(422, {'error': 'Не удалось проверить пересобранный Markdown и HTML; изменения не сохранены.'})
+                    atomic_write_json(result_path, result)
+                return self.reply(200, {'decision': 'accept_all', 'accepted': len(accepted),
+                                        'skipped': skipped, 'result': result})
+            except (OSError, ValueError, TypeError, KeyError):
+                return self.reply(422, {'error': 'Не удалось сохранить решения по предложениям'})
+
+        review_action = re.fullmatch(r'/api/documents/([a-f0-9]{32})/document-review/([a-f0-9]{32})/(accept|reject|undo)', urlparse(self.path).path)
+        if review_action:
+            ident, suggestion_id, action = review_action.groups()
+            path = STORAGE / ident
+            result_path = STORAGE / (ident + '.analysis.json')
+            if not path.is_file() or not result_path.is_file():
+                return self.reply(404, {'error': 'Документ или результат проверки не найден'})
+            try:
+                size = int(self.headers.get('Content-Length', '0'))
+                if size < 0 or size > 8192:
+                    return self.reply(400, {'error': 'Размер решения превышает лимит'})
+                payload = json.loads(self.rfile.read(size) or b'{}')
+                if not isinstance(payload, dict):
+                    raise ValueError('invalid decision')
+                with CACHE_LOCK:
+                    result = read_json(result_path)
+                    if result is None:
+                        return self.reply(404, {'error': 'Результат анализа не найден'})
+                    result = copy.deepcopy(result)
+                    review = result.get('document_review') or {}
+                    suggestion = next((item for item in review.get('suggestions', [])
+                                       if item.get('id') == suggestion_id), None)
+                    if suggestion is None:
+                        return self.reply(404, {'error': 'Предложение не найдено'})
+                    if action == 'undo':
+                        if suggestion.get('status') != 'accepted':
+                            return self.reply(409, {'error': 'Откатить можно только принятое предложение.'})
+                        from polza_document_review import revert_suggestion
+                        if not revert_suggestion(result, suggestion):
+                            return self.reply(409, {'error': 'Не удалось однозначно откатить изменение; результат не сохранён.'})
+                        suggestion['status'] = 'undone'
+                        from datetime import datetime, timezone
+                        suggestion['undone_at'] = datetime.now(timezone.utc).isoformat()
+                        active = result.get('accepted_document_edits', [])
+                        result['accepted_document_edits'] = [edit for edit in active if edit.get('id') != suggestion_id]
+                        result.setdefault('document_edit_history', []).append({**suggestion, 'history_status': 'undone'})
+                    elif suggestion.get('status') != 'pending':
+                        return self.reply(409, {'error': 'Это предложение уже обработано'})
+                    elif action == 'accept':
+                        proposed = payload.get('proposed', suggestion.get('proposed'))
+                        from polza_document_review import apply_suggestion
+                        if not apply_suggestion(result, suggestion, proposed):
+                            return self.reply(409, {'error': 'Не удалось однозначно сопоставить правку с исходным блоком. Повторите обработку документа, чтобы получить актуальное предложение.'})
+                        suggestion['status'] = 'accepted'
+                        suggestion['accepted_proposed'] = proposed
+                        from datetime import datetime, timezone
+                        suggestion['accepted_at'] = datetime.now(timezone.utc).isoformat()
+                        result.setdefault('accepted_document_edits', []).append({**suggestion, 'proposed': proposed})
+                        if result.get('source_extension') in {'.txt', '.md', '.log', '.json', '.xml'} and suggestion.get('action') == 'replace_text':
+                            original = suggestion.get('original', '')
+                            if original and original in result.get('markdown', ''):
+                                result['markdown'] = result['markdown'].replace(original, proposed, 1)
+                    else:
+                        suggestion['status'] = 'rejected'
+                    from quality_gate import prepare_result
+                    prepare_result(result)
+                    from markdown_export import structured_markdown, preview_html
+                    result['export_markdown'] = structured_markdown(result)
+                    result['markdown_preview'] = preview_html(result['export_markdown'])
+                    if not result['export_markdown'].strip() or not result['markdown_preview'].strip():
+                        return self.reply(422, {'error': 'Не удалось пересобрать представления; изменение не сохранено.'})
+                    atomic_write_json(result_path, result)
+                return self.reply(200, {'decision': action, 'result': result})
+            except (OSError, ValueError, TypeError, KeyError):
+                return self.reply(422, {'error': 'Не удалось сохранить решение по предложению'})
         retry_match = re.fullmatch(r'/api/documents/([a-f0-9]{32})/retry', urlparse(self.path).path)
         if retry_match:
             ident = retry_match.group(1)
@@ -249,6 +387,7 @@ class Handler(BaseHTTPRequestHandler):
                         page.close()
                 return self.reply(200, buffer.getvalue(), 'image/png')
             except Exception:
+                logging.getLogger(__name__).exception('[FIX:preview] Failed to render document=%s page=%s', ident, number)
                 return self.reply(422, {'error': 'Не удалось отобразить страницу'})
         match = re.fullmatch(r'/api/documents/([a-f0-9]{32})(/content|/analysis)?', urlparse(self.path).path)
         if not match:
@@ -284,9 +423,24 @@ class Handler(BaseHTTPRequestHandler):
                                 if not layout or layout.get('version') != LAYOUT_VERSION:
                                     layout = extract_pdf_layout(path)
                                     atomic_write_json(layout_path, layout)
+                                previous_visual = result.get('visual_layout', {})
                                 result['visual_layout'] = merge_model_layout(layout, result.get('parts', []))
+                                from table_candidates import same_region
+                                reviewed = [p for p in previous_visual.get('parts', []) if p.get('ai_review') and p.get('provenance')]
+                                for part in result['visual_layout'].get('parts', []):
+                                    match = next((p for p in reviewed if part.get('kind') == 'table' and part.get('provenance') and same_region(p, part) and p.get('rows') == part.get('rows')), None)
+                                    if match: part['ai_review'] = match['ai_review']
                             except Exception:
                                 result['warnings'].append('Точная разметка недоступна. Используется сохранённый результат распознавания.')
+                        if result.get('accepted_document_edits'):
+                            try:
+                                from polza_document_review import apply_suggestion
+                                for edit in result['accepted_document_edits']:
+                                    apply_suggestion(result, edit, edit.get('proposed'))
+                            except (KeyError, TypeError, ValueError):
+                                result['warnings'].append('Не удалось повторно применить некоторые подтверждённые правки.')
+                        from quality_gate import prepare_result
+                        prepare_result(result)
                         result['stale'] = result.get('analysis_version') != EXPECTED_ANALYSIS_VERSION or (result.get('ocr', {}).get('enabled') and result.get('ocr_detail_version', 0) < 12)
                         result['export_markdown'] = structured_markdown(result)
                         result['markdown_preview'] = preview_html(result['export_markdown'])
@@ -295,7 +449,7 @@ class Handler(BaseHTTPRequestHandler):
                 return self.reply(200, queue_document(ident, json.loads(meta_path.read_text(encoding='utf-8'))['name']))
             except (OSError, ValueError, TypeError, KeyError):
                 return self.reply(422, {'error': 'Не удалось подготовить результат документа. Повторите обработку.'})
-        allowed = {'.pdf': 'application/pdf', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.gif': 'image/gif', '.webp': 'image/webp'}
+        allowed = {'.pdf': 'application/pdf', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.gif': 'image/gif', '.webp': 'image/webp', '.tif': 'image/tiff', '.tiff': 'image/tiff', '.bmp': 'image/bmp'}
         if content:
             if ext not in allowed:
                 return self.reply(415, {'error': 'Формат не поддерживается'})

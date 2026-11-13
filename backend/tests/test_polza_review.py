@@ -3,7 +3,8 @@ from pathlib import Path
 from unittest.mock import patch
 from PIL import Image
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
-from polza_review import review_tables
+from polza_review import review_tables, review_uncertain_tables
+from quality_gate import assess_quality
 
 class ReviewTests(unittest.TestCase):
  def setUp(self):
@@ -27,4 +28,13 @@ class ReviewTests(unittest.TestCase):
   with patch.dict(os.environ,{'POLZA_AI_API_KEY':'test','POLZA_OCR_ENABLED':'1'}),patch('urllib.request.urlopen') as call:
    result=review_tables(Path('x'),'.png',self.layout)
   self.assertEqual(result['failed'],1);call.assert_not_called()
+ def test_numeric_gap_is_reviewed_after_quality_assessment(self):
+  self.table['rows']=[['Цена'], ['10'], [''], ['20']]
+  with patch.dict(os.environ,{'POLZA_AI_API_KEY':'test','POLZA_OCR_ENABLED':'1'}),patch('ocr_layout._page_image',return_value=Image.new('RGB',(200,100),'white')),patch('urllib.request.urlopen',return_value=self.response('{"status":"issues","issues":["Пропуск"]}')):
+   result=review_uncertain_tables(Path('x'),'.png',self.layout)
+  self.assertEqual(result['issues'],1)
+  self.assertEqual(assess_quality({'visual_layout':self.layout})['status'],'needs_review')
+ def test_ai_disagreement_changes_quality_even_without_other_warnings(self):
+  self.table['ai_review']={'status':'issues','issues':['Неверная сумма']}
+  self.assertEqual(assess_quality({'visual_layout':self.layout})['status'],'needs_review')
 if __name__=='__main__':unittest.main()

@@ -249,6 +249,33 @@ def merge_model_layout(layout, model_parts):
     visual = output['parts']
     ocr_pages = {p['provenance'][0]['page_no'] for p in model_parts if p.get('source', '').startswith('ocr_') and p.get('provenance')}
     visual[:] = [p for p in visual if not (p['kind']=='picture' and p['provenance'][0]['page_no'] in ocr_pages and _area(_box(p['provenance'][0])) > .7 * output['pages'][str(p['provenance'][0]['page_no'])]['size']['width'] * output['pages'][str(p['provenance'][0]['page_no'])]['size']['height'])]
+    def add_table(part):
+        from table_candidates import same_region
+        from table_arbitration import arbitrate
+        overlaps = [p for p in visual if p.get('kind') == 'table' and p.get('provenance') and same_region(p, part)]
+        if len(overlaps) == 1:
+            old = overlaps[0]
+            visual[visual.index(old)] = arbitrate(old, part)
+        else:
+            if len(overlaps) > 1:
+                part['table_warning'] = 'Область соответствует нескольким таблицам; требуется проверка.'
+            visual.append(part)
+
+    # OCR can produce two reconstructions before model merging, for example a
+    # perspective-corrected full page and the corresponding tight raster grid.
+    # Reconcile them using the same identity rules as incoming candidates.
+    from table_candidates import same_region
+    from table_arbitration import arbitrate
+    consolidated = []
+    for part in visual:
+        matches = [p for p in consolidated if p.get('kind') == 'table' and part.get('kind') == 'table' and same_region(p, part)]
+        if len(matches) == 1:
+            old = matches[0]
+            consolidated[consolidated.index(old)] = arbitrate(old, part)
+        else:
+            consolidated.append(part)
+    visual[:] = consolidated
+
     for original in model_parts:
         if not original.get('provenance'):
             continue
@@ -277,17 +304,40 @@ def merge_model_layout(layout, model_parts):
         page = valid_provenance[0]['page_no']
         box = _box(valid_provenance[0])
         data = part.get('data', {})
+        def normalize_cell_box(cell):
+            value = cell.get('bbox')
+            if not isinstance(value, dict) or not all(k in value for k in ('l', 't', 'r', 'b')):
+                return
+            height = output['pages'][str(page)]['size']['height']
+            left, right = sorted((value['l'], value['r']))
+            top, bottom = sorted((value['t'], value['b']))
+            if str(value.get('coord_origin', 'TOPLEFT')).split('.')[-1].upper() == 'BOTTOMLEFT':
+                top, bottom = height - bottom, height - top
+            cell['source_bbox'] = deepcopy(value)
+            cell['bbox'] = [left, top, right, bottom]
+        for cell in part.get('cells', []): normalize_cell_box(cell)
+        for cell in data.get('table_cells', []): normalize_cell_box(cell)
         is_table = part['kind'] == 'table' and (data.get('table_cells') or (part.get('rows') and part.get('cells')))
         same_page = [p for p in visual if p['provenance'][0]['page_no'] == page]
         if is_table:
-            if any(p['kind'] == 'table' and _overlap(box, _box(p['provenance'][0])) > .3 * max(1, _area(box))
-                   for p in same_page):
-                continue
             if part.get('rows') and part.get('cells') and len(part['rows']) * max(map(len, part['rows']), default=0) <= 100000:
                 # server.normalize_tables already validated this representation.
-                visual[:] = [p for p in visual if not (p['kind'] in {'text', 'section_header', 'picture'} and
-                             p['provenance'][0]['page_no'] == page and _contains(box, _box(p['provenance'][0])))]
-                visual.append(part)
+                def covered_by_table(p):
+                    if (p['kind'] not in {'text', 'section_header', 'picture'} or
+                        p['provenance'][0]['page_no'] != page or not _contains(box, _box(p['provenance'][0]))):
+                        return False
+                    if part.get('source') != 'ocr_text_alignment':
+                        return True
+                    # An inferred region may enclose notes that were not assigned
+                    # to a cell. Remove only OCR text represented by a cell.
+                    text = ' '.join(str(p.get('text', '')).split())
+                    return bool(text and any(
+                        isinstance(c.get('bbox'), list) and len(c['bbox']) == 4 and
+                        ' '.join(str(c.get('text', '')).split()) == text and
+                        _contains(tuple(c['bbox']), _box(p['provenance'][0]))
+                        for c in part['cells']))
+                visual[:] = [p for p in visual if not covered_by_table(p)]
+                add_table(part)
                 continue
             row_count, column_count = data.get('num_rows', 0), data.get('num_cols', 0)
             if not isinstance(row_count, int) or not isinstance(column_count, int) or row_count <= 0 or column_count <= 0 or row_count * column_count > 100000:
@@ -303,11 +353,11 @@ def merge_model_layout(layout, model_parts):
                 rows[row][col] = cell.get('text', '')
                 cells.append({'row': row, 'column': col, 'text': cell.get('text', ''),
                               'row_span': max(1, min(row_count - row, cell.get('row_span', 1))),
-                              'col_span': max(1, min(column_count - col, cell.get('col_span', 1)))})
+                              'col_span': max(1, min(column_count - col, cell.get('col_span', 1))), **({'bbox': cell['bbox']} if cell.get('bbox') else {})})
             part.update(rows=rows, cells=cells)
             visual[:] = [p for p in visual if not (p['kind'] in {'text', 'section_header', 'picture'} and
                          p['provenance'][0]['page_no'] == page and _contains(box, _box(p['provenance'][0])))]
-            visual.append(part)
+            add_table(part)
             continue
         if part['kind'] == 'picture':
             duplicate = any(p['kind'] == 'picture' and _contains(_box(p['provenance'][0]), box) for p in same_page)

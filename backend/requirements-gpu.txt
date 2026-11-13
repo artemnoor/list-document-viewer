@@ -1,0 +1,13 @@
+# Install this complete environment from the PyTorch CUDA 12.8 index.
+docling==2.72.0
+openpyxl==3.1.5
+python-docx==1.2.0
+python-pptx==1.0.2
+PyMuPDF==1.25.1
+markdown-it-py==4.0.0
+bleach==6.2.0
+rapidocr==3.6.0
+opencv-python==4.10.0.84
+onnxruntime-gpu==1.21.1
+torch==2.7.1+cu128
+torchvision==0.22.1+cu128

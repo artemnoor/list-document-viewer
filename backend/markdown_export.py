@@ -37,11 +37,22 @@ def table(rows, cells=None, force_html=False, first_row_header=True):
     return '\n'.join(lines)
 
 
+def _append_accepted_additions(text, result):
+    additions=[]
+    for edit in result.get('accepted_document_edits',[]):
+        value=edit.get('proposed')
+        if edit.get('action')=='add_text' and isinstance(value,str) and value.strip() and value.strip() not in text:
+            additions.append(literal(value.strip()))
+    return text.rstrip() + ('\n\n' if text.strip() else '') + '\n\n'.join(additions) + ('\n' if additions or text else '')
+
+
 def structured_markdown(result):
     layout = result.get('visual_layout', {})
     if layout.get('parts'):
         blocks, previous, first_heading = [], None, True
         for part in layout['parts']:
+            if part.get('annotation_only'):
+                continue
             if part.get('rows'):
                 blocks.append(table(part['rows'],part.get('cells'), force_html=bool(part.get('continuation_of_page')), first_row_header=not part.get('continuation_of_page'))); previous=None; continue
             text = part.get('text', '').strip()
@@ -68,7 +79,7 @@ def structured_markdown(result):
                 if previous['kind'] != 'section_header' and aligned and prov.get('page_no') == prev_prov.get('page_no') and 0 <= gap < part.get('font_size', 10) * .4:
                     blocks[-1] += ' ' + text; previous = part; continue
             blocks.append(text); previous = part
-        return '\n\n'.join(blocks) + '\n'
+        return _append_accepted_additions('\n\n'.join(blocks) + '\n', result)
     parts = result.get('parts', [])
     # Native Office tables carry merges, nested content, and exact grid coordinates.
     native = [p for p in parts if p.get('kind') in {'sheet','cell','paragraph','table','header','footer','footnote','endnote'} or p.get('source')=='docx_native']
@@ -120,11 +131,11 @@ def structured_markdown(result):
                     entry=part['list'];prefix='  '*min(entry['level'],12)+('- ' if entry['format']=='bullet' else str(entry.get('start',1))+'. ')
                 blocks.append(prefix+text)
         flush_sheet()
-        return '\n\n'.join(blocks).rstrip()+'\n'
+        return _append_accepted_additions('\n\n'.join(blocks).rstrip()+'\n', result)
     text=result.get('markdown','').rstrip()
     if result.get('source_extension') in {'.txt','.log','.json','.xml'}:
         text=literal(text)
-    return text+'\n'
+    return _append_accepted_additions(text+'\n', result)
 
 
 def preview_html(markdown):

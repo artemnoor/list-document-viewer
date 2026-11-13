@@ -140,6 +140,51 @@ class ServerAudit(unittest.TestCase):
             analyze.assert_not_called()
         self.assertEqual(path.stat().st_mtime_ns, before)
 
+    def test_accept_all_rolls_back_entire_batch_when_one_edit_fails(self):
+        from unittest.mock import patch
+        result_path = self.root / (self.ident + '.analysis.json')
+        original = {'source_extension': '.txt', 'parts': [], 'markdown': 'untouched',
+                    'document_review': {'suggestions': [
+                        {'id': '1', 'status': 'pending', 'proposed': 'first'},
+                        {'id': '2', 'status': 'pending', 'proposed': 'second'}]}}
+        result_path.write_text(json.dumps(original), encoding='utf8')
+        calls = 0
+        def apply(draft, suggestion, proposed):
+            nonlocal calls
+            calls += 1
+            draft['markdown'] = proposed
+            return calls == 1
+        with patch('polza_document_review.apply_suggestion', side_effect=apply):
+            status, _, _ = self.request(
+                f'/api/documents/{self.ident}/document-review/accept-all', 'POST', data=b'{}')
+        self.assertEqual(status, 409)
+        self.assertEqual(json.loads(result_path.read_text(encoding='utf8')), original)
+
+    def test_undo_restores_original_text_and_rebuilds_exports(self):
+        result_path = self.root / (self.ident + '.analysis.json')
+        suggestion = {'id': 'b' * 32, 'action': 'replace_text', 'target_index': 0,
+                      'target_scope': 'parts', 'target_kind': 'text', 'page_no': 1,
+                      'target_bbox': [10, 10, 80, 20],
+                      'original': 'Исходник', 'proposed': 'Исправлено',
+                      'accepted_proposed': 'Исправлено', 'status': 'accepted'}
+        text_part = {'kind': 'text', 'text': 'Исправлено',
+                     'provenance': [{'page_no': 1, 'bbox': dict(zip(('l','t','r','b'), suggestion['target_bbox']))}]}
+        current = {'source_extension': '.pdf', 'parts': [text_part],
+                   'visual_layout': {'parts': [dict(text_part)]},
+                   'markdown': '', 'warnings': [], 'document_review': {'suggestions': [suggestion]},
+                   'accepted_document_edits': [suggestion]}
+        result_path.write_text(json.dumps(current, ensure_ascii=False), encoding='utf8')
+        status, _, body = self.request(
+            f'/api/documents/{self.ident}/document-review/{suggestion["id"]}/undo',
+            'POST', data=b'{}')
+        self.assertEqual(status, 200)
+        result = json.loads(body)['result']
+        self.assertEqual(result['parts'][0]['text'], 'Исходник')
+        self.assertIn('Исходник', result['export_markdown'])
+        self.assertEqual(result['document_review']['suggestions'][0]['status'], 'undone')
+        self.assertEqual(result['accepted_document_edits'], [])
+        self.assertEqual(result['document_edit_history'][0]['history_status'], 'undone')
+
     def test_explicit_retry_replaces_old_cache(self):
         path = self.root / (self.ident + '.analysis.json')
         path.write_text(json.dumps({'parts': [], 'markdown': 'Old result'}), encoding='utf8')

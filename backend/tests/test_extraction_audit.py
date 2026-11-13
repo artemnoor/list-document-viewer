@@ -19,6 +19,16 @@ class ExtractionAudit(unittest.TestCase):
    part=next(p for p in native_parts(path,'.xlsx') if p['kind']=='cell')
    self.assertEqual(part['calculation_status'],'missing_cached_result')
    self.assertEqual(part['formula'],'=SUM(1,2)')
+ def test_supported_sum_range_is_recalculated_without_replacing_formula(self):
+  from openpyxl import Workbook
+  with tempfile.TemporaryDirectory() as directory:
+   path=Path(directory)/'sum.xlsx';w=Workbook();s=w.active;s['C6']=12.5;s['C7']=7.5;s['C8']='=SUM(C6:C7)';w.save(path)
+   part=next(p for p in native_parts(path,'.xlsx') if p.get('coordinate')=='C8')
+   self.assertEqual(part['formula'],'=SUM(C6:C7)')
+   self.assertIsNone(part['cached_value'])
+   self.assertEqual(part['computed_value'],20)
+   self.assertEqual(part['calculation_status'],'computed_supported')
+   self.assertEqual(part['display_value'],'20')
  def test_formatting_is_not_data_loss(self):
   from openpyxl import Workbook
   with tempfile.TemporaryDirectory() as directory:

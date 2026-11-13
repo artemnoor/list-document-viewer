@@ -14,7 +14,7 @@ for record in manifest:
    if data['state']=='error':raise RuntimeError(data['error'])
    time.sleep(.5)
   else:raise TimeoutError('Analysis timed out')
-  result=data['result'];assert result.get('analysis_version')=='audit-2026-11-v1'
+  result=data['result'];assert result.get('analysis_version')=='audit-2026-11-v2'
   assert result.get('export_markdown','').strip(), 'Empty Markdown'
   assert result.get('markdown_preview','').strip(),'Empty preview'
   repeated=json.load(urllib.request.urlopen(req,timeout=20));assert repeated['id']==doc['id']

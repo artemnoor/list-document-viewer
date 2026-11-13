@@ -51,6 +51,7 @@ function renderAnnotations(host, result, file, api, source = 'native') {
     inspector.replaceChildren(create('span','inspector-eyebrow','ВЫБРАННЫЙ ЭЛЕМЕНТ'),heading,meta,text,details);
     if(part.rows) {
       text.remove(); inspector.insertBefore(renderTable(part), details);
+      if(part.arbitration?.has_conflicts) inspector.insertBefore(create('p','ai-review','Варианты таблицы расходятся. Сверьте с оригиналом; варианты доступны в подробных данных.'),details);
       if(part.ai_review) {
         const review=part.ai_review, labels={ok:'ИИ не заметил явных расхождений',issues:'ИИ заметил возможные расхождения',uncertain:'ИИ не уверен в результате',failed:'Проверка ИИ недоступна',skipped:'Таблица не проверена ИИ'};
         const note=create('div','ai-review'); note.append(create('strong','',labels[review.status] || 'Проверка ИИ'));
@@ -68,7 +69,7 @@ function renderAnnotations(host, result, file, api, source = 'native') {
         for(const cell of part.cells.filter(c=>c.row===r).sort((a,b)=>a.column-b.column)) {
           const td=create(r===0&&!part.continuation_of_page?'th':'td','',cell.text);td.rowSpan=cell.row_span || 1;td.colSpan=cell.col_span || 1;
           td.title=`Строка ${r+1}, столбец ${cell.column+1}`;
-          if(cell.requires_review) { td.classList.add('ai-cell'); td.title+=' · ИИ: сверьте с оригиналом'; td.append(create('small','ai-cell-label',' ИИ · проверить')); }
+          if(cell.requires_review) { td.classList.add('ai-cell'); td.title+=' · сверьте с оригиналом'; td.append(create('small','ai-cell-label',' Проверить')); }
           for(const nested of cell.nested_tables || []) td.append(renderTable(nested));
           row.append(td);
         }
@@ -110,7 +111,7 @@ function renderAnnotations(host, result, file, api, source = 'native') {
       scene.append(canvas);
     }
     if (!located) scene.prepend(create('p','annotation-note','Координаты элементов отсутствуют. Ниже доступна структура.'));
-    const unlocated=parts.filter(p=>!p.provenance?.length);
+    const unlocated=parts.filter(p=>!p.provenance?.some(prov=>prov?.bbox));
     if(unlocated.length) { scene.append(create('p','annotation-note',`${unlocated.length} элементов без координат`)); renderBlocks(unlocated); }
   } else {
     root.append(create('p','annotation-note','Структурное представление: расположение блоков может отличаться от оригинала.'));

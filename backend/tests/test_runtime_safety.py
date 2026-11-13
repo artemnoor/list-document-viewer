@@ -24,4 +24,12 @@ class RuntimeSafety(unittest.TestCase):
   model=[{'kind':'text','source':'ocr_text','text':'Read me','provenance':prov([20,100,200,120])}]
   output=merge_model_layout(native,model)
   self.assertEqual([p['kind'] for p in output['parts']],['text'])
+ def test_failed_job_exposes_quality_unavailable(self):
+  import tempfile
+  import server
+  with tempfile.TemporaryDirectory() as folder, patch.object(server,'STORAGE',Path(folder)), patch.object(server,'analyze',side_effect=ValueError('bad')), patch.object(server,'native_parts',return_value=[]):
+   server.process_document('failure-case','doc.pdf')
+  job=server.JOBS.pop('failure-case')
+  self.assertEqual(job['processing_status'],'failed')
+  self.assertEqual(job['quality']['status'],'not_available')
 if __name__=='__main__':unittest.main()

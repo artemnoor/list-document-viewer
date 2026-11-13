@@ -91,3 +91,13 @@ def review_tables(path, extension, layout):
     summary['status'] = 'complete' if not summary['failed'] else 'partial'
     if costs: summary['cost_rub'] = round(sum(costs), 6)
     return summary
+
+
+def review_uncertain_tables(path, extension, layout):
+    """Send only visibly uncertain final candidates to the optional service."""
+    from quality_gate import assess_quality
+    selected = [part for part in layout.get('parts', []) if part.get('kind') == 'table' and
+                assess_quality({'parts': [part]})['status'] == 'needs_review']
+    if not selected:
+        return {'status':'no_uncertain_tables','total':0,'checked':0}
+    return review_tables(path, extension, {'pages':layout.get('pages', {}), 'parts':selected})

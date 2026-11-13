@@ -10,9 +10,17 @@ from functools import lru_cache
 
 @lru_cache(maxsize=1)
 def _detail_reader():
+    import os
+    from pathlib import Path
     from rapidocr import RapidOCR, LangRec, OCRVersion
     from ocr_config import ensure_recognition_model
-    return RapidOCR(params={'Rec.model_path':str(ensure_recognition_model()), 'Rec.lang_type':LangRec.CYRILLIC, 'Rec.ocr_version':OCRVersion.PPOCRV5, 'Global.text_score':.45, 'Det.intra_op_num_threads':4, 'Rec.intra_op_num_threads':4, 'Cls.intra_op_num_threads':4})
+    params = {'Rec.model_path':str(ensure_recognition_model()), 'Rec.lang_type':LangRec.CYRILLIC, 'Rec.ocr_version':OCRVersion.PPOCRV5, 'Global.text_score':.45, 'Det.intra_op_num_threads':4, 'Rec.intra_op_num_threads':4, 'Cls.intra_op_num_threads':4}
+    if os.environ.get('DOCLING_DEVICE', 'cpu').lower().startswith('cuda'):
+        import onnxruntime as ort
+        import torch
+        ort.preload_dlls(directory=str(Path(torch.__file__).resolve().parent / 'lib'))
+        params['EngineConfig.onnxruntime.use_cuda'] = True
+    return RapidOCR(params=params)
 
 def _recover_small_text(image, page_size, existing, page_no):
     """Detect small horizontal ink bands missed by whole-page OCR and retry crops."""
@@ -68,18 +76,20 @@ def _groups(points, gap=3):
     return [round(sum(group) / len(group)) for group in groups]
 
 
-def _page_image(path, extension, number):
+def _page_image(path, extension, number, source_bytes=None, preferred_scale=3):
     from PIL import Image
+    source_bytes = source_bytes if source_bytes is not None else path.read_bytes()
     if extension.lower() == '.pdf':
         import fitz
-        with fitz.open(stream=path.read_bytes(), filetype='pdf') as doc:
+        with fitz.open(stream=source_bytes, filetype='pdf') as doc:
             page=doc[number-1]
-            scale=bounded_scale(page.rect.width,page.rect.height,preferred=3)
+            scale=bounded_scale(page.rect.width,page.rect.height,preferred=preferred_scale)
             pixmap = page.get_pixmap(matrix=fitz.Matrix(scale, scale), alpha=False)
             return Image.frombytes('RGB', (pixmap.width, pixmap.height), pixmap.samples)
-    with Image.open(BytesIO(path.read_bytes())) as image:
+    with Image.open(BytesIO(source_bytes)) as image:
         if image.width*image.height>50_000_000:
             raise ValueError('Изображение слишком большое для распознавания (лимит 50 млн пикселей)')
+        image.seek(max(0, min(int(number) - 1, int(getattr(image, 'n_frames', 1)) - 1)))
         scale=bounded_scale(image.width,image.height,preferred=1)
         image.thumbnail((max(1,int(image.width*scale)),max(1,int(image.height*scale))))
         return image.convert('RGB')
@@ -413,18 +423,6 @@ def extract_ocr_layout(converted, input_path=None, extension=None):
         warnings.append(f"Стоимость обращения к Polza AI: {ai_budget['cost_rub']:.4f} ₽.")
     layout = {'version': 1, 'source': 'ocr_geometry', 'pages': pages, 'parts': parts, 'warnings': warnings,
               'ai_usage': {'requests': 1 - ai_budget['remaining'], 'cost_rub': ai_budget.get('cost_rub')}}
-    if input_path and extension:
-        from polza_review import review_tables
-        review = review_tables(input_path, extension, layout)
-        layout['ai_review'] = review
-        if review['status'] in {'complete', 'partial'}:
-            warnings.append(f"ИИ проверил таблиц: {review['checked']} из {review['total']}; с замечаниями: {review['issues']}, с неопределённым результатом: {review['uncertain']}. Проверка может пропустить ошибки.")
-            if review['failed']:
-                warnings.append(f"Не удалось проверить таблиц: {review['failed']}.")
-            if review['cost_rub'] is not None:
-                warnings.append(f"Стоимость проверки таблиц Polza AI: {review['cost_rub']:.4f} ₽.")
-        elif review['status'] == 'disabled':
-            warnings.append('Проверка таблиц через ИИ отключена или ключ недоступен.')
     return layout
 
 
