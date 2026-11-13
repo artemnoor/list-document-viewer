@@ -1,0 +1,13 @@
+{
+  "status": "blocked_no_gemma_completion",
+  "requested_model_label": "Gemma 4 30B A4",
+  "available_provider_model_id": "google/gemma-4-26b-a4b-it",
+  "model_availability_verified": true,
+  "gemma_completion_calls": 0,
+  "synthetic_scenarios_prepared": 10,
+  "repeats_requested_per_scenario": 3,
+  "blocker": "Polza returned HTTP 402 Payment Required for an earlier completion request using a different model. No completion request has been made with the requested Gemma model.",
+  "non_gemma_model_outputs_retained": false,
+  "credentials_included": false,
+  "reproduce_when_provider_accepts_requests": "python tests/live_e2e/run_live_evaluation.py --repeat 3 --max-api-calls 40"
+}

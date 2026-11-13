@@ -29,6 +29,9 @@ Rules:
   fact and excluded fact/group. If a candidate cannot be decided, list its alias in
   `unprocessed_fact_ids`, explain why in information_gaps, and set
   requires_manual_review=true. Do not treat an unprocessed candidate as excluded.
+- `candidate_batch` identifies the current part of a complete target-specific set.
+  All batches will be reviewed and their plans merged. Exclude irrelevant candidates
+  in this batch without requesting review solely because other batches exist.
 - Use only the supplied operations and fact IDs in the calculation steps. Steps must
   be a reproducible arithmetic expression; the deterministic engine executes them.
 - If an unambiguous calculation cannot be justified from supplied evidence, return a

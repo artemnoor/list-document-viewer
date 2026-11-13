@@ -1,0 +1,312 @@
+{
+  "contract_version": "1.0.0",
+  "extraction_results": [
+    {
+      "extraction_id": "live-synthetic-extraction-live-unlinked-act-v1",
+      "document_id": "live-unlinked-act",
+      "version": 1,
+      "schema_version": "1.2.0",
+      "extracted_at": "2026-11-13T00:00:00Z",
+      "classification": {
+        "type": "act",
+        "label": "Synthetic act",
+        "confidence": 1.0,
+        "status": "classified"
+      },
+      "extraction_engine": {
+        "rules_executed": true,
+        "llm": {
+          "provider": "not_called",
+          "model": null,
+          "called": false,
+          "response_validated": false,
+          "duration_ms": null,
+          "usage": null,
+          "validation_status": "not_run",
+          "error": null
+        },
+        "parser_adapter": "document-parser-unified/1.1.0"
+      },
+      "mode": "rules_only",
+      "fields": {
+        "execution_period": {
+          "label": "Synthetic operation period",
+          "value": {
+            "start": "2026-04-01",
+            "end": "2026-04-30"
+          },
+          "source_value": "Synthetic operation period",
+          "status": "extracted",
+          "confidence": 1.0,
+          "provenance": {
+            "document_id": "live-unlinked-act",
+            "source_ref": "#/fields/execution_period",
+            "source_text": "Synthetic operation period",
+            "source_available": true
+          },
+          "normalization_note": null
+        }
+      },
+      "tables": [],
+      "indicators": [],
+      "missing_fields": [],
+      "review_required": [],
+      "document_type": "act",
+      "line_items": [
+        {
+          "line_number": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "identifier": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "description": {
+            "label": "Operation description",
+            "value": "Completed equipment inspection",
+            "source_value": "Completed equipment inspection",
+            "status": "extracted",
+            "confidence": 1.0,
+            "provenance": {
+              "document_id": "live-unlinked-act",
+              "source_ref": "#/line_items/0/description",
+              "source_text": "Completed equipment inspection",
+              "source_available": true
+            },
+            "normalization_note": null
+          },
+          "unit": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "plan_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "actual_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit_price": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "amount": {
+            "label": "Amount for Completed equipment inspection",
+            "value": {
+              "amount": "500.00",
+              "currency": "RUB"
+            },
+            "source_value": "500.00",
+            "status": "extracted",
+            "confidence": 1.0,
+            "provenance": {
+              "document_id": "live-unlinked-act",
+              "source_ref": "#/line_items/0/amount",
+              "source_text": "500.00",
+              "source_available": true
+            },
+            "normalization_note": null,
+            "economic_measure": "actual"
+          },
+          "row_id": "live-unlinked-act-row-0001",
+          "source_cells": [],
+          "row_status": "extracted"
+        }
+      ],
+      "model_version": null,
+      "synthetic": true
+    },
+    {
+      "extraction_id": "live-synthetic-extraction-live-synthetic-kfz-07_missing_document_link-v1",
+      "document_id": "live-synthetic-kfz-07_missing_document_link",
+      "version": 1,
+      "schema_version": "1.2.0",
+      "extracted_at": "2026-11-13T00:00:00Z",
+      "classification": {
+        "type": "kfz_report",
+        "label": "Synthetic KФЗ report",
+        "confidence": 1.0,
+        "status": "classified"
+      },
+      "extraction_engine": {
+        "rules_executed": true,
+        "llm": {
+          "provider": "not_called",
+          "model": null,
+          "called": false,
+          "response_validated": false,
+          "duration_ms": null,
+          "usage": null,
+          "validation_status": "not_run",
+          "error": null
+        },
+        "parser_adapter": "document-parser-unified/1.1.0"
+      },
+      "mode": "rules_only",
+      "fields": {},
+      "tables": [],
+      "indicators": [
+        {
+          "key": "reported_total",
+          "label": "Synthetic target indicator",
+          "extracted": {
+            "label": "Synthetic target indicator",
+            "value": {
+              "amount": "500.00",
+              "currency": "RUB"
+            },
+            "source_value": "500.00",
+            "status": "extracted",
+            "confidence": 1.0,
+            "provenance": {
+              "document_id": "live-synthetic-kfz-07_missing_document_link",
+              "source_ref": "#/indicators/0/extracted",
+              "source_text": "500.00",
+              "source_available": true
+            },
+            "normalization_note": null
+          }
+        },
+        {
+          "key": "reporting_period",
+          "label": "Synthetic reporting period",
+          "extracted": {
+            "label": "Synthetic reporting period",
+            "value": {
+              "start": "2026-04-01",
+              "end": "2026-04-30"
+            },
+            "source_value": "Synthetic reporting period",
+            "status": "extracted",
+            "confidence": 1.0,
+            "provenance": {
+              "document_id": "live-synthetic-kfz-07_missing_document_link",
+              "source_ref": "#/indicators/1/extracted",
+              "source_text": "Synthetic reporting period",
+              "source_available": true
+            },
+            "normalization_note": null
+          }
+        }
+      ],
+      "missing_fields": [],
+      "review_required": [],
+      "document_type": "kfz_report",
+      "line_items": [],
+      "model_version": null,
+      "synthetic": true
+    }
+  ],
+  "linking_result": {
+    "linking_run_id": "live-synthetic-linking-v1",
+    "contract_version": "1.2.0",
+    "created_at": "2026-11-13T00:00:00Z",
+    "input_documents": [
+      {
+        "document_id": "live-unlinked-act",
+        "extraction_id": "live-synthetic-extraction-live-unlinked-act-v1",
+        "document_type": "act",
+        "version": 1,
+        "schema_version": "1.2.0",
+        "input_version": 1
+      },
+      {
+        "document_id": "live-synthetic-kfz-07_missing_document_link",
+        "extraction_id": "live-synthetic-extraction-live-synthetic-kfz-07_missing_document_link-v1",
+        "document_type": "kfz_report",
+        "version": 1,
+        "schema_version": "1.2.0",
+        "input_version": 1
+      }
+    ],
+    "links": [],
+    "review_required": [],
+    "unlinked_documents": [
+      {
+        "document_id": "live-unlinked-act",
+        "reason": "Synthetic source has no confirmed target link."
+      }
+    ],
+    "warnings": [
+      "Synthetic evaluation data; no production documents or values."
+    ],
+    "link_validation_diagnostics": [],
+    "analysis_summary": "Synthetic evaluation graph.",
+    "processing_metadata": {
+      "engine_version": "live-e2e-test",
+      "llm": {
+        "enabled": false,
+        "provider": "not_called",
+        "model": "not_called",
+        "strategy": "full_set",
+        "estimated_input_tokens": 0,
+        "calls": 0,
+        "errors": 0,
+        "duration_ms": 0
+      },
+      "duration_ms": 0
+    }
+  },
+  "context": {
+    "period_start": "2026-04-01",
+    "period_end": "2026-04-30",
+    "targets": [
+      {
+        "target_id": "live-07_missing_document_link",
+        "target_fact_id": "fact_4df74992ba8090a32367",
+        "kfz_document_id": "live-synthetic-kfz-07_missing_document_link",
+        "kfz_source_path": "#/indicators/0/extracted",
+        "kfz_row_id": null,
+        "label": "Total supported by an invoice",
+        "description": "Synthetic evaluation case: Нет обязательного счёта и подтверждённой связи. Even a numerically complete plan must not be published without the required invoice and a confirmed evidence path.",
+        "unit": null,
+        "currency": "RUB",
+        "amount_basis": "unspecified",
+        "economic_measure": "actual",
+        "rounding_scale": 2,
+        "period_basis": "document_period",
+        "required_document_types": [
+          "invoice"
+        ]
+      }
+    ],
+    "data_classification": "open",
+    "external_llm_allowed": true,
+    "rounding_mode": "ROUND_HALF_UP"
+  },
+  "prior_decisions": []
+}

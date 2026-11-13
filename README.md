@@ -42,7 +42,7 @@ uvicorn reconciliation_engine.api:app --reload
 
 Скопируйте `.env.example` и настройте `LLM_ENABLED=true`, `LLM_BASE_URL`, `LLM_API_KEY`, `LLM_MODEL`. Поддерживается OpenAI-compatible `/chat/completions`, включая Polza и локальные серверы; для локального endpoint ключ может быть пустым. Внешний вызов дополнительно требует `context.data_classification` равный `open` или `anonymized` и `context.external_llm_allowed=true`. Для закрытых данных модель остаётся выключенной, кроме явно настроенного оператором `LLM_TRUSTED_LOCAL=true` для локально контролируемой модели/endpoint. В prompt не передаются `source_value`, координаты или полная provenance; идентификаторы документов, строк и связей заменяются псевдонимами. Нормализованные описания строк и evidence значения передаются только в разрешённом режиме.
 
-Правила планировщика имеют отдельную версию: `prompts/calculation-plan.v1.0.0.txt`.
+Правила планировщика имеют отдельные версии: исходная `prompts/calculation-plan.v1.0.0.txt` и текущая `prompts/calculation-plan.v1.0.1.txt`.
 
 ## Тесты
 
@@ -65,6 +65,7 @@ docker run --rm -p 8000:8000 --env-file .env -v ${PWD}/data:/app/data phystech-t
 - [Контракты](docs/contracts.md)
 - [Модель расчёта](docs/calculation-model.md)
 - [Результаты проверок](docs/test-results.md)
+- [Статус live E2E-теста Gemma 4](docs/live-llm-evaluation.md)
 
 ## Синтетический acceptance и текущие ограничения
 

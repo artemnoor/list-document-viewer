@@ -1,0 +1,21 @@
+{
+  "case_id": "05_period_filter",
+  "synthetic": true,
+  "title": "Фильтр периода",
+  "scenario_note": "The March amount is deliberately equal to April but outside the requested period.",
+  "expected_source_groups": [
+    [
+      "fact_219adf31ba0d7354f972"
+    ]
+  ],
+  "expected_excluded_fact_ids": [
+    "fact_665570b7ad23a8c691b1"
+  ],
+  "expected_formula": {
+    "operation": "sum",
+    "input_count": 1
+  },
+  "expected_value": "500.00",
+  "expected_publication_gate": null,
+  "truth_source": "deterministic synthetic input specification; independent of all LLM outputs"
+}

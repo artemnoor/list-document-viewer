@@ -1,0 +1,837 @@
+{
+  "contract_version": "1.0.0",
+  "extraction_results": [
+    {
+      "extraction_id": "live-synthetic-extraction-live-duplicate-act-v1",
+      "document_id": "live-duplicate-act",
+      "version": 1,
+      "schema_version": "1.2.0",
+      "extracted_at": "2026-11-13T00:00:00Z",
+      "classification": {
+        "type": "act",
+        "label": "Synthetic act",
+        "confidence": 1.0,
+        "status": "classified"
+      },
+      "extraction_engine": {
+        "rules_executed": true,
+        "llm": {
+          "provider": "not_called",
+          "model": null,
+          "called": false,
+          "response_validated": false,
+          "duration_ms": null,
+          "usage": null,
+          "validation_status": "not_run",
+          "error": null
+        },
+        "parser_adapter": "document-parser-unified/1.1.0"
+      },
+      "mode": "rules_only",
+      "fields": {
+        "execution_period": {
+          "label": "Synthetic operation period",
+          "value": {
+            "start": "2026-04-01",
+            "end": "2026-04-30"
+          },
+          "source_value": "Synthetic operation period",
+          "status": "extracted",
+          "confidence": 1.0,
+          "provenance": {
+            "document_id": "live-duplicate-act",
+            "source_ref": "#/fields/execution_period",
+            "source_text": "Synthetic operation period",
+            "source_available": true
+          },
+          "normalization_note": null
+        }
+      },
+      "tables": [],
+      "indicators": [],
+      "missing_fields": [],
+      "review_required": [],
+      "document_type": "act",
+      "line_items": [
+        {
+          "line_number": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "identifier": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "description": {
+            "label": "Operation description",
+            "value": "Work order WO-018 equipment inspection",
+            "source_value": "Work order WO-018 equipment inspection",
+            "status": "extracted",
+            "confidence": 1.0,
+            "provenance": {
+              "document_id": "live-duplicate-act",
+              "source_ref": "#/line_items/0/description",
+              "source_text": "Work order WO-018 equipment inspection",
+              "source_available": true
+            },
+            "normalization_note": null
+          },
+          "unit": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "plan_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "actual_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit_price": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "amount": {
+            "label": "Amount for Work order WO-018 equipment inspection",
+            "value": {
+              "amount": "125.00",
+              "currency": "RUB"
+            },
+            "source_value": "125.00",
+            "status": "extracted",
+            "confidence": 1.0,
+            "provenance": {
+              "document_id": "live-duplicate-act",
+              "source_ref": "#/line_items/0/amount",
+              "source_text": "125.00",
+              "source_available": true
+            },
+            "normalization_note": null,
+            "economic_measure": "actual"
+          },
+          "row_id": "live-duplicate-act-row-0001",
+          "source_cells": [],
+          "row_status": "extracted"
+        }
+      ],
+      "model_version": null,
+      "synthetic": true
+    },
+    {
+      "extraction_id": "live-synthetic-extraction-live-duplicate-invoice-v1",
+      "document_id": "live-duplicate-invoice",
+      "version": 1,
+      "schema_version": "1.2.0",
+      "extracted_at": "2026-11-13T00:00:00Z",
+      "classification": {
+        "type": "invoice",
+        "label": "Synthetic invoice",
+        "confidence": 1.0,
+        "status": "classified"
+      },
+      "extraction_engine": {
+        "rules_executed": true,
+        "llm": {
+          "provider": "not_called",
+          "model": null,
+          "called": false,
+          "response_validated": false,
+          "duration_ms": null,
+          "usage": null,
+          "validation_status": "not_run",
+          "error": null
+        },
+        "parser_adapter": "document-parser-unified/1.1.0"
+      },
+      "mode": "rules_only",
+      "fields": {
+        "execution_period": {
+          "label": "Synthetic operation period",
+          "value": {
+            "start": "2026-04-01",
+            "end": "2026-04-30"
+          },
+          "source_value": "Synthetic operation period",
+          "status": "extracted",
+          "confidence": 1.0,
+          "provenance": {
+            "document_id": "live-duplicate-invoice",
+            "source_ref": "#/fields/execution_period",
+            "source_text": "Synthetic operation period",
+            "source_available": true
+          },
+          "normalization_note": null
+        }
+      },
+      "tables": [],
+      "indicators": [],
+      "missing_fields": [],
+      "review_required": [],
+      "document_type": "invoice",
+      "line_items": [
+        {
+          "line_number": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "identifier": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "description": {
+            "label": "Operation description",
+            "value": "Work order WO-018 equipment inspection",
+            "source_value": "Work order WO-018 equipment inspection",
+            "status": "extracted",
+            "confidence": 1.0,
+            "provenance": {
+              "document_id": "live-duplicate-invoice",
+              "source_ref": "#/line_items/0/description",
+              "source_text": "Work order WO-018 equipment inspection",
+              "source_available": true
+            },
+            "normalization_note": null
+          },
+          "unit": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "plan_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "actual_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit_price": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "amount": {
+            "label": "Amount for Work order WO-018 equipment inspection",
+            "value": {
+              "amount": "125.00",
+              "currency": "RUB"
+            },
+            "source_value": "125.00",
+            "status": "extracted",
+            "confidence": 1.0,
+            "provenance": {
+              "document_id": "live-duplicate-invoice",
+              "source_ref": "#/line_items/0/amount",
+              "source_text": "125.00",
+              "source_available": true
+            },
+            "normalization_note": null,
+            "economic_measure": "actual"
+          },
+          "row_id": "live-duplicate-invoice-row-0001",
+          "source_cells": [],
+          "row_status": "extracted"
+        }
+      ],
+      "model_version": null,
+      "synthetic": true
+    },
+    {
+      "extraction_id": "live-synthetic-extraction-live-duplicate-registry-v1",
+      "document_id": "live-duplicate-registry",
+      "version": 1,
+      "schema_version": "1.2.0",
+      "extracted_at": "2026-11-13T00:00:00Z",
+      "classification": {
+        "type": "registry",
+        "label": "Synthetic registry",
+        "confidence": 1.0,
+        "status": "classified"
+      },
+      "extraction_engine": {
+        "rules_executed": true,
+        "llm": {
+          "provider": "not_called",
+          "model": null,
+          "called": false,
+          "response_validated": false,
+          "duration_ms": null,
+          "usage": null,
+          "validation_status": "not_run",
+          "error": null
+        },
+        "parser_adapter": "document-parser-unified/1.1.0"
+      },
+      "mode": "rules_only",
+      "fields": {
+        "execution_period": {
+          "label": "Synthetic operation period",
+          "value": {
+            "start": "2026-04-01",
+            "end": "2026-04-30"
+          },
+          "source_value": "Synthetic operation period",
+          "status": "extracted",
+          "confidence": 1.0,
+          "provenance": {
+            "document_id": "live-duplicate-registry",
+            "source_ref": "#/fields/execution_period",
+            "source_text": "Synthetic operation period",
+            "source_available": true
+          },
+          "normalization_note": null
+        }
+      },
+      "tables": [],
+      "indicators": [],
+      "missing_fields": [],
+      "review_required": [],
+      "document_type": "registry",
+      "line_items": [
+        {
+          "line_number": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "identifier": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "description": {
+            "label": "Operation description",
+            "value": "Work order WO-018 equipment inspection",
+            "source_value": "Work order WO-018 equipment inspection",
+            "status": "extracted",
+            "confidence": 1.0,
+            "provenance": {
+              "document_id": "live-duplicate-registry",
+              "source_ref": "#/line_items/0/description",
+              "source_text": "Work order WO-018 equipment inspection",
+              "source_available": true
+            },
+            "normalization_note": null
+          },
+          "unit": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "plan_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "actual_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit_price": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "amount": {
+            "label": "Amount for Work order WO-018 equipment inspection",
+            "value": {
+              "amount": "125.00",
+              "currency": "RUB"
+            },
+            "source_value": "125.00",
+            "status": "extracted",
+            "confidence": 1.0,
+            "provenance": {
+              "document_id": "live-duplicate-registry",
+              "source_ref": "#/line_items/0/amount",
+              "source_text": "125.00",
+              "source_available": true
+            },
+            "normalization_note": null,
+            "economic_measure": "actual"
+          },
+          "row_id": "live-duplicate-registry-row-0001",
+          "source_cells": [],
+          "row_status": "extracted"
+        }
+      ],
+      "model_version": null,
+      "synthetic": true
+    },
+    {
+      "extraction_id": "live-synthetic-extraction-live-synthetic-kfz-03_duplicate_representations-v1",
+      "document_id": "live-synthetic-kfz-03_duplicate_representations",
+      "version": 1,
+      "schema_version": "1.2.0",
+      "extracted_at": "2026-11-13T00:00:00Z",
+      "classification": {
+        "type": "kfz_report",
+        "label": "Synthetic KФЗ report",
+        "confidence": 1.0,
+        "status": "classified"
+      },
+      "extraction_engine": {
+        "rules_executed": true,
+        "llm": {
+          "provider": "not_called",
+          "model": null,
+          "called": false,
+          "response_validated": false,
+          "duration_ms": null,
+          "usage": null,
+          "validation_status": "not_run",
+          "error": null
+        },
+        "parser_adapter": "document-parser-unified/1.1.0"
+      },
+      "mode": "rules_only",
+      "fields": {},
+      "tables": [],
+      "indicators": [
+        {
+          "key": "reported_total",
+          "label": "Synthetic target indicator",
+          "extracted": {
+            "label": "Synthetic target indicator",
+            "value": {
+              "amount": "125.00",
+              "currency": "RUB"
+            },
+            "source_value": "125.00",
+            "status": "extracted",
+            "confidence": 1.0,
+            "provenance": {
+              "document_id": "live-synthetic-kfz-03_duplicate_representations",
+              "source_ref": "#/indicators/0/extracted",
+              "source_text": "125.00",
+              "source_available": true
+            },
+            "normalization_note": null
+          }
+        },
+        {
+          "key": "reporting_period",
+          "label": "Synthetic reporting period",
+          "extracted": {
+            "label": "Synthetic reporting period",
+            "value": {
+              "start": "2026-04-01",
+              "end": "2026-04-30"
+            },
+            "source_value": "Synthetic reporting period",
+            "status": "extracted",
+            "confidence": 1.0,
+            "provenance": {
+              "document_id": "live-synthetic-kfz-03_duplicate_representations",
+              "source_ref": "#/indicators/1/extracted",
+              "source_text": "Synthetic reporting period",
+              "source_available": true
+            },
+            "normalization_note": null
+          }
+        }
+      ],
+      "missing_fields": [],
+      "review_required": [],
+      "document_type": "kfz_report",
+      "line_items": [],
+      "model_version": null,
+      "synthetic": true
+    }
+  ],
+  "linking_result": {
+    "linking_run_id": "live-synthetic-linking-v1",
+    "contract_version": "1.2.0",
+    "created_at": "2026-11-13T00:00:00Z",
+    "input_documents": [
+      {
+        "document_id": "live-duplicate-act",
+        "extraction_id": "live-synthetic-extraction-live-duplicate-act-v1",
+        "document_type": "act",
+        "version": 1,
+        "schema_version": "1.2.0",
+        "input_version": 1
+      },
+      {
+        "document_id": "live-duplicate-invoice",
+        "extraction_id": "live-synthetic-extraction-live-duplicate-invoice-v1",
+        "document_type": "invoice",
+        "version": 1,
+        "schema_version": "1.2.0",
+        "input_version": 1
+      },
+      {
+        "document_id": "live-duplicate-registry",
+        "extraction_id": "live-synthetic-extraction-live-duplicate-registry-v1",
+        "document_type": "registry",
+        "version": 1,
+        "schema_version": "1.2.0",
+        "input_version": 1
+      },
+      {
+        "document_id": "live-synthetic-kfz-03_duplicate_representations",
+        "extraction_id": "live-synthetic-extraction-live-synthetic-kfz-03_duplicate_representations-v1",
+        "document_type": "kfz_report",
+        "version": 1,
+        "schema_version": "1.2.0",
+        "input_version": 1
+      }
+    ],
+    "links": [
+      {
+        "link_id": "synthetic-support-03_duplicate_representations-0001",
+        "relationship_type": "supports_indicator",
+        "source_document_id": "live-duplicate-act",
+        "target_document_id": "live-synthetic-kfz-03_duplicate_representations",
+        "evidence": [
+          {
+            "source": {
+              "document_id": "live-duplicate-act",
+              "path": "#/line_items/0/amount",
+              "raw_value": "synthetic-private-value",
+              "normalized_value": "synthetic-source",
+              "provenance": {
+                "document_id": "live-duplicate-act",
+                "source_ref": "#/line_items/0/amount",
+                "source_text": "125.00",
+                "source_available": true
+              }
+            },
+            "target": {
+              "document_id": "live-synthetic-kfz-03_duplicate_representations",
+              "path": "#/indicators/0/extracted",
+              "raw_value": "synthetic-target-value",
+              "normalized_value": "synthetic-target",
+              "provenance": {
+                "document_id": "live-synthetic-kfz-03_duplicate_representations",
+                "source_ref": "#/indicators/0/extracted",
+                "source_text": "125.00",
+                "source_available": true
+              }
+            },
+            "signal": "synthetic_operation_support",
+            "explanation": "Synthetic evidence edge for evaluator-controlled test records."
+          }
+        ],
+        "explanation": "Synthetic source-to-target relation.",
+        "confidence": 1.0,
+        "status": "confirmed",
+        "verification_status": "human_confirmed",
+        "detection_method": "llm",
+        "conflicts": [],
+        "source_row_id": "live-duplicate-act-row-0001"
+      },
+      {
+        "link_id": "synthetic-support-03_duplicate_representations-0002",
+        "relationship_type": "supports_indicator",
+        "source_document_id": "live-duplicate-invoice",
+        "target_document_id": "live-synthetic-kfz-03_duplicate_representations",
+        "evidence": [
+          {
+            "source": {
+              "document_id": "live-duplicate-invoice",
+              "path": "#/line_items/0/amount",
+              "raw_value": "synthetic-private-value",
+              "normalized_value": "synthetic-source",
+              "provenance": {
+                "document_id": "live-duplicate-invoice",
+                "source_ref": "#/line_items/0/amount",
+                "source_text": "125.00",
+                "source_available": true
+              }
+            },
+            "target": {
+              "document_id": "live-synthetic-kfz-03_duplicate_representations",
+              "path": "#/indicators/0/extracted",
+              "raw_value": "synthetic-target-value",
+              "normalized_value": "synthetic-target",
+              "provenance": {
+                "document_id": "live-synthetic-kfz-03_duplicate_representations",
+                "source_ref": "#/indicators/0/extracted",
+                "source_text": "125.00",
+                "source_available": true
+              }
+            },
+            "signal": "synthetic_operation_support",
+            "explanation": "Synthetic evidence edge for evaluator-controlled test records."
+          }
+        ],
+        "explanation": "Synthetic source-to-target relation.",
+        "confidence": 1.0,
+        "status": "confirmed",
+        "verification_status": "human_confirmed",
+        "detection_method": "llm",
+        "conflicts": [],
+        "source_row_id": "live-duplicate-invoice-row-0001"
+      },
+      {
+        "link_id": "synthetic-support-03_duplicate_representations-0003",
+        "relationship_type": "supports_indicator",
+        "source_document_id": "live-duplicate-registry",
+        "target_document_id": "live-synthetic-kfz-03_duplicate_representations",
+        "evidence": [
+          {
+            "source": {
+              "document_id": "live-duplicate-registry",
+              "path": "#/line_items/0/amount",
+              "raw_value": "synthetic-private-value",
+              "normalized_value": "synthetic-source",
+              "provenance": {
+                "document_id": "live-duplicate-registry",
+                "source_ref": "#/line_items/0/amount",
+                "source_text": "125.00",
+                "source_available": true
+              }
+            },
+            "target": {
+              "document_id": "live-synthetic-kfz-03_duplicate_representations",
+              "path": "#/indicators/0/extracted",
+              "raw_value": "synthetic-target-value",
+              "normalized_value": "synthetic-target",
+              "provenance": {
+                "document_id": "live-synthetic-kfz-03_duplicate_representations",
+                "source_ref": "#/indicators/0/extracted",
+                "source_text": "125.00",
+                "source_available": true
+              }
+            },
+            "signal": "synthetic_operation_support",
+            "explanation": "Synthetic evidence edge for evaluator-controlled test records."
+          }
+        ],
+        "explanation": "Synthetic source-to-target relation.",
+        "confidence": 1.0,
+        "status": "confirmed",
+        "verification_status": "human_confirmed",
+        "detection_method": "llm",
+        "conflicts": [],
+        "source_row_id": "live-duplicate-registry-row-0001"
+      },
+      {
+        "link_id": "synthetic-correspondence-03_duplicate_representations-0001",
+        "relationship_type": "line_item_correspondence",
+        "source_document_id": "live-duplicate-act",
+        "target_document_id": "live-duplicate-invoice",
+        "source_row_id": "live-duplicate-act-row-0001",
+        "target_row_id": "live-duplicate-invoice-row-0001",
+        "evidence": [
+          {
+            "source": {
+              "document_id": "live-duplicate-act",
+              "path": "#/line_items/0/amount",
+              "raw_value": "synthetic-private-value",
+              "normalized_value": "synthetic-source",
+              "provenance": {
+                "document_id": "live-duplicate-act",
+                "source_ref": "#/line_items/0/amount",
+                "source_text": "125.00",
+                "source_available": true
+              }
+            },
+            "target": {
+              "document_id": "live-duplicate-invoice",
+              "path": "#/line_items/0/amount",
+              "raw_value": "synthetic-target-value",
+              "normalized_value": "synthetic-target",
+              "provenance": {
+                "document_id": "live-duplicate-invoice",
+                "source_ref": "#/line_items/0/amount",
+                "source_text": "125.00",
+                "source_available": true
+              }
+            },
+            "signal": "synthetic_operation_support",
+            "explanation": "Synthetic evidence edge for evaluator-controlled test records."
+          }
+        ],
+        "explanation": "Synthetic duplicate-operation correspondence.",
+        "confidence": 1.0,
+        "status": "confirmed",
+        "verification_status": "human_confirmed",
+        "detection_method": "llm",
+        "conflicts": []
+      },
+      {
+        "link_id": "synthetic-correspondence-03_duplicate_representations-0002",
+        "relationship_type": "line_item_correspondence",
+        "source_document_id": "live-duplicate-act",
+        "target_document_id": "live-duplicate-registry",
+        "source_row_id": "live-duplicate-act-row-0001",
+        "target_row_id": "live-duplicate-registry-row-0001",
+        "evidence": [
+          {
+            "source": {
+              "document_id": "live-duplicate-act",
+              "path": "#/line_items/0/amount",
+              "raw_value": "synthetic-private-value",
+              "normalized_value": "synthetic-source",
+              "provenance": {
+                "document_id": "live-duplicate-act",
+                "source_ref": "#/line_items/0/amount",
+                "source_text": "125.00",
+                "source_available": true
+              }
+            },
+            "target": {
+              "document_id": "live-duplicate-registry",
+              "path": "#/line_items/0/amount",
+              "raw_value": "synthetic-target-value",
+              "normalized_value": "synthetic-target",
+              "provenance": {
+                "document_id": "live-duplicate-registry",
+                "source_ref": "#/line_items/0/amount",
+                "source_text": "125.00",
+                "source_available": true
+              }
+            },
+            "signal": "synthetic_operation_support",
+            "explanation": "Synthetic evidence edge for evaluator-controlled test records."
+          }
+        ],
+        "explanation": "Synthetic duplicate-operation correspondence.",
+        "confidence": 1.0,
+        "status": "confirmed",
+        "verification_status": "human_confirmed",
+        "detection_method": "llm",
+        "conflicts": []
+      }
+    ],
+    "review_required": [],
+    "unlinked_documents": [],
+    "warnings": [
+      "Synthetic evaluation data; no production documents or values."
+    ],
+    "link_validation_diagnostics": [],
+    "analysis_summary": "Synthetic evaluation graph.",
+    "processing_metadata": {
+      "engine_version": "live-e2e-test",
+      "llm": {
+        "enabled": false,
+        "provider": "not_called",
+        "model": "not_called",
+        "strategy": "full_set",
+        "estimated_input_tokens": 0,
+        "calls": 0,
+        "errors": 0,
+        "duration_ms": 0
+      },
+      "duration_ms": 0
+    }
+  },
+  "context": {
+    "period_start": "2026-04-01",
+    "period_end": "2026-04-30",
+    "targets": [
+      {
+        "target_id": "live-03_duplicate_representations",
+        "target_fact_id": "fact_f3960e04799c423b8a1a",
+        "kfz_document_id": "live-synthetic-kfz-03_duplicate_representations",
+        "kfz_source_path": "#/indicators/0/extracted",
+        "kfz_row_id": null,
+        "label": "Total for operation WO-018",
+        "description": "Synthetic evaluation case: Акт, счёт и реестр одной операции. The act, invoice, and registry describe the same operation; any single representation may be selected, but none may be added to another.",
+        "unit": null,
+        "currency": "RUB",
+        "amount_basis": "unspecified",
+        "economic_measure": "actual",
+        "rounding_scale": 2,
+        "period_basis": "document_period",
+        "required_document_types": []
+      }
+    ],
+    "data_classification": "open",
+    "external_llm_allowed": true,
+    "rounding_mode": "ROUND_HALF_UP"
+  },
+  "prior_decisions": []
+}

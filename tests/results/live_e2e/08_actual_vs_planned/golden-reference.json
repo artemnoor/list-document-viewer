@@ -1,0 +1,21 @@
+{
+  "case_id": "08_actual_vs_planned",
+  "synthetic": true,
+  "title": "Факт против плана",
+  "scenario_note": "The larger planned value is not interchangeable with the actual completed amount.",
+  "expected_source_groups": [
+    [
+      "fact_288f2090c7cc8063c211"
+    ]
+  ],
+  "expected_excluded_fact_ids": [
+    "fact_7e67c00e922a57e3eca6"
+  ],
+  "expected_formula": {
+    "operation": "sum",
+    "input_count": 1
+  },
+  "expected_value": "900.00",
+  "expected_publication_gate": null,
+  "truth_source": "deterministic synthetic input specification; independent of all LLM outputs"
+}

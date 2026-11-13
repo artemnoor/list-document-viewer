@@ -1,0 +1,8 @@
+{
+  "prepared_at": "2026-11-13T21:29:45.345894+00:00",
+  "live_llm_calls": 0,
+  "status": "prepared_not_run",
+  "scenario_count": 10,
+  "repeat_count": 3,
+  "note": "Synthetic inputs and independent references only; no LLM response is fabricated."
+}

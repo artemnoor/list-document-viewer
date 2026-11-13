@@ -1,0 +1,22 @@
+{
+  "case_id": "02_independent_acts",
+  "synthetic": true,
+  "title": "Сумма независимых актов",
+  "scenario_note": "Two separately described operations in distinct acts; the engine still requires explicit cross-document independence confirmation.",
+  "expected_source_groups": [
+    [
+      "fact_62391e1c5c9ecca4c669"
+    ],
+    [
+      "fact_40e18cffd64fa0341138"
+    ]
+  ],
+  "expected_excluded_fact_ids": [],
+  "expected_formula": {
+    "operation": "sum",
+    "input_count": 2
+  },
+  "expected_value": "150.00",
+  "expected_publication_gate": "independence_not_established",
+  "truth_source": "deterministic synthetic input specification; independent of all LLM outputs"
+}

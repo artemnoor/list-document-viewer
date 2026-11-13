@@ -1,0 +1,22 @@
+{
+  "case_id": "09_similar_equal_amounts",
+  "synthetic": true,
+  "title": "Похожие операции с одинаковыми суммами",
+  "scenario_note": "All amounts are equal; selection must use operation semantics and location, not numeric coincidence.",
+  "expected_source_groups": [
+    [
+      "fact_96475e87b91cef054937"
+    ]
+  ],
+  "expected_excluded_fact_ids": [
+    "fact_edc3ba65825e16b48b82",
+    "fact_fe61050bbcba5ab6ac71"
+  ],
+  "expected_formula": {
+    "operation": "sum",
+    "input_count": 1
+  },
+  "expected_value": "125.00",
+  "expected_publication_gate": null,
+  "truth_source": "deterministic synthetic input specification; independent of all LLM outputs"
+}

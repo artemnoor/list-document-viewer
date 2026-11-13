@@ -44,15 +44,52 @@ def related_links_for_fact(fact: Fact, linking: dict[str, Any]) -> list[dict[str
     return related
 
 
+def _is_vat_amount_fact(fact: Fact) -> bool:
+    """Recognize a VAT component without mistaking a gross total that mentions VAT for tax itself."""
+    key = re.sub(r"[^a-z0-9а-яё]+", "_", fact.key.casefold())
+    label = fact.label.casefold()
+    measure_words = r"(?:amount|value|sum|total|tax|сумма|значение|налог)"
+    key_is_vat_amount = bool(
+        re.search(r"(?:^|_)(?:vat|ндс)(?:_|$)", key)
+        and re.search(rf"(?:^|_){measure_words}(?:_|$)", key)
+    )
+    label_is_vat_amount = bool(
+        re.search(rf"\b(?:vat|ндс)\s+{measure_words}\b", label)
+        or re.search(rf"\b{measure_words}\s+(?:of\s+)?(?:vat|ндс)\b", label)
+    )
+    return key_is_vat_amount or label_is_vat_amount
+
+
+def _is_explicit_gross_amount(fact: Fact) -> bool:
+    if fact.amount_basis == "gross":
+        return True
+    key = fact.key.replace("_", " ").casefold()
+    label = fact.label.casefold()
+    text = f"{key} {label}"
+    return bool(
+        re.search(r"\bgross\b|\bвалов(?:ая|ой|ую)\b", text)
+        or re.search(r"\b(?:including|inclusive|including tax)\s+(?:vat|ндс)\b", text)
+        or re.search(r"\b(?:с|включая)\s+(?:vat|ндс)\b", text)
+        or re.search(r"\b(?:amount due|total due|amount payable|total payable|total to pay)\b", key)
+        or re.search(r"\bитого к оплате\b", label)
+    )
+
+
 def _explicit_net_conversion_facts(plan: CalculationPlan, facts: list[Fact], target: TargetIndicator) -> set[str]:
     if target.amount_basis != "net" or plan.amount_basis != "net":
         return set()
     selected = [fact for fact in facts if fact.fact_id in {item.fact_id for item in plan.included}]
-    vat_facts = [fact for fact in selected if re.search(r"vat|ндс", f"{fact.key} {fact.label}", re.IGNORECASE)]
+    vat_facts = [fact for fact in selected if _is_vat_amount_fact(fact)]
     if len(vat_facts) != 1:
         return set()
     vat = vat_facts[0]
-    gross_candidates = [fact for fact in selected if fact.document_id == vat.document_id and fact.fact_id != vat.fact_id and fact.currency == vat.currency]
+    gross_candidates = [
+        fact for fact in selected
+        if fact.document_id == vat.document_id
+        and fact.fact_id != vat.fact_id
+        and fact.currency == vat.currency
+        and _is_explicit_gross_amount(fact)
+    ]
     for gross in gross_candidates:
         if any(step.operation == "subtract" and step.inputs == [gross.fact_id, vat.fact_id] for step in plan.steps):
             return {gross.fact_id, vat.fact_id}
@@ -220,7 +257,13 @@ def validate_plan(
             if source_id not in known:
                 diagnostics.append(Diagnostic("unknown_step_input", f"{path}.inputs[{input_index}]", "Step input must reference an included fact or a previous step", {"input": source_id}))
         known.add(step.step_id)
-    if plan.result_step_id not in step_ids:
+    non_calculating_review = (
+        plan.requires_manual_review
+        and not included_ids
+        and not plan.steps
+        and plan.result_step_id is None
+    )
+    if plan.result_step_id not in step_ids and not non_calculating_review:
         diagnostics.append(Diagnostic("missing_result_step", "$.plan.result_step_id", "result_step_id must identify a calculation step", {"result_step_id": plan.result_step_id}))
     # Walk backward from the final expression. Merely appearing somewhere in the
     # submitted steps is not enough: detached or repeated intermediate nodes must
@@ -265,9 +308,11 @@ def validate_plan(
 
     excluded_fact_ids = {item.fact_id for item in plan.excluded if item.fact_id}
     excluded_group_ids = {item.source_group_id for item in plan.excluded if item.source_group_id}
+    unprocessed_fact_ids = set(plan.unprocessed_fact_ids)
     missing_explanations = sorted(
         fact.fact_id for fact in facts
         if fact.fact_id not in set(included_ids)
+        and fact.fact_id not in unprocessed_fact_ids
         and fact.document_id != target.kfz_document_id
         and fact.document_type != "kfz_report"
         and fact.document_id not in excluded_group_ids

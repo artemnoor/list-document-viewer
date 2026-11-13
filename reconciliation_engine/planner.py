@@ -1,7 +1,8 @@
-import json
 import hashlib
+import json
 import re
 from pathlib import Path
+import time
 from typing import Any
 
 import httpx
@@ -12,7 +13,7 @@ from .models import TargetIndicator
 from .plans import CalculationPlan, PlanStep
 from .security import is_trusted_internal_endpoint
 
-PROMPT_PATH = Path(__file__).resolve().parents[1] / "prompts" / "calculation-plan.v1.0.0.txt"
+PROMPT_PATH = Path(__file__).resolve().parents[1] / "prompts" / "calculation-plan.v1.0.1.txt"
 
 
 class PlannerUnavailable(Exception):
@@ -29,6 +30,7 @@ def _json_content(content: str) -> dict[str, Any]:
 class LLMPlanner:
     def __init__(self, settings: Settings):
         self.settings = settings
+        self.call_records: list[dict[str, Any]] = []
 
     @staticmethod
     def _row_alias(document_id: str, row_id: str | None) -> str | None:
@@ -66,7 +68,7 @@ class LLMPlanner:
             fact for fact in facts
             if fact.document_type != "kfz_report"
             and fact.document_id != target.kfz_document_id
-            and (numeric_value(fact) is not None or fact.status in {"review", "missing"})
+            and numeric_value(fact) is not None
         ]
         group_by_document, locally_assigned_fact_aliases = self._aliases(facts, source_groups, candidates)
         fact_aliases = fact_aliases or locally_assigned_fact_aliases
@@ -185,7 +187,6 @@ class LLMPlanner:
                 "review_required": safe_review,
                 "unlinked_source_groups": safe_unlinked,
                 "validation_diagnostics": safe_diagnostics,
-                "warning_count": len(linking.get("warnings", [])),
             },
             "output_contract": CalculationPlan.model_json_schema(),
         }
@@ -197,28 +198,83 @@ class LLMPlanner:
             if not is_trusted_internal_endpoint(self.settings.llm_base_url, self.settings.llm_trusted_hosts):
                 raise PlannerUnavailable("Confidential inputs cannot be sent to an endpoint outside localhost or the configured internal host allowlist")
         system_prompt = PROMPT_PATH.read_text(encoding="utf-8")
+        prompt_sha256 = hashlib.sha256(system_prompt.encode("utf-8")).hexdigest()
+        payload_sha256 = hashlib.sha256(
+            json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        ).hexdigest()
         headers = {"Authorization": f"Bearer {self.settings.llm_api_key}"} if self.settings.llm_api_key else {}
         url = self.settings.llm_base_url.rstrip("/") + "/chat/completions"
-        with httpx.Client(timeout=self.settings.llm_timeout_seconds, follow_redirects=False) as client:
-            response = client.post(
-                url,
-                headers=headers,
-                json={
-                    "model": self.settings.llm_model,
-                    "temperature": 0,
-                    "response_format": {"type": "json_object"},
-                    "messages": [
-                        {"role": "system", "content": system_prompt},
-                        {"role": "user", "content": json.dumps(payload, ensure_ascii=False)},
-                    ],
-                },
-            )
-            response.raise_for_status()
-            result = response.json()
+        started = time.perf_counter()
         try:
-            content = result["choices"][0]["message"]["content"]
+            with httpx.Client(timeout=self.settings.llm_timeout_seconds, follow_redirects=False) as client:
+                response = client.post(
+                    url,
+                    headers=headers,
+                    json={
+                        "model": self.settings.llm_model,
+                        "temperature": 0,
+                        "response_format": {"type": "json_object"},
+                        "messages": [
+                            {"role": "system", "content": system_prompt},
+                            {"role": "user", "content": json.dumps(payload, ensure_ascii=False)},
+                        ],
+                    },
+                )
+                response.raise_for_status()
+                result = response.json()
+        except Exception as exc:
+            self.call_records.append({
+                "model_requested": self.settings.llm_model,
+                "duration_ms": round((time.perf_counter() - started) * 1000, 3),
+                "error_type": type(exc).__name__,
+                "http_status": getattr(getattr(exc, "response", None), "status_code", None),
+                "prompt_sha256": prompt_sha256,
+                "payload_sha256": payload_sha256,
+                "assistant_content": None,
+                "usage": None,
+            })
+            raise
+        try:
+            choice = result["choices"][0]
+            content = choice["message"]["content"]
+        except (KeyError, IndexError, TypeError) as exc:
+            self.call_records.append({
+                "model_requested": self.settings.llm_model,
+                "duration_ms": round((time.perf_counter() - started) * 1000, 3),
+                "prompt_sha256": prompt_sha256,
+                "payload_sha256": payload_sha256,
+                "usage": result.get("usage") if isinstance(result, dict) else None,
+                "assistant_content": None,
+                "error_type": type(exc).__name__,
+                "http_status": response.status_code,
+            })
+            raise PlannerUnavailable(f"LLM returned an invalid response envelope: {exc}") from exc
+        self.call_records.append({
+            "response_id": result.get("id"),
+            "model_requested": self.settings.llm_model,
+            "model_returned": result.get("model"),
+            "finish_reason": choice.get("finish_reason"),
+            "duration_ms": round((time.perf_counter() - started) * 1000, 3),
+            "prompt_sha256": prompt_sha256,
+            "payload_sha256": payload_sha256,
+            "usage": result.get("usage"),
+            "provider_cost": (
+                (result.get("usage") or {}).get("cost_rub", (result.get("usage") or {}).get("cost"))
+                if isinstance(result.get("usage"), dict) else None
+            ),
+            "provider_cost_currency": (
+                "RUB" if isinstance(result.get("usage"), dict) and "cost_rub" in result["usage"]
+                else (result.get("usage") or {}).get("cost_currency") if isinstance(result.get("usage"), dict)
+                else None
+            ),
+            "assistant_content": content,
+            "error_type": None,
+            "http_status": response.status_code,
+        })
+        try:
             return CalculationPlan.model_validate(_json_content(content))
-        except (KeyError, IndexError, TypeError, ValueError) as exc:
+        except (TypeError, ValueError) as exc:
+            self.call_records[-1]["error_type"] = type(exc).__name__
             raise PlannerUnavailable(f"LLM returned an invalid plan: {exc}") from exc
 
     def plan(
@@ -236,7 +292,7 @@ class LLMPlanner:
             fact for fact in facts
             if fact.document_type != "kfz_report"
             and fact.document_id != target.kfz_document_id
-            and (numeric_value(fact) is not None or fact.status in {"review", "missing"})
+            and numeric_value(fact) is not None
         ]
         group_by_document, fact_aliases = self._aliases(facts, source_groups, candidates)
         alias_to_fact = {alias: fact_id for fact_id, alias in fact_aliases.items()}
@@ -260,6 +316,13 @@ class LLMPlanner:
         plans: list[tuple[int, CalculationPlan]] = []
         for chunk_index, chunk in enumerate(chunks, start=1):
             payload = self.build_payload(target, facts, source_groups, linking, chunk, fact_aliases)
+            payload["candidate_batch"] = {
+                "index": chunk_index,
+                "total_batches": len(chunks),
+                "batch_candidate_count": len(chunk),
+                "total_candidate_count": len(candidates),
+                "all_batches_will_be_reviewed": True,
+            }
             plan = self._request_plan(payload, sensitive_data)
             decoded = plan.model_dump(mode="python")
             decoded["target_id"] = target.target_id

@@ -299,6 +299,7 @@ def _calculate_target(
     facts: list[Fact],
     settings: Settings,
     snapshot_sha256: str,
+    planner: LLMPlanner | None = None,
 ) -> dict[str, Any]:
     linking = request.linking_result
     facts_by_id = {fact.fact_id: fact for fact in facts}
@@ -337,7 +338,7 @@ def _calculate_target(
     ):
         try:
             groups = {fact.document_id: _group_id(fact.document_id) for fact in facts}
-            plan = LLMPlanner(settings).plan(
+            plan = (planner or LLMPlanner(settings)).plan(
                 target, facts, groups, linking,
                 sensitive_data=request.context.data_classification == "confidential",
             )
@@ -595,7 +596,7 @@ def _failed_target_result(
     }
 
 
-def reconcile(request: ReconciliationRequest, settings: Settings) -> dict[str, Any]:
+def reconcile(request: ReconciliationRequest, settings: Settings, planner: LLMPlanner | None = None) -> dict[str, Any]:
     validate_upstream_inputs(request.extraction_results, request.linking_result)
     facts = extract_facts(request.extraction_results)
     identity = input_snapshot_identity(request)
@@ -604,7 +605,7 @@ def reconcile(request: ReconciliationRequest, settings: Settings) -> dict[str, A
     calculations = []
     for target in request.context.targets:
         try:
-            calculations.append(_calculate_target(request, target, facts, settings, snapshot_hash))
+            calculations.append(_calculate_target(request, target, facts, settings, snapshot_hash, planner))
         except InputContractError as exc:
             calculations.append(_failed_target_result(request, target, snapshot_hash, exc.diagnostics))
         except Exception as exc:

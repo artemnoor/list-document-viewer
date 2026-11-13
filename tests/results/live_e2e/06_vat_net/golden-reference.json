@@ -1,0 +1,25 @@
+{
+  "case_id": "06_vat_net",
+  "synthetic": true,
+  "title": "НДС из gross-суммы",
+  "scenario_note": "Subtract the explicitly identified VAT amount from a same-document gross total.",
+  "expected_source_groups": [
+    [
+      "fact_3a72debd61a0f0f20792"
+    ],
+    [
+      "fact_8e1a37267c8dc5f760f1"
+    ]
+  ],
+  "expected_excluded_fact_ids": [],
+  "expected_formula": {
+    "operation": "subtract",
+    "ordered_keys": [
+      "gross_total",
+      "vat_amount"
+    ]
+  },
+  "expected_value": "100.00",
+  "expected_publication_gate": null,
+  "truth_source": "deterministic synthetic input specification; independent of all LLM outputs"
+}

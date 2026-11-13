@@ -172,6 +172,8 @@ def test_planner_batches_all_candidates_without_truncating(settings, monkeypatch
 
     def review_batch(payload, sensitive_data):
         calls.append(payload)
+        assert payload["candidate_batch"]["total_candidate_count"] == 1200
+        assert payload["candidate_batch"]["total_batches"] == 12
         return CalculationPlan(
             target_id="target_001", method_description="Candidate review only",
             included=[], excluded=[PlanExclusion(fact_id=item["fact_id"], reason="Not applicable to this target") for item in payload["candidates"]],

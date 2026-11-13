@@ -1,0 +1,24 @@
+{
+  "case_id": "03_duplicate_representations",
+  "synthetic": true,
+  "title": "Акт, счёт и реестр одной операции",
+  "scenario_note": "The act, invoice, and registry describe the same operation; any single representation may be selected, but none may be added to another.",
+  "expected_source_groups": [
+    [
+      "fact_5506c69d792ff656ba45",
+      "fact_464a2eda86e9cdcb5972",
+      "fact_87e9df058e461bb9d3c9"
+    ]
+  ],
+  "expected_excluded_fact_ids": [
+    "fact_464a2eda86e9cdcb5972",
+    "fact_87e9df058e461bb9d3c9"
+  ],
+  "expected_formula": {
+    "operation": "sum",
+    "input_count": 1
+  },
+  "expected_value": "125.00",
+  "expected_publication_gate": null,
+  "truth_source": "deterministic synthetic input specification; independent of all LLM outputs"
+}

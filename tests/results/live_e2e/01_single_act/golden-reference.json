@@ -1,0 +1,19 @@
+{
+  "case_id": "01_single_act",
+  "synthetic": true,
+  "title": "Один акт",
+  "scenario_note": "Select the sole completed financial row.",
+  "expected_source_groups": [
+    [
+      "fact_1ef3ae4e6018415ed518"
+    ]
+  ],
+  "expected_excluded_fact_ids": [],
+  "expected_formula": {
+    "operation": "sum",
+    "input_count": 1
+  },
+  "expected_value": "550.00",
+  "expected_publication_gate": null,
+  "truth_source": "deterministic synthetic input specification; independent of all LLM outputs"
+}
