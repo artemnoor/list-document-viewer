@@ -1,0 +1,162 @@
+TAP version 13
+# Subtest: annotation release contains ten unlabeled, hash-pinned expert packets
+ok 1 - annotation release contains ten unlabeled, hash-pinned expert packets
+  ---
+  duration_ms: 110.3606
+  ...
+# Subtest: single-reviewer mode compiles one completed human packet without claiming adjudication
+ok 2 - single-reviewer mode compiles one completed human packet without claiming adjudication
+  ---
+  duration_ms: 1175.1242
+  ...
+# Subtest: single-reviewer mode rejects pending packets and missing pair decisions
+ok 3 - single-reviewer mode rejects pending packets and missing pair decisions
+  ---
+  duration_ms: 1894.7538
+  ...
+# Subtest: single-reviewer mode rejects changed source hashes and unsafe evidence paths or values
+not ok 4 - single-reviewer mode rejects changed source hashes and unsafe evidence paths or values
+  ---
+  duration_ms: 1048.3375
+  location: 'D:\\phystech-trace-quality\\phystech-trace\\services\\document-linking\\tests\\annotation-packets.test.ts:6:1359'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /Source file hash changed/. Input:
+    
+    '{"timestamp":"2026-11-13T19:17:23.464Z","level":"WARN","event":"annotation_compile_rejected_or_failed","mode":"single","failureKind":"validation_rejection","message":"Scenario synthetic-compiler-check still has pending or mismatched packets."}\n'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: |-
+    {"timestamp":"2026-11-13T19:17:23.464Z","level":"WARN","event":"annotation_compile_rejected_or_failed","mode":"single","failureKind":"validation_rejection","message":"Scenario synthetic-compiler-check still has pending or mismatched packets."}
+    
+  operator: 'match'
+  stack: |-
+    TestContext.<anonymous> (D:\phystech-trace-quality\phystech-trace\services\document-linking\tests\annotation-packets.test.ts:151:10)
+    Test.runInAsyncScope (node:async_hooks:211:14)
+    Test.run (node:internal/test_runner/test:931:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:629:18)
+    Test.postRun (node:internal/test_runner/test:1042:19)
+    Test.run (node:internal/test_runner/test:970:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:629:7)
+  ...
+# Subtest: single-reviewer mode rejects placeholder identities
+ok 5 - single-reviewer mode rejects placeholder identities
+  ---
+  duration_ms: 1010.2108
+  ...
+# Subtest: expert mode still requires two reviewers and a separate adjudicator
+ok 6 - expert mode still requires two reviewers and a separate adjudicator
+  ---
+  duration_ms: 957.0803
+  ...
+# Subtest: each repeat is scored separately and the worst repeat remains visible
+ok 7 - each repeat is scored separately and the worst repeat remains visible
+  ---
+  duration_ms: 3.777
+  ...
+# Subtest: reverse direction is a false positive and false negative
+ok 8 - reverse direction is a false positive and false negative
+  ---
+  duration_ms: 0.3755
+  ...
+# Subtest: multiple row matches on one document relation count once for links and separately for rows
+ok 9 - multiple row matches on one document relation count once for links and separately for rows
+  ---
+  duration_ms: 0.5886
+  ...
+# Subtest: evidence is paired to its own true positive and crossed references do not match
+ok 10 - evidence is paired to its own true positive and crossed references do not match
+  ---
+  duration_ms: 0.5715
+  ...
+# Subtest: missing, extra, and duplicate document relations retain exact denominators
+ok 11 - missing, extra, and duplicate document relations retain exact denominators
+  ---
+  duration_ms: 0.5297
+  ...
+# Subtest: negative and ambiguous pairs have separate gates, and an empty negative graph stays N/A
+ok 12 - negative and ambiguous pairs have separate gates, and an empty negative graph stays N/A
+  ---
+  duration_ms: 0.3888
+  ...
+# Subtest: malformed prediction results are rejected instead of becoming empty graphs
+ok 13 - malformed prediction results are rejected instead of becoming empty graphs
+  ---
+  duration_ms: 3.6902
+  ...
+# Subtest: source bundle hashes are checked again before scoring
+ok 14 - source bundle hashes are checked again before scoring
+  ---
+  duration_ms: 48.4107
+  ...
+# Subtest: evidence registry indexes arbitrary nested values and inherits row/provenance context
+ok 15 - evidence registry indexes arbitrary nested values and inherits row/provenance context
+  ---
+  duration_ms: 3.448
+  ...
+# Subtest: complete upstream set is sent as one unfiltered Gemma context
+ok 16 - complete upstream set is sent as one unfiltered Gemma context
+  ---
+  duration_ms: 277.1127
+  ...
+# Subtest: large complete sets use Gemma document passes before whole-set relationship analysis
+ok 17 - large complete sets use Gemma document passes before whole-set relationship analysis
+  ---
+  duration_ms: 226.7102
+  ...
+# Subtest: completed Gemma document fragments persist and resume after an interrupted run
+ok 18 - completed Gemma document fragments persist and resume after an interrupted run
+  ---
+  duration_ms: 9.2032
+  ...
+# Subtest: staged Gemma can request an exact original fragment and reconsider the whole set
+ok 19 - staged Gemma can request an exact original fragment and reconsider the whole set
+  ---
+  duration_ms: 5.9992
+  ...
+# Subtest: full-set Gemma can request an original fragment and resume from its checkpoint
+ok 20 - full-set Gemma can request an original fragment and resume from its checkpoint
+  ---
+  duration_ms: 62.9814
+  ...
+# Subtest: model choice is pinned and missing credentials fail without fallback
+ok 21 - model choice is pinned and missing credentials fail without fallback
+  ---
+  duration_ms: 26.5234
+  ...
+# Subtest: unknown evidence references are diagnosed, then Gemma can repair its own proposal
+ok 22 - unknown evidence references are diagnosed, then Gemma can repair its own proposal
+  ---
+  duration_ms: 67.2518
+  ...
+# Subtest: source text OCR uncertainty keeps the Gemma link for review with a diagnostic
+ok 23 - source text OCR uncertainty keeps the Gemma link for review with a diagnostic
+  ---
+  duration_ms: 42.7948
+  ...
+# Subtest: malformed status and path-shaped row_id retain the model relation as review
+ok 24 - malformed status and path-shaped row_id retain the model relation as review
+  ---
+  duration_ms: 30.0404
+  ...
+# Subtest: a bad evidence citation does not discard another technically valid citation
+ok 25 - a bad evidence citation does not discard another technically valid citation
+  ---
+  duration_ms: 23.614
+  ...
+# Subtest: LLM-only output satisfies the versioned stage 4 contract
+ok 26 - LLM-only output satisfies the versioned stage 4 contract
+  ---
+  duration_ms: 163.6636
+  ...
+1..26
+# tests 26
+# suites 0
+# pass 25
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 6733.399

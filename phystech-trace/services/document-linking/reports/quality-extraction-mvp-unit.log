@@ -1,0 +1,60 @@
+TAP version 13
+# Subtest: missing critical field is an FN and fails critical recall
+ok 1 - missing critical field is an FN and fails critical recall
+  ---
+  duration_ms: 5.9946
+  ...
+# Subtest: matching normalized value with wrong raw value or source is not accepted as correct
+ok 2 - matching normalized value with wrong raw value or source is not accepted as correct
+  ---
+  duration_ms: 0.7615
+  ...
+# Subtest: duplicate and omitted row IDs remain separate FP and FN counts
+ok 3 - duplicate and omitted row IDs remain separate FP and FN counts
+  ---
+  duration_ms: 1.0689
+  ...
+# Subtest: unexpected accepted fields are false positives while noncritical recall keeps its denominator
+ok 4 - unexpected accepted fields are false positives while noncritical recall keeps its denominator
+  ---
+  duration_ms: 0.9172
+  ...
+# Subtest: forged provenance fails accepted source correctness even when typed and raw values match
+ok 5 - forged provenance fails accepted source correctness even when typed and raw values match
+  ---
+  duration_ms: 0.8111
+  ...
+# Subtest: source artifact byte hash tampering is rejected
+ok 6 - source artifact byte hash tampering is rejected
+  ---
+  duration_ms: 14.1424
+  ...
+# Subtest: prediction file hash tampering is represented as a failed result
+ok 7 - prediction file hash tampering is represented as a failed result
+  ---
+  duration_ms: 4.7487
+  ...
+# Subtest: invalid output schema is failed and cannot be counted as an empty successful extraction
+ok 8 - invalid output schema is failed and cannot be counted as an empty successful extraction
+  ---
+  duration_ms: 1.4278
+  ...
+# Subtest: failed model result and rules-only fallback fail LLM-required while preserving misses
+ok 9 - failed model result and rules-only fallback fail LLM-required while preserving misses
+  ---
+  duration_ms: 0.9614
+  ...
+# Subtest: missing prediction remains a failed scenario instead of an empty successful graph
+ok 10 - missing prediction remains a failed scenario instead of an empty successful graph
+  ---
+  duration_ms: 0.5424
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 141.4653

@@ -1,0 +1,55 @@
+TAP version 13
+# Subtest: bounded tasks expose every scalar and text slice across all document pairs without a whole-set reduce
+not ok 1 - bounded tasks expose every scalar and text slice across all document pairs without a whole-set reduce
+  ---
+  duration_ms: 33.5743
+  location: 'D:\\phystech-trace-quality\\phystech-trace\\services\\document-linking\\tests\\quality-baseline-temporary.test.ts:12:1'
+  failureType: 'testCodeFailure'
+  error: 'Временная сетевая ошибка при обращении к Polza AI'
+  code: 'ERR_TEST_FAILURE'
+  name: 'PolzaRequestError'
+  stack: |-
+    requestPolzaJson (D:\phystech-trace-quality\phystech-trace\services\document-linking\src\linking\polza-client.ts:44:13)
+    async requestModel (D:\phystech-trace-quality\phystech-trace\services\document-linking\src\linking\quality-baseline-temporary.ts:85:20)
+    async analyzeDocumentSet (D:\phystech-trace-quality\phystech-trace\services\document-linking\src\linking\quality-baseline-temporary.ts:152:28)
+    async TestContext.<anonymous> (D:\phystech-trace-quality\phystech-trace\services\document-linking\tests\quality-baseline-temporary.test.ts:28:18)
+    async Test.run (node:internal/test_runner/test:932:9)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: bounded checkpoints resume completed tasks without repeated model calls or premature unlinked claims
+ok 2 - bounded checkpoints resume completed tasks without repeated model calls or premature unlinked claims
+  ---
+  duration_ms: 9.7574
+  ...
+# Subtest: invalid row citation cannot keep confirmed status or masquerade as a valid row match
+not ok 3 - invalid row citation cannot keep confirmed status or masquerade as a valid row match
+  ---
+  duration_ms: 3.482
+  location: 'D:\\phystech-trace-quality\\phystech-trace\\services\\document-linking\\tests\\quality-baseline-temporary.test.ts:58:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'confirmed'
+    - 'review'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'review'
+  actual: 'confirmed'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (D:\phystech-trace-quality\phystech-trace\services\document-linking\tests\quality-baseline-temporary.test.ts:64:12)
+    async Test.run (node:internal/test_runner/test:932:9)
+    async Test.processPendingSubtests (node:internal/test_runner/test:629:7)
+  ...
+1..3
+# tests 3
+# suites 0
+# pass 1
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 321.436

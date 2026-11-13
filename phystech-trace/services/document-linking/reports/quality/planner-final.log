@@ -1,0 +1,129 @@
+TAP version 13
+# Subtest: bounded tasks expose every scalar and text slice across all document pairs without a whole-set reduce
+ok 1 - bounded tasks expose every scalar and text slice across all document pairs without a whole-set reduce
+  ---
+  duration_ms: 89.6776
+  ...
+# {"kind":"offline_transport_coverage","documents":5,"calls":250,"coverage":{"documents":[{"document_id":"doc-0","state":"no_link_found"},{"document_id":"doc-1","state":"no_link_found"},{"document_id":"doc-2","state":"no_link_found"},{"document_id":"doc-3","state":"no_link_found"},{"document_id":"doc-4","state":"no_link_found"}],"total_tasks":250,"completed_tasks":250,"total_references":45,"processed_references":45}}
+# Subtest: bounded checkpoints resume completed tasks without repeated model calls or premature unlinked claims
+ok 2 - bounded checkpoints resume completed tasks without repeated model calls or premature unlinked claims
+  ---
+  duration_ms: 33.8595
+  ...
+# Subtest: invalid row citation cannot keep confirmed status or masquerade as a valid row match
+ok 3 - invalid row citation cannot keep confirmed status or masquerade as a valid row match
+  ---
+  duration_ms: 3.2174
+  ...
+# Subtest: malformed bounded JSON retries only the failed task and preserves raw diagnostic and usage
+ok 4 - malformed bounded JSON retries only the failed task and preserves raw diagnostic and usage
+  ---
+  duration_ms: 10.8527
+  ...
+# Subtest: permanently malformed bounded task never becomes completed or unlinked and resume does not reset attempts
+ok 5 - permanently malformed bounded task never becomes completed or unlinked and resume does not reset attempts
+  ---
+  duration_ms: 3.1994
+  ...
+# Subtest: an unsupported citation stays an insufficient-evidence diagnostic rather than no-link finding
+ok 6 - an unsupported citation stays an insufficient-evidence diagnostic rather than no-link finding
+  ---
+  duration_ms: 4.8702
+  ...
+# Subtest: evidence repair resumes within one-call slices and preserves original proposals
+ok 7 - evidence repair resumes within one-call slices and preserves original proposals
+  ---
+  duration_ms: 2.1526
+  ...
+# Subtest: merge preserves different rows, repeated amounts and ambiguous alternatives
+ok 8 - merge preserves different rows, repeated amounts and ambiguous alternatives
+  ---
+  duration_ms: 0.2805
+  ...
+# Subtest: insufficient whole-run call budget is rejected before any send with pending tasks saved
+ok 9 - insufficient whole-run call budget is rejected before any send with pending tasks saved
+  ---
+  duration_ms: 2.6407
+  ...
+# Subtest: evidence registry indexes arbitrary nested values and inherits row/provenance context
+ok 10 - evidence registry indexes arbitrary nested values and inherits row/provenance context
+  ---
+  duration_ms: 2.0525
+  ...
+# Subtest: complete upstream set is sent as one unfiltered Gemma context
+ok 11 - complete upstream set is sent as one unfiltered Gemma context
+  ---
+  duration_ms: 238.9264
+  ...
+# Subtest: large upstream sets compare bounded originals with complete document coverage
+ok 12 - large upstream sets compare bounded originals with complete document coverage
+  ---
+  duration_ms: 1085.225
+  ...
+# {"kind":"offline_transport_coverage","documents":6,"calls":79,"fragments":14,"tasks":79,"references":14261}
+# Subtest: native fixture subset of 3 documents retains complete source coverage
+ok 13 - native fixture subset of 3 documents retains complete source coverage
+  ---
+  duration_ms: 78.5911
+  ...
+# {"kind":"offline_transport_coverage","documents":3,"calls":12,"coverage":{"documents":[{"document_id":"act-2026-0424","state":"no_link_found"},{"document_id":"contract-2026-0315","state":"no_link_found"},{"document_id":"invoice-2026-0408","state":"no_link_found"}],"total_tasks":12,"completed_tasks":12,"total_references":4697,"processed_references":4697}}
+# Subtest: native fixture subset of 5 documents retains complete source coverage
+ok 14 - native fixture subset of 5 documents retains complete source coverage
+  ---
+  duration_ms: 478.8424
+  ...
+# {"kind":"offline_transport_coverage","documents":5,"calls":66,"coverage":{"documents":[{"document_id":"act-2026-0424","state":"no_link_found"},{"document_id":"contract-2026-0315","state":"no_link_found"},{"document_id":"invoice-2026-0408","state":"no_link_found"},{"document_id":"kfz-2026-q1","state":"no_link_found"},{"document_id":"registry-2026-04","state":"no_link_found"}],"total_tasks":66,"completed_tasks":66,"total_references":13261,"processed_references":13261}}
+# Subtest: completed bounded source tasks persist and resume with no repeated requests
+ok 15 - completed bounded source tasks persist and resume with no repeated requests
+  ---
+  duration_ms: 6.0676
+  ...
+# Subtest: bounded Gemma can request another original fragment and preserve it across resume
+ok 16 - bounded Gemma can request another original fragment and preserve it across resume
+  ---
+  duration_ms: 5.6806
+  ...
+# Subtest: full-set Gemma can request an original fragment and resume from its checkpoint
+ok 17 - full-set Gemma can request an original fragment and resume from its checkpoint
+  ---
+  duration_ms: 69.9506
+  ...
+# Subtest: model choice is pinned and missing credentials fail without fallback
+ok 18 - model choice is pinned and missing credentials fail without fallback
+  ---
+  duration_ms: 22.4646
+  ...
+# Subtest: unknown evidence references are diagnosed, then Gemma can repair its own proposal
+ok 19 - unknown evidence references are diagnosed, then Gemma can repair its own proposal
+  ---
+  duration_ms: 51.1547
+  ...
+# Subtest: source text OCR uncertainty keeps the Gemma link for review with a diagnostic
+ok 20 - source text OCR uncertainty keeps the Gemma link for review with a diagnostic
+  ---
+  duration_ms: 30.8006
+  ...
+# Subtest: malformed status and path-shaped row_id retain the model relation as review
+ok 21 - malformed status and path-shaped row_id retain the model relation as review
+  ---
+  duration_ms: 24.4363
+  ...
+# Subtest: a bad evidence citation does not discard another technically valid citation
+ok 22 - a bad evidence citation does not discard another technically valid citation
+  ---
+  duration_ms: 19.4555
+  ...
+# Subtest: LLM-only output satisfies the versioned stage 4 contract
+ok 23 - LLM-only output satisfies the versioned stage 4 contract
+  ---
+  duration_ms: 123.4354
+  ...
+1..23
+# tests 23
+# suites 0
+# pass 23
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2718.9002

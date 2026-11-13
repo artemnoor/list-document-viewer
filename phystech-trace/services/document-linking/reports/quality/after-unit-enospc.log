@@ -1,0 +1,327 @@
+TAP version 13
+# Subtest: annotation release contains ten unlabeled, hash-pinned expert packets
+ok 1 - annotation release contains ten unlabeled, hash-pinned expert packets
+  ---
+  duration_ms: 276.9143
+  ...
+# Subtest: single-reviewer mode compiles one completed human packet without claiming adjudication
+ok 2 - single-reviewer mode compiles one completed human packet without claiming adjudication
+  ---
+  duration_ms: 1202.9643
+  ...
+# Subtest: single-reviewer mode rejects pending packets and missing pair decisions
+ok 3 - single-reviewer mode rejects pending packets and missing pair decisions
+  ---
+  duration_ms: 2051.9109
+  ...
+# Subtest: single-reviewer mode rejects changed source hashes and unsafe evidence paths or values
+ok 4 - single-reviewer mode rejects changed source hashes and unsafe evidence paths or values
+  ---
+  duration_ms: 2797.6715
+  ...
+# Subtest: single-reviewer mode rejects placeholder identities
+ok 5 - single-reviewer mode rejects placeholder identities
+  ---
+  duration_ms: 864.3863
+  ...
+# Subtest: expert mode still requires two reviewers and a separate adjudicator
+ok 6 - expert mode still requires two reviewers and a separate adjudicator
+  ---
+  duration_ms: 909.2584
+  ...
+# Subtest: bounded tasks expose every scalar and text slice across all document pairs without a whole-set reduce
+ok 7 - bounded tasks expose every scalar and text slice across all document pairs without a whole-set reduce
+  ---
+  duration_ms: 136.1189
+  ...
+# {"kind":"offline_transport_coverage","documents":5,"calls":160,"coverage":{"documents":[{"document_id":"doc-0","state":"no_link_found"},{"document_id":"doc-1","state":"no_link_found"},{"document_id":"doc-2","state":"no_link_found"},{"document_id":"doc-3","state":"no_link_found"},{"document_id":"doc-4","state":"no_link_found"}],"total_tasks":160,"completed_tasks":160,"total_references":45,"processed_references":45}}
+# Subtest: bounded checkpoints resume completed tasks without repeated model calls or premature unlinked claims
+ok 8 - bounded checkpoints resume completed tasks without repeated model calls or premature unlinked claims
+  ---
+  duration_ms: 50.8538
+  ...
+# Subtest: invalid row citation cannot keep confirmed status or masquerade as a valid row match
+ok 9 - invalid row citation cannot keep confirmed status or masquerade as a valid row match
+  ---
+  duration_ms: 4.456
+  ...
+# Subtest: malformed bounded JSON retries only the failed task and preserves raw diagnostic and usage
+ok 10 - malformed bounded JSON retries only the failed task and preserves raw diagnostic and usage
+  ---
+  duration_ms: 18.9645
+  ...
+# Subtest: permanently malformed bounded task never becomes completed or unlinked and resume does not reset attempts
+ok 11 - permanently malformed bounded task never becomes completed or unlinked and resume does not reset attempts
+  ---
+  duration_ms: 3.3287
+  ...
+# Subtest: an unsupported citation stays an insufficient-evidence diagnostic rather than no-link finding
+ok 12 - an unsupported citation stays an insufficient-evidence diagnostic rather than no-link finding
+  ---
+  duration_ms: 8.1182
+  ...
+# Subtest: evidence repair resumes within one-call slices and preserves original proposals
+ok 13 - evidence repair resumes within one-call slices and preserves original proposals
+  ---
+  duration_ms: 2.961
+  ...
+# Subtest: merge preserves different rows, repeated amounts and ambiguous alternatives
+ok 14 - merge preserves different rows, repeated amounts and ambiguous alternatives
+  ---
+  duration_ms: 0.4336
+  ...
+# Subtest: insufficient whole-run call budget is rejected before any send with pending tasks saved
+ok 15 - insufficient whole-run call budget is rejected before any send with pending tasks saved
+  ---
+  duration_ms: 3.2628
+  ...
+# Subtest: production secrets reject missing, sample, short, weak and repeated defaults
+ok 16 - production secrets reject missing, sample, short, weak and repeated defaults
+  ---
+  duration_ms: 1.9852
+  ...
+# Subtest: production config accepts strong distinct secrets and keeps Gemma optional for UI-only startup
+ok 17 - production config accepts strong distinct secrets and keeps Gemma optional for UI-only startup
+  ---
+  duration_ms: 0.7892
+  ...
+# Subtest: invalid size configuration and production database URLs fail with variable names only
+ok 18 - invalid size configuration and production database URLs fail with variable names only
+  ---
+  duration_ms: 0.5086
+  ...
+# Subtest: published JSON Schemas describe full input and output objects
+ok 19 - published JSON Schemas describe full input and output objects
+  ---
+  duration_ms: 5.1616
+  ...
+# Subtest: actual rules-mode Structured Extraction 1.2.0 outputs satisfy input contract
+ok 20 - actual rules-mode Structured Extraction 1.2.0 outputs satisfy input contract
+  ---
+  duration_ms: 84.8482
+  ...
+# Subtest: API extraction envelope is accepted without changing payload keys
+ok 21 - API extraction envelope is accepted without changing payload keys
+  ---
+  duration_ms: 8.1069
+  ...
+# Subtest: incompatible input returns field-level diagnostics
+ok 22 - incompatible input returns field-level diagnostics
+  ---
+  duration_ms: 1.6727
+  ...
+# Subtest: additive fields and newer schema version are backward compatible
+ok 23 - additive fields and newer schema version are backward compatible
+  ---
+  duration_ms: 8.7693
+  ...
+# Subtest: unknown fields survive at nested provenance, extraction-engine and table-row levels
+ok 24 - unknown fields survive at nested provenance, extraction-engine and table-row levels
+  ---
+  duration_ms: 9.6343
+  ...
+# Subtest: unsupported upstream major versions are rejected with a schema_version diagnostic
+ok 25 - unsupported upstream major versions are rejected with a schema_version diagnostic
+  ---
+  duration_ms: 7.5431
+  ...
+# Subtest: independent demo examples use the same input contract
+ok 26 - independent demo examples use the same input contract
+  ---
+  duration_ms: 67.2269
+  ...
+# Subtest: each repeat is scored separately and the worst repeat remains visible
+ok 27 - each repeat is scored separately and the worst repeat remains visible
+  ---
+  duration_ms: 5.0585
+  ...
+# Subtest: reverse direction is a false positive and false negative
+ok 28 - reverse direction is a false positive and false negative
+  ---
+  duration_ms: 0.5696
+  ...
+# Subtest: multiple row matches on one document relation count once for links and separately for rows
+ok 29 - multiple row matches on one document relation count once for links and separately for rows
+  ---
+  duration_ms: 0.8595
+  ...
+# Subtest: evidence is paired to its own true positive and crossed references do not match
+ok 30 - evidence is paired to its own true positive and crossed references do not match
+  ---
+  duration_ms: 0.8399
+  ...
+# Subtest: missing, extra, and duplicate document relations retain exact denominators
+ok 31 - missing, extra, and duplicate document relations retain exact denominators
+  ---
+  duration_ms: 0.5395
+  ...
+# Subtest: negative and ambiguous pairs have separate gates, and an empty negative graph stays N/A
+ok 32 - negative and ambiguous pairs have separate gates, and an empty negative graph stays N/A
+  ---
+  duration_ms: 0.6133
+  ...
+# Subtest: malformed prediction results are rejected instead of becoming empty graphs
+ok 33 - malformed prediction results are rejected instead of becoming empty graphs
+  ---
+  duration_ms: 4.6887
+  ...
+# Subtest: source bundle hashes are checked again before scoring
+not ok 34 - source bundle hashes are checked again before scoring
+  ---
+  duration_ms: 10.8348
+  location: 'D:\\phystech-trace-quality\\phystech-trace\\services\\document-linking\\tests\\evaluation-metrics.test.ts:1:7134'
+  failureType: 'testCodeFailure'
+  error: 'ENOSPC: no space left on device, write'
+  code: 'ENOSPC'
+  stack: |-
+    Object.writeSync (node:fs:924:3)
+    writeFileSync (node:fs:2446:26)
+    <anonymous> (D:\phystech-trace-quality\phystech-trace\services\document-linking\tests\evaluation-metrics.test.ts:185:5)
+    Array.map (<anonymous>)
+    TestContext.<anonymous> (D:\phystech-trace-quality\phystech-trace\services\document-linking\tests\evaluation-metrics.test.ts:182:32)
+    Test.runInAsyncScope (node:async_hooks:211:14)
+    Test.run (node:internal/test_runner/test:931:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:629:18)
+    Test.postRun (node:internal/test_runner/test:1042:19)
+    Test.run (node:internal/test_runner/test:970:12)
+  ...
+# Subtest: evidence checks a real upstream value, direction, provenance owner and source availability
+ok 35 - evidence checks a real upstream value, direction, provenance owner and source availability
+  ---
+  duration_ms: 6.3569
+  ...
+# Subtest: evidence rejects missing paths, mismatched raw values and prototype access
+ok 36 - evidence rejects missing paths, mismatched raw values and prototype access
+  ---
+  duration_ms: 4.853
+  ...
+# Subtest: source text normalization handles OCR formatting and reports uncertain OCR without invalidating paths
+ok 37 - source text normalization handles OCR formatting and reports uncertain OCR without invalidating paths
+  ---
+  duration_ms: 16.0868
+  ...
+# Subtest: row evidence requires an existing row and a path that crosses that row
+ok 38 - row evidence requires an existing row and a path that crosses that row
+  ---
+  duration_ms: 26.4949
+  ...
+# Subtest: evidence registry indexes arbitrary nested values and inherits row/provenance context
+ok 39 - evidence registry indexes arbitrary nested values and inherits row/provenance context
+  ---
+  duration_ms: 2.8857
+  ...
+# Subtest: complete upstream set is sent as one unfiltered Gemma context
+ok 40 - complete upstream set is sent as one unfiltered Gemma context
+  ---
+  duration_ms: 294.7834
+  ...
+# Subtest: large upstream sets compare bounded originals with complete document coverage
+ok 41 - large upstream sets compare bounded originals with complete document coverage
+  ---
+  duration_ms: 1557.02
+  ...
+# {"kind":"offline_transport_coverage","documents":6,"calls":79,"fragments":14,"tasks":79,"references":14261}
+# Subtest: completed bounded source tasks persist and resume with no repeated requests
+ok 42 - completed bounded source tasks persist and resume with no repeated requests
+  ---
+  duration_ms: 4.9066
+  ...
+# Subtest: bounded Gemma can request another original fragment and preserve it across resume
+ok 43 - bounded Gemma can request another original fragment and preserve it across resume
+  ---
+  duration_ms: 4.533
+  ...
+# Subtest: full-set Gemma can request an original fragment and resume from its checkpoint
+ok 44 - full-set Gemma can request an original fragment and resume from its checkpoint
+  ---
+  duration_ms: 60.1961
+  ...
+# Subtest: model choice is pinned and missing credentials fail without fallback
+ok 45 - model choice is pinned and missing credentials fail without fallback
+  ---
+  duration_ms: 27.2722
+  ...
+# Subtest: unknown evidence references are diagnosed, then Gemma can repair its own proposal
+ok 46 - unknown evidence references are diagnosed, then Gemma can repair its own proposal
+  ---
+  duration_ms: 64.939
+  ...
+# Subtest: source text OCR uncertainty keeps the Gemma link for review with a diagnostic
+ok 47 - source text OCR uncertainty keeps the Gemma link for review with a diagnostic
+  ---
+  duration_ms: 45.9491
+  ...
+# Subtest: malformed status and path-shaped row_id retain the model relation as review
+ok 48 - malformed status and path-shaped row_id retain the model relation as review
+  ---
+  duration_ms: 30.9426
+  ...
+# Subtest: a bad evidence citation does not discard another technically valid citation
+ok 49 - a bad evidence citation does not discard another technically valid citation
+  ---
+  duration_ms: 30.8254
+  ...
+# Subtest: LLM-only output satisfies the versioned stage 4 contract
+ok 50 - LLM-only output satisfies the versioned stage 4 contract
+  ---
+  duration_ms: 184.3891
+  ...
+# Subtest: Polza 401, 403, 402 and invalid request errors are permanent
+ok 51 - Polza 401, 403, 402 and invalid request errors are permanent
+  ---
+  duration_ms: 23.1563
+  ...
+# Subtest: Polza 429 honors bounded Retry-After and 5xx retries
+ok 52 - Polza 429 honors bounded Retry-After and 5xx retries
+  ---
+  duration_ms: 1.1792
+  ...
+# Subtest: network errors are retryable, and model mismatch is permanent without leaking provider body
+ok 53 - network errors are retryable, and model mismatch is permanent without leaking provider body
+  ---
+  duration_ms: 0.5753
+  ...
+# Subtest: invalid JSON response is retained through an explicit observer without exposing credentials
+ok 54 - invalid JSON response is retained through an explicit observer without exposing credentials
+  ---
+  duration_ms: 2.8338
+  ...
+# Subtest: BullMQ retries only transient Polza errors with exponential delay and respects Retry-After
+ok 55 - BullMQ retries only transient Polza errors with exponential delay and respects Retry-After
+  ---
+  duration_ms: 0.3781
+  ...
+# Subtest: strategy A delegates to the existing matcher and records its raw responses
+ok 56 - strategy A delegates to the existing matcher and records its raw responses
+  ---
+  duration_ms: 59.4443
+  ...
+# Subtest: strategy B discovers first, selects exact references in a second pass, and retains unproven candidates
+ok 57 - strategy B discovers first, selects exact references in a second pass, and retains unproven candidates
+  ---
+  duration_ms: 8.432
+  ...
+# Subtest: strategy B keeps malformed status and row-id proposals visible as review candidates
+ok 58 - strategy B keeps malformed status and row-id proposals visible as review candidates
+  ---
+  duration_ms: 3.118
+  ...
+# Subtest: LLM evidence pass, not a synonym dictionary, chooses semantic duplicate candidates
+ok 59 - LLM evidence pass, not a synonym dictionary, chooses semantic duplicate candidates
+  ---
+  duration_ms: 3.0826
+  ...
+# Subtest: strategy C unions independent candidates, lets critic add a candidate, debates only on model request, then validates evidence
+ok 60 - strategy C unions independent candidates, lets critic add a candidate, debates only on model request, then validates evidence
+  ---
+  duration_ms: 5.7618
+  ...
+1..60
+# tests 60
+# suites 0
+# pass 59
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 8479.2656

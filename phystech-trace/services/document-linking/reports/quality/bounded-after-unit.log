@@ -1,0 +1,40 @@
+TAP version 13
+# Subtest: bounded tasks expose every scalar and text slice across all document pairs without a whole-set reduce
+ok 1 - bounded tasks expose every scalar and text slice across all document pairs without a whole-set reduce
+  ---
+  duration_ms: 202.0563
+  ...
+# Subtest: bounded checkpoints resume completed tasks without repeated model calls or premature unlinked claims
+ok 2 - bounded checkpoints resume completed tasks without repeated model calls or premature unlinked claims
+  ---
+  duration_ms: 293.0015
+  ...
+# Subtest: invalid row citation cannot keep confirmed status or masquerade as a valid row match
+ok 3 - invalid row citation cannot keep confirmed status or masquerade as a valid row match
+  ---
+  duration_ms: 4.8636
+  ...
+# Subtest: malformed bounded JSON retries only the failed task and preserves raw diagnostic and usage
+ok 4 - malformed bounded JSON retries only the failed task and preserves raw diagnostic and usage
+  ---
+  duration_ms: 130.6862
+  ...
+# Subtest: permanently malformed bounded task never becomes completed or unlinked and resume does not reset attempts
+ok 5 - permanently malformed bounded task never becomes completed or unlinked and resume does not reset attempts
+  ---
+  duration_ms: 4.3427
+  ...
+# Subtest: an unsupported citation stays an insufficient-evidence diagnostic rather than no-link finding
+ok 6 - an unsupported citation stays an insufficient-evidence diagnostic rather than no-link finding
+  ---
+  duration_ms: 15.9411
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 961.4529

@@ -1,0 +1,284 @@
+TAP version 13
+# Subtest: native Document Parser XLSX JSON preserves cell addresses, merges, formulas and empty cells
+ok 1 - native Document Parser XLSX JSON preserves cell addresses, merges, formulas and empty cells
+  ---
+  duration_ms: 23.1052
+  ...
+# Subtest: authentic Document Parser DOCX JSON preserves paragraphs, table rows and JSON-path provenance
+ok 2 - authentic Document Parser DOCX JSON preserves paragraphs, table rows and JSON-path provenance
+  ---
+  duration_ms: 4.9142
+  ...
+# Subtest: native PDF analysis plus separate visual layout JSON keeps exact provenance and coordinate transforms
+ok 3 - native PDF analysis plus separate visual layout JSON keeps exact provenance and coordinate transforms
+  ---
+  duration_ms: 5.1545
+  ...
+# Subtest: Docling multi-page tables and merged header spans retain row pages and all header source IDs
+ok 4 - Docling multi-page tables and merged header spans retain row pages and all header source IDs
+  ---
+  duration_ms: 2.3984
+  ...
+# Subtest: logical tables, fragments and values accept object-valued parser structures
+ok 5 - logical tables, fragments and values accept object-valued parser structures
+  ---
+  duration_ms: 0.9936
+  ...
+# Subtest: logical table fragments preserve multi-page rows, repeated headers and multi-level headers
+ok 6 - logical table fragments preserve multi-page rows, repeated headers and multi-level headers
+  ---
+  duration_ms: 21.842
+  ...
+# Subtest: extraction calls Polza AI, validates JSON Schema and grounds returned IDs to native PDF source
+ok 7 - extraction calls Polza AI, validates JSON Schema and grounds returned IDs to native PDF source
+  ---
+  duration_ms: 48.5638
+  ...
+# Subtest: grounded table mappings can map an unfamiliar native XLSX header and preserve every source column
+ok 8 - grounded table mappings can map an unfamiliar native XLSX header and preserve every source column
+  ---
+  duration_ms: 19.681
+  ...
+# Subtest: provider absence fails closed and ungrounded candidates are filtered before extraction
+ok 9 - provider absence fails closed and ungrounded candidates are filtered before extraction
+  ---
+  duration_ms: 12.5602
+  ...
+# Subtest: all six parser fixtures are classified from their parsed content
+ok 10 - all six parser fixtures are classified from their parsed content
+  ---
+  duration_ms: 205.3933
+  ...
+# Subtest: LLM-only classification preserves only valid model confidence and always requests review
+ok 11 - LLM-only classification preserves only valid model confidence and always requests review
+  ---
+  duration_ms: 1.2346
+  ...
+# Subtest: LLM-only classification with missing or invalid confidence passes the extraction schema as review
+ok 12 - LLM-only classification with missing or invalid confidence passes the extraction schema as review
+  ---
+  duration_ms: 5.2198
+  ...
+# Subtest: date, currency and unit normalization keeps exact decimal strings
+ok 13 - date, currency and unit normalization keeps exact decimal strings
+  ---
+  duration_ms: 1.9055
+  ...
+# Subtest: grounded rules and LLM candidates reconcile to review when evidence conflicts
+ok 14 - grounded rules and LLM candidates reconcile to review when evidence conflicts
+  ---
+  duration_ms: 54.6909
+  ...
+# Subtest: LLM cannot turn a key-value metadata table into checked line items
+ok 15 - LLM cannot turn a key-value metadata table into checked line items
+  ---
+  duration_ms: 36.8839
+  ...
+# Subtest: every KFS source row and all quantitative indicators are retained with provenance
+ok 16 - every KFS source row and all quantitative indicators are retained with provenance
+  ---
+  duration_ms: 25.4277
+  ...
+# Subtest: XLSX provenance uses stable sheet names and cell addresses
+ok 17 - XLSX provenance uses stable sheet names and cell addresses
+  ---
+  duration_ms: 17.02
+  ...
+# Subtest: empty fields remain null and ambiguous dates are flagged
+ok 18 - empty fields remain null and ambiguous dates are flagged
+  ---
+  duration_ms: 6.4902
+  ...
+# Subtest: addendum rows expose parameter, old and new values, reason and each source locator
+ok 19 - addendum rows expose parameter, old and new values, reason and each source locator
+  ---
+  duration_ms: 7.4612
+  ...
+# Subtest: partially populated addendum preserves all source cells and marks only absent values missing
+ok 20 - partially populated addendum preserves all source cells and marks only absent values missing
+  ---
+  duration_ms: 17.387
+  ...
+# Subtest: provenance gaps, unavailable sources and low OCR confidence force review
+ok 21 - provenance gaps, unavailable sources and low OCR confidence force review
+  ---
+  duration_ms: 1.044
+  ...
+# Subtest: compare reports addendum value changes, missing data and changed provenance
+ok 22 - compare reports addendum value changes, missing data and changed provenance
+  ---
+  duration_ms: 9.5698
+  ...
+# Subtest: Compare counts each addendum change once and reports its value, missing data and provenance differences
+ok 23 - Compare counts each addendum change once and reports its value, missing data and provenance differences
+  ---
+  duration_ms: 9.3805
+  ...
+# Subtest: unavailable source elements are not deterministic extraction candidates
+ok 24 - unavailable source elements are not deterministic extraction candidates
+  ---
+  duration_ms: 1.2913
+  ...
+# Subtest: parser JSON importer shape checks distinguish parsed JSON from source files
+ok 25 - parser JSON importer shape checks distinguish parsed JSON from source files
+  ---
+  duration_ms: 4.2822
+  ...
+# Subtest: missing critical field is an FN and fails critical recall
+ok 26 - missing critical field is an FN and fails critical recall
+  ---
+  duration_ms: 7.6222
+  ...
+# Subtest: matching normalized value with wrong raw value or source is not accepted as correct
+ok 27 - matching normalized value with wrong raw value or source is not accepted as correct
+  ---
+  duration_ms: 1.2724
+  ...
+# Subtest: duplicate and omitted row IDs remain separate FP and FN counts
+ok 28 - duplicate and omitted row IDs remain separate FP and FN counts
+  ---
+  duration_ms: 1.4785
+  ...
+# Subtest: unexpected accepted fields are false positives while noncritical recall keeps its denominator
+ok 29 - unexpected accepted fields are false positives while noncritical recall keeps its denominator
+  ---
+  duration_ms: 0.9638
+  ...
+# Subtest: forged provenance fails accepted source correctness even when typed and raw values match
+ok 30 - forged provenance fails accepted source correctness even when typed and raw values match
+  ---
+  duration_ms: 2.012
+  ...
+# Subtest: source artifact byte hash tampering is rejected
+ok 31 - source artifact byte hash tampering is rejected
+  ---
+  duration_ms: 17.5029
+  ...
+# Subtest: prediction file hash tampering is represented as a failed result
+ok 32 - prediction file hash tampering is represented as a failed result
+  ---
+  duration_ms: 4.3853
+  ...
+# Subtest: invalid output schema is failed and cannot be counted as an empty successful extraction
+not ok 33 - invalid output schema is failed and cannot be counted as an empty successful extraction
+  ---
+  duration_ms: 1.2766
+  location: 'D:\\phystech-trace-quality\\phystech-trace\\services\\structured-extraction\\tests\\mvp-quality.test.mjs:186:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'PREDICTION_DOCUMENT_ID_MISMATCH'
+    - 'PREDICTION_INVALID'
+                  ^
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'PREDICTION_INVALID'
+  actual: 'PREDICTION_DOCUMENT_ID_MISMATCH'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///D:/phystech-trace-quality/phystech-trace/services/structured-extraction/tests/mvp-quality.test.mjs:190:10)
+    Test.runInAsyncScope (node:async_hooks:211:14)
+    Test.run (node:internal/test_runner/test:931:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:629:18)
+    Test.postRun (node:internal/test_runner/test:1042:19)
+    Test.run (node:internal/test_runner/test:970:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:629:7)
+  ...
+# Subtest: failed model result and rules-only fallback fail LLM-required while preserving misses
+ok 34 - failed model result and rules-only fallback fail LLM-required while preserving misses
+  ---
+  duration_ms: 1.0429
+  ...
+# Subtest: missing prediction remains a failed scenario instead of an empty successful graph
+ok 35 - missing prediction remains a failed scenario instead of an empty successful graph
+  ---
+  duration_ms: 0.7587
+  ...
+# Subtest: every middle row and late paragraph remains available for semantic analysis
+ok 36 - every middle row and late paragraph remains available for semantic analysis
+  ---
+  duration_ms: 22.7793
+  ...
+# Subtest: bounded extraction visits every source and preserves exact middle-row value
+ok 37 - bounded extraction visits every source and preserves exact middle-row value
+  ---
+  duration_ms: 125.9528
+  ...
+# Subtest: all native PDF XLSX DOCX available elements survive bounded planning
+ok 38 - all native PDF XLSX DOCX available elements survive bounded planning
+  ---
+  duration_ms: 22.6872
+  ...
+# Subtest: failed LLM fragments stay failures with retained checkpoints and no rules fallback
+ok 39 - failed LLM fragments stay failures with retained checkpoints and no rules fallback
+  ---
+  duration_ms: 2.8475
+  ...
+# Subtest: extraction entrypoint retains checkpoints and marks grounded ambiguity for review
+ok 40 - extraction entrypoint retains checkpoints and marks grounded ambiguity for review
+  ---
+  duration_ms: 8.1902
+  ...
+# Subtest: repair includes malformed response usage and preserves unknown expense explicitly
+ok 41 - repair includes malformed response usage and preserves unknown expense explicitly
+  ---
+  duration_ms: 4.7121
+  ...
+# Subtest: Polza JSON object fallback remains locally schema-checked and grounded
+ok 42 - Polza JSON object fallback remains locally schema-checked and grounded
+  ---
+  duration_ms: 52.208
+  ...
+# Subtest: Polza JSON parsing accepts fenced output while preserving local schema validation
+ok 43 - Polza JSON parsing accepts fenced output while preserving local schema validation
+  ---
+  duration_ms: 8.8909
+  ...
+# Subtest: Polza missing or invalid classification confidence is normalized to null for review
+ok 44 - Polza missing or invalid classification confidence is normalized to null for review
+  ---
+  duration_ms: 19.9885
+  ...
+# Subtest: Polza maps authentication, balance, model, rate-limit and server errors
+ok 45 - Polza maps authentication, balance, model, rate-limit and server errors
+  ---
+  duration_ms: 445.2989
+  ...
+# Subtest: Polza retries transient network errors only within the configured bound
+ok 46 - Polza retries transient network errors only within the configured bound
+  ---
+  duration_ms: 219.2845
+  ...
+# Subtest: Polza models endpoint requests the model catalog without exposing the API key
+ok 47 - Polza models endpoint requests the model catalog without exposing the API key
+  ---
+  duration_ms: 0.55
+  ...
+# Subtest: unavailable source text stays out of Polza context and cannot ground an extracted value
+ok 48 - unavailable source text stays out of Polza context and cannot ground an extracted value
+  ---
+  duration_ms: 13.5376
+  ...
+# Subtest: Polza table context preserves source column indexes when an earlier header is unavailable
+ok 49 - Polza table context preserves source column indexes when an earlier header is unavailable
+  ---
+  duration_ms: 5.8795
+  ...
+# Rules Only · synthetic oracle corpus (LLM not measured): rows P=100.0% R=100.0% completeness=100.0% (46/46); provenance=100.0% (521/521); field assertions=13/13.
+# Subtest: rules-only golden corpus reports row precision, recall, completeness and source-link correctness
+ok 50 - rules-only golden corpus reports row precision, recall, completeness and source-link correctness
+  ---
+  duration_ms: 217.2569
+  ...
+1..50
+# tests 50
+# suites 0
+# pass 49
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 936.3058

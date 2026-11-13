@@ -139,4 +139,3 @@ test("insufficient whole-run call budget is rejected before any send with pendin
     assert.equal(calls,0);assert.equal(saved.coverage.completed_tasks,0);assert.ok(saved.coverage.total_tasks>1);
   } finally {globalThis.fetch=original;}
 });
-

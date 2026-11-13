@@ -1,0 +1,48 @@
+TAP version 13
+# Subtest: every middle row and late paragraph remains available for semantic analysis
+not ok 1 - every middle row and late paragraph remains available for semantic analysis
+  ---
+  duration_ms: 15.5036
+  location: 'D:\\phystech-trace-quality\\phystech-trace\\services\\structured-extraction\\tests\\polza-coverage.test.mjs:5:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    9 !== 30
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 30
+  actual: 9
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///D:/phystech-trace-quality/phystech-trace/services/structured-extraction/tests/polza-coverage.test.mjs:7:9)
+    Test.runInAsyncScope (node:async_hooks:211:14)
+    Test.run (node:internal/test_runner/test:931:25)
+    Test.start (node:internal/test_runner/test:829:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+# Subtest: bounded extraction visits every source and preserves exact middle-row value
+not ok 2 - bounded extraction visits every source and preserves exact middle-row value
+  ---
+  duration_ms: 222.7316
+  location: 'D:\\phystech-trace-quality\\phystech-trace\\services\\structured-extraction\\tests\\polza-coverage.test.mjs:10:1'
+  failureType: 'testCodeFailure'
+  error: 'Не удалось подключиться к Polza AI'
+  code: 'POLZA_NETWORK_ERROR'
+  name: 'PolzaAiError'
+  stack: |-
+    callPolzaForExtraction (file:///D:/phystech-trace-quality/phystech-trace/services/structured-extraction/lib/extraction/polza-ai.mjs:315:11)
+    async TestContext.<anonymous> (file:///D:/phystech-trace-quality/phystech-trace/services/structured-extraction/tests/polza-coverage.test.mjs:12:15)
+    async Test.run (node:internal/test_runner/test:932:9)
+    async Test.processPendingSubtests (node:internal/test_runner/test:629:7)
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 0
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 365.7661
