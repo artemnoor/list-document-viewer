@@ -41,4 +41,4 @@ docker compose up --build --detach
 
 ### GitHub Actions
 
-CI запускает полный pytest matrix на Python 3.11 и 3.12 и отдельный Docker Compose smoke после push и pull request. Успешные удалённые run URLs будут перечислены здесь после завершения workflow.
+CI запускает полный pytest matrix на Python 3.11 и 3.12 и отдельный Docker Compose smoke после push и pull request. Push commit a4209a6 проверен успешным [GitHub Actions run 43513739458](https://github.com/artemnoor/phystech-trace-verification-engine/actions/runs/43513739458): оба Python job и Docker Compose smoke завершились успешно.

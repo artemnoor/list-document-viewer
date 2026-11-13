@@ -56,4 +56,4 @@
 
 ## Ограничение интеграции
 
-Есть реальный upstream Reconciliation Engine result, но он намеренно неполный и не доказывает успешный расчёт. Synthetic engine acceptance проверяет арифметику адаптера отдельно и не подменяет production integration result. Полный Phystech Trace E2E до Reporting не заявляется. Успешный GitHub Actions run будет указан в [`test-results.md`](test-results.md) после завершения workflow, запущенного push этого изменения.
+Есть реальный upstream Reconciliation Engine result, но он намеренно неполный и не доказывает успешный расчёт. Synthetic engine acceptance проверяет арифметику адаптера отдельно и не подменяет production integration result. Полный Phystech Trace E2E до Reporting не заявляется. GitHub Actions run после push commit a4209a6 завершился успешно на Python 3.11, Python 3.12 и Docker Compose smoke; [результаты workflow](https://github.com/artemnoor/phystech-trace-verification-engine/actions/runs/43513739458) сохранены в [test-results.md](test-results.md).
