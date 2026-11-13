@@ -1,0 +1,1 @@
+ALTER TABLE `extraction_runs` ADD `owner_id` text;

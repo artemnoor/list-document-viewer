@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1794479363585,
+      "tag": "0000_shocking_cerebro",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1794494277914,
+      "tag": "0001_third_spot",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1794495191960,
+      "tag": "0002_elite_trish_tilby",
+      "breakpoints": true
+    }
+  ]
+}
