@@ -166,6 +166,19 @@ def test_formula_metric_accepts_target_rounding_around_a_single_source_sum():
     assert _formula_matches(plan, case["reference"])
 
 
+def test_formula_metric_treats_add_as_equivalent_to_expected_sum():
+    case = next(item for item in build_cases() if item["reference"]["case_id"] == "04_negative_adjustment")
+    fact_ids = [fact_id for group in case["reference"]["expected_source_groups"] for fact_id in group]
+    plan = {
+        "included": [{"fact_id": fact_id} for fact_id in fact_ids],
+        "steps": [{"step_id": "total", "operation": "add", "inputs": fact_ids}],
+        "result_step_id": "total",
+    }
+
+    assert case["reference"]["expected_formula"]["operation"] == "sum"
+    assert _formula_matches(plan, case["reference"])
+
+
 def test_formula_metric_rejects_malformed_tree_even_when_leaf_count_matches():
     case = next(item for item in build_cases() if item["reference"]["case_id"] == "01_single_act")
     fact_id = case["reference"]["expected_source_groups"][0][0]

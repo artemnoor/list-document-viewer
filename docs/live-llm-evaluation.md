@@ -6,6 +6,8 @@ The requested label is “Gemma 4 30B A4”. Polza's current model catalog expos
 
 The live evaluation was run on 14 November 2026 against `google/gemma-4-26b-a4b-it`, using only synthetic data. It completed all ten scenarios at three repeats within the 40-call cap: 31 scenario calls plus one protocol preflight. The provider returned 29 model responses; two calls timed out in the 320-candidate scenario. Across scored responses, mean source F1 was 0.714, formula accuracy was 0.950 (20 scored formulas), and expected-value accuracy was 0.412 (17 scored values). The timeouts were retained as failed attempts and not retried. Detailed metrics are in [`evaluation-summary.json`](../tests/results/live_e2e/evaluation-summary.json); bulky per-repeat raw snapshots are not committed.
 
+After the dimension and response-echo fixes, the same bounded benchmark was repeated: 29 responses, two timeouts, mean source F1 0.810, formula accuracy 0.947 (19 scored), and expected-value accuracy 0.625 (16 scored). Formula scoring treats `add` and `sum` as equivalent when their leaves and count match. See the current aggregate in [`evaluation-summary.json`](../tests/results/live_e2e/evaluation-summary.json).
+
 The evaluation harness has ten synthetic, contract-validated cases with independent golden references prepared under [`tests/results/live_e2e/`](../tests/results/live_e2e/):
 
 1. One act confirms a КФЗ indicator.

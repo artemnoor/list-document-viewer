@@ -196,7 +196,10 @@ def _formula_matches(plan: dict[str, Any] | None, reference: dict[str, Any]) -> 
     if not valid(expression):
         return False
     expected_input_count = expected.get("input_count")
-    if expression.get("operation") != expected.get("operation"):
+    operation = expression.get("operation")
+    expected_operation = expected.get("operation")
+    equivalent_aggregations = operation in {"sum", "add"} and expected_operation in {"sum", "add"}
+    if operation != expected_operation and not equivalent_aggregations:
         # A one-source sum is the identity. LLMs often make target rounding
         # explicit as round(fact, target_scale), while the engine always applies
         # that same final target rounding after executing the formula.
@@ -209,13 +212,13 @@ def _formula_matches(plan: dict[str, Any] | None, reference: dict[str, Any]) -> 
     selected = [item.get("fact_id") for item in (plan or {}).get("included", [])]
     if expected_input_count is not None and len(selected) != expected_input_count:
         return False
-    if expected_input_count == 1 and expected.get("operation") in {"sum", "add"}:
+    if expected_input_count == 1 and expected_operation in {"sum", "add"}:
         return len(_leaves(expression)) == 1
     if expected.get("ordered_keys"):
         facts_by_id = {fact.fact_id: fact for fact in extract_facts(_read(RESULTS / reference["case_id"] / "input.json")["extraction_results"])}
         ordered_leaves = _leaves(expression)
         return [facts_by_id[item].key for item in ordered_leaves if item in facts_by_id] == expected["ordered_keys"]
-    if expected.get("input_count") == 1 and expression.get("operation") in {"sum", "add"}:
+    if expected.get("input_count") == 1 and operation in {"sum", "add"}:
         return len(_leaves(expression)) == 1
     return len(_leaves(expression)) == expected.get("input_count", len(_leaves(expression)))
 

@@ -647,9 +647,9 @@
           }
         ],
         "explanation": "Synthetic source-to-target relation.",
-        "confidence": 1.0,
-        "status": "confirmed",
-        "verification_status": "human_confirmed",
+        "confidence": 0.7,
+        "status": "review",
+        "verification_status": "not_reviewed",
         "detection_method": "llm",
         "conflicts": [],
         "source_row_id": "live-duplicate-invoice-row-0001"
@@ -690,9 +690,9 @@
           }
         ],
         "explanation": "Synthetic source-to-target relation.",
-        "confidence": 1.0,
-        "status": "confirmed",
-        "verification_status": "human_confirmed",
+        "confidence": 0.7,
+        "status": "review",
+        "verification_status": "not_reviewed",
         "detection_method": "llm",
         "conflicts": [],
         "source_row_id": "live-duplicate-registry-row-0001"
@@ -786,7 +786,24 @@
         "conflicts": []
       }
     ],
-    "review_required": [],
+    "review_required": [
+      {
+        "link_id": "synthetic-support-03_duplicate_representations-0002",
+        "reason": "Synthetic unreviewed relation.",
+        "candidate_document_ids": [
+          "live-duplicate-invoice",
+          "live-synthetic-kfz-03_duplicate_representations"
+        ]
+      },
+      {
+        "link_id": "synthetic-support-03_duplicate_representations-0003",
+        "reason": "Synthetic unreviewed relation.",
+        "candidate_document_ids": [
+          "live-duplicate-registry",
+          "live-synthetic-kfz-03_duplicate_representations"
+        ]
+      }
+    ],
     "unlinked_documents": [],
     "warnings": [
       "Synthetic evaluation data; no production documents or values."

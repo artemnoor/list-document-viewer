@@ -2,13 +2,13 @@
   "case_id": "07_missing_document_link",
   "repeat_count": 3,
   "real_llm_responses": 3,
-  "pass_count": 1,
+  "pass_count": 2,
   "mean_precision": 0.0,
   "mean_recall": 0.0,
   "mean_f1": 0.0,
-  "source_identification_precision": 0.3333333333333333,
-  "source_identification_recall": 0.3333333333333333,
-  "source_identification_f1": 0.3333333333333333,
+  "source_identification_precision": 0.6666666666666666,
+  "source_identification_recall": 0.6666666666666666,
+  "source_identification_f1": 0.6666666666666666,
   "formula_accuracy": null,
   "formula_scored_repeats": 0,
   "value_accuracy": null,
@@ -19,19 +19,21 @@
   "llm_calls": 3,
   "provider_error_calls": 0,
   "usage": {
-    "prompt_tokens": 6435,
-    "completion_tokens": 650,
-    "total_tokens": 7085,
-    "provider_cost_total": 0.07982239,
+    "prompt_tokens": 6561,
+    "completion_tokens": 546,
+    "total_tokens": 7107,
+    "provider_cost_total": 0.07074728,
     "provider_cost_currency": "RUB"
   },
-  "latency_ms": 11084.899000000001,
+  "latency_ms": 9213.699,
   "runs": [
     {
       "repeat": 1,
       "comparison": {
         "selected_fact_ids": [],
-        "identified_fact_ids": [],
+        "identified_fact_ids": [
+          "fact_d0e017575046755855b0"
+        ],
         "expected_operation_groups": 1,
         "represented_groups": 0,
         "precision": 0.0,
@@ -41,13 +43,13 @@
         "missed_operation_groups": 1,
         "false_duplicate_inclusions": 0,
         "source_selection_correct": false,
-        "source_identification_precision": 0.0,
-        "source_identification_recall": 0.0,
-        "source_identification_f1": 0.0,
-        "identified_operation_groups": 0,
-        "unidentified_operation_groups": 1,
+        "source_identification_precision": 1.0,
+        "source_identification_recall": 1.0,
+        "source_identification_f1": 1.0,
+        "identified_operation_groups": 1,
+        "unidentified_operation_groups": 0,
         "false_positive_identifications": 0,
-        "source_identification_correct": false,
+        "source_identification_correct": true,
         "formula_applicable": false,
         "formula_correct": null,
         "calculation_status": "insufficient_data",
@@ -61,10 +63,11 @@
         "diagnostic_codes": [
           "information_gap",
           "plan_requires_manual_review",
-          "required_document_missing"
+          "required_document_missing",
+          "unprocessed_candidates"
         ],
         "plan_source": "llm",
-        "pass": false
+        "pass": true
       },
       "llm_call_count": 1,
       "real_llm_response": true

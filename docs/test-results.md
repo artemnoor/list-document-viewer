@@ -9,7 +9,7 @@
 - Тест сценария 320 кандидатов проверяет индекс целевого факта за границей первого пакета и наличие как подтверждённых, так и ожидающих проверки Linking-связей.
 - Платные LLM-вызовы в тестах не используются.
 
-Проверки 14 ноября 2026 года: `pytest -q` — **успешно, все собранные тесты пройдены** (повторный полный прогон после регрессионных тестов также успешен); `python examples/build_synthetic_acceptance.py` — **успешно**, результат `calculated`, `550.00 RUB`; `docker build --tag reconciliation-engine:ci .` — **успешно**; запущенный контейнер вернул HTTP 200 для `/health`, `/docs` и `/openapi.json`. Реальные платные LLM-вызовы не выполнялись.
+Локальный CI 14 ноября 2026 года: `pytest -q`, `python examples/build_synthetic_acceptance.py` и `docker build --tag reconciliation-engine:ci .` прошли; acceptance результат — `calculated`, `550.00 RUB`; контейнер вернул HTTP 200 для `/health`, `/docs` и `/openapi.json`. Сам CI не запускает платные LLM-вызовы; отдельная модельная оценка ниже выполнялась на синтетических данных.
 
 ## Реальная модельная оценка (14 ноября 2026)
 
@@ -18,6 +18,10 @@
 - Средний source F1: **0.714**; точность формулы: **0.950** по 20 оценённым формулам; точность ожидаемого значения: **0.412** по 17 оценённым значениям.
 - Агрегация также исправлена для вызовов без HTTP status (таймаутов); добавлен regression test.
 - Только синтетические входы отправлялись провайдеру. Сводка и status: `tests/results/live_e2e/evaluation-summary.json` и `evaluation-status.json`.
+
+Повторный полный synthetic benchmark после dimension filtering и обработки exact metadata echoes: **10 сценариев × 3 повтора**, 31 scenario-вызов + 1 preflight, 29 ответов, 2 read timeout, в лимите 40. Source F1 **0.810**, формулы **0.947** (19 оценённых ответов), expected values **0.625** (16 оценённых ответов). Проверка формулы теперь считает операции `add` и `sum` эквивалентными агрегированиями; это исправило ложные отрицания при правильном плане и значении. Текущий pass count после offline rescoring — 12.
+
+После этого benchmark полный локальный CI повторно пройден: `pytest -q`, synthetic acceptance, Docker build и HTTP smoke (`/health`, `/docs`, `/openapi.json`).
 
 ## Проверка реального upstream-примера
 

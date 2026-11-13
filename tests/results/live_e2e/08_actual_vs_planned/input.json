@@ -383,9 +383,9 @@
           }
         ],
         "explanation": "Synthetic source-to-target relation.",
-        "confidence": 1.0,
-        "status": "confirmed",
-        "verification_status": "human_confirmed",
+        "confidence": 0.7,
+        "status": "review",
+        "verification_status": "not_reviewed",
         "detection_method": "llm",
         "conflicts": [],
         "source_row_id": "live-measures-row-0001"
@@ -434,7 +434,16 @@
         "source_row_id": "live-measures-row-0002"
       }
     ],
-    "review_required": [],
+    "review_required": [
+      {
+        "link_id": "synthetic-support-08_actual_vs_planned-0001",
+        "reason": "Synthetic unreviewed relation.",
+        "candidate_document_ids": [
+          "live-measures",
+          "live-synthetic-kfz-08_actual_vs_planned"
+        ]
+      }
+    ],
     "unlinked_documents": [],
     "warnings": [
       "Synthetic evaluation data; no production documents or values."
