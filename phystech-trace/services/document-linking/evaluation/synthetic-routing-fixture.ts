@@ -26,4 +26,4 @@ export const documents: any[] = [
   document("registry", "registry", { title: "Реестр двух отдельных оплат" }, [line("registry", "registry-payment-A", "Оплата INV-A по договору A за оптический стенд"), line("registry", "registry-payment-B", "Оплата INV-B по договору B за криостат")]),
 ];
 
-export const systemPrompt = "Определи фактические связи между оригинальными документами и строками. Ссылайся только на исходные reference_id.";
+export const systemPrompt = readFileSync("prompts/document-linking-system.md", "utf8");

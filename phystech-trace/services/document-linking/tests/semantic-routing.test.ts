@@ -9,9 +9,12 @@ const response = (payload: unknown) => new Response(JSON.stringify({ model: GEMM
 const edgeKey = (edge: any) => JSON.stringify([edge.source_document_id, edge.target_document_id, edge.relationship_type, edge.source_row_id ?? null, edge.target_row_id ?? null]);
 
 test("negative routing is provisional: original-anchor verification recovers repeated-amount and row links", async (t) => {
+  assert.match(systemPrompt, /"relationship_type"/);
+  assert.match(systemPrompt, /"confidence"/);
+  assert.match(systemPrompt, /"status"/);
   const originalFetch = globalThis.fetch;
   const registry = buildEvidenceRegistry(docs), byPath = new Map(registry.map(ref => [`${ref.document_id}\0${ref.json_path}`, ref]));
-  const plan = planSemanticLinking(docs, { maxInputTokens: 8000, systemPrompt });
+  const plan = planSemanticLinking(docs, { maxInputTokens: 16_000, systemPrompt });
   const canonicalId = (id: string) => Object.entries(plan.alias_map).find(([canonical, aliases]) => canonical === id || aliases.includes(id))?.[0] ?? id;
   const goldEdges = gold.positive_relations.map((edge: any) => {
     const source = byPath.get(`${edge.source_document_id}\0${edge.source_path}`), target = byPath.get(`${edge.target_document_id}\0${edge.target_path}`);
@@ -58,7 +61,7 @@ test("negative routing is provisional: original-anchor verification recovers rep
     }
   };
   try {
-    const result = await analyzeDocumentSet(docs, { apiKey: "offline-only", timeoutMs: 1000, maxCalls: 28, maxInputTokens: 8000, systemPrompt });
+    const result = await analyzeDocumentSet(docs, { apiKey: "offline-only", timeoutMs: 1000, maxCalls: 28, maxInputTokens: 16_000, systemPrompt });
     assert.match(mockFailure, /retried with bounded validator feedback/);
     const goldKeys = new Set<string>(goldEdges.map(edgeKey)), predictionKeys = new Set<string>(result.links.map(edgeKey));
     const truePositive = [...predictionKeys].filter(key => goldKeys.has(key)).length, falsePositive = [...predictionKeys].filter(key => !goldKeys.has(key)).length, falseNegative = [...goldKeys].filter(key => !predictionKeys.has(key)).length;
