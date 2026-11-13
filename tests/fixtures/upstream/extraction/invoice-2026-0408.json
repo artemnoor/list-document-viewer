@@ -1,0 +1,5808 @@
+{
+  "extraction_id": "real-invoice-2026-0408-v1",
+  "document_id": "invoice-2026-0408",
+  "version": 1,
+  "schema_version": "1.2.0",
+  "extracted_at": "2026-11-12T10:00:00.000Z",
+  "classification": {
+    "type": "invoice",
+    "label": "Счёт",
+    "confidence": 0.95,
+    "status": "classified"
+  },
+  "extraction_engine": {
+    "rules_executed": true,
+    "llm": {
+      "provider": "not_called",
+      "model": null,
+      "called": false,
+      "response_validated": false,
+      "duration_ms": null,
+      "usage": null,
+      "validation_status": "not_run",
+      "error": null
+    },
+    "parser_adapter": "document-parser-unified/1.1.0"
+  },
+  "mode": "rules_only",
+  "fields": {
+    "invoice_number": {
+      "label": "Номер счёта",
+      "value": "СЧ-0426-17",
+      "source_value": "СЧ-0426-17",
+      "status": "extracted",
+      "confidence": 0.985,
+      "provenance": {
+        "document_id": "invoice-2026-0408",
+        "source_part_id": "invoice-2026-0408:src:ib8zvj",
+        "source_ref": "#/tables/0/cells/5",
+        "page_no": 1,
+        "sheet_name": null,
+        "cell_address": null,
+        "bbox": {
+          "l": 297.64,
+          "t": 285,
+          "r": 553.28,
+          "b": 306,
+          "coord_origin": "TOPLEFT"
+        },
+        "coordinate_origin": "TOPLEFT",
+        "page_size": {
+          "width": 595.28,
+          "height": 841.89,
+          "unit": "pt"
+        },
+        "column_index": 1,
+        "source_text": "СЧ-0426-17",
+        "confidence": 0.985,
+        "source_available": true
+      },
+      "normalization_note": null,
+      "source_method": "rules"
+    },
+    "invoice_date": {
+      "label": "Дата счёта",
+      "value": "2026-04-08",
+      "source_value": "08.04.2026",
+      "status": "extracted",
+      "confidence": 0.985,
+      "provenance": {
+        "document_id": "invoice-2026-0408",
+        "source_part_id": "invoice-2026-0408:src:1lzc0ds",
+        "source_ref": "#/tables/0/cells/7",
+        "page_no": 1,
+        "sheet_name": null,
+        "cell_address": null,
+        "bbox": {
+          "l": 297.64,
+          "t": 310,
+          "r": 553.28,
+          "b": 331,
+          "coord_origin": "TOPLEFT"
+        },
+        "coordinate_origin": "TOPLEFT",
+        "page_size": {
+          "width": 595.28,
+          "height": 841.89,
+          "unit": "pt"
+        },
+        "column_index": 1,
+        "source_text": "08.04.2026",
+        "confidence": 0.985,
+        "source_available": true
+      },
+      "normalization_note": null,
+      "source_method": "rules"
+    },
+    "supplier": {
+      "label": "Поставщик",
+      "value": "ООО «Вектор Прибор»",
+      "source_value": "ООО «Вектор Прибор»",
+      "status": "extracted",
+      "confidence": 0.985,
+      "provenance": {
+        "document_id": "invoice-2026-0408",
+        "source_part_id": "invoice-2026-0408:src:18s01j1",
+        "source_ref": "#/tables/0/cells/9",
+        "page_no": 1,
+        "sheet_name": null,
+        "cell_address": null,
+        "bbox": {
+          "l": 297.64,
+          "t": 335,
+          "r": 553.28,
+          "b": 356,
+          "coord_origin": "TOPLEFT"
+        },
+        "coordinate_origin": "TOPLEFT",
+        "page_size": {
+          "width": 595.28,
+          "height": 841.89,
+          "unit": "pt"
+        },
+        "column_index": 1,
+        "source_text": "ООО «Вектор Прибор»",
+        "confidence": 0.985,
+        "source_available": true
+      },
+      "normalization_note": null,
+      "source_method": "rules"
+    },
+    "supplier_inn": {
+      "label": "ИНН поставщика",
+      "value": "7705824190",
+      "source_value": "7705824190",
+      "status": "extracted",
+      "confidence": 0.985,
+      "provenance": {
+        "document_id": "invoice-2026-0408",
+        "source_part_id": "invoice-2026-0408:src:1vag90m",
+        "source_ref": "#/tables/0/cells/11",
+        "page_no": 1,
+        "sheet_name": null,
+        "cell_address": null,
+        "bbox": {
+          "l": 297.64,
+          "t": 360,
+          "r": 553.28,
+          "b": 381,
+          "coord_origin": "TOPLEFT"
+        },
+        "coordinate_origin": "TOPLEFT",
+        "page_size": {
+          "width": 595.28,
+          "height": 841.89,
+          "unit": "pt"
+        },
+        "column_index": 1,
+        "source_text": "7705824190",
+        "confidence": 0.985,
+        "source_available": true
+      },
+      "normalization_note": null,
+      "source_method": "rules"
+    },
+    "buyer": {
+      "label": "Покупатель",
+      "value": "ООО «ИнжКонтур Бета»",
+      "source_value": "ООО «ИнжКонтур Бета»",
+      "status": "extracted",
+      "confidence": 0.985,
+      "provenance": {
+        "document_id": "invoice-2026-0408",
+        "source_part_id": "invoice-2026-0408:src:1bcjptf",
+        "source_ref": "#/tables/0/cells/13",
+        "page_no": 1,
+        "sheet_name": null,
+        "cell_address": null,
+        "bbox": {
+          "l": 297.64,
+          "t": 385,
+          "r": 553.28,
+          "b": 406,
+          "coord_origin": "TOPLEFT"
+        },
+        "coordinate_origin": "TOPLEFT",
+        "page_size": {
+          "width": 595.28,
+          "height": 841.89,
+          "unit": "pt"
+        },
+        "column_index": 1,
+        "source_text": "ООО «ИнжКонтур Бета»",
+        "confidence": 0.985,
+        "source_available": true
+      },
+      "normalization_note": null,
+      "source_method": "rules"
+    },
+    "buyer_inn": {
+      "label": "ИНН покупателя",
+      "value": "7712458032",
+      "source_value": "7712458032",
+      "status": "review",
+      "confidence": 0.985,
+      "provenance": {
+        "document_id": "invoice-2026-0408",
+        "source_part_id": "invoice-2026-0408:src:1xw1ymc",
+        "source_ref": "#/tables/0/cells/15",
+        "page_no": 1,
+        "sheet_name": null,
+        "cell_address": null,
+        "bbox": {
+          "l": 297.64,
+          "t": 410,
+          "r": 553.28,
+          "b": 431,
+          "coord_origin": "TOPLEFT"
+        },
+        "coordinate_origin": "TOPLEFT",
+        "page_size": {
+          "width": 595.28,
+          "height": 841.89,
+          "unit": "pt"
+        },
+        "column_index": 1,
+        "source_text": "7712458032",
+        "confidence": 0.985,
+        "source_available": true
+      },
+      "normalization_note": "ИНН должен содержать 10 или 12 цифр с корректной контрольной суммой",
+      "source_method": "rules"
+    },
+    "contract_reference": {
+      "label": "Основание",
+      "value": "Договор КД-24/03-15",
+      "source_value": "Договор КД-24/03-15",
+      "status": "extracted",
+      "confidence": 0.985,
+      "provenance": {
+        "document_id": "invoice-2026-0408",
+        "source_part_id": "invoice-2026-0408:src:12apmoh",
+        "source_ref": "#/tables/0/cells/17",
+        "page_no": 1,
+        "sheet_name": null,
+        "cell_address": null,
+        "bbox": {
+          "l": 297.64,
+          "t": 435,
+          "r": 553.28,
+          "b": 456,
+          "coord_origin": "TOPLEFT"
+        },
+        "coordinate_origin": "TOPLEFT",
+        "page_size": {
+          "width": 595.28,
+          "height": 841.89,
+          "unit": "pt"
+        },
+        "column_index": 1,
+        "source_text": "Договор КД-24/03-15",
+        "confidence": 0.985,
+        "source_available": true
+      },
+      "normalization_note": null,
+      "source_method": "rules"
+    },
+    "payment_deadline": {
+      "label": "Срок оплаты",
+      "value": "2026-04-18",
+      "source_value": "до 18.04.2026",
+      "status": "extracted",
+      "confidence": 0.985,
+      "provenance": {
+        "document_id": "invoice-2026-0408",
+        "source_part_id": "invoice-2026-0408:src:lbr3qy",
+        "source_ref": "#/tables/0/cells/19",
+        "page_no": 1,
+        "sheet_name": null,
+        "cell_address": null,
+        "bbox": {
+          "l": 297.64,
+          "t": 460,
+          "r": 553.28,
+          "b": 481,
+          "coord_origin": "TOPLEFT"
+        },
+        "coordinate_origin": "TOPLEFT",
+        "page_size": {
+          "width": 595.28,
+          "height": 841.89,
+          "unit": "pt"
+        },
+        "column_index": 1,
+        "source_text": "до 18.04.2026",
+        "confidence": 0.985,
+        "source_available": true
+      },
+      "normalization_note": null,
+      "source_method": "rules"
+    },
+    "total_amount": {
+      "label": "Итого с НДС",
+      "value": {
+        "amount": "318298.10",
+        "currency": "RUB"
+      },
+      "source_value": "318 298,10 руб.",
+      "status": "extracted",
+      "confidence": 0.985,
+      "provenance": {
+        "document_id": "invoice-2026-0408",
+        "source_part_id": "invoice-2026-0408:src:1lwr8cs",
+        "source_ref": "#/tables/0/cells/21",
+        "page_no": 1,
+        "sheet_name": null,
+        "cell_address": null,
+        "bbox": {
+          "l": 297.64,
+          "t": 485,
+          "r": 553.28,
+          "b": 506,
+          "coord_origin": "TOPLEFT"
+        },
+        "coordinate_origin": "TOPLEFT",
+        "page_size": {
+          "width": 595.28,
+          "height": 841.89,
+          "unit": "pt"
+        },
+        "column_index": 1,
+        "source_text": "318 298,10 руб.",
+        "confidence": 0.985,
+        "source_available": true
+      },
+      "normalization_note": null,
+      "source_method": "rules"
+    },
+    "vat_amount": {
+      "label": "В том числе НДС",
+      "value": {
+        "amount": "53049.68",
+        "currency": "RUB"
+      },
+      "source_value": "53 049,68 руб.",
+      "status": "extracted",
+      "confidence": 0.985,
+      "provenance": {
+        "document_id": "invoice-2026-0408",
+        "source_part_id": "invoice-2026-0408:src:28lpiz",
+        "source_ref": "#/tables/0/cells/23",
+        "page_no": 1,
+        "sheet_name": null,
+        "cell_address": null,
+        "bbox": {
+          "l": 297.64,
+          "t": 510,
+          "r": 553.28,
+          "b": 531,
+          "coord_origin": "TOPLEFT"
+        },
+        "coordinate_origin": "TOPLEFT",
+        "page_size": {
+          "width": 595.28,
+          "height": 841.89,
+          "unit": "pt"
+        },
+        "column_index": 1,
+        "source_text": "53 049,68 руб.",
+        "confidence": 0.985,
+        "source_available": true
+      },
+      "normalization_note": null,
+      "source_method": "rules"
+    },
+    "payee_bank": {
+      "label": "Банк получателя",
+      "value": "ПАО «Банк Столичный»",
+      "source_value": "ПАО «Банк Столичный»",
+      "status": "extracted",
+      "confidence": 0.985,
+      "provenance": {
+        "document_id": "invoice-2026-0408",
+        "source_part_id": "invoice-2026-0408:src:18t7nwu",
+        "source_ref": "#/tables/0/cells/25",
+        "page_no": 1,
+        "sheet_name": null,
+        "cell_address": null,
+        "bbox": {
+          "l": 297.64,
+          "t": 535,
+          "r": 553.28,
+          "b": 556,
+          "coord_origin": "TOPLEFT"
+        },
+        "coordinate_origin": "TOPLEFT",
+        "page_size": {
+          "width": 595.28,
+          "height": 841.89,
+          "unit": "pt"
+        },
+        "column_index": 1,
+        "source_text": "ПАО «Банк Столичный»",
+        "confidence": 0.985,
+        "source_available": true
+      },
+      "normalization_note": null,
+      "source_method": "rules"
+    },
+    "correspondent_account": {
+      "label": "Корреспондентский счёт",
+      "value": "30101810400000000225",
+      "source_value": "30101810400000000225",
+      "status": "extracted",
+      "confidence": 0.985,
+      "provenance": {
+        "document_id": "invoice-2026-0408",
+        "source_part_id": "invoice-2026-0408:src:dodsmd",
+        "source_ref": "#/tables/0/cells/27",
+        "page_no": 1,
+        "sheet_name": null,
+        "cell_address": null,
+        "bbox": {
+          "l": 297.64,
+          "t": 560,
+          "r": 553.28,
+          "b": 581,
+          "coord_origin": "TOPLEFT"
+        },
+        "coordinate_origin": "TOPLEFT",
+        "page_size": {
+          "width": 595.28,
+          "height": 841.89,
+          "unit": "pt"
+        },
+        "column_index": 1,
+        "source_text": "30101810400000000225",
+        "confidence": 0.985,
+        "source_available": true
+      },
+      "normalization_note": null,
+      "source_method": "rules"
+    }
+  },
+  "tables": [
+    {
+      "id": "document-metadata",
+      "title": "Реквизиты документа",
+      "role": "metadata",
+      "headers": [
+        "Реквизит",
+        "Значение"
+      ],
+      "rows": [
+        {
+          "row_id": "document-metadata-r001",
+          "line_number": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "identifier": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "description": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "plan_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "actual_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit_price": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "amount": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "source_cells": [
+            {
+              "header": "Реквизит",
+              "extracted": {
+                "value": "Вид документа",
+                "source_value": "Вид документа",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "invoice-2026-0408",
+                  "source_part_id": "invoice-2026-0408:src:9fl9un",
+                  "source_ref": "#/tables/0/cells/2",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 42,
+                    "t": 235,
+                    "r": 297.64,
+                    "b": 256,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 0,
+                  "source_text": "Вид документа",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            },
+            {
+              "header": "Значение",
+              "extracted": {
+                "value": "Счёт на оплату",
+                "source_value": "Счёт на оплату",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "invoice-2026-0408",
+                  "source_part_id": "invoice-2026-0408:src:9pkvjm",
+                  "source_ref": "#/tables/0/cells/3",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 297.64,
+                    "t": 260,
+                    "r": 553.28,
+                    "b": 281,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 1,
+                  "source_text": "Счёт на оплату",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            }
+          ],
+          "row_status": "extracted"
+        },
+        {
+          "row_id": "document-metadata-r002",
+          "line_number": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "identifier": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "description": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "plan_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "actual_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit_price": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "amount": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "source_cells": [
+            {
+              "header": "Реквизит",
+              "extracted": {
+                "value": "Номер счёта",
+                "source_value": "Номер счёта",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "invoice-2026-0408",
+                  "source_part_id": "invoice-2026-0408:src:il8lki",
+                  "source_ref": "#/tables/0/cells/4",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 42,
+                    "t": 260,
+                    "r": 297.64,
+                    "b": 281,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 0,
+                  "source_text": "Номер счёта",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            },
+            {
+              "header": "Значение",
+              "extracted": {
+                "value": "СЧ-0426-17",
+                "source_value": "СЧ-0426-17",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "invoice-2026-0408",
+                  "source_part_id": "invoice-2026-0408:src:ib8zvj",
+                  "source_ref": "#/tables/0/cells/5",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 297.64,
+                    "t": 285,
+                    "r": 553.28,
+                    "b": 306,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 1,
+                  "source_text": "СЧ-0426-17",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            }
+          ],
+          "row_status": "extracted"
+        },
+        {
+          "row_id": "document-metadata-r003",
+          "line_number": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "identifier": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "description": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "plan_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "actual_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit_price": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "amount": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "source_cells": [
+            {
+              "header": "Реквизит",
+              "extracted": {
+                "value": "Дата счёта",
+                "source_value": "Дата счёта",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "invoice-2026-0408",
+                  "source_part_id": "invoice-2026-0408:src:1mtatgp",
+                  "source_ref": "#/tables/0/cells/6",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 42,
+                    "t": 285,
+                    "r": 297.64,
+                    "b": 306,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 0,
+                  "source_text": "Дата счёта",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            },
+            {
+              "header": "Значение",
+              "extracted": {
+                "value": "08.04.2026",
+                "source_value": "08.04.2026",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "invoice-2026-0408",
+                  "source_part_id": "invoice-2026-0408:src:1lzc0ds",
+                  "source_ref": "#/tables/0/cells/7",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 297.64,
+                    "t": 310,
+                    "r": 553.28,
+                    "b": 331,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 1,
+                  "source_text": "08.04.2026",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            }
+          ],
+          "row_status": "extracted"
+        },
+        {
+          "row_id": "document-metadata-r004",
+          "line_number": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "identifier": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "description": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "plan_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "actual_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit_price": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "amount": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "source_cells": [
+            {
+              "header": "Реквизит",
+              "extracted": {
+                "value": "Поставщик",
+                "source_value": "Поставщик",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "invoice-2026-0408",
+                  "source_part_id": "invoice-2026-0408:src:17y18g4",
+                  "source_ref": "#/tables/0/cells/8",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 42,
+                    "t": 310,
+                    "r": 297.64,
+                    "b": 331,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 0,
+                  "source_text": "Поставщик",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            },
+            {
+              "header": "Значение",
+              "extracted": {
+                "value": "ООО «Вектор Прибор»",
+                "source_value": "ООО «Вектор Прибор»",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "invoice-2026-0408",
+                  "source_part_id": "invoice-2026-0408:src:18s01j1",
+                  "source_ref": "#/tables/0/cells/9",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 297.64,
+                    "t": 335,
+                    "r": 553.28,
+                    "b": 356,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 1,
+                  "source_text": "ООО «Вектор Прибор»",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            }
+          ],
+          "row_status": "extracted"
+        },
+        {
+          "row_id": "document-metadata-r005",
+          "line_number": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "identifier": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "description": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "plan_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "actual_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit_price": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "amount": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "source_cells": [
+            {
+              "header": "Реквизит",
+              "extracted": {
+                "value": "ИНН поставщика",
+                "source_value": "ИНН поставщика",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "invoice-2026-0408",
+                  "source_part_id": "invoice-2026-0408:src:1v0gnbn",
+                  "source_ref": "#/tables/0/cells/10",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 42,
+                    "t": 335,
+                    "r": 297.64,
+                    "b": 356,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 0,
+                  "source_text": "ИНН поставщика",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            },
+            {
+              "header": "Значение",
+              "extracted": {
+                "value": "7705824190",
+                "source_value": "7705824190",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "invoice-2026-0408",
+                  "source_part_id": "invoice-2026-0408:src:1vag90m",
+                  "source_ref": "#/tables/0/cells/11",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 297.64,
+                    "t": 360,
+                    "r": 553.28,
+                    "b": 381,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 1,
+                  "source_text": "7705824190",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            }
+          ],
+          "row_status": "extracted"
+        },
+        {
+          "row_id": "document-metadata-r006",
+          "line_number": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "identifier": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "description": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "plan_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "actual_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit_price": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "amount": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "source_cells": [
+            {
+              "header": "Реквизит",
+              "extracted": {
+                "value": "Покупатель",
+                "source_value": "Покупатель",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "invoice-2026-0408",
+                  "source_part_id": "invoice-2026-0408:src:1bmjbie",
+                  "source_ref": "#/tables/0/cells/12",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 42,
+                    "t": 360,
+                    "r": 297.64,
+                    "b": 381,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 0,
+                  "source_text": "Покупатель",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            },
+            {
+              "header": "Значение",
+              "extracted": {
+                "value": "ООО «ИнжКонтур Бета»",
+                "source_value": "ООО «ИнжКонтур Бета»",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "invoice-2026-0408",
+                  "source_part_id": "invoice-2026-0408:src:1bcjptf",
+                  "source_ref": "#/tables/0/cells/13",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 297.64,
+                    "t": 385,
+                    "r": 553.28,
+                    "b": 406,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 1,
+                  "source_text": "ООО «ИнжКонтур Бета»",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            }
+          ],
+          "row_status": "extracted"
+        },
+        {
+          "row_id": "document-metadata-r007",
+          "line_number": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "identifier": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "description": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "plan_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "actual_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit_price": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "amount": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "source_cells": [
+            {
+              "header": "Реквизит",
+              "extracted": {
+                "value": "ИНН покупателя",
+                "source_value": "ИНН покупателя",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "invoice-2026-0408",
+                  "source_part_id": "invoice-2026-0408:src:1yq0rp9",
+                  "source_ref": "#/tables/0/cells/14",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 42,
+                    "t": 385,
+                    "r": 297.64,
+                    "b": 406,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 0,
+                  "source_text": "ИНН покупателя",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            },
+            {
+              "header": "Значение",
+              "extracted": {
+                "value": "7712458032",
+                "source_value": "7712458032",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "invoice-2026-0408",
+                  "source_part_id": "invoice-2026-0408:src:1xw1ymc",
+                  "source_ref": "#/tables/0/cells/15",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 297.64,
+                    "t": 410,
+                    "r": 553.28,
+                    "b": 431,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 1,
+                  "source_text": "7712458032",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            }
+          ],
+          "row_status": "extracted"
+        },
+        {
+          "row_id": "document-metadata-r008",
+          "line_number": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "identifier": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "description": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "plan_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "actual_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit_price": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "amount": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "source_cells": [
+            {
+              "header": "Реквизит",
+              "extracted": {
+                "value": "Основание",
+                "source_value": "Основание",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "invoice-2026-0408",
+                  "source_part_id": "invoice-2026-0408:src:11gqtlk",
+                  "source_ref": "#/tables/0/cells/16",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 42,
+                    "t": 410,
+                    "r": 297.64,
+                    "b": 431,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 0,
+                  "source_text": "Основание",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            },
+            {
+              "header": "Значение",
+              "extracted": {
+                "value": "Договор КД-24/03-15",
+                "source_value": "Договор КД-24/03-15",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "invoice-2026-0408",
+                  "source_part_id": "invoice-2026-0408:src:12apmoh",
+                  "source_ref": "#/tables/0/cells/17",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 297.64,
+                    "t": 435,
+                    "r": 553.28,
+                    "b": 456,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 1,
+                  "source_text": "Договор КД-24/03-15",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            }
+          ],
+          "row_status": "extracted"
+        },
+        {
+          "row_id": "document-metadata-r009",
+          "line_number": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "identifier": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "description": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "plan_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "actual_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit_price": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "amount": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "source_cells": [
+            {
+              "header": "Реквизит",
+              "extracted": {
+                "value": "Срок оплаты",
+                "source_value": "Срок оплаты",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "invoice-2026-0408",
+                  "source_part_id": "invoice-2026-0408:src:l1ri1z",
+                  "source_ref": "#/tables/0/cells/18",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 42,
+                    "t": 435,
+                    "r": 297.64,
+                    "b": 456,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 0,
+                  "source_text": "Срок оплаты",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            },
+            {
+              "header": "Значение",
+              "extracted": {
+                "value": "до 18.04.2026",
+                "source_value": "до 18.04.2026",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "invoice-2026-0408",
+                  "source_part_id": "invoice-2026-0408:src:lbr3qy",
+                  "source_ref": "#/tables/0/cells/19",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 297.64,
+                    "t": 460,
+                    "r": 553.28,
+                    "b": 481,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 1,
+                  "source_text": "до 18.04.2026",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            }
+          ],
+          "row_status": "extracted"
+        },
+        {
+          "row_id": "document-metadata-r010",
+          "line_number": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "identifier": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "description": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "plan_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "actual_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit_price": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "amount": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "source_cells": [
+            {
+              "header": "Реквизит",
+              "extracted": {
+                "value": "Итого с НДС",
+                "source_value": "Итого с НДС",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "invoice-2026-0408",
+                  "source_part_id": "invoice-2026-0408:src:1mqq1fp",
+                  "source_ref": "#/tables/0/cells/20",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 42,
+                    "t": 460,
+                    "r": 297.64,
+                    "b": 481,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 0,
+                  "source_text": "Итого с НДС",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            },
+            {
+              "header": "Значение",
+              "extracted": {
+                "value": "318 298,10 руб.",
+                "source_value": "318 298,10 руб.",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "invoice-2026-0408",
+                  "source_part_id": "invoice-2026-0408:src:1lwr8cs",
+                  "source_ref": "#/tables/0/cells/21",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 297.64,
+                    "t": 485,
+                    "r": 553.28,
+                    "b": 506,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 1,
+                  "source_text": "318 298,10 руб.",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            }
+          ],
+          "row_status": "extracted"
+        },
+        {
+          "row_id": "document-metadata-r011",
+          "line_number": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "identifier": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "description": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "plan_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "actual_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit_price": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "amount": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "source_cells": [
+            {
+              "header": "Реквизит",
+              "extracted": {
+                "value": "В том числе НДС 20%",
+                "source_value": "В том числе НДС 20%",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "invoice-2026-0408",
+                  "source_part_id": "invoice-2026-0408:src:2ilb7y",
+                  "source_ref": "#/tables/0/cells/22",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 42,
+                    "t": 485,
+                    "r": 297.64,
+                    "b": 506,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 0,
+                  "source_text": "В том числе НДС 20%",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            },
+            {
+              "header": "Значение",
+              "extracted": {
+                "value": "53 049,68 руб.",
+                "source_value": "53 049,68 руб.",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "invoice-2026-0408",
+                  "source_part_id": "invoice-2026-0408:src:28lpiz",
+                  "source_ref": "#/tables/0/cells/23",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 297.64,
+                    "t": 510,
+                    "r": 553.28,
+                    "b": 531,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 1,
+                  "source_text": "53 049,68 руб.",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            }
+          ],
+          "row_status": "extracted"
+        },
+        {
+          "row_id": "document-metadata-r012",
+          "line_number": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "identifier": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "description": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "plan_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "actual_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit_price": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "amount": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "source_cells": [
+            {
+              "header": "Реквизит",
+              "extracted": {
+                "value": "Банк получателя",
+                "source_value": "Банк получателя",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "invoice-2026-0408",
+                  "source_part_id": "invoice-2026-0408:src:18j827v",
+                  "source_ref": "#/tables/0/cells/24",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 42,
+                    "t": 510,
+                    "r": 297.64,
+                    "b": 531,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 0,
+                  "source_text": "Банк получателя",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            },
+            {
+              "header": "Значение",
+              "extracted": {
+                "value": "ПАО «Банк Столичный»",
+                "source_value": "ПАО «Банк Столичный»",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "invoice-2026-0408",
+                  "source_part_id": "invoice-2026-0408:src:18t7nwu",
+                  "source_ref": "#/tables/0/cells/25",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 297.64,
+                    "t": 535,
+                    "r": 553.28,
+                    "b": 556,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 1,
+                  "source_text": "ПАО «Банк Столичный»",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            }
+          ],
+          "row_status": "extracted"
+        },
+        {
+          "row_id": "document-metadata-r013",
+          "line_number": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "identifier": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "description": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "plan_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "actual_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "unit_price": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "amount": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "source_cells": [
+            {
+              "header": "Реквизит",
+              "extracted": {
+                "value": "Корреспондентский счёт",
+                "source_value": "Корреспондентский счёт",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "invoice-2026-0408",
+                  "source_part_id": "invoice-2026-0408:src:cuezjg",
+                  "source_ref": "#/tables/0/cells/26",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 42,
+                    "t": 535,
+                    "r": 297.64,
+                    "b": 556,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 0,
+                  "source_text": "Корреспондентский счёт",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            },
+            {
+              "header": "Значение",
+              "extracted": {
+                "value": "30101810400000000225",
+                "source_value": "30101810400000000225",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "invoice-2026-0408",
+                  "source_part_id": "invoice-2026-0408:src:dodsmd",
+                  "source_ref": "#/tables/0/cells/27",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 297.64,
+                    "t": 560,
+                    "r": 553.28,
+                    "b": 581,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 1,
+                  "source_text": "30101810400000000225",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            }
+          ],
+          "row_status": "extracted"
+        }
+      ],
+      "repeated_header_rows": [],
+      "summary_rows": [],
+      "empty_rows": [],
+      "role_source": "rules_or_parser",
+      "source": {
+        "source_type": "logical_tables",
+        "source_ref": "#/logical_tables/0",
+        "page_numbers": [
+          1
+        ],
+        "sheet_name": null
+      }
+    },
+    {
+      "id": "invoice-lines",
+      "title": "Счёт на оплату: состав поставки",
+      "role": "line_items",
+      "headers": [
+        "№",
+        "Артикул",
+        "Наименование",
+        "Ед. изм.",
+        "Кол-во",
+        "Цена",
+        "Сумма"
+      ],
+      "rows": [
+        {
+          "row_id": "invoice-lines-r001",
+          "line_number": {
+            "value": "1",
+            "source_value": "1",
+            "status": "extracted",
+            "confidence": 0.985,
+            "provenance": {
+              "document_id": "invoice-2026-0408",
+              "source_part_id": "invoice-2026-0408:src:xlb077",
+              "source_ref": "#/tables/1/cells/7",
+              "page_no": 1,
+              "sheet_name": null,
+              "cell_address": null,
+              "bbox": {
+                "l": 42,
+                "t": 235,
+                "r": 115.04,
+                "b": 256,
+                "coord_origin": "TOPLEFT"
+              },
+              "coordinate_origin": "TOPLEFT",
+              "page_size": {
+                "width": 595.28,
+                "height": 841.89,
+                "unit": "pt"
+              },
+              "column_index": 0,
+              "source_text": "1",
+              "confidence": 0.985,
+              "source_available": true
+            },
+            "normalization_note": null
+          },
+          "identifier": {
+            "value": "ДД-10-24",
+            "source_value": "ДД-10-24",
+            "status": "extracted",
+            "confidence": 0.985,
+            "provenance": {
+              "document_id": "invoice-2026-0408",
+              "source_part_id": "invoice-2026-0408:src:xvalw6",
+              "source_ref": "#/tables/1/cells/8",
+              "page_no": 1,
+              "sheet_name": null,
+              "cell_address": null,
+              "bbox": {
+                "l": 115.04,
+                "t": 260,
+                "r": 188.08,
+                "b": 281,
+                "coord_origin": "TOPLEFT"
+              },
+              "coordinate_origin": "TOPLEFT",
+              "page_size": {
+                "width": 595.28,
+                "height": 841.89,
+                "unit": "pt"
+              },
+              "column_index": 1,
+              "source_text": "ДД-10-24",
+              "confidence": 0.985,
+              "source_available": true
+            },
+            "normalization_note": null
+          },
+          "description": {
+            "value": "Датчик давления ДД-10, диапазон 0–2,5 МПа",
+            "source_value": "Датчик давления ДД-10, диапазон 0–2,5 МПа",
+            "status": "extracted",
+            "confidence": 0.985,
+            "provenance": {
+              "document_id": "invoice-2026-0408",
+              "source_part_id": "invoice-2026-0408:src:y5a7l5",
+              "source_ref": "#/tables/1/cells/9",
+              "page_no": 1,
+              "sheet_name": null,
+              "cell_address": null,
+              "bbox": {
+                "l": 188.08,
+                "t": 260,
+                "r": 261.12,
+                "b": 281,
+                "coord_origin": "TOPLEFT"
+              },
+              "coordinate_origin": "TOPLEFT",
+              "page_size": {
+                "width": 595.28,
+                "height": 841.89,
+                "unit": "pt"
+              },
+              "column_index": 2,
+              "source_text": "Датчик давления ДД-10, диапазон 0–2,5 МПа",
+              "confidence": 0.985,
+              "source_available": true
+            },
+            "normalization_note": null
+          },
+          "unit": {
+            "value": "piece",
+            "source_value": "шт.",
+            "status": "extracted",
+            "confidence": 0.985,
+            "provenance": {
+              "document_id": "invoice-2026-0408",
+              "source_part_id": "invoice-2026-0408:src:yf9ta4",
+              "source_ref": "#/tables/1/cells/10",
+              "page_no": 1,
+              "sheet_name": null,
+              "cell_address": null,
+              "bbox": {
+                "l": 261.12,
+                "t": 260,
+                "r": 334.16,
+                "b": 281,
+                "coord_origin": "TOPLEFT"
+              },
+              "coordinate_origin": "TOPLEFT",
+              "page_size": {
+                "width": 595.28,
+                "height": 841.89,
+                "unit": "pt"
+              },
+              "column_index": 3,
+              "source_text": "шт.",
+              "confidence": 0.985,
+              "source_available": true
+            },
+            "normalization_note": null
+          },
+          "quantity": {
+            "value": "6",
+            "source_value": "6",
+            "status": "extracted",
+            "confidence": 0.985,
+            "provenance": {
+              "document_id": "invoice-2026-0408",
+              "source_part_id": "invoice-2026-0408:src:yp9ez3",
+              "source_ref": "#/tables/1/cells/11",
+              "page_no": 1,
+              "sheet_name": null,
+              "cell_address": null,
+              "bbox": {
+                "l": 334.16,
+                "t": 260,
+                "r": 407.2,
+                "b": 281,
+                "coord_origin": "TOPLEFT"
+              },
+              "coordinate_origin": "TOPLEFT",
+              "page_size": {
+                "width": 595.28,
+                "height": 841.89,
+                "unit": "pt"
+              },
+              "column_index": 4,
+              "source_text": "6",
+              "confidence": 0.985,
+              "source_available": true
+            },
+            "normalization_note": null
+          },
+          "plan_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "actual_quantity": {
+            "value": "6",
+            "source_value": "6",
+            "status": "extracted",
+            "confidence": 0.985,
+            "provenance": {
+              "document_id": "invoice-2026-0408",
+              "source_part_id": "invoice-2026-0408:src:yp9ez3",
+              "source_ref": "#/tables/1/cells/11",
+              "page_no": 1,
+              "sheet_name": null,
+              "cell_address": null,
+              "bbox": {
+                "l": 334.16,
+                "t": 260,
+                "r": 407.2,
+                "b": 281,
+                "coord_origin": "TOPLEFT"
+              },
+              "coordinate_origin": "TOPLEFT",
+              "page_size": {
+                "width": 595.28,
+                "height": 841.89,
+                "unit": "pt"
+              },
+              "column_index": 4,
+              "source_text": "6",
+              "confidence": 0.985,
+              "source_available": true
+            },
+            "normalization_note": null
+          },
+          "unit_price": {
+            "value": {
+              "amount": "38400.00",
+              "currency": "RUB"
+            },
+            "source_value": "38 400,00 ₽",
+            "status": "extracted",
+            "confidence": 0.985,
+            "provenance": {
+              "document_id": "invoice-2026-0408",
+              "source_part_id": "invoice-2026-0408:src:yz90o2",
+              "source_ref": "#/tables/1/cells/12",
+              "page_no": 1,
+              "sheet_name": null,
+              "cell_address": null,
+              "bbox": {
+                "l": 407.2,
+                "t": 260,
+                "r": 480.24,
+                "b": 281,
+                "coord_origin": "TOPLEFT"
+              },
+              "coordinate_origin": "TOPLEFT",
+              "page_size": {
+                "width": 595.28,
+                "height": 841.89,
+                "unit": "pt"
+              },
+              "column_index": 5,
+              "source_text": "38 400,00 ₽",
+              "confidence": 0.985,
+              "source_available": true
+            },
+            "normalization_note": null
+          },
+          "amount": {
+            "value": {
+              "amount": "230400.00",
+              "currency": "RUB"
+            },
+            "source_value": "230 400,00 ₽",
+            "status": "extracted",
+            "confidence": 0.985,
+            "provenance": {
+              "document_id": "invoice-2026-0408",
+              "source_part_id": "invoice-2026-0408:src:z98md1",
+              "source_ref": "#/tables/1/cells/13",
+              "page_no": 1,
+              "sheet_name": null,
+              "cell_address": null,
+              "bbox": {
+                "l": 480.24,
+                "t": 260,
+                "r": 553.28,
+                "b": 281,
+                "coord_origin": "TOPLEFT"
+              },
+              "coordinate_origin": "TOPLEFT",
+              "page_size": {
+                "width": 595.28,
+                "height": 841.89,
+                "unit": "pt"
+              },
+              "column_index": 6,
+              "source_text": "230 400,00 ₽",
+              "confidence": 0.985,
+              "source_available": true
+            },
+            "normalization_note": null
+          },
+          "source_cells": [
+            {
+              "header": "№",
+              "extracted": {
+                "value": "1",
+                "source_value": "1",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "invoice-2026-0408",
+                  "source_part_id": "invoice-2026-0408:src:xlb077",
+                  "source_ref": "#/tables/1/cells/7",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 42,
+                    "t": 235,
+                    "r": 115.04,
+                    "b": 256,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 0,
+                  "source_text": "1",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            },
+            {
+              "header": "Артикул",
+              "extracted": {
+                "value": "ДД-10-24",
+                "source_value": "ДД-10-24",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "invoice-2026-0408",
+                  "source_part_id": "invoice-2026-0408:src:xvalw6",
+                  "source_ref": "#/tables/1/cells/8",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 115.04,
+                    "t": 260,
+                    "r": 188.08,
+                    "b": 281,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 1,
+                  "source_text": "ДД-10-24",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            },
+            {
+              "header": "Наименование",
+              "extracted": {
+                "value": "Датчик давления ДД-10, диапазон 0–2,5 МПа",
+                "source_value": "Датчик давления ДД-10, диапазон 0–2,5 МПа",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "invoice-2026-0408",
+                  "source_part_id": "invoice-2026-0408:src:y5a7l5",
+                  "source_ref": "#/tables/1/cells/9",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 188.08,
+                    "t": 260,
+                    "r": 261.12,
+                    "b": 281,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 2,
+                  "source_text": "Датчик давления ДД-10, диапазон 0–2,5 МПа",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            },
+            {
+              "header": "Ед. изм.",
+              "extracted": {
+                "value": "piece",
+                "source_value": "шт.",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "invoice-2026-0408",
+                  "source_part_id": "invoice-2026-0408:src:yf9ta4",
+                  "source_ref": "#/tables/1/cells/10",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 261.12,
+                    "t": 260,
+                    "r": 334.16,
+                    "b": 281,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 3,
+                  "source_text": "шт.",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            },
+            {
+              "header": "Кол-во",
+              "extracted": {
+                "value": "6",
+                "source_value": "6",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "invoice-2026-0408",
+                  "source_part_id": "invoice-2026-0408:src:yp9ez3",
+                  "source_ref": "#/tables/1/cells/11",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 334.16,
+                    "t": 260,
+                    "r": 407.2,
+                    "b": 281,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 4,
+                  "source_text": "6",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            },
+            {
+              "header": "Цена",
+              "extracted": {
+                "value": {
+                  "amount": "38400.00",
+                  "currency": "RUB"
+                },
+                "source_value": "38 400,00 ₽",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "invoice-2026-0408",
+                  "source_part_id": "invoice-2026-0408:src:yz90o2",
+                  "source_ref": "#/tables/1/cells/12",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 407.2,
+                    "t": 260,
+                    "r": 480.24,
+                    "b": 281,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 5,
+                  "source_text": "38 400,00 ₽",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            },
+            {
+              "header": "Сумма",
+              "extracted": {
+                "value": {
+                  "amount": "230400.00",
+                  "currency": "RUB"
+                },
+                "source_value": "230 400,00 ₽",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "invoice-2026-0408",
+                  "source_part_id": "invoice-2026-0408:src:z98md1",
+                  "source_ref": "#/tables/1/cells/13",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 480.24,
+                    "t": 260,
+                    "r": 553.28,
+                    "b": 281,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 6,
+                  "source_text": "230 400,00 ₽",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            }
+          ],
+          "row_status": "extracted"
+        },
+        {
+          "row_id": "invoice-lines-r002",
+          "line_number": {
+            "value": "2",
+            "source_value": "2",
+            "status": "extracted",
+            "confidence": 0.985,
+            "provenance": {
+              "document_id": "invoice-2026-0408",
+              "source_part_id": "invoice-2026-0408:src:e7dody",
+              "source_ref": "#/tables/1/cells/14",
+              "page_no": 1,
+              "sheet_name": null,
+              "cell_address": null,
+              "bbox": {
+                "l": 42,
+                "t": 260,
+                "r": 115.04,
+                "b": 281,
+                "coord_origin": "TOPLEFT"
+              },
+              "coordinate_origin": "TOPLEFT",
+              "page_size": {
+                "width": 595.28,
+                "height": 841.89,
+                "unit": "pt"
+              },
+              "column_index": 0,
+              "source_text": "2",
+              "confidence": 0.985,
+              "source_available": true
+            },
+            "normalization_note": null
+          },
+          "identifier": {
+            "value": "КБ-24",
+            "source_value": "КБ-24",
+            "status": "extracted",
+            "confidence": 0.985,
+            "provenance": {
+              "document_id": "invoice-2026-0408",
+              "source_part_id": "invoice-2026-0408:src:dxe2oz",
+              "source_ref": "#/tables/1/cells/15",
+              "page_no": 1,
+              "sheet_name": null,
+              "cell_address": null,
+              "bbox": {
+                "l": 115.04,
+                "t": 285,
+                "r": 188.08,
+                "b": 306,
+                "coord_origin": "TOPLEFT"
+              },
+              "coordinate_origin": "TOPLEFT",
+              "page_size": {
+                "width": 595.28,
+                "height": 841.89,
+                "unit": "pt"
+              },
+              "column_index": 1,
+              "source_text": "КБ-24",
+              "confidence": 0.985,
+              "source_available": true
+            },
+            "normalization_note": null
+          },
+          "description": {
+            "value": "Блок клеммный для шкафа автоматики",
+            "source_value": "Блок клеммный для шкафа автоматики",
+            "status": "extracted",
+            "confidence": 0.985,
+            "provenance": {
+              "document_id": "invoice-2026-0408",
+              "source_part_id": "invoice-2026-0408:src:dneh00",
+              "source_ref": "#/tables/1/cells/16",
+              "page_no": 1,
+              "sheet_name": null,
+              "cell_address": null,
+              "bbox": {
+                "l": 188.08,
+                "t": 285,
+                "r": 261.12,
+                "b": 306,
+                "coord_origin": "TOPLEFT"
+              },
+              "coordinate_origin": "TOPLEFT",
+              "page_size": {
+                "width": 595.28,
+                "height": 841.89,
+                "unit": "pt"
+              },
+              "column_index": 2,
+              "source_text": "Блок клеммный для шкафа автоматики",
+              "confidence": 0.985,
+              "source_available": true
+            },
+            "normalization_note": null
+          },
+          "unit": {
+            "value": "piece",
+            "source_value": "шт.",
+            "status": "extracted",
+            "confidence": 0.985,
+            "provenance": {
+              "document_id": "invoice-2026-0408",
+              "source_part_id": "invoice-2026-0408:src:flbout",
+              "source_ref": "#/tables/1/cells/17",
+              "page_no": 1,
+              "sheet_name": null,
+              "cell_address": null,
+              "bbox": {
+                "l": 261.12,
+                "t": 285,
+                "r": 334.16,
+                "b": 306,
+                "coord_origin": "TOPLEFT"
+              },
+              "coordinate_origin": "TOPLEFT",
+              "page_size": {
+                "width": 595.28,
+                "height": 841.89,
+                "unit": "pt"
+              },
+              "column_index": 3,
+              "source_text": "шт.",
+              "confidence": 0.985,
+              "source_available": true
+            },
+            "normalization_note": null
+          },
+          "quantity": {
+            "value": "32",
+            "source_value": "32",
+            "status": "extracted",
+            "confidence": 0.985,
+            "provenance": {
+              "document_id": "invoice-2026-0408",
+              "source_part_id": "invoice-2026-0408:src:fbc35u",
+              "source_ref": "#/tables/1/cells/18",
+              "page_no": 1,
+              "sheet_name": null,
+              "cell_address": null,
+              "bbox": {
+                "l": 334.16,
+                "t": 285,
+                "r": 407.2,
+                "b": 306,
+                "coord_origin": "TOPLEFT"
+              },
+              "coordinate_origin": "TOPLEFT",
+              "page_size": {
+                "width": 595.28,
+                "height": 841.89,
+                "unit": "pt"
+              },
+              "column_index": 4,
+              "source_text": "32",
+              "confidence": 0.985,
+              "source_available": true
+            },
+            "normalization_note": null
+          },
+          "plan_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "actual_quantity": {
+            "value": "32",
+            "source_value": "32",
+            "status": "extracted",
+            "confidence": 0.985,
+            "provenance": {
+              "document_id": "invoice-2026-0408",
+              "source_part_id": "invoice-2026-0408:src:fbc35u",
+              "source_ref": "#/tables/1/cells/18",
+              "page_no": 1,
+              "sheet_name": null,
+              "cell_address": null,
+              "bbox": {
+                "l": 334.16,
+                "t": 285,
+                "r": 407.2,
+                "b": 306,
+                "coord_origin": "TOPLEFT"
+              },
+              "coordinate_origin": "TOPLEFT",
+              "page_size": {
+                "width": 595.28,
+                "height": 841.89,
+                "unit": "pt"
+              },
+              "column_index": 4,
+              "source_text": "32",
+              "confidence": 0.985,
+              "source_available": true
+            },
+            "normalization_note": null
+          },
+          "unit_price": {
+            "value": {
+              "amount": "1240.00",
+              "currency": null
+            },
+            "source_value": "1 240,00",
+            "status": "review",
+            "confidence": 0.985,
+            "provenance": {
+              "document_id": "invoice-2026-0408",
+              "source_part_id": "invoice-2026-0408:src:f1chgv",
+              "source_ref": "#/tables/1/cells/19",
+              "page_no": 1,
+              "sheet_name": null,
+              "cell_address": null,
+              "bbox": {
+                "l": 407.2,
+                "t": 285,
+                "r": 480.24,
+                "b": 306,
+                "coord_origin": "TOPLEFT"
+              },
+              "coordinate_origin": "TOPLEFT",
+              "page_size": {
+                "width": 595.28,
+                "height": 841.89,
+                "unit": "pt"
+              },
+              "column_index": 5,
+              "source_text": "1 240,00",
+              "confidence": 0.985,
+              "source_available": true
+            },
+            "normalization_note": "Валюта не указана в значении или заголовке источника"
+          },
+          "amount": {
+            "value": {
+              "amount": "39680.00",
+              "currency": "RUB"
+            },
+            "source_value": "39 680,00 руб.",
+            "status": "extracted",
+            "confidence": 0.985,
+            "provenance": {
+              "document_id": "invoice-2026-0408",
+              "source_part_id": "invoice-2026-0408:src:ercvrw",
+              "source_ref": "#/tables/1/cells/20",
+              "page_no": 1,
+              "sheet_name": null,
+              "cell_address": null,
+              "bbox": {
+                "l": 480.24,
+                "t": 285,
+                "r": 553.28,
+                "b": 306,
+                "coord_origin": "TOPLEFT"
+              },
+              "coordinate_origin": "TOPLEFT",
+              "page_size": {
+                "width": 595.28,
+                "height": 841.89,
+                "unit": "pt"
+              },
+              "column_index": 6,
+              "source_text": "39 680,00 руб.",
+              "confidence": 0.985,
+              "source_available": true
+            },
+            "normalization_note": null
+          },
+          "source_cells": [
+            {
+              "header": "№",
+              "extracted": {
+                "value": "2",
+                "source_value": "2",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "invoice-2026-0408",
+                  "source_part_id": "invoice-2026-0408:src:e7dody",
+                  "source_ref": "#/tables/1/cells/14",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 42,
+                    "t": 260,
+                    "r": 115.04,
+                    "b": 281,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 0,
+                  "source_text": "2",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            },
+            {
+              "header": "Артикул",
+              "extracted": {
+                "value": "КБ-24",
+                "source_value": "КБ-24",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "invoice-2026-0408",
+                  "source_part_id": "invoice-2026-0408:src:dxe2oz",
+                  "source_ref": "#/tables/1/cells/15",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 115.04,
+                    "t": 285,
+                    "r": 188.08,
+                    "b": 306,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 1,
+                  "source_text": "КБ-24",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            },
+            {
+              "header": "Наименование",
+              "extracted": {
+                "value": "Блок клеммный для шкафа автоматики",
+                "source_value": "Блок клеммный для шкафа автоматики",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "invoice-2026-0408",
+                  "source_part_id": "invoice-2026-0408:src:dneh00",
+                  "source_ref": "#/tables/1/cells/16",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 188.08,
+                    "t": 285,
+                    "r": 261.12,
+                    "b": 306,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 2,
+                  "source_text": "Блок клеммный для шкафа автоматики",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            },
+            {
+              "header": "Ед. изм.",
+              "extracted": {
+                "value": "piece",
+                "source_value": "шт.",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "invoice-2026-0408",
+                  "source_part_id": "invoice-2026-0408:src:flbout",
+                  "source_ref": "#/tables/1/cells/17",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 261.12,
+                    "t": 285,
+                    "r": 334.16,
+                    "b": 306,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 3,
+                  "source_text": "шт.",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            },
+            {
+              "header": "Кол-во",
+              "extracted": {
+                "value": "32",
+                "source_value": "32",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "invoice-2026-0408",
+                  "source_part_id": "invoice-2026-0408:src:fbc35u",
+                  "source_ref": "#/tables/1/cells/18",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 334.16,
+                    "t": 285,
+                    "r": 407.2,
+                    "b": 306,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 4,
+                  "source_text": "32",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            },
+            {
+              "header": "Цена",
+              "extracted": {
+                "value": {
+                  "amount": "1240.00",
+                  "currency": null
+                },
+                "source_value": "1 240,00",
+                "status": "review",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "invoice-2026-0408",
+                  "source_part_id": "invoice-2026-0408:src:f1chgv",
+                  "source_ref": "#/tables/1/cells/19",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 407.2,
+                    "t": 285,
+                    "r": 480.24,
+                    "b": 306,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 5,
+                  "source_text": "1 240,00",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": "Валюта не указана в значении или заголовке источника"
+              }
+            },
+            {
+              "header": "Сумма",
+              "extracted": {
+                "value": {
+                  "amount": "39680.00",
+                  "currency": "RUB"
+                },
+                "source_value": "39 680,00 руб.",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "invoice-2026-0408",
+                  "source_part_id": "invoice-2026-0408:src:ercvrw",
+                  "source_ref": "#/tables/1/cells/20",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 480.24,
+                    "t": 285,
+                    "r": 553.28,
+                    "b": 306,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 6,
+                  "source_text": "39 680,00 руб.",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            }
+          ],
+          "row_status": "review"
+        },
+        {
+          "row_id": "invoice-lines-r003",
+          "line_number": {
+            "value": "3",
+            "source_value": "3",
+            "status": "extracted",
+            "confidence": 0.985,
+            "provenance": {
+              "document_id": "invoice-2026-0408",
+              "source_part_id": "invoice-2026-0408:src:rvlzot",
+              "source_ref": "#/tables/1/cells/21",
+              "page_no": 1,
+              "sheet_name": null,
+              "cell_address": null,
+              "bbox": {
+                "l": 42,
+                "t": 285,
+                "r": 115.04,
+                "b": 306,
+                "coord_origin": "TOPLEFT"
+              },
+              "coordinate_origin": "TOPLEFT",
+              "page_size": {
+                "width": 595.28,
+                "height": 841.89,
+                "unit": "pt"
+              },
+              "column_index": 0,
+              "source_text": "3",
+              "confidence": 0.985,
+              "source_available": true
+            },
+            "normalization_note": null
+          },
+          "identifier": {
+            "value": "ФЭ-40",
+            "source_value": "ФЭ-40",
+            "status": "extracted",
+            "confidence": 0.985,
+            "provenance": {
+              "document_id": "invoice-2026-0408",
+              "source_part_id": "invoice-2026-0408:src:r1n6lw",
+              "source_ref": "#/tables/1/cells/22",
+              "page_no": 1,
+              "sheet_name": null,
+              "cell_address": null,
+              "bbox": {
+                "l": 115.04,
+                "t": 310,
+                "r": 188.08,
+                "b": 331,
+                "coord_origin": "TOPLEFT"
+              },
+              "coordinate_origin": "TOPLEFT",
+              "page_size": {
+                "width": 595.28,
+                "height": 841.89,
+                "unit": "pt"
+              },
+              "column_index": 1,
+              "source_text": "ФЭ-40",
+              "confidence": 0.985,
+              "source_available": true
+            },
+            "normalization_note": null
+          },
+          "description": {
+            "value": "Фильтроэлемент для приточной установки",
+            "source_value": "Фильтроэлемент для приточной установки",
+            "status": "extracted",
+            "confidence": 0.985,
+            "provenance": {
+              "document_id": "invoice-2026-0408",
+              "source_part_id": "invoice-2026-0408:src:rbmsav",
+              "source_ref": "#/tables/1/cells/23",
+              "page_no": 1,
+              "sheet_name": null,
+              "cell_address": null,
+              "bbox": {
+                "l": 188.08,
+                "t": 310,
+                "r": 261.12,
+                "b": 331,
+                "coord_origin": "TOPLEFT"
+              },
+              "coordinate_origin": "TOPLEFT",
+              "page_size": {
+                "width": 595.28,
+                "height": 841.89,
+                "unit": "pt"
+              },
+              "column_index": 2,
+              "source_text": "Фильтроэлемент для приточной установки",
+              "confidence": 0.985,
+              "source_available": true
+            },
+            "normalization_note": null
+          },
+          "unit": {
+            "value": "piece",
+            "source_value": "шт.",
+            "status": "extracted",
+            "confidence": 0.985,
+            "provenance": {
+              "document_id": "invoice-2026-0408",
+              "source_part_id": "invoice-2026-0408:src:qhnz7y",
+              "source_ref": "#/tables/1/cells/24",
+              "page_no": 1,
+              "sheet_name": null,
+              "cell_address": null,
+              "bbox": {
+                "l": 261.12,
+                "t": 310,
+                "r": 334.16,
+                "b": 331,
+                "coord_origin": "TOPLEFT"
+              },
+              "coordinate_origin": "TOPLEFT",
+              "page_size": {
+                "width": 595.28,
+                "height": 841.89,
+                "unit": "pt"
+              },
+              "column_index": 3,
+              "source_text": "шт.",
+              "confidence": 0.985,
+              "source_available": true
+            },
+            "normalization_note": null
+          },
+          "quantity": {
+            "value": "6",
+            "source_value": "6",
+            "status": "extracted",
+            "confidence": 0.985,
+            "provenance": {
+              "document_id": "invoice-2026-0408",
+              "source_part_id": "invoice-2026-0408:src:qrnkwx",
+              "source_ref": "#/tables/1/cells/25",
+              "page_no": 1,
+              "sheet_name": null,
+              "cell_address": null,
+              "bbox": {
+                "l": 334.16,
+                "t": 310,
+                "r": 407.2,
+                "b": 331,
+                "coord_origin": "TOPLEFT"
+              },
+              "coordinate_origin": "TOPLEFT",
+              "page_size": {
+                "width": 595.28,
+                "height": 841.89,
+                "unit": "pt"
+              },
+              "column_index": 4,
+              "source_text": "6",
+              "confidence": 0.985,
+              "source_available": true
+            },
+            "normalization_note": null
+          },
+          "plan_quantity": {
+            "value": null,
+            "source_value": null,
+            "status": "missing",
+            "confidence": null,
+            "provenance": null,
+            "normalization_note": null
+          },
+          "actual_quantity": {
+            "value": "6",
+            "source_value": "6",
+            "status": "extracted",
+            "confidence": 0.985,
+            "provenance": {
+              "document_id": "invoice-2026-0408",
+              "source_part_id": "invoice-2026-0408:src:qrnkwx",
+              "source_ref": "#/tables/1/cells/25",
+              "page_no": 1,
+              "sheet_name": null,
+              "cell_address": null,
+              "bbox": {
+                "l": 334.16,
+                "t": 310,
+                "r": 407.2,
+                "b": 331,
+                "coord_origin": "TOPLEFT"
+              },
+              "coordinate_origin": "TOPLEFT",
+              "page_size": {
+                "width": 595.28,
+                "height": 841.89,
+                "unit": "pt"
+              },
+              "column_index": 4,
+              "source_text": "6",
+              "confidence": 0.985,
+              "source_available": true
+            },
+            "normalization_note": null
+          },
+          "unit_price": {
+            "value": {
+              "amount": "6803.02",
+              "currency": null
+            },
+            "source_value": "6 803,02",
+            "status": "review",
+            "confidence": 0.985,
+            "provenance": {
+              "document_id": "invoice-2026-0408",
+              "source_part_id": "invoice-2026-0408:src:pxoru0",
+              "source_ref": "#/tables/1/cells/26",
+              "page_no": 1,
+              "sheet_name": null,
+              "cell_address": null,
+              "bbox": {
+                "l": 407.2,
+                "t": 310,
+                "r": 480.24,
+                "b": 331,
+                "coord_origin": "TOPLEFT"
+              },
+              "coordinate_origin": "TOPLEFT",
+              "page_size": {
+                "width": 595.28,
+                "height": 841.89,
+                "unit": "pt"
+              },
+              "column_index": 5,
+              "source_text": "6 803,02",
+              "confidence": 0.985,
+              "source_available": true
+            },
+            "normalization_note": "Валюта не указана в значении или заголовке источника"
+          },
+          "amount": {
+            "value": {
+              "amount": "40818.10",
+              "currency": null
+            },
+            "source_value": "40 818,10",
+            "status": "review",
+            "confidence": 0.985,
+            "provenance": {
+              "document_id": "invoice-2026-0408",
+              "source_part_id": "invoice-2026-0408:src:q7odiz",
+              "source_ref": "#/tables/1/cells/27",
+              "page_no": 1,
+              "sheet_name": null,
+              "cell_address": null,
+              "bbox": {
+                "l": 480.24,
+                "t": 310,
+                "r": 553.28,
+                "b": 331,
+                "coord_origin": "TOPLEFT"
+              },
+              "coordinate_origin": "TOPLEFT",
+              "page_size": {
+                "width": 595.28,
+                "height": 841.89,
+                "unit": "pt"
+              },
+              "column_index": 6,
+              "source_text": "40 818,10",
+              "confidence": 0.985,
+              "source_available": true
+            },
+            "normalization_note": "Валюта не указана в значении или заголовке источника"
+          },
+          "source_cells": [
+            {
+              "header": "№",
+              "extracted": {
+                "value": "3",
+                "source_value": "3",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "invoice-2026-0408",
+                  "source_part_id": "invoice-2026-0408:src:rvlzot",
+                  "source_ref": "#/tables/1/cells/21",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 42,
+                    "t": 285,
+                    "r": 115.04,
+                    "b": 306,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 0,
+                  "source_text": "3",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            },
+            {
+              "header": "Артикул",
+              "extracted": {
+                "value": "ФЭ-40",
+                "source_value": "ФЭ-40",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "invoice-2026-0408",
+                  "source_part_id": "invoice-2026-0408:src:r1n6lw",
+                  "source_ref": "#/tables/1/cells/22",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 115.04,
+                    "t": 310,
+                    "r": 188.08,
+                    "b": 331,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 1,
+                  "source_text": "ФЭ-40",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            },
+            {
+              "header": "Наименование",
+              "extracted": {
+                "value": "Фильтроэлемент для приточной установки",
+                "source_value": "Фильтроэлемент для приточной установки",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "invoice-2026-0408",
+                  "source_part_id": "invoice-2026-0408:src:rbmsav",
+                  "source_ref": "#/tables/1/cells/23",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 188.08,
+                    "t": 310,
+                    "r": 261.12,
+                    "b": 331,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 2,
+                  "source_text": "Фильтроэлемент для приточной установки",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            },
+            {
+              "header": "Ед. изм.",
+              "extracted": {
+                "value": "piece",
+                "source_value": "шт.",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "invoice-2026-0408",
+                  "source_part_id": "invoice-2026-0408:src:qhnz7y",
+                  "source_ref": "#/tables/1/cells/24",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 261.12,
+                    "t": 310,
+                    "r": 334.16,
+                    "b": 331,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 3,
+                  "source_text": "шт.",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            },
+            {
+              "header": "Кол-во",
+              "extracted": {
+                "value": "6",
+                "source_value": "6",
+                "status": "extracted",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "invoice-2026-0408",
+                  "source_part_id": "invoice-2026-0408:src:qrnkwx",
+                  "source_ref": "#/tables/1/cells/25",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 334.16,
+                    "t": 310,
+                    "r": 407.2,
+                    "b": 331,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 4,
+                  "source_text": "6",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": null
+              }
+            },
+            {
+              "header": "Цена",
+              "extracted": {
+                "value": {
+                  "amount": "6803.02",
+                  "currency": null
+                },
+                "source_value": "6 803,02",
+                "status": "review",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "invoice-2026-0408",
+                  "source_part_id": "invoice-2026-0408:src:pxoru0",
+                  "source_ref": "#/tables/1/cells/26",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 407.2,
+                    "t": 310,
+                    "r": 480.24,
+                    "b": 331,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 5,
+                  "source_text": "6 803,02",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": "Валюта не указана в значении или заголовке источника"
+              }
+            },
+            {
+              "header": "Сумма",
+              "extracted": {
+                "value": {
+                  "amount": "40818.10",
+                  "currency": null
+                },
+                "source_value": "40 818,10",
+                "status": "review",
+                "confidence": 0.985,
+                "provenance": {
+                  "document_id": "invoice-2026-0408",
+                  "source_part_id": "invoice-2026-0408:src:q7odiz",
+                  "source_ref": "#/tables/1/cells/27",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "bbox": {
+                    "l": 480.24,
+                    "t": 310,
+                    "r": 553.28,
+                    "b": 331,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "coordinate_origin": "TOPLEFT",
+                  "page_size": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "unit": "pt"
+                  },
+                  "column_index": 6,
+                  "source_text": "40 818,10",
+                  "confidence": 0.985,
+                  "source_available": true
+                },
+                "normalization_note": "Валюта не указана в значении или заголовке источника"
+              }
+            }
+          ],
+          "row_status": "review"
+        }
+      ],
+      "repeated_header_rows": [],
+      "summary_rows": [],
+      "empty_rows": [],
+      "role_source": "rules_or_parser",
+      "source": {
+        "source_type": "logical_tables",
+        "source_ref": "#/logical_tables/1",
+        "page_numbers": [
+          1
+        ],
+        "sheet_name": null
+      }
+    }
+  ],
+  "indicators": [
+    {
+      "key": "total_amount",
+      "label": "Итого с НДС",
+      "extracted": {
+        "label": "Итого с НДС",
+        "value": {
+          "amount": "318298.10",
+          "currency": "RUB"
+        },
+        "source_value": "318 298,10 руб.",
+        "status": "extracted",
+        "confidence": 0.985,
+        "provenance": {
+          "document_id": "invoice-2026-0408",
+          "source_part_id": "invoice-2026-0408:src:1lwr8cs",
+          "source_ref": "#/tables/0/cells/21",
+          "page_no": 1,
+          "sheet_name": null,
+          "cell_address": null,
+          "bbox": {
+            "l": 297.64,
+            "t": 485,
+            "r": 553.28,
+            "b": 506,
+            "coord_origin": "TOPLEFT"
+          },
+          "coordinate_origin": "TOPLEFT",
+          "page_size": {
+            "width": 595.28,
+            "height": 841.89,
+            "unit": "pt"
+          },
+          "column_index": 1,
+          "source_text": "318 298,10 руб.",
+          "confidence": 0.985,
+          "source_available": true
+        },
+        "normalization_note": null,
+        "source_method": "rules"
+      }
+    },
+    {
+      "key": "vat_amount",
+      "label": "В том числе НДС",
+      "extracted": {
+        "label": "В том числе НДС",
+        "value": {
+          "amount": "53049.68",
+          "currency": "RUB"
+        },
+        "source_value": "53 049,68 руб.",
+        "status": "extracted",
+        "confidence": 0.985,
+        "provenance": {
+          "document_id": "invoice-2026-0408",
+          "source_part_id": "invoice-2026-0408:src:28lpiz",
+          "source_ref": "#/tables/0/cells/23",
+          "page_no": 1,
+          "sheet_name": null,
+          "cell_address": null,
+          "bbox": {
+            "l": 297.64,
+            "t": 510,
+            "r": 553.28,
+            "b": 531,
+            "coord_origin": "TOPLEFT"
+          },
+          "coordinate_origin": "TOPLEFT",
+          "page_size": {
+            "width": 595.28,
+            "height": 841.89,
+            "unit": "pt"
+          },
+          "column_index": 1,
+          "source_text": "53 049,68 руб.",
+          "confidence": 0.985,
+          "source_available": true
+        },
+        "normalization_note": null,
+        "source_method": "rules"
+      }
+    },
+    {
+      "key": "extracted_line_count",
+      "label": "Извлечено строк",
+      "extracted": {
+        "value": "3",
+        "source_value": "3",
+        "status": "extracted",
+        "confidence": 1,
+        "provenance": null,
+        "normalization_note": "Количество строк структурированной таблицы"
+      }
+    }
+  ],
+  "missing_fields": [],
+  "review_required": [
+    {
+      "path": "fields.buyer_inn",
+      "reason": "ИНН должен содержать 10 или 12 цифр с корректной контрольной суммой",
+      "source_value": "7712458032",
+      "provenance": {
+        "document_id": "invoice-2026-0408",
+        "source_part_id": "invoice-2026-0408:src:1xw1ymc",
+        "source_ref": "#/tables/0/cells/15",
+        "page_no": 1,
+        "sheet_name": null,
+        "cell_address": null,
+        "bbox": {
+          "l": 297.64,
+          "t": 410,
+          "r": 553.28,
+          "b": 431,
+          "coord_origin": "TOPLEFT"
+        },
+        "coordinate_origin": "TOPLEFT",
+        "page_size": {
+          "width": 595.28,
+          "height": 841.89,
+          "unit": "pt"
+        },
+        "column_index": 1,
+        "source_text": "7712458032",
+        "confidence": 0.985,
+        "source_available": true
+      }
+    },
+    {
+      "path": "tables.invoice-lines.rows.1.cells.5",
+      "reason": "Валюта не указана в значении или заголовке источника",
+      "source_value": "1 240,00",
+      "provenance": {
+        "document_id": "invoice-2026-0408",
+        "source_part_id": "invoice-2026-0408:src:f1chgv",
+        "source_ref": "#/tables/1/cells/19",
+        "page_no": 1,
+        "sheet_name": null,
+        "cell_address": null,
+        "bbox": {
+          "l": 407.2,
+          "t": 285,
+          "r": 480.24,
+          "b": 306,
+          "coord_origin": "TOPLEFT"
+        },
+        "coordinate_origin": "TOPLEFT",
+        "page_size": {
+          "width": 595.28,
+          "height": 841.89,
+          "unit": "pt"
+        },
+        "column_index": 5,
+        "source_text": "1 240,00",
+        "confidence": 0.985,
+        "source_available": true
+      }
+    },
+    {
+      "path": "tables.invoice-lines.rows.2.cells.5",
+      "reason": "Валюта не указана в значении или заголовке источника",
+      "source_value": "6 803,02",
+      "provenance": {
+        "document_id": "invoice-2026-0408",
+        "source_part_id": "invoice-2026-0408:src:pxoru0",
+        "source_ref": "#/tables/1/cells/26",
+        "page_no": 1,
+        "sheet_name": null,
+        "cell_address": null,
+        "bbox": {
+          "l": 407.2,
+          "t": 310,
+          "r": 480.24,
+          "b": 331,
+          "coord_origin": "TOPLEFT"
+        },
+        "coordinate_origin": "TOPLEFT",
+        "page_size": {
+          "width": 595.28,
+          "height": 841.89,
+          "unit": "pt"
+        },
+        "column_index": 5,
+        "source_text": "6 803,02",
+        "confidence": 0.985,
+        "source_available": true
+      }
+    },
+    {
+      "path": "tables.invoice-lines.rows.2.cells.6",
+      "reason": "Валюта не указана в значении или заголовке источника",
+      "source_value": "40 818,10",
+      "provenance": {
+        "document_id": "invoice-2026-0408",
+        "source_part_id": "invoice-2026-0408:src:q7odiz",
+        "source_ref": "#/tables/1/cells/27",
+        "page_no": 1,
+        "sheet_name": null,
+        "cell_address": null,
+        "bbox": {
+          "l": 480.24,
+          "t": 310,
+          "r": 553.28,
+          "b": 331,
+          "coord_origin": "TOPLEFT"
+        },
+        "coordinate_origin": "TOPLEFT",
+        "page_size": {
+          "width": 595.28,
+          "height": 841.89,
+          "unit": "pt"
+        },
+        "column_index": 6,
+        "source_text": "40 818,10",
+        "confidence": 0.985,
+        "source_available": true
+      }
+    }
+  ],
+  "document_type": "invoice",
+  "line_items": [
+    {
+      "row_id": "invoice-lines-r001",
+      "line_number": {
+        "value": "1",
+        "source_value": "1",
+        "status": "extracted",
+        "confidence": 0.985,
+        "provenance": {
+          "document_id": "invoice-2026-0408",
+          "source_part_id": "invoice-2026-0408:src:xlb077",
+          "source_ref": "#/tables/1/cells/7",
+          "page_no": 1,
+          "sheet_name": null,
+          "cell_address": null,
+          "bbox": {
+            "l": 42,
+            "t": 235,
+            "r": 115.04,
+            "b": 256,
+            "coord_origin": "TOPLEFT"
+          },
+          "coordinate_origin": "TOPLEFT",
+          "page_size": {
+            "width": 595.28,
+            "height": 841.89,
+            "unit": "pt"
+          },
+          "column_index": 0,
+          "source_text": "1",
+          "confidence": 0.985,
+          "source_available": true
+        },
+        "normalization_note": null
+      },
+      "identifier": {
+        "value": "ДД-10-24",
+        "source_value": "ДД-10-24",
+        "status": "extracted",
+        "confidence": 0.985,
+        "provenance": {
+          "document_id": "invoice-2026-0408",
+          "source_part_id": "invoice-2026-0408:src:xvalw6",
+          "source_ref": "#/tables/1/cells/8",
+          "page_no": 1,
+          "sheet_name": null,
+          "cell_address": null,
+          "bbox": {
+            "l": 115.04,
+            "t": 260,
+            "r": 188.08,
+            "b": 281,
+            "coord_origin": "TOPLEFT"
+          },
+          "coordinate_origin": "TOPLEFT",
+          "page_size": {
+            "width": 595.28,
+            "height": 841.89,
+            "unit": "pt"
+          },
+          "column_index": 1,
+          "source_text": "ДД-10-24",
+          "confidence": 0.985,
+          "source_available": true
+        },
+        "normalization_note": null
+      },
+      "description": {
+        "value": "Датчик давления ДД-10, диапазон 0–2,5 МПа",
+        "source_value": "Датчик давления ДД-10, диапазон 0–2,5 МПа",
+        "status": "extracted",
+        "confidence": 0.985,
+        "provenance": {
+          "document_id": "invoice-2026-0408",
+          "source_part_id": "invoice-2026-0408:src:y5a7l5",
+          "source_ref": "#/tables/1/cells/9",
+          "page_no": 1,
+          "sheet_name": null,
+          "cell_address": null,
+          "bbox": {
+            "l": 188.08,
+            "t": 260,
+            "r": 261.12,
+            "b": 281,
+            "coord_origin": "TOPLEFT"
+          },
+          "coordinate_origin": "TOPLEFT",
+          "page_size": {
+            "width": 595.28,
+            "height": 841.89,
+            "unit": "pt"
+          },
+          "column_index": 2,
+          "source_text": "Датчик давления ДД-10, диапазон 0–2,5 МПа",
+          "confidence": 0.985,
+          "source_available": true
+        },
+        "normalization_note": null
+      },
+      "unit": {
+        "value": "piece",
+        "source_value": "шт.",
+        "status": "extracted",
+        "confidence": 0.985,
+        "provenance": {
+          "document_id": "invoice-2026-0408",
+          "source_part_id": "invoice-2026-0408:src:yf9ta4",
+          "source_ref": "#/tables/1/cells/10",
+          "page_no": 1,
+          "sheet_name": null,
+          "cell_address": null,
+          "bbox": {
+            "l": 261.12,
+            "t": 260,
+            "r": 334.16,
+            "b": 281,
+            "coord_origin": "TOPLEFT"
+          },
+          "coordinate_origin": "TOPLEFT",
+          "page_size": {
+            "width": 595.28,
+            "height": 841.89,
+            "unit": "pt"
+          },
+          "column_index": 3,
+          "source_text": "шт.",
+          "confidence": 0.985,
+          "source_available": true
+        },
+        "normalization_note": null
+      },
+      "quantity": {
+        "value": "6",
+        "source_value": "6",
+        "status": "extracted",
+        "confidence": 0.985,
+        "provenance": {
+          "document_id": "invoice-2026-0408",
+          "source_part_id": "invoice-2026-0408:src:yp9ez3",
+          "source_ref": "#/tables/1/cells/11",
+          "page_no": 1,
+          "sheet_name": null,
+          "cell_address": null,
+          "bbox": {
+            "l": 334.16,
+            "t": 260,
+            "r": 407.2,
+            "b": 281,
+            "coord_origin": "TOPLEFT"
+          },
+          "coordinate_origin": "TOPLEFT",
+          "page_size": {
+            "width": 595.28,
+            "height": 841.89,
+            "unit": "pt"
+          },
+          "column_index": 4,
+          "source_text": "6",
+          "confidence": 0.985,
+          "source_available": true
+        },
+        "normalization_note": null
+      },
+      "plan_quantity": {
+        "value": null,
+        "source_value": null,
+        "status": "missing",
+        "confidence": null,
+        "provenance": null,
+        "normalization_note": null
+      },
+      "actual_quantity": {
+        "value": "6",
+        "source_value": "6",
+        "status": "extracted",
+        "confidence": 0.985,
+        "provenance": {
+          "document_id": "invoice-2026-0408",
+          "source_part_id": "invoice-2026-0408:src:yp9ez3",
+          "source_ref": "#/tables/1/cells/11",
+          "page_no": 1,
+          "sheet_name": null,
+          "cell_address": null,
+          "bbox": {
+            "l": 334.16,
+            "t": 260,
+            "r": 407.2,
+            "b": 281,
+            "coord_origin": "TOPLEFT"
+          },
+          "coordinate_origin": "TOPLEFT",
+          "page_size": {
+            "width": 595.28,
+            "height": 841.89,
+            "unit": "pt"
+          },
+          "column_index": 4,
+          "source_text": "6",
+          "confidence": 0.985,
+          "source_available": true
+        },
+        "normalization_note": null
+      },
+      "unit_price": {
+        "value": {
+          "amount": "38400.00",
+          "currency": "RUB"
+        },
+        "source_value": "38 400,00 ₽",
+        "status": "extracted",
+        "confidence": 0.985,
+        "provenance": {
+          "document_id": "invoice-2026-0408",
+          "source_part_id": "invoice-2026-0408:src:yz90o2",
+          "source_ref": "#/tables/1/cells/12",
+          "page_no": 1,
+          "sheet_name": null,
+          "cell_address": null,
+          "bbox": {
+            "l": 407.2,
+            "t": 260,
+            "r": 480.24,
+            "b": 281,
+            "coord_origin": "TOPLEFT"
+          },
+          "coordinate_origin": "TOPLEFT",
+          "page_size": {
+            "width": 595.28,
+            "height": 841.89,
+            "unit": "pt"
+          },
+          "column_index": 5,
+          "source_text": "38 400,00 ₽",
+          "confidence": 0.985,
+          "source_available": true
+        },
+        "normalization_note": null
+      },
+      "amount": {
+        "value": {
+          "amount": "230400.00",
+          "currency": "RUB"
+        },
+        "source_value": "230 400,00 ₽",
+        "status": "extracted",
+        "confidence": 0.985,
+        "provenance": {
+          "document_id": "invoice-2026-0408",
+          "source_part_id": "invoice-2026-0408:src:z98md1",
+          "source_ref": "#/tables/1/cells/13",
+          "page_no": 1,
+          "sheet_name": null,
+          "cell_address": null,
+          "bbox": {
+            "l": 480.24,
+            "t": 260,
+            "r": 553.28,
+            "b": 281,
+            "coord_origin": "TOPLEFT"
+          },
+          "coordinate_origin": "TOPLEFT",
+          "page_size": {
+            "width": 595.28,
+            "height": 841.89,
+            "unit": "pt"
+          },
+          "column_index": 6,
+          "source_text": "230 400,00 ₽",
+          "confidence": 0.985,
+          "source_available": true
+        },
+        "normalization_note": null
+      },
+      "source_cells": [
+        {
+          "header": "№",
+          "extracted": {
+            "value": "1",
+            "source_value": "1",
+            "status": "extracted",
+            "confidence": 0.985,
+            "provenance": {
+              "document_id": "invoice-2026-0408",
+              "source_part_id": "invoice-2026-0408:src:xlb077",
+              "source_ref": "#/tables/1/cells/7",
+              "page_no": 1,
+              "sheet_name": null,
+              "cell_address": null,
+              "bbox": {
+                "l": 42,
+                "t": 235,
+                "r": 115.04,
+                "b": 256,
+                "coord_origin": "TOPLEFT"
+              },
+              "coordinate_origin": "TOPLEFT",
+              "page_size": {
+                "width": 595.28,
+                "height": 841.89,
+                "unit": "pt"
+              },
+              "column_index": 0,
+              "source_text": "1",
+              "confidence": 0.985,
+              "source_available": true
+            },
+            "normalization_note": null
+          }
+        },
+        {
+          "header": "Артикул",
+          "extracted": {
+            "value": "ДД-10-24",
+            "source_value": "ДД-10-24",
+            "status": "extracted",
+            "confidence": 0.985,
+            "provenance": {
+              "document_id": "invoice-2026-0408",
+              "source_part_id": "invoice-2026-0408:src:xvalw6",
+              "source_ref": "#/tables/1/cells/8",
+              "page_no": 1,
+              "sheet_name": null,
+              "cell_address": null,
+              "bbox": {
+                "l": 115.04,
+                "t": 260,
+                "r": 188.08,
+                "b": 281,
+                "coord_origin": "TOPLEFT"
+              },
+              "coordinate_origin": "TOPLEFT",
+              "page_size": {
+                "width": 595.28,
+                "height": 841.89,
+                "unit": "pt"
+              },
+              "column_index": 1,
+              "source_text": "ДД-10-24",
+              "confidence": 0.985,
+              "source_available": true
+            },
+            "normalization_note": null
+          }
+        },
+        {
+          "header": "Наименование",
+          "extracted": {
+            "value": "Датчик давления ДД-10, диапазон 0–2,5 МПа",
+            "source_value": "Датчик давления ДД-10, диапазон 0–2,5 МПа",
+            "status": "extracted",
+            "confidence": 0.985,
+            "provenance": {
+              "document_id": "invoice-2026-0408",
+              "source_part_id": "invoice-2026-0408:src:y5a7l5",
+              "source_ref": "#/tables/1/cells/9",
+              "page_no": 1,
+              "sheet_name": null,
+              "cell_address": null,
+              "bbox": {
+                "l": 188.08,
+                "t": 260,
+                "r": 261.12,
+                "b": 281,
+                "coord_origin": "TOPLEFT"
+              },
+              "coordinate_origin": "TOPLEFT",
+              "page_size": {
+                "width": 595.28,
+                "height": 841.89,
+                "unit": "pt"
+              },
+              "column_index": 2,
+              "source_text": "Датчик давления ДД-10, диапазон 0–2,5 МПа",
+              "confidence": 0.985,
+              "source_available": true
+            },
+            "normalization_note": null
+          }
+        },
+        {
+          "header": "Ед. изм.",
+          "extracted": {
+            "value": "piece",
+            "source_value": "шт.",
+            "status": "extracted",
+            "confidence": 0.985,
+            "provenance": {
+              "document_id": "invoice-2026-0408",
+              "source_part_id": "invoice-2026-0408:src:yf9ta4",
+              "source_ref": "#/tables/1/cells/10",
+              "page_no": 1,
+              "sheet_name": null,
+              "cell_address": null,
+              "bbox": {
+                "l": 261.12,
+                "t": 260,
+                "r": 334.16,
+                "b": 281,
+                "coord_origin": "TOPLEFT"
+              },
+              "coordinate_origin": "TOPLEFT",
+              "page_size": {
+                "width": 595.28,
+                "height": 841.89,
+                "unit": "pt"
+              },
+              "column_index": 3,
+              "source_text": "шт.",
+              "confidence": 0.985,
+              "source_available": true
+            },
+            "normalization_note": null
+          }
+        },
+        {
+          "header": "Кол-во",
+          "extracted": {
+            "value": "6",
+            "source_value": "6",
+            "status": "extracted",
+            "confidence": 0.985,
+            "provenance": {
+              "document_id": "invoice-2026-0408",
+              "source_part_id": "invoice-2026-0408:src:yp9ez3",
+              "source_ref": "#/tables/1/cells/11",
+              "page_no": 1,
+              "sheet_name": null,
+              "cell_address": null,
+              "bbox": {
+                "l": 334.16,
+                "t": 260,
+                "r": 407.2,
+                "b": 281,
+                "coord_origin": "TOPLEFT"
+              },
+              "coordinate_origin": "TOPLEFT",
+              "page_size": {
+                "width": 595.28,
+                "height": 841.89,
+                "unit": "pt"
+              },
+              "column_index": 4,
+              "source_text": "6",
+              "confidence": 0.985,
+              "source_available": true
+            },
+            "normalization_note": null
+          }
+        },
+        {
+          "header": "Цена",
+          "extracted": {
+            "value": {
+              "amount": "38400.00",
+              "currency": "RUB"
+            },
+            "source_value": "38 400,00 ₽",
+            "status": "extracted",
+            "confidence": 0.985,
+            "provenance": {
+              "document_id": "invoice-2026-0408",
+              "source_part_id": "invoice-2026-0408:src:yz90o2",
+              "source_ref": "#/tables/1/cells/12",
+              "page_no": 1,
+              "sheet_name": null,
+              "cell_address": null,
+              "bbox": {
+                "l": 407.2,
+                "t": 260,
+                "r": 480.24,
+                "b": 281,
+                "coord_origin": "TOPLEFT"
+              },
+              "coordinate_origin": "TOPLEFT",
+              "page_size": {
+                "width": 595.28,
+                "height": 841.89,
+                "unit": "pt"
+              },
+              "column_index": 5,
+              "source_text": "38 400,00 ₽",
+              "confidence": 0.985,
+              "source_available": true
+            },
+            "normalization_note": null
+          }
+        },
+        {
+          "header": "Сумма",
+          "extracted": {
+            "value": {
+              "amount": "230400.00",
+              "currency": "RUB"
+            },
+            "source_value": "230 400,00 ₽",
+            "status": "extracted",
+            "confidence": 0.985,
+            "provenance": {
+              "document_id": "invoice-2026-0408",
+              "source_part_id": "invoice-2026-0408:src:z98md1",
+              "source_ref": "#/tables/1/cells/13",
+              "page_no": 1,
+              "sheet_name": null,
+              "cell_address": null,
+              "bbox": {
+                "l": 480.24,
+                "t": 260,
+                "r": 553.28,
+                "b": 281,
+                "coord_origin": "TOPLEFT"
+              },
+              "coordinate_origin": "TOPLEFT",
+              "page_size": {
+                "width": 595.28,
+                "height": 841.89,
+                "unit": "pt"
+              },
+              "column_index": 6,
+              "source_text": "230 400,00 ₽",
+              "confidence": 0.985,
+              "source_available": true
+            },
+            "normalization_note": null
+          }
+        }
+      ],
+      "row_status": "extracted"
+    },
+    {
+      "row_id": "invoice-lines-r002",
+      "line_number": {
+        "value": "2",
+        "source_value": "2",
+        "status": "extracted",
+        "confidence": 0.985,
+        "provenance": {
+          "document_id": "invoice-2026-0408",
+          "source_part_id": "invoice-2026-0408:src:e7dody",
+          "source_ref": "#/tables/1/cells/14",
+          "page_no": 1,
+          "sheet_name": null,
+          "cell_address": null,
+          "bbox": {
+            "l": 42,
+            "t": 260,
+            "r": 115.04,
+            "b": 281,
+            "coord_origin": "TOPLEFT"
+          },
+          "coordinate_origin": "TOPLEFT",
+          "page_size": {
+            "width": 595.28,
+            "height": 841.89,
+            "unit": "pt"
+          },
+          "column_index": 0,
+          "source_text": "2",
+          "confidence": 0.985,
+          "source_available": true
+        },
+        "normalization_note": null
+      },
+      "identifier": {
+        "value": "КБ-24",
+        "source_value": "КБ-24",
+        "status": "extracted",
+        "confidence": 0.985,
+        "provenance": {
+          "document_id": "invoice-2026-0408",
+          "source_part_id": "invoice-2026-0408:src:dxe2oz",
+          "source_ref": "#/tables/1/cells/15",
+          "page_no": 1,
+          "sheet_name": null,
+          "cell_address": null,
+          "bbox": {
+            "l": 115.04,
+            "t": 285,
+            "r": 188.08,
+            "b": 306,
+            "coord_origin": "TOPLEFT"
+          },
+          "coordinate_origin": "TOPLEFT",
+          "page_size": {
+            "width": 595.28,
+            "height": 841.89,
+            "unit": "pt"
+          },
+          "column_index": 1,
+          "source_text": "КБ-24",
+          "confidence": 0.985,
+          "source_available": true
+        },
+        "normalization_note": null
+      },
+      "description": {
+        "value": "Блок клеммный для шкафа автоматики",
+        "source_value": "Блок клеммный для шкафа автоматики",
+        "status": "extracted",
+        "confidence": 0.985,
+        "provenance": {
+          "document_id": "invoice-2026-0408",
+          "source_part_id": "invoice-2026-0408:src:dneh00",
+          "source_ref": "#/tables/1/cells/16",
+          "page_no": 1,
+          "sheet_name": null,
+          "cell_address": null,
+          "bbox": {
+            "l": 188.08,
+            "t": 285,
+            "r": 261.12,
+            "b": 306,
+            "coord_origin": "TOPLEFT"
+          },
+          "coordinate_origin": "TOPLEFT",
+          "page_size": {
+            "width": 595.28,
+            "height": 841.89,
+            "unit": "pt"
+          },
+          "column_index": 2,
+          "source_text": "Блок клеммный для шкафа автоматики",
+          "confidence": 0.985,
+          "source_available": true
+        },
+        "normalization_note": null
+      },
+      "unit": {
+        "value": "piece",
+        "source_value": "шт.",
+        "status": "extracted",
+        "confidence": 0.985,
+        "provenance": {
+          "document_id": "invoice-2026-0408",
+          "source_part_id": "invoice-2026-0408:src:flbout",
+          "source_ref": "#/tables/1/cells/17",
+          "page_no": 1,
+          "sheet_name": null,
+          "cell_address": null,
+          "bbox": {
+            "l": 261.12,
+            "t": 285,
+            "r": 334.16,
+            "b": 306,
+            "coord_origin": "TOPLEFT"
+          },
+          "coordinate_origin": "TOPLEFT",
+          "page_size": {
+            "width": 595.28,
+            "height": 841.89,
+            "unit": "pt"
+          },
+          "column_index": 3,
+          "source_text": "шт.",
+          "confidence": 0.985,
+          "source_available": true
+        },
+        "normalization_note": null
+      },
+      "quantity": {
+        "value": "32",
+        "source_value": "32",
+        "status": "extracted",
+        "confidence": 0.985,
+        "provenance": {
+          "document_id": "invoice-2026-0408",
+          "source_part_id": "invoice-2026-0408:src:fbc35u",
+          "source_ref": "#/tables/1/cells/18",
+          "page_no": 1,
+          "sheet_name": null,
+          "cell_address": null,
+          "bbox": {
+            "l": 334.16,
+            "t": 285,
+            "r": 407.2,
+            "b": 306,
+            "coord_origin": "TOPLEFT"
+          },
+          "coordinate_origin": "TOPLEFT",
+          "page_size": {
+            "width": 595.28,
+            "height": 841.89,
+            "unit": "pt"
+          },
+          "column_index": 4,
+          "source_text": "32",
+          "confidence": 0.985,
+          "source_available": true
+        },
+        "normalization_note": null
+      },
+      "plan_quantity": {
+        "value": null,
+        "source_value": null,
+        "status": "missing",
+        "confidence": null,
+        "provenance": null,
+        "normalization_note": null
+      },
+      "actual_quantity": {
+        "value": "32",
+        "source_value": "32",
+        "status": "extracted",
+        "confidence": 0.985,
+        "provenance": {
+          "document_id": "invoice-2026-0408",
+          "source_part_id": "invoice-2026-0408:src:fbc35u",
+          "source_ref": "#/tables/1/cells/18",
+          "page_no": 1,
+          "sheet_name": null,
+          "cell_address": null,
+          "bbox": {
+            "l": 334.16,
+            "t": 285,
+            "r": 407.2,
+            "b": 306,
+            "coord_origin": "TOPLEFT"
+          },
+          "coordinate_origin": "TOPLEFT",
+          "page_size": {
+            "width": 595.28,
+            "height": 841.89,
+            "unit": "pt"
+          },
+          "column_index": 4,
+          "source_text": "32",
+          "confidence": 0.985,
+          "source_available": true
+        },
+        "normalization_note": null
+      },
+      "unit_price": {
+        "value": {
+          "amount": "1240.00",
+          "currency": null
+        },
+        "source_value": "1 240,00",
+        "status": "review",
+        "confidence": 0.985,
+        "provenance": {
+          "document_id": "invoice-2026-0408",
+          "source_part_id": "invoice-2026-0408:src:f1chgv",
+          "source_ref": "#/tables/1/cells/19",
+          "page_no": 1,
+          "sheet_name": null,
+          "cell_address": null,
+          "bbox": {
+            "l": 407.2,
+            "t": 285,
+            "r": 480.24,
+            "b": 306,
+            "coord_origin": "TOPLEFT"
+          },
+          "coordinate_origin": "TOPLEFT",
+          "page_size": {
+            "width": 595.28,
+            "height": 841.89,
+            "unit": "pt"
+          },
+          "column_index": 5,
+          "source_text": "1 240,00",
+          "confidence": 0.985,
+          "source_available": true
+        },
+        "normalization_note": "Валюта не указана в значении или заголовке источника"
+      },
+      "amount": {
+        "value": {
+          "amount": "39680.00",
+          "currency": "RUB"
+        },
+        "source_value": "39 680,00 руб.",
+        "status": "extracted",
+        "confidence": 0.985,
+        "provenance": {
+          "document_id": "invoice-2026-0408",
+          "source_part_id": "invoice-2026-0408:src:ercvrw",
+          "source_ref": "#/tables/1/cells/20",
+          "page_no": 1,
+          "sheet_name": null,
+          "cell_address": null,
+          "bbox": {
+            "l": 480.24,
+            "t": 285,
+            "r": 553.28,
+            "b": 306,
+            "coord_origin": "TOPLEFT"
+          },
+          "coordinate_origin": "TOPLEFT",
+          "page_size": {
+            "width": 595.28,
+            "height": 841.89,
+            "unit": "pt"
+          },
+          "column_index": 6,
+          "source_text": "39 680,00 руб.",
+          "confidence": 0.985,
+          "source_available": true
+        },
+        "normalization_note": null
+      },
+      "source_cells": [
+        {
+          "header": "№",
+          "extracted": {
+            "value": "2",
+            "source_value": "2",
+            "status": "extracted",
+            "confidence": 0.985,
+            "provenance": {
+              "document_id": "invoice-2026-0408",
+              "source_part_id": "invoice-2026-0408:src:e7dody",
+              "source_ref": "#/tables/1/cells/14",
+              "page_no": 1,
+              "sheet_name": null,
+              "cell_address": null,
+              "bbox": {
+                "l": 42,
+                "t": 260,
+                "r": 115.04,
+                "b": 281,
+                "coord_origin": "TOPLEFT"
+              },
+              "coordinate_origin": "TOPLEFT",
+              "page_size": {
+                "width": 595.28,
+                "height": 841.89,
+                "unit": "pt"
+              },
+              "column_index": 0,
+              "source_text": "2",
+              "confidence": 0.985,
+              "source_available": true
+            },
+            "normalization_note": null
+          }
+        },
+        {
+          "header": "Артикул",
+          "extracted": {
+            "value": "КБ-24",
+            "source_value": "КБ-24",
+            "status": "extracted",
+            "confidence": 0.985,
+            "provenance": {
+              "document_id": "invoice-2026-0408",
+              "source_part_id": "invoice-2026-0408:src:dxe2oz",
+              "source_ref": "#/tables/1/cells/15",
+              "page_no": 1,
+              "sheet_name": null,
+              "cell_address": null,
+              "bbox": {
+                "l": 115.04,
+                "t": 285,
+                "r": 188.08,
+                "b": 306,
+                "coord_origin": "TOPLEFT"
+              },
+              "coordinate_origin": "TOPLEFT",
+              "page_size": {
+                "width": 595.28,
+                "height": 841.89,
+                "unit": "pt"
+              },
+              "column_index": 1,
+              "source_text": "КБ-24",
+              "confidence": 0.985,
+              "source_available": true
+            },
+            "normalization_note": null
+          }
+        },
+        {
+          "header": "Наименование",
+          "extracted": {
+            "value": "Блок клеммный для шкафа автоматики",
+            "source_value": "Блок клеммный для шкафа автоматики",
+            "status": "extracted",
+            "confidence": 0.985,
+            "provenance": {
+              "document_id": "invoice-2026-0408",
+              "source_part_id": "invoice-2026-0408:src:dneh00",
+              "source_ref": "#/tables/1/cells/16",
+              "page_no": 1,
+              "sheet_name": null,
+              "cell_address": null,
+              "bbox": {
+                "l": 188.08,
+                "t": 285,
+                "r": 261.12,
+                "b": 306,
+                "coord_origin": "TOPLEFT"
+              },
+              "coordinate_origin": "TOPLEFT",
+              "page_size": {
+                "width": 595.28,
+                "height": 841.89,
+                "unit": "pt"
+              },
+              "column_index": 2,
+              "source_text": "Блок клеммный для шкафа автоматики",
+              "confidence": 0.985,
+              "source_available": true
+            },
+            "normalization_note": null
+          }
+        },
+        {
+          "header": "Ед. изм.",
+          "extracted": {
+            "value": "piece",
+            "source_value": "шт.",
+            "status": "extracted",
+            "confidence": 0.985,
+            "provenance": {
+              "document_id": "invoice-2026-0408",
+              "source_part_id": "invoice-2026-0408:src:flbout",
+              "source_ref": "#/tables/1/cells/17",
+              "page_no": 1,
+              "sheet_name": null,
+              "cell_address": null,
+              "bbox": {
+                "l": 261.12,
+                "t": 285,
+                "r": 334.16,
+                "b": 306,
+                "coord_origin": "TOPLEFT"
+              },
+              "coordinate_origin": "TOPLEFT",
+              "page_size": {
+                "width": 595.28,
+                "height": 841.89,
+                "unit": "pt"
+              },
+              "column_index": 3,
+              "source_text": "шт.",
+              "confidence": 0.985,
+              "source_available": true
+            },
+            "normalization_note": null
+          }
+        },
+        {
+          "header": "Кол-во",
+          "extracted": {
+            "value": "32",
+            "source_value": "32",
+            "status": "extracted",
+            "confidence": 0.985,
+            "provenance": {
+              "document_id": "invoice-2026-0408",
+              "source_part_id": "invoice-2026-0408:src:fbc35u",
+              "source_ref": "#/tables/1/cells/18",
+              "page_no": 1,
+              "sheet_name": null,
+              "cell_address": null,
+              "bbox": {
+                "l": 334.16,
+                "t": 285,
+                "r": 407.2,
+                "b": 306,
+                "coord_origin": "TOPLEFT"
+              },
+              "coordinate_origin": "TOPLEFT",
+              "page_size": {
+                "width": 595.28,
+                "height": 841.89,
+                "unit": "pt"
+              },
+              "column_index": 4,
+              "source_text": "32",
+              "confidence": 0.985,
+              "source_available": true
+            },
+            "normalization_note": null
+          }
+        },
+        {
+          "header": "Цена",
+          "extracted": {
+            "value": {
+              "amount": "1240.00",
+              "currency": null
+            },
+            "source_value": "1 240,00",
+            "status": "review",
+            "confidence": 0.985,
+            "provenance": {
+              "document_id": "invoice-2026-0408",
+              "source_part_id": "invoice-2026-0408:src:f1chgv",
+              "source_ref": "#/tables/1/cells/19",
+              "page_no": 1,
+              "sheet_name": null,
+              "cell_address": null,
+              "bbox": {
+                "l": 407.2,
+                "t": 285,
+                "r": 480.24,
+                "b": 306,
+                "coord_origin": "TOPLEFT"
+              },
+              "coordinate_origin": "TOPLEFT",
+              "page_size": {
+                "width": 595.28,
+                "height": 841.89,
+                "unit": "pt"
+              },
+              "column_index": 5,
+              "source_text": "1 240,00",
+              "confidence": 0.985,
+              "source_available": true
+            },
+            "normalization_note": "Валюта не указана в значении или заголовке источника"
+          }
+        },
+        {
+          "header": "Сумма",
+          "extracted": {
+            "value": {
+              "amount": "39680.00",
+              "currency": "RUB"
+            },
+            "source_value": "39 680,00 руб.",
+            "status": "extracted",
+            "confidence": 0.985,
+            "provenance": {
+              "document_id": "invoice-2026-0408",
+              "source_part_id": "invoice-2026-0408:src:ercvrw",
+              "source_ref": "#/tables/1/cells/20",
+              "page_no": 1,
+              "sheet_name": null,
+              "cell_address": null,
+              "bbox": {
+                "l": 480.24,
+                "t": 285,
+                "r": 553.28,
+                "b": 306,
+                "coord_origin": "TOPLEFT"
+              },
+              "coordinate_origin": "TOPLEFT",
+              "page_size": {
+                "width": 595.28,
+                "height": 841.89,
+                "unit": "pt"
+              },
+              "column_index": 6,
+              "source_text": "39 680,00 руб.",
+              "confidence": 0.985,
+              "source_available": true
+            },
+            "normalization_note": null
+          }
+        }
+      ],
+      "row_status": "review"
+    },
+    {
+      "row_id": "invoice-lines-r003",
+      "line_number": {
+        "value": "3",
+        "source_value": "3",
+        "status": "extracted",
+        "confidence": 0.985,
+        "provenance": {
+          "document_id": "invoice-2026-0408",
+          "source_part_id": "invoice-2026-0408:src:rvlzot",
+          "source_ref": "#/tables/1/cells/21",
+          "page_no": 1,
+          "sheet_name": null,
+          "cell_address": null,
+          "bbox": {
+            "l": 42,
+            "t": 285,
+            "r": 115.04,
+            "b": 306,
+            "coord_origin": "TOPLEFT"
+          },
+          "coordinate_origin": "TOPLEFT",
+          "page_size": {
+            "width": 595.28,
+            "height": 841.89,
+            "unit": "pt"
+          },
+          "column_index": 0,
+          "source_text": "3",
+          "confidence": 0.985,
+          "source_available": true
+        },
+        "normalization_note": null
+      },
+      "identifier": {
+        "value": "ФЭ-40",
+        "source_value": "ФЭ-40",
+        "status": "extracted",
+        "confidence": 0.985,
+        "provenance": {
+          "document_id": "invoice-2026-0408",
+          "source_part_id": "invoice-2026-0408:src:r1n6lw",
+          "source_ref": "#/tables/1/cells/22",
+          "page_no": 1,
+          "sheet_name": null,
+          "cell_address": null,
+          "bbox": {
+            "l": 115.04,
+            "t": 310,
+            "r": 188.08,
+            "b": 331,
+            "coord_origin": "TOPLEFT"
+          },
+          "coordinate_origin": "TOPLEFT",
+          "page_size": {
+            "width": 595.28,
+            "height": 841.89,
+            "unit": "pt"
+          },
+          "column_index": 1,
+          "source_text": "ФЭ-40",
+          "confidence": 0.985,
+          "source_available": true
+        },
+        "normalization_note": null
+      },
+      "description": {
+        "value": "Фильтроэлемент для приточной установки",
+        "source_value": "Фильтроэлемент для приточной установки",
+        "status": "extracted",
+        "confidence": 0.985,
+        "provenance": {
+          "document_id": "invoice-2026-0408",
+          "source_part_id": "invoice-2026-0408:src:rbmsav",
+          "source_ref": "#/tables/1/cells/23",
+          "page_no": 1,
+          "sheet_name": null,
+          "cell_address": null,
+          "bbox": {
+            "l": 188.08,
+            "t": 310,
+            "r": 261.12,
+            "b": 331,
+            "coord_origin": "TOPLEFT"
+          },
+          "coordinate_origin": "TOPLEFT",
+          "page_size": {
+            "width": 595.28,
+            "height": 841.89,
+            "unit": "pt"
+          },
+          "column_index": 2,
+          "source_text": "Фильтроэлемент для приточной установки",
+          "confidence": 0.985,
+          "source_available": true
+        },
+        "normalization_note": null
+      },
+      "unit": {
+        "value": "piece",
+        "source_value": "шт.",
+        "status": "extracted",
+        "confidence": 0.985,
+        "provenance": {
+          "document_id": "invoice-2026-0408",
+          "source_part_id": "invoice-2026-0408:src:qhnz7y",
+          "source_ref": "#/tables/1/cells/24",
+          "page_no": 1,
+          "sheet_name": null,
+          "cell_address": null,
+          "bbox": {
+            "l": 261.12,
+            "t": 310,
+            "r": 334.16,
+            "b": 331,
+            "coord_origin": "TOPLEFT"
+          },
+          "coordinate_origin": "TOPLEFT",
+          "page_size": {
+            "width": 595.28,
+            "height": 841.89,
+            "unit": "pt"
+          },
+          "column_index": 3,
+          "source_text": "шт.",
+          "confidence": 0.985,
+          "source_available": true
+        },
+        "normalization_note": null
+      },
+      "quantity": {
+        "value": "6",
+        "source_value": "6",
+        "status": "extracted",
+        "confidence": 0.985,
+        "provenance": {
+          "document_id": "invoice-2026-0408",
+          "source_part_id": "invoice-2026-0408:src:qrnkwx",
+          "source_ref": "#/tables/1/cells/25",
+          "page_no": 1,
+          "sheet_name": null,
+          "cell_address": null,
+          "bbox": {
+            "l": 334.16,
+            "t": 310,
+            "r": 407.2,
+            "b": 331,
+            "coord_origin": "TOPLEFT"
+          },
+          "coordinate_origin": "TOPLEFT",
+          "page_size": {
+            "width": 595.28,
+            "height": 841.89,
+            "unit": "pt"
+          },
+          "column_index": 4,
+          "source_text": "6",
+          "confidence": 0.985,
+          "source_available": true
+        },
+        "normalization_note": null
+      },
+      "plan_quantity": {
+        "value": null,
+        "source_value": null,
+        "status": "missing",
+        "confidence": null,
+        "provenance": null,
+        "normalization_note": null
+      },
+      "actual_quantity": {
+        "value": "6",
+        "source_value": "6",
+        "status": "extracted",
+        "confidence": 0.985,
+        "provenance": {
+          "document_id": "invoice-2026-0408",
+          "source_part_id": "invoice-2026-0408:src:qrnkwx",
+          "source_ref": "#/tables/1/cells/25",
+          "page_no": 1,
+          "sheet_name": null,
+          "cell_address": null,
+          "bbox": {
+            "l": 334.16,
+            "t": 310,
+            "r": 407.2,
+            "b": 331,
+            "coord_origin": "TOPLEFT"
+          },
+          "coordinate_origin": "TOPLEFT",
+          "page_size": {
+            "width": 595.28,
+            "height": 841.89,
+            "unit": "pt"
+          },
+          "column_index": 4,
+          "source_text": "6",
+          "confidence": 0.985,
+          "source_available": true
+        },
+        "normalization_note": null
+      },
+      "unit_price": {
+        "value": {
+          "amount": "6803.02",
+          "currency": null
+        },
+        "source_value": "6 803,02",
+        "status": "review",
+        "confidence": 0.985,
+        "provenance": {
+          "document_id": "invoice-2026-0408",
+          "source_part_id": "invoice-2026-0408:src:pxoru0",
+          "source_ref": "#/tables/1/cells/26",
+          "page_no": 1,
+          "sheet_name": null,
+          "cell_address": null,
+          "bbox": {
+            "l": 407.2,
+            "t": 310,
+            "r": 480.24,
+            "b": 331,
+            "coord_origin": "TOPLEFT"
+          },
+          "coordinate_origin": "TOPLEFT",
+          "page_size": {
+            "width": 595.28,
+            "height": 841.89,
+            "unit": "pt"
+          },
+          "column_index": 5,
+          "source_text": "6 803,02",
+          "confidence": 0.985,
+          "source_available": true
+        },
+        "normalization_note": "Валюта не указана в значении или заголовке источника"
+      },
+      "amount": {
+        "value": {
+          "amount": "40818.10",
+          "currency": null
+        },
+        "source_value": "40 818,10",
+        "status": "review",
+        "confidence": 0.985,
+        "provenance": {
+          "document_id": "invoice-2026-0408",
+          "source_part_id": "invoice-2026-0408:src:q7odiz",
+          "source_ref": "#/tables/1/cells/27",
+          "page_no": 1,
+          "sheet_name": null,
+          "cell_address": null,
+          "bbox": {
+            "l": 480.24,
+            "t": 310,
+            "r": 553.28,
+            "b": 331,
+            "coord_origin": "TOPLEFT"
+          },
+          "coordinate_origin": "TOPLEFT",
+          "page_size": {
+            "width": 595.28,
+            "height": 841.89,
+            "unit": "pt"
+          },
+          "column_index": 6,
+          "source_text": "40 818,10",
+          "confidence": 0.985,
+          "source_available": true
+        },
+        "normalization_note": "Валюта не указана в значении или заголовке источника"
+      },
+      "source_cells": [
+        {
+          "header": "№",
+          "extracted": {
+            "value": "3",
+            "source_value": "3",
+            "status": "extracted",
+            "confidence": 0.985,
+            "provenance": {
+              "document_id": "invoice-2026-0408",
+              "source_part_id": "invoice-2026-0408:src:rvlzot",
+              "source_ref": "#/tables/1/cells/21",
+              "page_no": 1,
+              "sheet_name": null,
+              "cell_address": null,
+              "bbox": {
+                "l": 42,
+                "t": 285,
+                "r": 115.04,
+                "b": 306,
+                "coord_origin": "TOPLEFT"
+              },
+              "coordinate_origin": "TOPLEFT",
+              "page_size": {
+                "width": 595.28,
+                "height": 841.89,
+                "unit": "pt"
+              },
+              "column_index": 0,
+              "source_text": "3",
+              "confidence": 0.985,
+              "source_available": true
+            },
+            "normalization_note": null
+          }
+        },
+        {
+          "header": "Артикул",
+          "extracted": {
+            "value": "ФЭ-40",
+            "source_value": "ФЭ-40",
+            "status": "extracted",
+            "confidence": 0.985,
+            "provenance": {
+              "document_id": "invoice-2026-0408",
+              "source_part_id": "invoice-2026-0408:src:r1n6lw",
+              "source_ref": "#/tables/1/cells/22",
+              "page_no": 1,
+              "sheet_name": null,
+              "cell_address": null,
+              "bbox": {
+                "l": 115.04,
+                "t": 310,
+                "r": 188.08,
+                "b": 331,
+                "coord_origin": "TOPLEFT"
+              },
+              "coordinate_origin": "TOPLEFT",
+              "page_size": {
+                "width": 595.28,
+                "height": 841.89,
+                "unit": "pt"
+              },
+              "column_index": 1,
+              "source_text": "ФЭ-40",
+              "confidence": 0.985,
+              "source_available": true
+            },
+            "normalization_note": null
+          }
+        },
+        {
+          "header": "Наименование",
+          "extracted": {
+            "value": "Фильтроэлемент для приточной установки",
+            "source_value": "Фильтроэлемент для приточной установки",
+            "status": "extracted",
+            "confidence": 0.985,
+            "provenance": {
+              "document_id": "invoice-2026-0408",
+              "source_part_id": "invoice-2026-0408:src:rbmsav",
+              "source_ref": "#/tables/1/cells/23",
+              "page_no": 1,
+              "sheet_name": null,
+              "cell_address": null,
+              "bbox": {
+                "l": 188.08,
+                "t": 310,
+                "r": 261.12,
+                "b": 331,
+                "coord_origin": "TOPLEFT"
+              },
+              "coordinate_origin": "TOPLEFT",
+              "page_size": {
+                "width": 595.28,
+                "height": 841.89,
+                "unit": "pt"
+              },
+              "column_index": 2,
+              "source_text": "Фильтроэлемент для приточной установки",
+              "confidence": 0.985,
+              "source_available": true
+            },
+            "normalization_note": null
+          }
+        },
+        {
+          "header": "Ед. изм.",
+          "extracted": {
+            "value": "piece",
+            "source_value": "шт.",
+            "status": "extracted",
+            "confidence": 0.985,
+            "provenance": {
+              "document_id": "invoice-2026-0408",
+              "source_part_id": "invoice-2026-0408:src:qhnz7y",
+              "source_ref": "#/tables/1/cells/24",
+              "page_no": 1,
+              "sheet_name": null,
+              "cell_address": null,
+              "bbox": {
+                "l": 261.12,
+                "t": 310,
+                "r": 334.16,
+                "b": 331,
+                "coord_origin": "TOPLEFT"
+              },
+              "coordinate_origin": "TOPLEFT",
+              "page_size": {
+                "width": 595.28,
+                "height": 841.89,
+                "unit": "pt"
+              },
+              "column_index": 3,
+              "source_text": "шт.",
+              "confidence": 0.985,
+              "source_available": true
+            },
+            "normalization_note": null
+          }
+        },
+        {
+          "header": "Кол-во",
+          "extracted": {
+            "value": "6",
+            "source_value": "6",
+            "status": "extracted",
+            "confidence": 0.985,
+            "provenance": {
+              "document_id": "invoice-2026-0408",
+              "source_part_id": "invoice-2026-0408:src:qrnkwx",
+              "source_ref": "#/tables/1/cells/25",
+              "page_no": 1,
+              "sheet_name": null,
+              "cell_address": null,
+              "bbox": {
+                "l": 334.16,
+                "t": 310,
+                "r": 407.2,
+                "b": 331,
+                "coord_origin": "TOPLEFT"
+              },
+              "coordinate_origin": "TOPLEFT",
+              "page_size": {
+                "width": 595.28,
+                "height": 841.89,
+                "unit": "pt"
+              },
+              "column_index": 4,
+              "source_text": "6",
+              "confidence": 0.985,
+              "source_available": true
+            },
+            "normalization_note": null
+          }
+        },
+        {
+          "header": "Цена",
+          "extracted": {
+            "value": {
+              "amount": "6803.02",
+              "currency": null
+            },
+            "source_value": "6 803,02",
+            "status": "review",
+            "confidence": 0.985,
+            "provenance": {
+              "document_id": "invoice-2026-0408",
+              "source_part_id": "invoice-2026-0408:src:pxoru0",
+              "source_ref": "#/tables/1/cells/26",
+              "page_no": 1,
+              "sheet_name": null,
+              "cell_address": null,
+              "bbox": {
+                "l": 407.2,
+                "t": 310,
+                "r": 480.24,
+                "b": 331,
+                "coord_origin": "TOPLEFT"
+              },
+              "coordinate_origin": "TOPLEFT",
+              "page_size": {
+                "width": 595.28,
+                "height": 841.89,
+                "unit": "pt"
+              },
+              "column_index": 5,
+              "source_text": "6 803,02",
+              "confidence": 0.985,
+              "source_available": true
+            },
+            "normalization_note": "Валюта не указана в значении или заголовке источника"
+          }
+        },
+        {
+          "header": "Сумма",
+          "extracted": {
+            "value": {
+              "amount": "40818.10",
+              "currency": null
+            },
+            "source_value": "40 818,10",
+            "status": "review",
+            "confidence": 0.985,
+            "provenance": {
+              "document_id": "invoice-2026-0408",
+              "source_part_id": "invoice-2026-0408:src:q7odiz",
+              "source_ref": "#/tables/1/cells/27",
+              "page_no": 1,
+              "sheet_name": null,
+              "cell_address": null,
+              "bbox": {
+                "l": 480.24,
+                "t": 310,
+                "r": 553.28,
+                "b": 331,
+                "coord_origin": "TOPLEFT"
+              },
+              "coordinate_origin": "TOPLEFT",
+              "page_size": {
+                "width": 595.28,
+                "height": 841.89,
+                "unit": "pt"
+              },
+              "column_index": 6,
+              "source_text": "40 818,10",
+              "confidence": 0.985,
+              "source_available": true
+            },
+            "normalization_note": "Валюта не указана в значении или заголовке источника"
+          }
+        }
+      ],
+      "row_status": "review"
+    }
+  ],
+  "input_version": 1,
+  "input_hash": "69cbd404812019f6d7fc6d256d970adcd4ec02a5827438c25599926a4adef534",
+  "model_version": null
+}

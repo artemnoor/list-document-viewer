@@ -1,0 +1,124 @@
+{
+  "contract_version": "1.0.0",
+  "run_metadata": {
+    "run_id": "synthetic-reconciliation-run-001",
+    "project_id": "synthetic-project",
+    "calculation_id": "synthetic-calculation-001",
+    "generated_at": "2026-11-13T09:30:00Z",
+    "input_data": {
+      "extraction_id": "synthetic-kfz-extraction-v1",
+      "extraction_schema_version": "1.2.0",
+      "extraction_hash": null,
+      "linking_run_id": null,
+      "linking_contract_version": null,
+      "supporting_extraction_hashes": {}
+    },
+    "reconciliation_engine_version": "synthetic-reconciliation/1.0"
+  },
+  "targets": [
+    {
+      "target_id": "target-reported-total",
+      "target": {
+        "source_document_id": "synthetic-kfz-001",
+        "extraction_id": "synthetic-kfz-extraction-v1",
+        "row_id": null,
+        "json_pointer": "/fields/reported_total/value",
+        "semantic_key": "reported_total",
+        "label": "Reported amount",
+        "value_type": "money",
+        "period": {"start": "2026-01-01", "end": "2026-03-31"},
+        "unit": null,
+        "currency": "RUB",
+        "vat_basis": "gross",
+        "comparison_basis": "actual"
+      },
+      "result": {
+        "expected_value": {"amount": "100.00", "currency": "RUB"},
+        "value_type": "money",
+        "semantic_key": "reported_total",
+        "period": {"start": "2026-01-01", "end": "2026-03-31"},
+        "unit": null,
+        "currency": "RUB",
+        "vat_basis": "gross",
+        "comparison_basis": "actual",
+        "calculation_status": "complete",
+        "comparison_eligible": true,
+        "formula": "SUM(src-invoice-total)",
+        "applied_rules": ["Synthetic source value supplied as complete"],
+        "used_sources": [
+          {
+            "source_id": "src-invoice-total",
+            "document_id": "synthetic-invoice-001",
+            "extraction_id": "synthetic-invoice-extraction-v1",
+            "row_id": null,
+            "json_pointer": "/fields/source_amount/value",
+            "link_id": null,
+            "evidence_index": null,
+            "evidence_status": "human_confirmed",
+            "operation_ids": ["operation-sum-1"],
+            "reason": null
+          }
+        ],
+        "excluded_sources": [],
+        "operations": [
+          {"operation_id": "operation-sum-1", "operation_type": "sum", "formula": "SUM(src-invoice-total)", "input_source_ids": ["src-invoice-total"], "output_value": "100.00", "rounding_rule": null}
+        ],
+        "diagnostics": [],
+        "warnings": [],
+        "provenance": [{"stage": "synthetic-source", "source_id": "src-invoice-total", "json_pointer": "/fields/source_amount/value"}]
+      }
+    },
+    {
+      "target_id": "target-reporting-period",
+      "target": {
+        "source_document_id": "synthetic-kfz-001",
+        "extraction_id": "synthetic-kfz-extraction-v1",
+        "row_id": null,
+        "json_pointer": "/fields/reporting_period/value",
+        "semantic_key": "reporting_period",
+        "label": "Reporting period",
+        "value_type": "period",
+        "period": {"start": "2026-01-01", "end": "2026-03-31"},
+        "unit": null,
+        "currency": null,
+        "vat_basis": "not_applicable",
+        "comparison_basis": "actual"
+      },
+      "result": {
+        "expected_value": {"start": "2026-01-01", "end": "2026-03-31"},
+        "value_type": "period",
+        "semantic_key": "reporting_period",
+        "period": {"start": "2026-01-01", "end": "2026-03-31"},
+        "unit": null,
+        "currency": null,
+        "vat_basis": "not_applicable",
+        "comparison_basis": "actual",
+        "calculation_status": "complete",
+        "comparison_eligible": true,
+        "formula": "Source period accepted by Reconciliation",
+        "applied_rules": [],
+        "used_sources": [
+          {
+            "source_id": "src-invoice-period",
+            "document_id": "synthetic-invoice-001",
+            "extraction_id": "synthetic-invoice-extraction-v1",
+            "row_id": null,
+            "json_pointer": "/fields/source_period/value",
+            "link_id": null,
+            "evidence_index": null,
+            "evidence_status": "human_confirmed",
+            "operation_ids": ["operation-period-1"],
+            "reason": null
+          }
+        ],
+        "excluded_sources": [],
+        "operations": [
+          {"operation_id": "operation-period-1", "operation_type": "period_selection", "formula": "Select confirmed source period", "input_source_ids": ["src-invoice-period"], "output_value": {"start": "2026-01-01", "end": "2026-03-31"}, "rounding_rule": null}
+        ],
+        "diagnostics": [],
+        "warnings": [],
+        "provenance": [{"stage": "synthetic-source", "source_id": "src-invoice-period", "json_pointer": "/fields/source_period/value"}]
+      }
+    }
+  ]
+}

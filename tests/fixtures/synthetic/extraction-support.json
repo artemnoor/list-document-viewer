@@ -1,0 +1,36 @@
+{
+  "extraction_id": "synthetic-invoice-extraction-v1",
+  "document_id": "synthetic-invoice-001",
+  "version": 1,
+  "schema_version": "1.2.0",
+  "extracted_at": "2026-11-13T09:00:00Z",
+  "classification": {"type": "invoice", "label": "Synthetic invoice", "confidence": 1, "status": "classified"},
+  "extraction_engine": {"rules_executed": true, "llm": {"provider": "disabled", "model": null, "called": false, "response_validated": false}, "parser_adapter": "synthetic-fixture/1.0"},
+  "mode": "rules_only",
+  "fields": {
+    "source_amount": {
+      "label": "Invoice amount",
+      "value": {"amount": "100.00", "currency": "RUB"},
+      "source_value": "100.00 RUB",
+      "status": "extracted",
+      "confidence": 1,
+      "provenance": {"document_id": "synthetic-invoice-001", "source_ref": "#/synthetic/invoice/page-1/total", "page_no": 1, "sheet_name": null, "cell_address": null, "source_text": "100.00 RUB", "source_available": true},
+      "normalization_note": null
+    },
+    "source_period": {
+      "label": "Source reporting period",
+      "value": {"start": "2026-01-01", "end": "2026-03-31"},
+      "source_value": "2026 Q1",
+      "status": "extracted",
+      "confidence": 1,
+      "provenance": {"document_id": "synthetic-invoice-001", "source_ref": "#/synthetic/invoice/page-1/period", "page_no": 1, "sheet_name": null, "cell_address": null, "source_text": "2026 Q1", "source_available": true},
+      "normalization_note": null
+    }
+  },
+  "tables": [],
+  "indicators": [],
+  "missing_fields": [],
+  "review_required": [],
+  "document_type": "invoice",
+  "line_items": []
+}

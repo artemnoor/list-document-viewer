@@ -1,0 +1,21 @@
+services:
+  verification-engine:
+    build: .
+    ports:
+      - "${VERIFICATION_PORT:-8000}:8000"
+    environment:
+      VERIFICATION_DB_PATH: /data/verification.sqlite3
+      POLZA_AI_ENABLED: ${POLZA_AI_ENABLED:-true}
+      POLZA_AI_API_KEY: ${POLZA_AI_API_KEY:-}
+      POLZA_AI_MODEL: ${POLZA_AI_MODEL:-google/gemma-4-26b-a4b-it}
+      POLZA_AI_BASE_URL: ${POLZA_AI_BASE_URL:-https://polza.ai/api/v1}
+    volumes:
+      - verification-data:/data
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=3)"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  verification-data:

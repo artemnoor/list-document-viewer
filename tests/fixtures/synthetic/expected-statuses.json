@@ -1,0 +1,9 @@
+{
+  "exact_financial_value": "matched",
+  "reproducible_amount_difference": "mismatch",
+  "unconfirmed_calculation_evidence": "needs_review",
+  "unavailable_calculation_source": "insufficient_data",
+  "incompatible_units": "not_applicable",
+  "text_value_equal": "matched",
+  "period_mismatch_with_confirmed_source": "mismatch"
+}
