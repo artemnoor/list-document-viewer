@@ -75,8 +75,8 @@ export function graphStability(results: any[]) {
 }
 
 export async function runQualityE2E(config: Config) {
-  const extraction = await import(pathToFileURL(resolve(extractionRoot, "lib/extraction/polza-ai.mjs")).href);
-  const structured = await import(pathToFileURL(resolve(extractionRoot, "lib/extraction/structured-extraction.mjs")).href);
+  const extraction = config.linkingOnly ? null : await import(pathToFileURL(resolve(extractionRoot, "lib/extraction/polza-ai.mjs")).href);
+  const structured = config.linkingOnly ? null : await import(pathToFileURL(resolve(extractionRoot, "lib/extraction/structured-extraction.mjs")).href);
   const sourceManifest = await json(config.manifest), manifestRoot = dirname(config.manifest);
   if (sourceManifest.schema_version !== "polza-quality-inputs-v1") throw new Error("QUALITY_MANIFEST_VERSION_INVALID");
   const readInputs = async (paths: unknown) => {
@@ -96,7 +96,7 @@ export async function runQualityE2E(config: Config) {
   if (await exists(manifestPath)) { const previous = await json(manifestPath); if (previous.manifest_hash !== manifestHash) throw new Error("QUALITY_RESUME_INPUT_OR_CONFIG_MISMATCH"); }
   await mkdir(config.out, { recursive: true }); await writeFile(resolve(config.out, ".gitignore"), "*\n!.gitignore\n");
   await saveJson(manifestPath, { ...manifest, manifest_hash: manifestHash });
-  const nominalExtractionCalls = config.linkingOnly ? 0 : parserInputs.reduce((sum, item) => sum + extraction.buildGroundedContexts(item.parsed, extractionContextChars).length, 0);
+  const nominalExtractionCalls = config.linkingOnly ? 0 : parserInputs.reduce((sum, item) => sum + extraction!.buildGroundedContexts(item.parsed, extractionContextChars).length, 0);
   // The frozen linking fixtures describe the plan only. Live extraction outputs are never replaced with them.
   const planner = await import("../src/linking/semantic-plan");
   const linkingPlan = planner.planSemanticLinking(linkingInputs.map(item => item.parsed), { maxInputTokens: QUALITY_Q1.inputPerCall - 600, systemPrompt: prompt });
@@ -131,9 +131,9 @@ export async function runQualityE2E(config: Config) {
         stage = `extraction:${item.document_id}`;
         const outputPath = resolve(runDir, "extraction", `${encodeURIComponent(item.document_id)}.json`);
         if (config.resume && await exists(outputPath)) { const old = await json(outputPath); if (old.input_hash !== item.input_hash || old.mode !== "llm_assisted") throw new Error("QUALITY_RESUME_EXTRACTION_IDENTITY_MISMATCH"); extractions.push(old); continue; }
-        const llm = await extraction.callPolzaForExtraction(item.parsed, { POLZA_API_KEY: apiKey, POLZA_FETCH: transport.fetcher, POLZA_CONTEXT_MAX_CHARS: extractionContextChars, POLZA_MAX_OUTPUT_TOKENS: QUALITY_Q1.outputPerCall,
+        const llm = await extraction!.callPolzaForExtraction(item.parsed, { POLZA_API_KEY: apiKey, POLZA_FETCH: transport.fetcher, POLZA_CONTEXT_MAX_CHARS: extractionContextChars, POLZA_MAX_OUTPUT_TOKENS: QUALITY_Q1.outputPerCall,
           POLZA_ON_PROGRESS: async (state: unknown) => saveJson(resolve(runDir, "extraction-checkpoints", `${encodeURIComponent(item.document_id)}.json`), state) });
-        const output = structured.extractStructuredDocument(item.parsed, { mode: "llm_assisted", llm, extractionId: `quality-${item.input_hash.slice(0, 16)}-${repeat}`, extractedAt: ledger.started_at });
+        const output = structured!.extractStructuredDocument(item.parsed, { mode: "llm_assisted", llm, extractionId: `quality-${item.input_hash.slice(0, 16)}-${repeat}`, extractedAt: ledger.started_at });
         output.input_hash = item.input_hash;
         if (output.mode !== "llm_assisted" || !output.extraction_engine.llm.called || !output.extraction_engine.llm.response_validated) throw new Error("QUALITY_EXTRACTION_LLM_REQUIRED");
         await saveJson(outputPath, output); extractions.push(output);

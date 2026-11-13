@@ -58,11 +58,11 @@ test("empty proposal graphs have N/A Jaccard and forged provenance fails evidenc
   const verified = checkPublishedEvidence(result, documents); assert.equal(verified.passed, false); assert.equal(verified.technical_issues[0].code, "unresolved_or_forged_evidence");
 });
 
-test("default full-five dry run cannot call a provider and pins source hashes", async (t) => {
+test("full-five frozen Linking dry run cannot call a provider and pins source hashes", async (t) => {
   const directory = await mkdtemp(join(tmpdir(), "quality-live-harness-")); t.after(() => rm(directory, { recursive: true, force: true }));
   const original = globalThis.fetch; let sends = 0; globalThis.fetch = async () => { sends++; throw new Error("NO_NETWORK_ALLOWED"); };
   try {
-    const config = parseQualityArgs(["--out", directory, "--repeats", "1"]); assert.equal(config.live, false);
+    const config = parseQualityArgs(["--linking-only", "--out", directory, "--repeats", "1"]); assert.equal(config.live, false);
     const plan = await runQualityE2E(config); assert.equal(plan.live, false); assert.equal(sends, 0);
     const manifest = JSON.parse(await readFile(resolve(directory, "manifest.json"), "utf8"));
     assert.equal(manifest.parser_inputs.length, 5); assert.ok(manifest.parser_inputs.every((item: any) => /^[a-f0-9]{64}$/.test(item.sha256)));
