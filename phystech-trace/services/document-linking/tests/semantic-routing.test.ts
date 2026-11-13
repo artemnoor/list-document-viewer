@@ -1,37 +1,10 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
 import { analyzeDocumentSet, GEMMA_MODEL } from "../src/linking/llm-matcher";
 import { buildEvidenceRegistry } from "../src/linking/evidence-registry";
 import { resolveJsonPath } from "../src/linking/evidence-validation";
 import { planSemanticLinking } from "../src/linking/semantic-plan";
-
-const gold: any = JSON.parse(readFileSync("evaluation/synthetic-routing-gold.json", "utf8"));
-const value = (documentId: string, rowId: string | undefined, text: string, tableId?: string, columnIndex?: number) => ({
-  value: text, source_value: text, status: "extracted", confidence: 0.99,
-  provenance: { document_id: documentId, source_ref: `#/source/${rowId ?? "fields"}`, source_text: text, source_available: true, ...(rowId ? { row_id: rowId } : {}), ...(tableId ? { table_id: tableId } : {}), ...(columnIndex !== undefined ? { column_index: columnIndex } : {}) },
-});
-const line = (documentId: string, rowId: string, description: string) => {
-  const item = (text: string, column: number) => value(documentId, rowId, text, "lines", column);
-  return { row_id: rowId, line_number: item(rowId, 0), identifier: item("", 1), description: item(description, 2), unit: item("шт.", 3), quantity: item("1", 4), plan_quantity: item("1", 5), actual_quantity: item("1", 6), unit_price: item("1250000", 7), amount: item("1250000", 8), row_status: "extracted", source_cells: [{ header: "Описание", extracted: item(description, 2) }] };
-};
-const longContext = "Дополнительные условия и сведения о страницах исходного документа. ".repeat(40);
-const document = (id: string, type: string, fields: Record<string, any>, rows: any[] = []) => ({
-  extraction_id: `${id}-extraction`, document_id: id, version: 1, schema_version: "1.2.0", extracted_at: "2026-11-13T00:00:00.000Z",
-  classification: { type, label: type, confidence: 0.99, status: "classified" },
-  extraction_engine: { rules_executed: true, llm: { provider: "not_called", model: null, called: false, response_validated: false, duration_ms: null, usage: null, validation_status: "not_run", error: null }, parser_adapter: "synthetic-test" },
-  mode: "rules_only", fields: Object.fromEntries(Object.entries({ ...fields, context_note: longContext }).map(([key, text]) => [key, { label: key, ...value(id, undefined, String(text)) }])),
-  tables: rows.length ? [{ id: "lines", title: "Строки", role: "line_items", headers: ["Описание"], rows }] : [], indicators: [], missing_fields: [], review_required: [],
-});
-
-const docs: any[] = [
-  document("contract-A", "contract", { subject: "Договор A: поставка оптического стенда", amount: "1 250 000 рублей" }),
-  document("contract-B", "contract", { subject: "Договор B: поставка криостата", amount: "1 250 000 рублей" }),
-  document("invoice-A", "invoice", { basis: "Счет INV-A по договору A, оптический стенд", amount: "1 250 000 рублей", invoice_number: "INV-A" }, [line("invoice-A", "invoice-line-A", "Оптический стенд по договору A")]),
-  document("invoice-B", "invoice", { basis: "Счет INV-B по договору B, криостат", amount: "1 250 000 рублей", invoice_number: "INV-B" }, [line("invoice-B", "invoice-line-B", "Криостат по договору B")]),
-  document("registry", "registry", { title: "Реестр двух отдельных оплат" }, [line("registry", "registry-payment-A", "Оплата INV-A по договору A за оптический стенд"), line("registry", "registry-payment-B", "Оплата INV-B по договору B за криостат")]),
-];
-const systemPrompt = "Определи фактические связи между оригинальными документами и строками. Ссылайся только на исходные reference_id.";
+import { documents as docs, gold, systemPrompt } from "../evaluation/synthetic-routing-fixture";
 const response = (payload: unknown) => new Response(JSON.stringify({ model: GEMMA_MODEL, choices: [{ message: { content: JSON.stringify(payload) }, finish_reason: "stop" }], usage: { prompt_tokens: 300, completion_tokens: 100 } }));
 const edgeKey = (edge: any) => JSON.stringify([edge.source_document_id, edge.target_document_id, edge.relationship_type, edge.source_row_id ?? null, edge.target_row_id ?? null]);
 
@@ -45,12 +18,19 @@ test("negative routing is provisional: original-anchor verification recovers rep
     return { ...edge, source_ref: source && { ...source, reference_id: canonicalId(source.reference_id) }, target_ref: target && { ...target, reference_id: canonicalId(target.reference_id) } };
   });
   assert.ok(goldEdges.every((edge: any) => edge.source_ref && edge.target_ref), "independent gold must cite existing fixture paths");
-  let calls = 0, routingPairs: any[] = [], auditedPairs = new Set<string>(), mockFailure = "";
+  let calls = 0, routingPairs: any[] = [], auditedPairs = new Set<string>(), mockFailure = "", injectedDiscoveryFailure = false;
   globalThis.fetch = async (_input, init) => {
     try {
     calls++;
-    const body = JSON.parse(String(init?.body)), user = body.messages[1].content, context = JSON.parse(user.slice(user.indexOf("{")));
-    if (context.stage === "discover") return response({ fragments: context.fragments.map((fragment: any) => ({ fragment_id: fragment.fragment_id, summary: fragment.facts.map((fact: any) => fact[2]).filter((raw: any) => typeof raw === "string").join(" | ").slice(0, 800) || "Source rows", anchors: fragment.facts.slice(0, 24).map((fact: any) => ({ reference_id: fact[0], meaning: String(fact[1].join("; ")).slice(0, 160) })), open_questions: [] })) });
+    const body = JSON.parse(String(init?.body)), user = body.messages[1].content, jsonContext = user.slice(user.indexOf("{")).split("\n\nValidation correction:")[0], context = JSON.parse(jsonContext);
+    if (context.stage === "discover") {
+      if (!injectedDiscoveryFailure) {
+        injectedDiscoveryFailure = true;
+        return response({ fragments: context.fragments.map(() => ({ fragment_id: "unknown-fragment", summary: "invalid first response", anchors: [], open_questions: [] })) });
+      }
+      if (user.includes("Validation correction:")) mockFailure = "invalid discovery response was retried with bounded validator feedback";
+      return response({ fragments: context.fragments.map((fragment: any) => ({ fragment_id: fragment.fragment_id, summary: fragment.facts.map((fact: any) => fact[2]).filter((raw: any) => typeof raw === "string").join(" | ").slice(0, 800) || "Source rows", anchors: fragment.facts.slice(0, 24).map((fact: any) => ({ reference_id: fact[0], meaning: String(fact[1].join("; ")).slice(0, 160) })), open_questions: [] })) });
+    }
     if (context.stage === "route") {
       routingPairs = context.document_pairs.map((pair: any) => ({ ...pair, state: "no_relation" }));
       // Adversarial mock route: it marks every pair negative, including gold positives.
@@ -79,7 +59,7 @@ test("negative routing is provisional: original-anchor verification recovers rep
   };
   try {
     const result = await analyzeDocumentSet(docs, { apiKey: "offline-only", timeoutMs: 1000, maxCalls: 28, maxInputTokens: 8000, systemPrompt });
-    assert.equal(mockFailure, "", mockFailure);
+    assert.match(mockFailure, /retried with bounded validator feedback/);
     const goldKeys = new Set<string>(goldEdges.map(edgeKey)), predictionKeys = new Set<string>(result.links.map(edgeKey));
     const truePositive = [...predictionKeys].filter(key => goldKeys.has(key)).length, falsePositive = [...predictionKeys].filter(key => !goldKeys.has(key)).length, falseNegative = [...goldKeys].filter(key => !predictionKeys.has(key)).length;
     const precision = truePositive / Math.max(1, truePositive + falsePositive), recall = truePositive / Math.max(1, truePositive + falseNegative), f1 = 2 * precision * recall / Math.max(1e-9, precision + recall);

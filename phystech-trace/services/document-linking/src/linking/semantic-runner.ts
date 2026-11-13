@@ -19,6 +19,26 @@ export type SemanticProgress = { plan_hash: string; discovery: BoundedTaskCheckp
 const taskState = (id: string, keys: string[]): BoundedTaskCheckpoint => ({ task_id: id, fragment_keys: keys, attempts: 0, failures: [] });
 const fail = (message: string, status = 502) => Object.assign(new Error(message), { status, retryable: false });
 
+export function assertExactPairDecisions(decisions: unknown, expectedPairIds: string[]) {
+  const expected = new Set(expectedPairIds);
+  if (expected.size !== expectedPairIds.length) throw fail("План подробной проверки содержит повторяющийся pair_id.");
+  if (!Array.isArray(decisions) || decisions.length !== expected.size) throw fail("Ответ подробной проверки не содержит ровно одно решение на каждый ожидаемый pair_id.");
+  const seen = new Set<string>();
+  for (const decision of decisions) {
+    if (!decision || typeof decision.pair_id !== "string" || !expected.has(decision.pair_id)) throw fail("Ответ подробной проверки содержит посторонний pair_id.");
+    if (seen.has(decision.pair_id)) throw fail("Ответ подробной проверки содержит повторяющийся pair_id.");
+    if (!["no_relation", "insufficient_evidence", "supported"].includes(decision.state)) throw fail("Ответ подробной проверки содержит некорректное состояние pair_id.");
+    seen.add(decision.pair_id);
+  }
+  if (seen.size !== expected.size) throw fail("Ответ подробной проверки пропустил ожидаемый pair_id.");
+  return decisions as Array<{ pair_id: string; state: "no_relation" | "insufficient_evidence" | "supported"; reason?: string }>;
+}
+
+export function hasCompleteNoRelationAudit(expectedPairIds: string[], decisions: unknown) {
+  try { return assertExactPairDecisions(decisions, expectedPairIds).every(decision => decision.state === "no_relation"); }
+  catch { return false; }
+}
+
 export async function runSemanticAnalysis(documents: Extraction[], hooks: Hooks): Promise<ModelRun> {
   // Reserve room for the JSON request envelope and provider schema included by the shared Q1 ledger.
   const limit = Math.min(15400, hooks.maxInputTokens);
@@ -47,12 +67,15 @@ export async function runSemanticAnalysis(documents: Extraction[], hooks: Hooks)
   const requestTask = async (task: BoundedTaskCheckpoint, context: string, prompt: string, check: (value: any) => void) => {
     if (estimateTokens(prompt + context) > limit) throw fail("Семантическая задача превышает Q1-контекст; данные не обрезаны.", 413);
     if (task.response) return true;
+    let correction = "";
     while (task.attempts < 3) {
       if (hooks.exhausted()) return false;
+      const requestContext = correction ? `${context}\n\nValidation correction: the previous response failed local structural/provenance validation (${correction}). Return a complete corrected response for this exact task. Keep every required source item; use only IDs present in the supplied context. Do not add explanations outside JSON.` : context;
+      if (estimateTokens(prompt + requestContext) > limit) throw fail("Семантическая задача с коррекцией превышает Q1-контекст; исходные данные не обрезаны.", 413);
       task.attempts++; await hooks.checkpoint();
       let received: unknown;
       try {
-        const response = await hooks.request(context, prompt, 4000, `semantic.${task.task_id}:attempt:${task.attempts}`);
+        const response = await hooks.request(requestContext, prompt, 4000, `semantic.${task.task_id}:attempt:${task.attempts}`);
         received = response.value;
         if (response.finishReason === "length") throw fail("Ограниченный ответ модели обрезан.");
         check(received);
@@ -60,6 +83,8 @@ export async function runSemanticAnalysis(documents: Extraction[], hooks: Hooks)
       } catch (error: any) {
         task.failures.push({ message: String(error.message), ...(received !== undefined ? { response: received } : {}) }); await hooks.checkpoint();
         if (error.status !== 502 || task.attempts >= 3) throw error;
+        // Only trusted validator messages are included; model output is never reflected into a retry prompt.
+        correction = String(error.message).slice(0, 240);
       }
     }
     throw fail(`Исчерпаны попытки задачи ${task.task_id}.`);
@@ -166,6 +191,8 @@ export async function runSemanticAnalysis(documents: Extraction[], hooks: Hooks)
       if (estimateTokens(verifyPrompt + verificationContext([candidate])) > limit) throw fail(`Точный контекст кандидата ${decision.pair_id} не помещается в Q1; требуется более точная навигация, источники не обрезаны.`, 413);
       jobs.push(candidate);
     }
+    const plannedAuditIds = jobs.map(item => item.pair_id);
+    if (new Set(plannedAuditIds).size !== plannedAuditIds.length) throw fail("План подробной проверки содержит повторяющийся pair_id.");
     const inputs: any[][] = []; let current: any[] = [];
     for (const candidate of jobs) {
       if (current.length && estimateTokens(verifyPrompt + verificationContext([...current, candidate])) > limit) { inputs.push(current); current = []; }
@@ -181,10 +208,20 @@ export async function runSemanticAnalysis(documents: Extraction[], hooks: Hooks)
     if (saved.result) continue;
     const candidates = state.verification_inputs![index];
     let context = verificationContext(candidates);
+    const expectedPairIds = candidates.map((candidate: any) => candidate.pair_id);
+    if (new Set(expectedPairIds).size !== expectedPairIds.length) throw fail("План подробной проверки содержит повторяющийся pair_id.");
+    const checkPairDecisions = (value: any) => {
+      if (!Array.isArray(value?.context_requests) || value.context_requests.length === 0) assertExactPairDecisions(value?.pair_decisions, expectedPairIds);
+    };
     const okay = await requestTask(saved, context, verifyPrompt, value => {
       if (!Array.isArray(value?.links) || !Array.isArray(value?.unlinked_document_ids) || !Array.isArray(value?.context_requests)) throw fail("Невалидный контракт подробной проверки кандидатов.");
+      checkPairDecisions(value);
     });
     if (!okay) return partial();
+    if (saved.response.context_requests.length) {
+      // An incomplete first answer is allowed to request more originals; its final follow-up
+      // must still account for exactly the verification jobs in this task.
+    } else assertExactPairDecisions(saved.response.pair_decisions, expectedPairIds);
     let originalRefs = candidates.flatMap((candidate: any) => candidate.original_references ?? candidate.reference_ids.map((id: string) => proof(id)));
     if (saved.response.context_requests.length) {
       if (hooks.exhausted()) return partial();
@@ -200,8 +237,10 @@ export async function runSemanticAnalysis(documents: Extraction[], hooks: Hooks)
       const followup = saved.followup ??= taskState(`${saved.task_id}:source`, []);
       const expandedOkay = await requestTask(followup, context, verifyPrompt, value => {
         if (!Array.isArray(value?.links) || !Array.isArray(value?.unlinked_document_ids) || !Array.isArray(value?.context_requests) || value.context_requests.length) throw fail("Дополнительная проверка оригиналов не завершена.");
+        assertExactPairDecisions(value.pair_decisions, expectedPairIds);
       });
       if (!expandedOkay) return partial();
+      assertExactPairDecisions(followup.response.pair_decisions, expectedPairIds);
       originalRefs = expandedRefs;
     }
     if (saved.followup?.response) {
@@ -209,6 +248,7 @@ export async function runSemanticAnalysis(documents: Extraction[], hooks: Hooks)
       for (const request of saved.response.context_requests) plan.fragments.find(fragment => fragment.document_id === request.document_id && fragment.chunk_index === request.chunk_index)!.reference_ids.forEach(id => expanded.add(id));
       originalRefs = [...expanded].map(id => proof(String(id)));
       context = JSON.stringify({ stage: "verify", candidates, requested_original_references: originalRefs });
+      assertExactPairDecisions(saved.followup.response.pair_decisions, expectedPairIds);
     }
     const validated = await hooks.validate(saved.followup?.response ?? saved.response, context, new Set(originalRefs.map((ref: any) => ref.reference_id)), saved);
     if (!validated.complete) return partial();
@@ -220,10 +260,13 @@ export async function runSemanticAnalysis(documents: Extraction[], hooks: Hooks)
   const pairOutcomes = state.decisions.map(decision => {
     if (decision.state === "insufficient_context") return { ...decision, outcome: "insufficient_evidence" };
     const audits = state.verification_inputs!.flat().filter((item: any) => (item.document_pair_id ?? item.pair_id) === decision.pair_id);
-    const auditIds = new Set(audits.map((item: any) => item.pair_id));
-    const auditAnswers = state.verification!.flatMap(task => (task.followup?.response ?? task.response)?.pair_decisions ?? []).filter((item: any) => auditIds.has(item.pair_id));
+    const auditIds = audits.map((item: any) => item.pair_id);
+    const auditAnswers = state.verification!.flatMap((task, index) => {
+      const expected = state.verification_inputs![index].map((item: any) => item.pair_id);
+      return assertExactPairDecisions((task.followup?.response ?? task.response)?.pair_decisions, expected);
+    }).filter((item: any) => auditIds.includes(item.pair_id));
     const supported = links.some(link => link.status !== "rejected" && decision.document_ids.includes(link.source_document_id) && decision.document_ids.includes(link.target_document_id));
-    const noRelationVerified = audits.length > 0 && auditAnswers.length === audits.length && auditAnswers.every((item: any) => item.state === "no_relation");
+    const noRelationVerified = audits.length > 0 && new Set(auditIds).size === auditIds.length && hasCompleteNoRelationAudit(auditIds, auditAnswers);
     return { ...decision, outcome: supported ? "linked" : noRelationVerified && !diagnostics.some(item => decision.document_ids.includes(item.source_document_id!) && decision.document_ids.includes(item.target_document_id!) && !["corrected", "withdrawn"].includes(item.resolution ?? "")) ? "no_link_found" : "insufficient_evidence" };
   });
   const unlinked = documents.filter(doc => { const outcomes = pairOutcomes.filter(pair => pair.document_ids.includes(doc.document_id)); return outcomes.length > 0 && outcomes.every(pair => pair.outcome === "no_link_found"); }).map(doc => doc.document_id);
