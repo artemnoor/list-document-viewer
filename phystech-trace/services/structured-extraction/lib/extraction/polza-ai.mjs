@@ -81,16 +81,11 @@ export function polzaAiReadiness(env = {}) {
   return { configured, provider: configured ? "polza_ai" : null, base_url: POLZA_BASE_URL, model: POLZA_MODEL, ...(configured ? {} : { required: ["POLZA_API_KEY"] }) };
 }
 
-function clipText(value, max = 2400) {
-  const text = String(value ?? "");
-  return text.length > max ? `${text.slice(0, max)}…[усечено]` : text;
-}
-
 export function buildGroundedContext(parsed) {
   const source = adaptDocumentParserResult(parsed);
   const availableElementIds = new Set(source.elements.filter((element) => element.source_available !== false).map((element) => element.id));
   const ruleType = classifyDocument(parsed);
-  const budget = { chars: 34000 };
+
   const tableSourceIds = new Set();
   const tables = [];
 
@@ -101,42 +96,29 @@ export function buildGroundedContext(parsed) {
       tableSourceIds.add(cell.id);
       const sourceIds = [...new Set([cell.id, ...(cell.source_element_ids ?? [])])].filter((id) => availableElementIds.has(id));
       sourceIds.forEach((id) => tableSourceIds.add(id));
-      return { source_element_id: cell.id, source_element_ids: sourceIds, column_index, label: clipText(table.headers[column_index] ?? cell.text, 500) };
+      return { source_element_id: sourceIds[0] ?? cell.id, source_element_ids: sourceIds, column_index, label: String(table.headers[column_index] ?? cell.text) };
     });
     const allRows = table.rows ?? [];
-    const chosenRows = new Set();
-    allRows.slice(0, 8).forEach((_, index) => chosenRows.add(index));
-    if (allRows.length) chosenRows.add(allRows.length - 1);
-    const firstRowByPage = new Set();
-    allRows.forEach((row, index) => {
-      const key = `${row.page_no ?? "no-page"}|${row.sheet_name ?? ""}`;
-      if (!firstRowByPage.has(key)) { firstRowByPage.add(key); chosenRows.add(index); }
-    });
     const rows = [];
-    for (const rowIndex of [...chosenRows].sort((a, b) => a - b)) {
+    for (let rowIndex = 0; rowIndex < allRows.length; rowIndex++) {
       const row = allRows[rowIndex];
       const cells = [];
       for (const cell of row.cells ?? []) {
         tableSourceIds.add(cell.id);
         if (cell.source_available === false || !cell.text && !cell.address) continue;
-        const text = clipText(cell.text, 600);
-        const cost = text.length + 64;
-        if (budget.chars < cost) continue;
-        budget.chars -= cost;
+        const text = String(cell.text);
         cells.push({ source_element_id: cell.id, text });
       }
       if (cells.length) rows.push({ row_id: row.row_id, page_no: row.page_no ?? null, sheet_name: row.sheet_name ?? null, cells });
     }
-    tables.push({ table_id: table.id, title: clipText(table.caption, 300), role: table.role, pages: table.page_numbers ?? [...new Set((table.rows ?? []).map((row) => row.page_no).filter(Number.isFinite))], headers, rows });
+    tables.push({ table_id: table.id, title: String(table.caption ?? ""), role: table.role, pages: table.page_numbers ?? [...new Set((table.rows ?? []).map((row) => row.page_no).filter(Number.isFinite))], headers, rows });
   }
 
-  const fields = fieldDefinitions[ruleType.type] ?? Object.values(fieldDefinitions).flat();
+  const fields = [...new Map(Object.values(fieldDefinitions).flat().map(field => [field[0], field])).values()];
   const sourceElements = [];
   for (const element of source.elements) {
     if (element.source_available === false || tableSourceIds.has(element.id) || !element.text.trim()) continue;
-    const text = clipText(element.text, 1000);
-    if (budget.chars < text.length + 50 || sourceElements.length >= 180) continue;
-    budget.chars -= text.length + 50;
+    const text = String(element.text);
     sourceElements.push({ source_element_id: element.id, kind: element.kind, text });
   }
 
@@ -221,13 +203,15 @@ async function polzaRequest(env, endpoint, body = null) {
 async function runPolza(env, body, options = {}) {
   let attempt = 0;
   let useJsonMode = false;
+  let calls = 0;
   let lastError;
   while (attempt < (options.maxAttempts ?? 2)) {
     attempt++;
     try {
       const request = { ...body };
       if (useJsonMode) request.response_format = { type: "json_object" };
-      return { payload: await polzaRequest(env, "/chat/completions", request), strictSchema: !useJsonMode, attempts: attempt };
+      calls++;
+      return { payload: await polzaRequest(env, "/chat/completions", request), strictSchema: !useJsonMode, attempts: attempt, calls };
     } catch (error) {
       lastError = error;
       if (!useJsonMode && error instanceof PolzaAiError && error.code === "POLZA_REQUEST_REJECTED" && /response_format|json.schema|json_schema|unsupported/i.test(error.message)) {
@@ -271,7 +255,13 @@ function validateGrounding(result, context, parsed) {
     ...context.source_elements.map((element) => element.source_element_id),
     ...context.tables.flatMap((table) => [...table.headers.flatMap((header) => header.source_element_ids ?? [header.source_element_id]), ...table.rows.flatMap((row) => row.cells.map((cell) => cell.source_element_id))]),
   ].filter((id) => availableElementIds.has(id)));
-  const groundedFields = fieldCandidates.filter((item) => sourceIds.has(item.source_element_id));
+  const visibleTexts = new Map();
+  for (const element of context.source_elements) visibleTexts.set(element.source_element_id, [...(visibleTexts.get(element.source_element_id) ?? []), element.text]);
+  for (const table of context.tables) {
+    for (const header of table.headers) for (const id of header.source_element_ids ?? [header.source_element_id]) visibleTexts.set(id, [...(visibleTexts.get(id) ?? []), header.label]);
+    for (const row of table.rows) for (const cell of row.cells) visibleTexts.set(cell.source_element_id, [...(visibleTexts.get(cell.source_element_id) ?? []), cell.text]);
+  }
+  const groundedFields = fieldCandidates.filter((item) => sourceIds.has(item.source_element_id) && (visibleTexts.get(item.source_element_id) ?? []).some(text => String(text).includes(item.source_value)));
   const groundedTables = tableMappings.map((mapping) => ({
     ...mapping,
     columns: mapping.columns.filter((column) => sourceIds.has(column.source_element_id)),
@@ -284,11 +274,11 @@ function validateGrounding(result, context, parsed) {
   };
 }
 
-export async function callPolzaForExtraction(parsed, env = {}) {
+async function callPolzaFragment(parsed, env = {}, context) {
   const readiness = polzaAiReadiness(env);
   if (!readiness.configured) throw new PolzaAiError("Polza AI не настроен. Добавьте POLZA_API_KEY в локальные или Worker secrets.", "POLZA_NOT_CONFIGURED", 503, { provider: null, validation_status: "not_run" });
   const started = Date.now();
-  const context = buildGroundedContext(parsed);
+
   const input = {
     model: POLZA_MODEL,
     messages: [
@@ -305,15 +295,18 @@ export async function callPolzaForExtraction(parsed, env = {}) {
   };
   let raw;
   let strictSchema = true;
+  let modelCalls = 0;
   try {
     const response = await timed(runPolza(env, input), 55_000, "polza_ai");
     raw = response.payload;
     strictSchema = response.strictSchema;
+    modelCalls = response.calls;
   } catch (error) {
     if (error instanceof PolzaAiError) throw new PolzaAiError(error.message, error.code, error.status, { ...error.details, provider: "polza_ai", model: POLZA_MODEL, duration_ms: Date.now() - started });
     const timeout = error?.name === "TimeoutError" || error?.name === "AbortError";
     throw new PolzaAiError(timeout ? "Истекло время ожидания Polza AI" : "Не удалось подключиться к Polza AI", timeout ? "POLZA_TIMEOUT" : "POLZA_NETWORK_ERROR", timeout ? 504 : 502, { provider: "polza_ai", model: POLZA_MODEL, duration_ms: Date.now() - started });
   }
+  if (raw?.choices?.[0]?.finish_reason === "length") throw new PolzaAiError("Ответ модели обрезан", "POLZA_INVALID_JSON");
   let parsedResponse;
   try { parsedResponse = groundedResponseSchema.parse(parseModelResult(raw)); }
   catch (error) {
@@ -344,6 +337,8 @@ export async function callPolzaForExtraction(parsed, env = {}) {
   const rejectedFieldCandidates = parsedResponse.field_candidates.length - grounded.field_candidates.length;
   return {
     ...grounded,
+    model_calls: modelCalls,
+    grounding_rejections: parsedResponse.field_candidates.filter(candidate => !grounded.field_candidates.includes(candidate)).map(candidate => ({ candidate, reason: 'source_not_visible_or_exact_value_mismatch' })),
     provider: "polza_ai",
     model: POLZA_MODEL,
     called: true,
@@ -356,3 +351,113 @@ export async function callPolzaForExtraction(parsed, env = {}) {
   };
 }
 
+
+/** Complete source inventory, packed without sampling. Oversized texts use exact slices. */
+export function buildGroundedContexts(parsed, maxChars = 33000) {
+  const context = buildGroundedContext(parsed);
+  const base = { ...context, source_elements: [], tables: [] };
+  const contexts = [];
+  let current = structuredClone(base);
+  const size = value => JSON.stringify(value).length;
+  const flush = () => { if (current.source_elements.length || current.tables.length) contexts.push(current); current = structuredClone(base); };
+  const add = (key, value) => {
+    const next = { ...current, [key]: [...current[key], value] };
+    if (size(next) > maxChars) flush();
+    const single = { ...current, [key]: [...current[key], value] };
+    if (size(single) > maxChars) throw new PolzaAiError('Исходный заголовок или структура не помещается в ограниченный фрагмент; данные не обработаны', 'POLZA_CONTEXT_LIMIT');
+    current = single;
+  };
+  for (const element of context.source_elements) {
+    const width = Math.max(1, Math.floor((maxChars - size(base) - 1000) / 6));
+    for (let offset = 0; offset < element.text.length; offset += Math.max(1, width - Math.min(256, Math.floor(width / 4)))) add('source_elements', { ...element, text: element.text.slice(offset, offset + width), text_offset: offset });
+  }
+  for (const table of context.tables) {
+    const metadata = { ...table, rows: [] };
+    if (!table.rows.length) { add('tables', metadata); continue; }
+    for (const row of table.rows) {
+      const available = maxChars - size(base) - size(metadata) - 1000;
+      if (available < 100) throw new PolzaAiError('Заголовки таблицы превышают бюджет; данные не обработаны', 'POLZA_CONTEXT_LIMIT');
+      if (size({...metadata,rows:[row]}) < available) { add('tables', { ...metadata, rows: [row] }); continue; }
+      for (const cell of row.cells) {
+        const width = Math.max(1, Math.floor(available / 6));
+        for (let offset = 0; offset < Math.max(1, cell.text.length); offset += Math.max(1, width - Math.min(256, Math.floor(width / 4)))) add('tables', { ...metadata, rows: [{ ...row, cells: [{ ...cell, text: cell.text.slice(offset, offset + width), text_offset: offset }] }] });
+      }
+    }
+  }
+  flush();
+  return contexts.length ? contexts : [base];
+}
+
+export async function callPolzaForExtraction(parsed, env = {}) {
+  const startedAt = Date.now();
+  const contexts = buildGroundedContexts(parsed);
+  let modelCalls = 0;
+  const attempts = [];
+  const fetcher = env.POLZA_FETCH ?? fetch;
+  const measuredUsage = () => {
+    const known = {};
+    let unknown = 0;
+    for (const attempt of attempts) {
+      if (!attempt.usage || !Object.values(attempt.usage).some(value => typeof value === 'number')) { unknown++; continue; }
+      for (const [key, value] of Object.entries(attempt.usage)) if (typeof value === 'number' && Number.isFinite(value)) known[key] = (known[key] ?? 0) + value;
+    }
+    const totals = Object.fromEntries(Object.entries(known).map(([key, value]) => [key, attempts.every(attempt => typeof attempt.usage?.[key] === 'number') ? value : null]));
+    return { ...totals, usage_complete: unknown === 0 && Object.values(totals).every(value => value !== null), unknown_attempts: unknown, known_usage: Object.keys(known).length ? known : null };
+  };
+  env = { ...env, POLZA_FETCH: async (...args) => {
+    const attempt = { call_index: modelCalls++, usage: null, raw_output: null, state: 'requesting' };
+    attempts.push(attempt);
+    try {
+      const response = await fetcher(...args);
+      const payload = await response.clone().json().catch(() => null);
+      attempt.state = response.ok ? 'response_received' : 'http_error';
+      attempt.http_status = response.status;
+      attempt.usage = payload?.usage ?? payload?.result?.usage ?? payload?.meta?.usage ?? null;
+      attempt.raw_output = payload?.choices?.[0]?.message?.content ?? payload?.result?.response ?? payload?.response ?? null;
+      attempt.finish_reason = payload?.choices?.[0]?.finish_reason ?? null;
+      return response;
+    } catch (error) { attempt.state = 'transport_error'; attempt.error = String(error?.message ?? error); throw error; }
+  } };
+  const results = [];
+  const diagnostics = [];
+  for (const [index, context] of contexts.entries()) {
+    try {
+      let result;
+      try { result = await callPolzaFragment(parsed, env, context); }
+      catch (error) {
+        if (!(error instanceof PolzaAiError) || !['POLZA_UNGROUNDED_OUTPUT','POLZA_INVALID_JSON','POLZA_SCHEMA_INVALID'].includes(error.code)) throw error;
+        await env.POLZA_ON_PROGRESS?.({ completed_fragments: diagnostics, total_fragments: contexts.length, model_attempts: attempts, usage: measuredUsage(), repairing_fragment: index, failure: error.details });
+        result = await callPolzaFragment(parsed, env, { ...context, validation_feedback: { code: error.code, reason: error.message, instruction: 'Исправь только этот фрагмент. Используй ровно показанные source_element_id и table_id. Значения — точные подстроки исходного текста. Верни полный JSON, без сокращений.' } });
+      }
+      if (result.grounding_rejections.length) {
+        const rejected = result.grounding_rejections;
+        result = await callPolzaFragment(parsed, env, { ...context, validation_feedback: { code: 'POLZA_FIELD_GROUNDING_REJECTED', rejected_count: rejected.length, instruction: 'Исправь ссылки и точные подстроки только показанных источников или не возвращай неподтвержденные поля.' } });
+        result.grounding_rejections = [...rejected, ...result.grounding_rejections];
+      }
+      results.push(result);
+      diagnostics.push({ fragment_index: index, state: 'processed', source_element_ids: [...context.source_elements.map(e => e.source_element_id), ...context.tables.flatMap(t => t.rows.flatMap(r => r.cells.map(c => c.source_element_id)))], result });
+      await env.POLZA_ON_PROGRESS?.({ completed_fragments: diagnostics, total_fragments: contexts.length, model_attempts: attempts, usage: measuredUsage() });
+    } catch (error) {
+      if (error instanceof PolzaAiError) error.details = { ...error.details, failed_fragment: index, completed_fragments: diagnostics, unprocessed_fragments: contexts.length - index, total_fragments: contexts.length, model_calls: modelCalls, model_attempts: attempts, usage: measuredUsage(), duration_ms: Date.now() - startedAt };
+      throw error;
+    }
+  }
+  const first = results[0];
+  const field_candidates = [...new Map(results.flatMap(r => r.field_candidates).map(c => [JSON.stringify([c.field_key,c.source_element_id,c.source_value]),c])).values()];
+  const mappings = new Map();
+  const conflicts = [];
+  for (const result of results) for (const mapping of result.table_mappings) {
+    const previous = mappings.get(mapping.table_id);
+    if (!previous) { mappings.set(mapping.table_id, structuredClone(mapping)); continue; }
+    if (previous.role !== mapping.role) { conflicts.push({ table_id: mapping.table_id, kind: 'role', values: [previous.role,mapping.role] }); previous.role = 'table'; previous.confidence = 0; }
+    for (const column of mapping.columns) {
+      const existing = previous.columns.find(c => c.source_element_id === column.source_element_id);
+      if (!existing) previous.columns.push(column);
+      else if (existing.semantic_key !== column.semantic_key) { conflicts.push({table_id:mapping.table_id,source_element_id:column.source_element_id,kind:'column',values:[existing.semantic_key,column.semantic_key]}); existing.semantic_key='unknown'; existing.confidence=0; }
+    }
+  }
+  const sameType = results.every(r => r.document_type === first.document_type);
+  if (!sameType) conflicts.push({ kind: 'classification', values: [...new Set(results.map(r => r.document_type))] });
+  const usage = measuredUsage();
+  return { ...first, document_type: sameType ? first.document_type : 'unknown', classification_confidence: sameType && results.every(r => r.classification_confidence !== null) ? Math.min(...results.map(r => r.classification_confidence)) : null, field_candidates, table_mappings: [...mappings.values()], usage, duration_ms: Date.now() - startedAt, model_attempts: attempts, fragment_diagnostics: diagnostics, mapping_conflicts: conflicts, grounding_rejections: results.flatMap(r => r.grounding_rejections), model_calls: modelCalls, fragment_count: contexts.length };
+}

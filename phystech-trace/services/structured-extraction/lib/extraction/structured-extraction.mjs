@@ -768,6 +768,26 @@ export function extractStructuredDocument(parsed, options = {}) {
   const targetTables = parsedTables.filter((table) => ["line_items", "payment_schedule", "amendments"].includes(table.role));
   const rows = typeResult.type === "addendum" ? amendmentRows(parsed, parsedTables, llm) : targetTables.flatMap((table) => table.rows);
   const { missing, review } = collectReviewAndMissing(fields, parsedTables, typeResult.type === "addendum" ? rows : []);
+  const qualityDiagnostics = llm?.fragment_diagnostics ? {
+    fragment_count: llm.fragment_count,
+    model_calls: llm.model_calls,
+    model_attempts: llm.model_attempts ?? [],
+    fragments: llm.fragment_diagnostics,
+    mapping_conflicts: llm.mapping_conflicts ?? [],
+    grounding_rejections: llm.grounding_rejections ?? [],
+  } : null;
+  for (const conflict of llm?.mapping_conflicts ?? []) {
+    review.push({ path: conflict.table_id ? `tables.${conflict.table_id}` : 'classification', reason: `Неоднозначная интерпретация фрагментов: ${JSON.stringify(conflict)}`, source_value: null, provenance: null });
+    if (conflict.kind === 'classification') typeResult.status = 'review';
+  }
+  for (const key of Object.keys(fields)) {
+    const candidates = (llm?.field_candidates ?? []).filter(candidate => candidate.field_key === key);
+    if (new Set(candidates.map(candidate => candidate.source_value)).size > 1) {
+      fields[key] = { ...fields[key], value: null, source_value: null, provenance: null, status: 'review', source_method: 'conflict', normalization_note: 'Модель обнаружила несколько исходных значений; требуется выбор эксперта', conflict: { reason: 'multiple_grounded_candidates', rules: null, llm: candidates } };
+      review.push({ path: `fields.${key}`, reason: fields[key].normalization_note, source_value: null, provenance: null });
+    }
+  }
+  if (llm?.grounding_rejections?.length) review.push({ path: 'extraction_engine.llm', reason: 'Часть кандидатов LLM отклонена проверкой исходных значений; подробности сохранены в usage.quality_analysis', source_value: null, provenance: null });
   const result = {
     extraction_id: options.extractionId ?? globalThis.crypto.randomUUID(),
     document_id: documentId,
@@ -785,7 +805,7 @@ export function extractStructuredDocument(parsed, options = {}) {
         called: Boolean(llm?.called),
         response_validated: Boolean(llm?.response_validated),
         duration_ms: llm?.duration_ms ?? null,
-        usage: llm?.usage ?? null,
+        usage: qualityDiagnostics ? { ...(llm?.usage ?? {}), quality_analysis: qualityDiagnostics } : llm?.usage ?? null,
         validation_status: llm?.validation_status ?? (llm?.response_validated ? "valid" : "not_run"),
         error: llm?.error ?? null,
       },
