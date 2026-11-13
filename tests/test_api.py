@@ -137,8 +137,11 @@ def test_recorded_upstream_example_remains_reproducible():
     result = json.loads((root / "examples/act-reconciliation-result.json").read_text(encoding="utf-8"))
     errors = list(Draft202012Validator(request_schema, format_checker=FormatChecker()).iter_errors(request))
     assert not errors, [item.message for item in errors]
+    from reconciliation_engine.contracts import validate_upstream_inputs
+    validate_upstream_inputs(request["extraction_results"], request["linking_result"])
     assert result["calculations"][0]["expected_value"] is None
     assert result["calculations"][0]["status"] == "manual_review"
     assert any(error["code"] == "target_period_mismatch" for error in result["calculations"][0]["errors"])
     assert result["calculations"][0]["used_sources"] == []
     assert result["calculations"][0]["comparison_performed"] is False
+    assert "stale_human_decision" not in {item["code"] for item in result["calculations"][0]["errors"]}

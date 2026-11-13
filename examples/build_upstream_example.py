@@ -8,7 +8,7 @@ from reconciliation_engine.config import Settings
 from reconciliation_engine.facts import extract_facts, numeric_value
 from reconciliation_engine.models import ConfirmedDecision, ReconciliationContext, ReconciliationRequest, TargetIndicator
 from reconciliation_engine.plans import CalculationPlan, PlanExclusion, PlanInclusion, PlanStep
-from reconciliation_engine.service import reconcile
+from reconciliation_engine.service import bind_decision_to_request, reconcile
 
 ROOT = Path(__file__).resolve().parents[1]
 EXTRACTION = json.loads((ROOT / "fixtures/upstream-structured-extraction-1.2.0/act-2026-0424.json").read_text(encoding="utf-8"))
@@ -53,6 +53,7 @@ LINKING = {
         "version": EXTRACTION["version"],
         "schema_version": EXTRACTION["schema_version"],
         "input_version": EXTRACTION["version"],
+        "input_hash": EXTRACTION.get("input_hash") or EXTRACTION.get("source_hash"),
     }, {
         "document_id": KFZ["document_id"],
         "extraction_id": KFZ["extraction_id"],
@@ -60,6 +61,7 @@ LINKING = {
         "version": KFZ["version"],
         "schema_version": KFZ["schema_version"],
         "input_version": KFZ["version"],
+        "input_hash": KFZ.get("input_hash") or KFZ.get("source_hash"),
     }],
     "links": [],
     "review_required": [],
@@ -78,12 +80,15 @@ REQUEST = ReconciliationRequest(
     extraction_results=[EXTRACTION, KFZ],
     linking_result=LINKING,
     context=ReconciliationContext(period_start="2026-04-01", period_end="2026-04-06", targets=[TARGET], data_classification="open"),
-    prior_decisions=[ConfirmedDecision(decision_id="example-human-decision", target_id=PLAN.target_id, reviewer_id="example-reviewer", confirmed_at=datetime(2026, 11, 13, 10, tzinfo=timezone.utc), plan=PLAN.as_dict())],
+    prior_decisions=[],
 )
+DECISION = ConfirmedDecision(decision_id="example-human-decision", target_id=PLAN.target_id, reviewer_id="example-reviewer", confirmed_at=datetime(2026, 11, 13, 10, tzinfo=timezone.utc), plan=PLAN.as_dict())
+REQUEST = REQUEST.model_copy(update={"prior_decisions": [bind_decision_to_request(REQUEST, DECISION, PLAN)]})
 RESULT = reconcile(REQUEST, Settings(llm_enabled=False))
 assert RESULT["calculations"][0]["expected_value"] is None
 assert RESULT["calculations"][0]["status"] == "manual_review"
 assert any(error["code"] == "target_period_mismatch" for error in RESULT["calculations"][0]["errors"])
+assert not any(error["code"] == "stale_human_decision" for error in RESULT["calculations"][0]["errors"])
 
 (ROOT / "examples/act-reconciliation-request.json").write_text(json.dumps(REQUEST.model_dump(mode="json"), ensure_ascii=False, indent=2), encoding="utf-8")
 (ROOT / "examples/act-reconciliation-result.json").write_text(json.dumps(RESULT, ensure_ascii=False, indent=2), encoding="utf-8")

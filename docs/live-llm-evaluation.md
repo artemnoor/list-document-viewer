@@ -21,6 +21,10 @@ The evaluation harness has ten synthetic, contract-validated cases with independ
 
 No source values from real documents were transmitted. The model payload omits numeric values and full provenance; IDs are pseudonymized. All input documents are synthetic.
 
+## Real upstream example check
+
+On 14 November 2026, the rebuilt real request example (`act-2026-0424` plus `kfz-2026-q1`, both upstream Extraction 1.2.0) was sent to the pinned model three times before and once after repairing the example generator. All four calls returned a plan with five included source facts; deterministic local execution of the plan returned `1180300.00`. The engine correctly kept `expected_value=null` and `status=manual_review` because the April act does not match the Q1 target period and the example has no human-confirmed Linking path. Numeric source values and full provenance are omitted from the model payload. The safe run summaries are stored locally under `data/real-llm-*.json` and are not committed.
+
 ## Reproduction
 
 After provider billing is available, run from Windows PowerShell:

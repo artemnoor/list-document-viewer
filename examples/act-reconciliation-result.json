@@ -1,10 +1,10 @@
 {
-  "reconciliation_id": "47ef801ae4915b22bf75ad7913ae27ce",
+  "reconciliation_id": "9113d20393914aee2845064928a8eb3c",
   "contract_version": "1.0.0",
   "engine_version": "0.1.0",
-  "created_at": "2026-11-13T19:00:51.220255Z",
+  "created_at": "2026-11-13T22:42:34.439591Z",
   "input_snapshot": {
-    "snapshot_sha256": "47ef801ae4915b22bf75ad7913ae27ce21967a522d6fa83efd9e4e03da7c0169",
+    "snapshot_sha256": "52a622ad252e357afc9e0e3e7d11de606baa8fe846ed3011acfc7f998acdd34d",
     "extraction_results": [
       {
         "document_id": "act-2026-0424",
@@ -23,7 +23,7 @@
     ],
     "linking_run_id": "example-contract-valid-linking-snapshot",
     "linking_contract_version": "1.2.0",
-    "linking_sha256": "17a81ceca8000ec4bfcc2c82cbad5b96c0c52b9d05a8aca75c08e3ba99069689",
+    "linking_sha256": "de760277c3c04a4111f7359d041fb35019d6609570135ad52701220285d28b83",
     "fact_count": 204
   },
   "calculations": [
@@ -35,6 +35,7 @@
         "unit": null,
         "currency": "RUB",
         "amount_basis": "unspecified",
+        "economic_measure": "unspecified",
         "period_basis": "document_period",
         "kfz_origin": {
           "document_id": "kfz-2026-q1",
@@ -187,6 +188,7 @@
             "source_group_id": null
           }
         ],
+        "unprocessed_fact_ids": [],
         "steps": [
           {
             "step_id": "act_total",
@@ -216,7 +218,21 @@
           "reviewer_id": "example-reviewer",
           "confirmed_at": "2026-11-13T10:00:00+00:00",
           "accepted_fact_ids": [],
-          "accepted_link_ids": []
+          "accepted_link_ids": [],
+          "snapshot_sha256": "52a622ad252e357afc9e0e3e7d11de606baa8fe846ed3011acfc7f998acdd34d",
+          "linking_sha256": "de760277c3c04a4111f7359d041fb35019d6609570135ad52701220285d28b83",
+          "confirmed_fact_hashes": {
+            "fact_cf6ae50bc85a1f0a70a3": "d41c231e3e59aaa18382d20a530645698cf4ef1cb21df0973029062cc9b7de10",
+            "fact_c8f8862fff1a4ee7aec4": "d8626467d731b3a035f73fe8a1806805f02fd9abc76e2ec0b420483d0b829086",
+            "fact_e87976aff8eaa8a2e856": "7d37431bd206838f7eb8dde5daa7388ad718b8d408866963a9347014d826b152",
+            "fact_bb005a884bf661a4e73f": "986c68565a362fdb4211108f02d5e600eb9babc1896b0b99227cd0be9b7057ca",
+            "fact_c644b43158259ec06d37": "5177ce5d172d4621ad258ee1401b0af3940d99c62af550208b9439ef5ea58efb"
+          },
+          "accepted_fact_hashes": {},
+          "accepted_link_hashes": {},
+          "independence_confirmed": false,
+          "decision_sha256": "b77ff95eb7823c1b2364f8a935f45a454ea972d544bd6e43db157c0df6983071",
+          "binding_status": "active"
         }
       ],
       "steps": [],
@@ -241,6 +257,7 @@
           "confidence": 0.985,
           "currency": "RUB",
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "act-2026-0424",
             "source_part_id": "act-2026-0424:src:ty9k20",
@@ -266,7 +283,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "f66274c9f85b85dd2736586d28caec38a049c2ab6c48a6ce3d57f17f9a7159cd",
+          "input_hash": "d41c231e3e59aaa18382d20a530645698cf4ef1cb21df0973029062cc9b7de10",
           "related_links": [],
           "inclusion_reason": "One completed service line in the act; each row has its own source locator.",
           "used_in_result": false,
@@ -292,6 +309,7 @@
           "confidence": 0.985,
           "currency": "RUB",
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "act-2026-0424",
             "source_part_id": "act-2026-0424:src:23hzoh",
@@ -317,7 +335,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "7bb3b5a983db2bfca5cfd44d19737fe7ce61c556b4257cf3269a8e54825e7079",
+          "input_hash": "d8626467d731b3a035f73fe8a1806805f02fd9abc76e2ec0b420483d0b829086",
           "related_links": [],
           "inclusion_reason": "One completed service line in the act; each row has its own source locator.",
           "used_in_result": false,
@@ -343,6 +361,7 @@
           "confidence": 0.985,
           "currency": "RUB",
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "act-2026-0424",
             "source_part_id": "act-2026-0424:src:l2rp62",
@@ -368,7 +387,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "5ad3842a1aaf13642e68cae4c26a9aad5d66c6aa3bf04ebc205fd043fced0e7d",
+          "input_hash": "7d37431bd206838f7eb8dde5daa7388ad718b8d408866963a9347014d826b152",
           "related_links": [],
           "inclusion_reason": "One completed service line in the act; each row has its own source locator.",
           "used_in_result": false,
@@ -394,6 +413,7 @@
           "confidence": 0.985,
           "currency": "RUB",
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "act-2026-0424",
             "source_part_id": "act-2026-0424:src:1s5hsj",
@@ -419,7 +439,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "f2998a9e6c6dfc4e756c625d3467bca090367b388799197314fb6319b77f0f7d",
+          "input_hash": "986c68565a362fdb4211108f02d5e600eb9babc1896b0b99227cd0be9b7057ca",
           "related_links": [],
           "inclusion_reason": "One completed service line in the act; each row has its own source locator.",
           "used_in_result": false,
@@ -445,6 +465,7 @@
           "confidence": 0.985,
           "currency": "RUB",
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "act-2026-0424",
             "source_part_id": "act-2026-0424:src:it1n3o",
@@ -470,7 +491,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "f59ee3f6ff8974bcc215e57ae9361c030821a38ba9368adcc6e38dcdc5ba4878",
+          "input_hash": "5177ce5d172d4621ad258ee1401b0af3940d99c62af550208b9439ef5ea58efb",
           "related_links": [],
           "inclusion_reason": "One completed service line in the act; each row has its own source locator.",
           "used_in_result": false,
@@ -496,6 +517,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "act-2026-0424",
             "source_part_id": "act-2026-0424:src:28lpiz",
@@ -523,7 +545,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "ab5b4af45d0cb14a41254210db7572159d4b2450afb4c89a0e5e4a895c837ec8",
+          "input_hash": "cb3664d62cdf460eeb8163ec61e945184f0ea627cf391b96a78dc559245bfc75",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -547,6 +569,7 @@
           "confidence": 0.985,
           "currency": "RUB",
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "act-2026-0424",
             "source_part_id": "act-2026-0424:src:12apmoh",
@@ -572,7 +595,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "1ee4b07e56124b4e07798920f374d5aa708106cf4b03f082ae7b797d64178662",
+          "input_hash": "c8cd8b43025b1c46bafa7dc56be9079c70ba2494803140cdace7a0ae37228760",
           "related_links": [],
           "exclusion_reason": "Quantity, unit price, VAT, and document totals are not additional service-line amount values."
         },
@@ -596,6 +619,7 @@
           "confidence": 0.985,
           "currency": "RUB",
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "act-2026-0424",
             "source_part_id": "act-2026-0424:src:lbr3qy",
@@ -621,7 +645,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "31d13f8131c4450b4339d6c678a40d971307402c20bbfd0ee4d03d83aeece860",
+          "input_hash": "497b044165f44413e30c3357973e516e1d57df330cd6997c5a69679f023cced6",
           "related_links": [],
           "exclusion_reason": "Quantity, unit price, VAT, and document totals are not additional service-line amount values."
         },
@@ -642,8 +666,9 @@
           "confidence": 1,
           "currency": null,
           "unit": null,
+          "economic_measure": null,
           "provenance": null,
-          "input_hash": "4859d810f66e0285debb3aaf97d84714fcd400f06928e0c8ab27384a7dfea6a4",
+          "input_hash": "1613d8e9a82b8df56120653d3555f47d9700e56b07a8a463f777e70d68790c39",
           "related_links": [],
           "exclusion_reason": "Quantity, unit price, VAT, and document totals are not additional service-line amount values."
         },
@@ -664,6 +689,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "act-2026-0424",
             "source_part_id": "act-2026-0424:src:vm767u",
@@ -689,7 +715,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "40db2e75de6310af1001f079eb00be00c129d0b01706b91f75db826609b3b4dd",
+          "input_hash": "e2fbd839679176ba1844e5b16df1303b55fc053d4984d04f3998c10c1c9d9d3d",
           "related_links": [],
           "exclusion_reason": "Quantity, unit price, VAT, and document totals are not additional service-line amount values."
         },
@@ -710,6 +736,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": "object",
+          "economic_measure": null,
           "provenance": {
             "document_id": "act-2026-0424",
             "source_part_id": "act-2026-0424:src:ui8rfy",
@@ -735,7 +762,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "43cfc18f19a15883b2afb4949d4fe67f58f946a425790a9b9f4f0f2fd4ae65d9",
+          "input_hash": "aa9cb5df734ffa307f17d374dac6e166521f520cbdce42b7f90b244c9c0a1b30",
           "related_links": [],
           "exclusion_reason": "Quantity, unit price, VAT, and document totals are not additional service-line amount values."
         },
@@ -756,8 +783,9 @@
           "confidence": null,
           "currency": null,
           "unit": "object",
+          "economic_measure": "planned",
           "provenance": null,
-          "input_hash": "bdf38a819905861f1892aafb1c638c8d3d1935b6cb2fc60d2956d442d6e30265",
+          "input_hash": "b3154edad48601dbad10c70f40865d821019361bee77e73b5feba2a4cf4bbee6",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -781,6 +809,7 @@
           "confidence": 0.985,
           "currency": "RUB",
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "act-2026-0424",
             "source_part_id": "act-2026-0424:src:u895qz",
@@ -806,7 +835,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "653ac2d47041460eb1a359689b687f61dbb73e5b4dceaf3ec57d4710ed2af5c7",
+          "input_hash": "d53fe1512809681f6599e3d4d3484c2ac78b790125052a4d7ae88874aa1a360e",
           "related_links": [],
           "exclusion_reason": "Quantity, unit price, VAT, and document totals are not additional service-line amount values."
         },
@@ -830,6 +859,7 @@
           "confidence": 0.985,
           "currency": "RUB",
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "act-2026-0424",
             "source_part_id": "act-2026-0424:src:ty9k20",
@@ -855,7 +885,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "f66274c9f85b85dd2736586d28caec38a049c2ab6c48a6ce3d57f17f9a7159cd",
+          "input_hash": "d41c231e3e59aaa18382d20a530645698cf4ef1cb21df0973029062cc9b7de10",
           "related_links": [],
           "exclusion_reason": "Selected by the plan but not used because validation or evidence checks require review."
         },
@@ -876,6 +906,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "act-2026-0424",
             "source_part_id": "act-2026-0424:src:2nh72f",
@@ -901,7 +932,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "a6028a7499d03a34ba7160a439359296f80aaff0243a925f990347dec3e3d6f6",
+          "input_hash": "44aedbeb127edd98c354371b7e902b82dab0fa0302855b1d586acff9c811047d",
           "related_links": [],
           "exclusion_reason": "Quantity, unit price, VAT, and document totals are not additional service-line amount values."
         },
@@ -922,6 +953,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": "point",
+          "economic_measure": null,
           "provenance": {
             "document_id": "act-2026-0424",
             "source_part_id": "act-2026-0424:src:1jisaj",
@@ -947,7 +979,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "da63cb130cd3cd115bed45e8acb77fc480f5e3168efb06b01385f6b111334f7e",
+          "input_hash": "5a54d4ff0295daedd143751b6cd4bef0672c40585b8f83a8fda95f57a7ed6139",
           "related_links": [],
           "exclusion_reason": "Quantity, unit price, VAT, and document totals are not additional service-line amount values."
         },
@@ -968,8 +1000,9 @@
           "confidence": null,
           "currency": null,
           "unit": "point",
+          "economic_measure": "planned",
           "provenance": null,
-          "input_hash": "485d08845188f562fbe1c38c505d68a1fab07c995dced343982cfd0c25effae6",
+          "input_hash": "5afc9ad4f332739593d1c0ff0d7e5b6b70248f351c975f475748060bdf984c14",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -993,6 +1026,7 @@
           "confidence": 0.985,
           "currency": "RUB",
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "act-2026-0424",
             "source_part_id": "act-2026-0424:src:1tidzi",
@@ -1018,7 +1052,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "60b9c9f3a105a2dd7ba0105194df516f471e6001312c6531b6bec29f740094b5",
+          "input_hash": "f601476ed96a32018d5aae1a30f5b7623ed02d4d35c0e1a8b8d90e9aa7406918",
           "related_links": [],
           "exclusion_reason": "Quantity, unit price, VAT, and document totals are not additional service-line amount values."
         },
@@ -1042,6 +1076,7 @@
           "confidence": 0.985,
           "currency": "RUB",
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "act-2026-0424",
             "source_part_id": "act-2026-0424:src:23hzoh",
@@ -1067,7 +1102,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "7bb3b5a983db2bfca5cfd44d19737fe7ce61c556b4257cf3269a8e54825e7079",
+          "input_hash": "d8626467d731b3a035f73fe8a1806805f02fd9abc76e2ec0b420483d0b829086",
           "related_links": [],
           "exclusion_reason": "Selected by the plan but not used because validation or evidence checks require review."
         },
@@ -1088,6 +1123,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "act-2026-0424",
             "source_part_id": "act-2026-0424:src:jeu308",
@@ -1113,7 +1149,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "271eca22c05687fb5f759a70f5b02c44609f2eb08470fda65246ae791f78c3c3",
+          "input_hash": "4d16ba02257e683a89fd639f737e2c84f8a4c343ba36e028e792487e11ea3283",
           "related_links": [],
           "exclusion_reason": "Quantity, unit price, VAT, and document totals are not additional service-line amount values."
         },
@@ -1134,6 +1170,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": "piece",
+          "economic_measure": null,
           "provenance": {
             "document_id": "act-2026-0424",
             "source_part_id": "act-2026-0424:src:kishs4",
@@ -1159,7 +1196,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "a4ac6a5ca0ffbbba8b3cd970d79cf598700b034f2eaa5127a9e7f6e64882d237",
+          "input_hash": "6e7bb206c89647321ddb0fe6b5836a9b1d7c22e4ae119b0f93cf9866839b5280",
           "related_links": [],
           "exclusion_reason": "Quantity, unit price, VAT, and document totals are not additional service-line amount values."
         },
@@ -1180,8 +1217,9 @@
           "confidence": null,
           "currency": null,
           "unit": "piece",
+          "economic_measure": "planned",
           "provenance": null,
-          "input_hash": "59446f8c4bd76e1ddebddb9c62474717b47af87f9a292fb43ae2a865f81c31a2",
+          "input_hash": "fc612eadd779dc76774c5ccb346c3ebdb46ae4419ad7cfa9806ceccf68b0aa0f",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -1205,6 +1243,7 @@
           "confidence": 0.985,
           "currency": "RUB",
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "act-2026-0424",
             "source_part_id": "act-2026-0424:src:lcrav1",
@@ -1230,7 +1269,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "271ae2baf817a4fcec3517f09c85c404bf524272a2dc5aa8cd97a3a294054205",
+          "input_hash": "1ca3280070035d549c4db482c7e6e8befda26ac4eb6891b3c43420d0a33d982e",
           "related_links": [],
           "exclusion_reason": "Quantity, unit price, VAT, and document totals are not additional service-line amount values."
         },
@@ -1254,6 +1293,7 @@
           "confidence": 0.985,
           "currency": "RUB",
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "act-2026-0424",
             "source_part_id": "act-2026-0424:src:l2rp62",
@@ -1279,7 +1319,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "5ad3842a1aaf13642e68cae4c26a9aad5d66c6aa3bf04ebc205fd043fced0e7d",
+          "input_hash": "7d37431bd206838f7eb8dde5daa7388ad718b8d408866963a9347014d826b152",
           "related_links": [],
           "exclusion_reason": "Selected by the plan but not used because validation or evidence checks require review."
         },
@@ -1300,6 +1340,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "act-2026-0424",
             "source_part_id": "act-2026-0424:src:3g33yd",
@@ -1325,7 +1366,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "28a11be27040bdada7f3f8a40fc969cf9eddeac55ed4823e9bd412e3bb391bda",
+          "input_hash": "5caab450b772c09c85eabbbaeefb9febd7b9ac0acea3d627f4cc399c7549f371",
           "related_links": [],
           "exclusion_reason": "Quantity, unit price, VAT, and document totals are not additional service-line amount values."
         },
@@ -1346,6 +1387,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": "person_hour",
+          "economic_measure": null,
           "provenance": {
             "document_id": "act-2026-0424",
             "source_part_id": "act-2026-0424:src:2c4p6h",
@@ -1371,7 +1413,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "0640cc8c51209548cce0125bcfe1bdc0bba46c726e2226f4ed01af9e5e1c9492",
+          "input_hash": "bcf06ecb93ad9b31d896caa964cb1e67a19e8ae6787a92091617061fc62a7c38",
           "related_links": [],
           "exclusion_reason": "Quantity, unit price, VAT, and document totals are not additional service-line amount values."
         },
@@ -1392,8 +1434,9 @@
           "confidence": null,
           "currency": null,
           "unit": "person_hour",
+          "economic_measure": "planned",
           "provenance": null,
-          "input_hash": "b35df34f52188bcddad65fbc65d4623ec78238711389acd16a3488ef9455598e",
+          "input_hash": "739782196a9716fb697cdc9f067ca5f64b369b19864ff0c6f687806150cd0e0b",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -1417,6 +1460,7 @@
           "confidence": 0.985,
           "currency": "RUB",
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "act-2026-0424",
             "source_part_id": "act-2026-0424:src:1i5w3k",
@@ -1442,7 +1486,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "a07ceee54a9b28aa230429840a0385a9558c677fcee83fcaba8d4890ced51d5d",
+          "input_hash": "4e0d072bb8f3d737986381baa8eca2cb6afe6862ef90b6065cb8673563c0c923",
           "related_links": [],
           "exclusion_reason": "Quantity, unit price, VAT, and document totals are not additional service-line amount values."
         },
@@ -1466,6 +1510,7 @@
           "confidence": 0.985,
           "currency": "RUB",
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "act-2026-0424",
             "source_part_id": "act-2026-0424:src:1s5hsj",
@@ -1491,7 +1536,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "f2998a9e6c6dfc4e756c625d3467bca090367b388799197314fb6319b77f0f7d",
+          "input_hash": "986c68565a362fdb4211108f02d5e600eb9babc1896b0b99227cd0be9b7057ca",
           "related_links": [],
           "exclusion_reason": "Selected by the plan but not used because validation or evidence checks require review."
         },
@@ -1512,6 +1557,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "act-2026-0424",
             "source_part_id": "act-2026-0424:src:i92fpq",
@@ -1537,7 +1583,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "0aa5847266ae7df2d95971aa11340cf25c884d61f84b01d12b9efafdde4ddb9d",
+          "input_hash": "aa185a555ddb2ea0b79b100af59e2d9e85a597715f54d0534a9109587cd7e59f",
           "related_links": [],
           "exclusion_reason": "Quantity, unit price, VAT, and document totals are not additional service-line amount values."
         },
@@ -1558,6 +1604,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": "piece",
+          "economic_measure": null,
           "provenance": {
             "document_id": "act-2026-0424",
             "source_part_id": "act-2026-0424:src:jd0uhm",
@@ -1583,7 +1630,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "d5ddbf2f1020535536589f883a970502dc8a6775fda4eca75fc4974cbaf20ac8",
+          "input_hash": "87b4427c60761212ce690ad38589da895f4bbffb44353c1be48e93e22f843053",
           "related_links": [],
           "exclusion_reason": "Quantity, unit price, VAT, and document totals are not additional service-line amount values."
         },
@@ -1604,8 +1651,9 @@
           "confidence": null,
           "currency": null,
           "unit": "piece",
+          "economic_measure": "planned",
           "provenance": null,
-          "input_hash": "c801ca52ce0e69e16540d0821347034704450c041cbc7938d216618d6bf8d1e8",
+          "input_hash": "17044ec17fd55afeee8f8cca2060a6866a4c86cb27105cfeba23c8567576bb90",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -1629,6 +1677,7 @@
           "confidence": 0.985,
           "currency": "RUB",
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "act-2026-0424",
             "source_part_id": "act-2026-0424:src:j318sn",
@@ -1654,7 +1703,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "0758af16e3a4cfffa25fbf70e046b49cc54fa8584d284f9ebd684dac31cbb8f8",
+          "input_hash": "990984712572c13ec3d1f4845cbb9d9a6bb2ef857f4c54bb9da7794f8695759d",
           "related_links": [],
           "exclusion_reason": "Quantity, unit price, VAT, and document totals are not additional service-line amount values."
         },
@@ -1678,6 +1727,7 @@
           "confidence": 0.985,
           "currency": "RUB",
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "act-2026-0424",
             "source_part_id": "act-2026-0424:src:it1n3o",
@@ -1703,7 +1753,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "f59ee3f6ff8974bcc215e57ae9361c030821a38ba9368adcc6e38dcdc5ba4878",
+          "input_hash": "5177ce5d172d4621ad258ee1401b0af3940d99c62af550208b9439ef5ea58efb",
           "related_links": [],
           "exclusion_reason": "Selected by the plan but not used because validation or evidence checks require review."
         },
@@ -1724,6 +1774,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:1xw1ymc",
@@ -1749,7 +1800,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "4c9414672d6d053da2562781d3a967c3ad7d0277c89c74ae11110282a249b5a9",
+          "input_hash": "d4ce502f6893090ad9d3a91d2c089fac33486e67ebd1333ba69f503b41b27e61",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -1770,6 +1821,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:12apmoh",
@@ -1795,7 +1847,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "b04059c45203c3dc1b086d648005c286a02a43747b8c475b44c800da257b35df",
+          "input_hash": "9d01f02861bb3d5c129e332ee0cf01ecdb887f5e1b28a3b11350b9cd653457a4",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -1816,6 +1868,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:dodsmd",
@@ -1843,7 +1896,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "0b6ce028c51882b6c99ee433b558814b0d98397784276b5a553f3e30ae0f111e",
+          "input_hash": "e190a245e040ccf03f4aa65ea64222bf2238527491aa13abc7efe2927c7999dd",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -1867,6 +1920,7 @@
           "confidence": 0.985,
           "currency": "RUB",
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:28lpiz",
@@ -1892,7 +1946,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "63565c7a0dc8a55cae8211f3fa3ac46ef975e759859cb96d647040a7eae09c0c",
+          "input_hash": "17f60aab717e21cdc7475d9338705162538fef4e8dad23d2e6302ba289631af7",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -1913,8 +1967,9 @@
           "confidence": 1,
           "currency": null,
           "unit": null,
+          "economic_measure": null,
           "provenance": null,
-          "input_hash": "335c130823d929afe4395ad0910b092c9c919022335599bfc23862c187438532",
+          "input_hash": "09325128b3606fb2acdd70569a806773947f10aa54083ba61654333a932e9b73",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -1935,6 +1990,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:7q23xo",
@@ -1960,7 +2016,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "f812ae237f464991ddacafe1a27ade6a23c2d93db6cd1654c7dad6c4650ed1e7",
+          "input_hash": "6f1ca742b90eddf4a22d70d5b7d0beb3867761cd31a6443a23c12171a795a88a",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -1981,6 +2037,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": "object",
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:7g2i8p",
@@ -2006,7 +2063,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "30baaef2bcaf8c379422c6f0acc3482bd86fef8b959f6ef0ebe544976eb1d0e8",
+          "input_hash": "a0dce345311e378649f43595b9ccf8de7e09c252125f15d1cbb1cf89a259152a",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -2027,6 +2084,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": "object",
+          "economic_measure": "planned",
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:6m3p5s",
@@ -2052,7 +2110,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "19c282fdc49ccef802781839c585da34efa046abaa6f3d1862ab77ce1c5e766d",
+          "input_hash": "d37bcfd62f40e5313cfcb18cfc5e3a881e78e423041ccb6733b9e0c2fcbaf12c",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -2076,6 +2134,7 @@
           "confidence": 0.985,
           "currency": "RUB",
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:762wjq",
@@ -2101,7 +2160,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "e3644a2aedb75d7b9b95297d9237d79d6803b2ec40c270a74f644869142983d2",
+          "input_hash": "9079271c100e3ec6f3c6f08e82ddd4ea20c3dc2b16d7f4d40997f77c65f20990",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -2125,6 +2184,7 @@
           "confidence": 0.985,
           "currency": "RUB",
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:a7yj6f",
@@ -2150,7 +2210,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "17160c6845d63e6d2fb41982ddb6731a9a0263735f7769037709ba1b70546384",
+          "input_hash": "1f89cbc4dde64d3745018d0ecad0cbd6a0df384e5e314035a2dbd17b732c6440",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -2171,6 +2231,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:1hmd5tx",
@@ -2196,7 +2257,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "2f69b373343c7bafed92ed7d2bce638ce8c2300ce9255d3c5564df756ce690f5",
+          "input_hash": "aaf05f0ca6a3126ec152e16813de583131c9f1c4e85b46358a33179953e700f5",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -2217,6 +2278,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": "point",
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:1fofxz4",
@@ -2242,7 +2304,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "fa718d0e4a6d32611bc1c9a707f82f4282ba39a5e28513fdcce57b5ed6faa9c8",
+          "input_hash": "31fe356fe0d93652f982f487de4b6748f0e2d741ad647decc41faaeeed98a306",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -2263,6 +2325,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": "point",
+          "economic_measure": "planned",
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:1gier21",
@@ -2288,7 +2351,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "5e437219fbade947884700c41e769b97369545bb1ae5f947d55647b573ea9c1e",
+          "input_hash": "83da99cec44965efc1344531782ee9cefb6e8c42aa5debfe18b879eacbfd2ff5",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -2312,6 +2375,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:1fyfjo3",
@@ -2337,7 +2401,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "290b686c9b875b9bbf1b9f007f9ed2a561b5351553ca2f3f77e54828484679a0",
+          "input_hash": "68497913ebda2683a06e6cb7a90958bc8c50fc1b156c86fefe3f672e3cee3e46",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -2361,6 +2425,7 @@
           "confidence": 0.985,
           "currency": "RUB",
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:1jkadoq",
@@ -2386,7 +2451,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "48da7baca141b2acab5c897839ab1d56db88a348dc82a819f3857b6a55032ab9",
+          "input_hash": "f290510ecd41c017a15494013e368c1c33afef5acf4270f0ecd66d944d006c75",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -2407,6 +2472,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:1wfchla",
@@ -2432,7 +2498,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "8f4953faf3de02190c1de0f1b3859331cecba5a7024d1749399faf7e8fcd601f",
+          "input_hash": "26dad3b35b65683d27cd6e5f6f0279992892969f225e313989be997f9c9292bf",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -2453,6 +2519,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": "piece",
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:1x9bao7",
@@ -2478,7 +2545,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "a9d9c45168d73f55d7c7c83eb93e40b8336222b50108ac7303dc388e951f88d8",
+          "input_hash": "6dfa434ce226040f89c443503d9184612f007b00d62db69fb406195443aac294",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -2499,6 +2566,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": "piece",
+          "economic_measure": "planned",
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:1xjawd6",
@@ -2524,7 +2592,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "5161beb9bdca4f9c1a44e2c82d17c965c30233e971698126d50b0164d974aeda",
+          "input_hash": "3cc8dc8ae7ea1f4c02c89277b6ce546f826367ce22f246a4e6e45c9b624b4298",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -2548,6 +2616,7 @@
           "confidence": 0.985,
           "currency": "RUB",
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:1wzboz8",
@@ -2573,7 +2642,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "87622d02242011f212d96a8edc69f9d95d133b54793e85f7360639fd6688eaa8",
+          "input_hash": "28a46d5a59147b91eb24e85207fc3db26eb899867a87987e465a70881b75ca35",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -2597,6 +2666,7 @@
           "confidence": 0.985,
           "currency": "RUB",
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:1uhf9qh",
@@ -2622,7 +2692,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "8075d689b19b57b9304bd106d0bb47f17455401b5374d4d0ee38b68d550e4b1a",
+          "input_hash": "76cb59cccbddf10e0fc4231a1699ddd8a2517d65fbbac65901656a8a842ec51c",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -2643,6 +2713,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:1gtr8xz",
@@ -2668,7 +2739,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "b2d3e5c8e2488313b55f1989b16bdb5c99f7a52c78b37932ba86f25c2154197d",
+          "input_hash": "c31e842f7adfd8978f3a1a60d8bdeacc7c6a184981795d4f1afe332f20f847a9",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -2689,6 +2760,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": "person_hour",
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:1fzsfv2",
@@ -2714,7 +2786,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "849d6c3677e1d29db1179632df548527828cc19fe99969b7ea541b928f2c83a1",
+          "input_hash": "4eb358791c10a90103dcc977ef00b8c06808b9bf5cb9cede11682f7d791153d1",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -2735,6 +2807,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": "person_hour",
+          "economic_measure": "planned",
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:1fpsu63",
@@ -2760,7 +2833,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "9f3b88135ffb094123a6354e5bda05ac3867a9d76bbde5605c9ecf83e68b9e37",
+          "input_hash": "a549a862311ab76193a550729bddae10ff9a818b2f6a1048d6e5c9ea83e762f1",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -2784,6 +2857,7 @@
           "confidence": 0.985,
           "currency": "RUB",
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:1g9s1k1",
@@ -2809,7 +2883,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "6b1f9634159df2d48f936ab72268e873e7653cbec8cbc131eeec2235ba4fb93f",
+          "input_hash": "5d1d993235a3ded22dda2212a247819ddf56b17d6f4019e908ade94ef0929f4e",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -2833,6 +2907,7 @@
           "confidence": 0.985,
           "currency": "RUB",
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:1ebutp8",
@@ -2858,7 +2933,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "f052ae68981c592628231200791916a2ce9448ea26dafc6d579a9ef51fa15a77",
+          "input_hash": "4734a350c60048bab17d396545a846fcd98782801fc01b789690734ffd3bd584",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -2879,6 +2954,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:1xl44vs",
@@ -2904,7 +2980,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "f5b00d6d8b57633e3955f05afb2e3fea6d5c5bd39e55a609a188fceb7159a208",
+          "input_hash": "e272b32cb2a400356bd8a3675161a2e9e7832a6c52794c98ca85f013c3d70585",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -2925,6 +3001,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": "set",
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:hxarh",
@@ -2950,7 +3027,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "153ddcbe1bc16ef27410f42e0a4418faf4c74a2a1b0cf6a29b5986472ccb0b2a",
+          "input_hash": "98ecafa577c4a802dc655f6e5969de06af16c48ddad02f340c50fde9472dba23",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -2971,6 +3048,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": "set",
+          "economic_measure": "planned",
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:1yp2jno",
@@ -2996,7 +3074,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "042ce75d457d267682e949769cf67f3f8bb76e5e6a1a4ff867eff645bd89e447",
+          "input_hash": "0b8c655fea5f3b4b4d45f6ff14a82c9b5570de5e1f8f2ab506b4f166fabeca70",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -3020,6 +3098,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:7xp2i",
@@ -3045,7 +3124,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "29ef9f49e6d939b128a81188297af031a16c7e5a902eb49d60c4720dd6d5df6c",
+          "input_hash": "fe2a88d00ae18cc30bb16170e25719d4b1533f56fb920bb29a16d7f068fce310",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -3069,6 +3148,7 @@
           "confidence": 0.985,
           "currency": "RUB",
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:1vn6x0z",
@@ -3094,7 +3174,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "35cbafe2e1c800ccee7154c6bd68a962254e254d1a29038cfd552548d1f89f11",
+          "input_hash": "2b9b279ceeec92337fd32da744f596071a5f0ffabfe1882fdd9aafacc89024fe",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -3115,6 +3195,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:1v4d65t",
@@ -3140,7 +3221,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "db2d067bafd81508d91a0be2e5a3702ab615f1726144538ed5e1d5e538b892d9",
+          "input_hash": "17822f19ab5b4c6bbefe68d015d9f0d54f484511c110e23a67a2bfa038f79098",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -3161,6 +3242,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": "meter",
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:1vecrus",
@@ -3186,7 +3268,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "7d0358af9eaeec09fee4d6e9814f8749acb2af43c72f17bec89211a0ada59a34",
+          "input_hash": "bb6b0c606b9127aab2cccbe7f412d89136dc330c781c32f433396a3f47f062fa",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -3207,6 +3289,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": "meter",
+          "economic_measure": "planned",
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:1w8bkxp",
@@ -3232,7 +3315,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "1d0c1d4b1a7a6b1e1bc39d5c132965806261a4e3a47349b227f15dd43b2eae98",
+          "input_hash": "49cc75f13582e3b5ade6d32185fd1c11c2ede705206e7d00c323cb99061e4dce",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -3256,6 +3339,7 @@
           "confidence": 0.985,
           "currency": "RUB",
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:1vocdjr",
@@ -3281,7 +3365,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "fbeeef37c0f0bc7e7c2fcc3b31eaffe250eb9d5ca2285aa142a398e63e76f73f",
+          "input_hash": "93536f4c083df8e9449eba824f2246e2cde21bb4f5d34cd9bbd01506078b83ec",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -3305,6 +3389,7 @@
           "confidence": 0.985,
           "currency": "RUB",
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:1smgqx2",
@@ -3330,7 +3415,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "c2b1047ef17b7c3c16309aefa200e7b881f4727d0ef5c7c3889e7e6f30b1f557",
+          "input_hash": "f3a1304e16b0d9c615fb15a45ac3d7a16af87693462b7de411c05cf6b8b93279",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -3351,6 +3436,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:ard64a",
@@ -3376,7 +3462,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "23169803ae7e233d92b6b7ec3f9d809e4f656013b57e072693ed37a63dc992f0",
+          "input_hash": "1f2e50a9712fc30b3bc07dae520eb7d36aee35cd318b22bfbeeabb603e71663f",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -3397,6 +3483,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": "piece",
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:9df5nf",
@@ -3422,7 +3509,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "2584470bb5c84c86b56e8b65113ecba80fdd318563f3751f04fd784a6daf504e",
+          "input_hash": "cbf0c56f88a10d6bd796b92ba2a4d099e8f5343e562ecc779b627687aaf26873",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -3443,6 +3530,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": "piece",
+          "economic_measure": "planned",
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:9nerce",
@@ -3468,7 +3556,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "4357a71200af3422cbb9c86b405376309f31b17abccb077d9cee1666d67fe76b",
+          "input_hash": "9973d8ca5bb1743bad409b6dbaf9e0694f4b0a876acfc1566cc0eba9bcad7efb",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -3492,6 +3580,7 @@
           "confidence": 0.985,
           "currency": "RUB",
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:93fjyg",
@@ -3517,7 +3606,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "fd160d68a8d68b9fe9331d8d02e5382a223a035ea42c6d8b73e029c52c6e8781",
+          "input_hash": "01f62d27588320576d798cccfc9859a553da0ac6ca697f5f5ecb5e61697a10bd",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -3541,6 +3630,7 @@
           "confidence": 0.985,
           "currency": "RUB",
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:8tfy9h",
@@ -3566,7 +3656,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "20eff462bc55962f0c7a5acabe661d6d3d8202a1cd3005e756ac59bc48b45f48",
+          "input_hash": "a25bf8b36097549c647a8a79e99554791d5ac4544dfca78f65ebce139d58381f",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -3587,6 +3677,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:159ev3n",
@@ -3612,7 +3703,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "85c9cade78c2aff549ed861346951cb77562ec182eca3e22e2fdf20f85de08a7",
+          "input_hash": "7fe9089e29b08b7dc2b20bba039ca694ab3195ae8386143ed55ba34f36b83938",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -3633,6 +3724,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": "piece",
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:16ncvki",
@@ -3658,7 +3750,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "211b21103c15baabe327f1e09933cdf795b1c671317098709825ecc1c6535d60",
+          "input_hash": "dc7b963631553533f7c968da9103db8d519b593803b1352ce3c4d655e6947560",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -3679,6 +3771,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": "piece",
+          "economic_measure": "planned",
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:16dd9vj",
@@ -3704,7 +3797,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "b14580ab72457058f5b889f37fa1c66eb8a019a8157ecf500c0e01ef09d387fe",
+          "input_hash": "6ca8373e08c3f95e88e1a2bfb998765ec0c2a312f08da727e0531711d09a08c4",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -3728,6 +3821,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:16xch9h",
@@ -3753,7 +3847,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "38ba41a3c070dcc8e4721c61907eb32169e2ea60645738cd783a5562dbd26fb0",
+          "input_hash": "1a6e04c7b3a7e0b45f0f82be26028138dc11af473f8aa0b90f9861aa7c3eb132",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -3777,6 +3871,7 @@
           "confidence": 0.985,
           "currency": "RUB",
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:177c2yg",
@@ -3802,7 +3897,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "79965ed47af2b566eb5761af148753fd678e102e830e0d49b51725cf0f9cfd9b",
+          "input_hash": "de7af8b64facba6d70c44df19509e7aa73da5bdc5651655f122e992c8b4e2f1b",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -3823,6 +3918,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:1bkj0f8",
@@ -3848,7 +3944,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "e49a2e0a2fdec8c41d1437336dc4bff5483ba20aeffcfadabddd53365880c7c1",
+          "input_hash": "c2ca00a2fdbbf715f1c3cb148a84ad6633ac9bf438a3ce9a6d582a7929b92066",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -3869,6 +3965,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": "shift",
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:1bajeq9",
@@ -3894,7 +3991,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "aa4f0661e04f1e4fb07e13c7dcd7dcdd189cbc96fe842dc93b2c771356011abf",
+          "input_hash": "dea3df3c48310b9e6ab600b0cf2691bf58f25a6fb64bf7890c70440cbc577636",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -3915,6 +4012,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": "shift",
+          "economic_measure": "planned",
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:1agklnc",
@@ -3940,7 +4038,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "49c702367c125d6070410e93b72f1e30861851568170018a082e6eb4b24c1e86",
+          "input_hash": "1c3308de6551fd4bb9119c3373f45708a540626d9b835ba30629267bfc9769ab",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -3964,6 +4062,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:1b0jt1a",
@@ -3989,7 +4088,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "b758d40f319dcfbede930f4fa5ac0343a75144c512a7d7fd7dcf3fa849500db2",
+          "input_hash": "0235b647044d17c7cfb7e157864e1319a75282be0a20a1b731a5116d25f06a47",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -4013,6 +4112,7 @@
           "confidence": 0.985,
           "currency": "RUB",
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:19mlskf",
@@ -4038,7 +4138,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "8a88d3a4f128df44efbda6a7610e908e8a7c98ab6e0faa7b73f9fe7c041f11f3",
+          "input_hash": "a539d32b6a11f4823dcb789f19dae377a7a162dae89baa5d2316ee2b4a673d56",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -4059,6 +4159,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:guqmqm",
@@ -4084,7 +4185,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "75148f660d71aa63598065d45526a920466a9b6fd084e065a14627a74bf6b67c",
+          "input_hash": "2d85f1eefc39ec86fe94037f5f09f39e22ace2431875de5e1cd645058b1e5d26",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -4105,6 +4206,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": "meter",
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:hopftj",
@@ -4130,7 +4232,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "5e8b4a74609f0e0887dd670487c83fd29f55c82041f46728e8d0ba1a1ed2c923",
+          "input_hash": "90f3ed487f1f833ee3fe788d74ba492bbe7f03c0bf14bdd665add3ee60448fb4",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -4151,6 +4253,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": "meter",
+          "economic_measure": "planned",
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:hyp1ii",
@@ -4176,7 +4279,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "b39a07301119aaa4883004b2729ccfca00256f55a58181ad9ac318dcb6e3fccb",
+          "input_hash": "4559749526fe8da302000333d196730b542514151c86f65f7e143d9a545bcd85",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -4200,6 +4303,7 @@
           "confidence": 0.985,
           "currency": "RUB",
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:hepu4k",
@@ -4225,7 +4329,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "31f35f7314de39f4e947b48cce631da2e33f96ab05aeb3c7508eaf1e8581a35f",
+          "input_hash": "ee33d2d2ce1f90a6c62acc2580cb32df2c713b792f6d85eb0b70ec403df5cdd2",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -4249,6 +4353,7 @@
           "confidence": 0.985,
           "currency": "RUB",
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:ewtevt",
@@ -4274,7 +4379,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "c27b8a19fbf2b59b43c04c224d1b0fb1b37b17a80b27e731a8d5855e6a43eb08",
+          "input_hash": "568c584eadf3960249dec21682bde603767f4483d395964acb856bce1e726975",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -4295,6 +4400,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:ezecet",
@@ -4320,7 +4426,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "5cff646dd8a6fd45ce3f1da701b9b65aa708142f0fd08354fad3daef1e34bc87",
+          "input_hash": "bb2028ac86514efa8ac8d7c0d5a07ca2c244fb0239301e2f3add3d6ef42e39b6",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -4341,6 +4447,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": "set",
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:d1h4k0",
@@ -4366,7 +4473,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "50b802ee12e4972e396a7cfe434c250c27927b77c4d35a74483dd9bfdd50a857",
+          "input_hash": "9f35cda08bc6e6cc04b6812064351aba3e43aad5cd6731af263aa5ae9a4a942b",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -4387,6 +4494,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": "set",
+          "economic_measure": "planned",
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:dvfxmx",
@@ -4412,7 +4520,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "eef0ae4f381bde5c9e729fd0dd4e05310a5b9076e4a043865baea14c1c12efbd",
+          "input_hash": "56ea075611504818c56a2f9cbc737a6106dd1380baf8d15cfcb6e4557e6ce000",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -4436,6 +4544,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:dbgq8z",
@@ -4461,7 +4570,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "99b18322fb41596bef852ffe12bf6cffcf6c151724fd970d7d8f44c1d086c4dc",
+          "input_hash": "7d995a60b2aa280e7417587f2e04528012b64ccad547df09c71ce5684d056628",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -4485,6 +4594,7 @@
           "confidence": 0.985,
           "currency": "RUB",
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:gxbk9m",
@@ -4510,7 +4620,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "58188ee0fbc5f62adafae8bc1c91caefd4ca5300262808a90114d013e0d2ae88",
+          "input_hash": "09f44d8d86024aa7479ec3de7286c5e655e81a7485e234a18f1436577cda1a8a",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -4531,6 +4641,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:13ob4fw",
@@ -4556,7 +4667,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "5b6727ec3d3e232b23a999358f987a002bff182636097d0e36f7bc65e7d3ab18",
+          "input_hash": "347921a6059f049e401ad5c880217ce0ac8612e4d9c227efd101b2792f82534c",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -4577,6 +4688,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": "person_hour",
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:13ebiqx",
@@ -4602,7 +4714,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "89f533c16497cc5a3b8c2a3994a9a39f1d41e9ab97918c0fdc3ebf03e83297eb",
+          "input_hash": "ffb9a158c026b0ef9eac11479289425a1976fb37c15d4c1e463486825c4541fa",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -4623,6 +4735,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": "person_hour",
+          "economic_measure": "planned",
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:12kcpo0",
@@ -4648,7 +4761,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "e253edc4a64116b4864be466c3198cf910d26dc1696b4dd8a29eb09a260d13e2",
+          "input_hash": "2974a659acfdf4980524c7aab2a2f2736329bf5cadab40a7e09a94b0ac81ee45",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -4672,6 +4785,7 @@
           "confidence": 0.985,
           "currency": "RUB",
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:134bx1y",
@@ -4697,7 +4811,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "1e63a16bcb49d331afc8e9c4449867800268fcd73a4d51478c812b7ac782a130",
+          "input_hash": "aa031edde76a27d48aaa47a7fb8318e28a1e2f9e2ca5a47e7e61244f55f27352",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -4721,6 +4835,7 @@
           "confidence": 0.985,
           "currency": "RUB",
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:1667jon",
@@ -4746,7 +4861,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "5b6e14ea955939097d481f402e3fb79d49e8d3b8c43243c1c3cc80db801308ca",
+          "input_hash": "184e46120537b01aef504d1a1bcf04d5ea92ba96246bca043cc127ec02db6477",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -4767,6 +4882,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:16fend7",
@@ -4792,7 +4908,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "4dc7fb58419e95de36d2cfeaa4ae15e8774ecf718de83dfcc2d54102f05bbf19",
+          "input_hash": "1c7aa3e5f611074bcf47d2f7ca1659bd0d56d8fbf95df538665f8aa8816aca9a",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -4813,6 +4929,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": "piece",
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:17tcnu2",
@@ -4838,7 +4955,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "cf5b95db52c0033b11e359fbd2d36b4e6b51015dcdd5921826df594a177c4214",
+          "input_hash": "ae83c993d801afda55b1bdf16aa22c72dbdc7ed813b1a7f0cf7ad99797dfeb92",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -4859,6 +4976,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": "piece",
+          "economic_measure": "planned",
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:17jd253",
@@ -4884,7 +5002,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "8b2e99825dd881cf888e413800cd1cedfbf50b582e70350355e021f15c6fa085",
+          "input_hash": "639ddf0943cc216af46c96c3cc6855c0509091df8bf32d68b0c4994421b31d69",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -4908,6 +5026,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:183c9j1",
@@ -4933,7 +5052,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "a6f7bbe9d55373a8f0a389dd7d5027346223d8ed85586e0027410af8e5c23d1d",
+          "input_hash": "af5a61be756418f81b0073f842666aa2d59e147a3f85d38ca60ecd499359aacc",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -4957,6 +5076,7 @@
           "confidence": 0.985,
           "currency": "RUB",
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:13xi84g",
@@ -4982,7 +5102,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "83aade5084d8962f529fee4020217a9dda5ae27e0b353e141d66f666e23ffa1d",
+          "input_hash": "53b95e77a72004547645ce5081340e77bdf70593b0023769aa93dd7b171ad1fd",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -5003,6 +5123,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:n75rre",
@@ -5028,7 +5149,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "3c7acc3df7c962aa60b8842dcb161a53cfc1471b327763e15437e2af50bbe4d0",
+          "input_hash": "0c9959203baec14026af491fce245e5a1681ed12a3e8f1a75934879358c5443f",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -5049,6 +5170,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": "cubic_meter",
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:lt7raj",
@@ -5076,7 +5198,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "9e1f87b5902d1f9cdfa2ee70ac92fd24685a0ebe41d7194878dc841770b6dba7",
+          "input_hash": "12ca658b829065bdd01f0bd8c60ea649cc29b82a3e13e23d647c913aef46622e",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -5097,6 +5219,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": "cubic_meter",
+          "economic_measure": "planned",
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:m37czi",
@@ -5122,7 +5245,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "547e3b0883563feae3772cc0bab33cd02a6d6c2dd6d1b92c9342dbc612eecac1",
+          "input_hash": "ae9d13a61c4f80441e4af10274024d928795d26662a85391b83f0e508f02a043",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -5146,6 +5269,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:lj85lk",
@@ -5171,7 +5295,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "e81e8de0007c5d5497279c4e9896bddd8a7475f46fd68ccc52c26cc6822beeb6",
+          "input_hash": "ca849b1e112fd915e169388f45b726d339ae1868ff5f05995f1bdb05e7ff44eb",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -5195,6 +5319,7 @@
           "confidence": 0.985,
           "currency": "RUB",
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:l98jwl",
@@ -5220,7 +5345,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "09b5fb76a854138ee3f779a917cbc6a6fbcd2baaee9d0d4790132ec8e3418edc",
+          "input_hash": "2ccda501a074c3b515106d60fc61957b24c4e131e3406901708854878f99e863",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -5241,6 +5366,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:s1i4ox",
@@ -5266,7 +5392,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "837a8735d95d4efc4541f8215509e8fd6e822b5a36ac6a675b7a9a0030067c03",
+          "input_hash": "2adcadd05e2bd74aff0f1a852bfc8dd3a9dc5df81129d1b846c1eb4e3e615323",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -5287,6 +5413,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": "trip",
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:sbhqdw",
@@ -5312,7 +5439,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "9603a0968a0c383286c91275859cff9b498e5cb6ca7887b746eaa0433d59c3f7",
+          "input_hash": "e41d1d8b1b0b15e2fd668ec76d0c615d465f5a559eb1935505fba2219cdd3c49",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -5333,6 +5460,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": "trip",
+          "economic_measure": "planned",
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:t5gjgt",
@@ -5358,7 +5486,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "81be686685d74d71d09c3a2919d86ec1e3abbf3cacaf1139acd80a7c2271a93b",
+          "input_hash": "5a86bd6a46fb7ab0544ce236860fa102148a2d98f002b4c41052af475e6876fb",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -5382,6 +5510,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:slhc2v",
@@ -5407,7 +5536,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "c22ef923daea4ed254f6ed3070e2f07826a9b83836904b7500f55432e26d2ed7",
+          "input_hash": "b9b985a747edd22b4f75866134e6f9b21861a2572859982f986eb1c99d966163",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -5431,6 +5560,7 @@
           "confidence": 0.985,
           "currency": "RUB",
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:pjlpg6",
@@ -5456,7 +5586,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "271b5b9213a307717c18d81ed824a815bce5590ed333b9bfba1fe0b880b1368e",
+          "input_hash": "301aa56fb7b13a98ddbf17df78e86c9cc2f034a95d38b1e7a0aa8711f7795bae",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -5477,6 +5607,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:1h376rs",
@@ -5502,7 +5633,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "411138f73941febd68178fabb40c1759e431728519516a303aa1cd621366a4a6",
+          "input_hash": "67ee408a30093b56f4287f000f59496c546ec2485f5f10d43015c77f1d5aea90",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -5523,6 +5654,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": "piece",
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:1j14eml",
@@ -5548,7 +5680,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "6f10f186921b7b3c94f43b298ec3002f577526930cc60ffde45769a77b26073f",
+          "input_hash": "3ec5104b63d06000a01dfd132cccfa1a1d2e90ed04e06d4c6957ed94e1eb9978",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -5569,6 +5701,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": "piece",
+          "economic_measure": "planned",
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:1i75ljo",
@@ -5594,7 +5727,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "09d74a28f7560ea9227329f421b748b19906a08f740fe754600762fe53952720",
+          "input_hash": "73b8cab2dc1bfc96a660802b40099fee81ed1243f21f1b19a68cfaf279302b44",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -5618,6 +5751,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:1ir4sxm",
@@ -5643,7 +5777,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "f0b9eab077e6ba31cc3953fc2addd9838a7d6dce354c019201a0968c6b32b351",
+          "input_hash": "3ef598ba679d8bbc6b29b76a602c4fd5247a5ed5ab2d4485b5d6a5d41aeaeb19",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -5667,6 +5801,7 @@
           "confidence": 0.985,
           "currency": "RUB",
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:1f59ywz",
@@ -5692,7 +5827,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "bb7ffa58fae1b896bc4ecd1c71ace808e5b2ecca94f5948c888f6a001570ba8a",
+          "input_hash": "24bad50acea87c912770ec402f49132c52aab78cbfa7f3ce3e7b304090037324",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -5713,6 +5848,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:e39rvb",
@@ -5738,7 +5874,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "7f617b02ba0275c8cd5165f950d20fd2e25bbf303905c56a5d53b4674c355c16",
+          "input_hash": "3da4bc09ed77d6799d84ee4aae381ad1a7d4109bf0b540825b7022e6c5388e74",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -5759,6 +5895,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": "line",
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:d9ayse",
@@ -5784,7 +5921,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "e6dab1679d8fe1e5472a05d8c66c6204c2db5039ebe5ae44b03d7c2161be59c9",
+          "input_hash": "e3264050e15a2ef2427019ab4d164d5a9703a25b40fea968e3f3e1cbbca84c20",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -5805,6 +5942,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": "line",
+          "economic_measure": "planned",
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:czbd3f",
@@ -5830,7 +5968,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "abb871d3909bac094d05e4786809f82928957fdf27ec1d86afd9e2eafce8e8ea",
+          "input_hash": "1a7cc267647253086424354b3673d2393bad919cef4f5804212054047fd9787a",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -5854,6 +5992,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:djakhd",
@@ -5879,7 +6018,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "be1106cc7cea13c179ab075a5a764dd00f9ca731bbc9159f1c2dbf6d188d5f39",
+          "input_hash": "545b0c7771630b5907e19216263ec5bb88634df65e5406d274f6c651bcc0b71b",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -5903,6 +6042,7 @@
           "confidence": 0.985,
           "currency": "RUB",
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:bldcmk",
@@ -5928,7 +6068,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "727e9271d1ad3fe6ef8d080066b90ce518a503c8d21ed80a068548c35322e7cf",
+          "input_hash": "8bf350bb908372fc0c6706fb200ff189a10827670fda186162d1f01f27f11dc9",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -5949,6 +6089,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:1r8zoom",
@@ -5974,7 +6115,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "8cb35d172ca131d3beed59d6a00de5653b18e1b5ca8ca281c574bd6caf52fb44",
+          "input_hash": "d0272f82181ac9e1566f58169ef841d6130f778e45ea325166683d93e1d35929",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -5995,6 +6136,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": "set",
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:1s2yhrj",
@@ -6020,7 +6162,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "950026c16e92fac06da015c4c929a2e6cd3d6b0ce58f50275ad973324d298601",
+          "input_hash": "f6c5fe1c04c4f51080ee0df5414c08afac695de16a2f616fe16bb382eb195710",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -6041,6 +6183,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": "set",
+          "economic_measure": "planned",
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:1scy3gi",
@@ -6066,7 +6209,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "54438100269117e7f6245ee42719d00a7b34748223b2a08b73b714ff3ee968a0",
+          "input_hash": "e19fa163feb29e71319d74893a319f84c574fa6a700b28c51f0a626891d2c115",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -6090,6 +6233,7 @@
           "confidence": 0.985,
           "currency": null,
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:1rsyw2k",
@@ -6115,7 +6259,7 @@
             "confidence": 0.985,
             "source_available": true
           },
-          "input_hash": "4c6ed6470a8c9370fa46781c6bca09522aff4728bfe4493a6dafe64dc0d728f4",
+          "input_hash": "d739ad682558ae05d5b1530e4ddbe1bf7d1006d22e4eaa3b6b11f14d9e105c70",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         },
@@ -6136,6 +6280,7 @@
           "confidence": 0.62,
           "currency": null,
           "unit": null,
+          "economic_measure": null,
           "provenance": {
             "document_id": "kfz-2026-q1",
             "source_part_id": "kfz-2026-q1:src:1tqw3xd",
@@ -6161,13 +6306,13 @@
             "confidence": 0.62,
             "source_available": true
           },
-          "input_hash": "bc1bcb0e76284f02e55d25ac72587a2c19c1b6426777314bdf2e1f263df3575e",
+          "input_hash": "b2586d6f78d8716090550850d60fd5d0304aa8ab1dae4090ef9570cfd928e6c6",
           "related_links": [],
           "exclusion_reason": "No reason was supplied by the plan."
         }
       ],
       "provenance": {
-        "input_snapshot_sha256": "47ef801ae4915b22bf75ad7913ae27ce21967a522d6fa83efd9e4e03da7c0169",
+        "input_snapshot_sha256": "52a622ad252e357afc9e0e3e7d11de606baa8fe846ed3011acfc7f998acdd34d",
         "target_indicator": {
           "document_id": "kfz-2026-q1",
           "extraction_id": "real-kfz-2026-q1-v1",
@@ -6317,108 +6462,6 @@
             "requested_period_end": "2026-04-06"
           },
           "severity": "error"
-        },
-        {
-          "code": "excluded_source_reason_missing",
-          "path": "$.plan.excluded",
-          "message": "Every unused numeric candidate needs an explicit exclusion reason",
-          "details": {
-            "fact_ids": [
-              "fact_029c77d2ef5d029c8dd9",
-              "fact_068f01eea395455fcd4f",
-              "fact_1278cde71592cb4bbf3a",
-              "fact_1524ea9a369a3bbd2aaa",
-              "fact_15f175c23d14524e61ca",
-              "fact_1613ac2437e3df782c0b",
-              "fact_1755f03c79848892de65",
-              "fact_1a51a1676bacc66df5fd",
-              "fact_1aeacba045543b97ee6e",
-              "fact_23cdbc7129a59c0a41ee",
-              "fact_2b2bca44b09677d7ac26",
-              "fact_320729101153a4c64f09",
-              "fact_321e2b5393205dc5c3a3",
-              "fact_35be543256f1e2ef0add",
-              "fact_35f2721822648f3751ae",
-              "fact_3828813fc723b14598df",
-              "fact_42ae21490a9f0b131e14",
-              "fact_4886a61dfd9c42e6325f",
-              "fact_4b5960eb281ec2700f2e",
-              "fact_4cc65519da3b8a91d7d2",
-              "fact_4f7d4390a53290043273",
-              "fact_509ca4f7773d3774ee9e",
-              "fact_51d5aaf6dc1a7fd5b8d7",
-              "fact_52162838be24b8c69b09",
-              "fact_52e91c403cb8cd933494",
-              "fact_580efcd78fc317ee5dc1",
-              "fact_5d74df0b7bd1abe5ad7b",
-              "fact_5f35bb6c3637601ca741",
-              "fact_5f7a50d3aa1b6b2d3ad9",
-              "fact_65cfe1d25387e6260a9b",
-              "fact_69bcf30f4b8dc70731b3",
-              "fact_6a09052e0bca36b7e894",
-              "fact_6ef6a405e4b61c9f3e95",
-              "fact_7117d5a9483b5ca87f64",
-              "fact_749460519781bd4575fc",
-              "fact_74a7cce8a47a45807757",
-              "fact_76e904062f0646b38571",
-              "fact_78b51c190eaaafabae96",
-              "fact_7d6fd6260dcaac22e9d6",
-              "fact_7f6d8ee38de538dc82ff",
-              "fact_820c4cda8ad1b607a99a",
-              "fact_8311b7340c8168fccc09",
-              "fact_83783e525570c7eeb9d8",
-              "fact_83d1f90e5cd64bab1e2e",
-              "fact_88be8b4abad5fc372442",
-              "fact_8ddec013e0320eaa24f7",
-              "fact_93e0a99652b70547125c",
-              "fact_99b44b7525cb1e1a9902",
-              "fact_9bce123c06b51f98178d",
-              "fact_a26403c83723af33be86",
-              "fact_a59c3f4f114ec9a8c3e6",
-              "fact_a6b93f042b6e42facc0d",
-              "fact_a9be85e46efd0d04b622",
-              "fact_af87c724d20acb66a5f5",
-              "fact_b156950b4be551caad2d",
-              "fact_b2e31c8169cbfef83e23",
-              "fact_b55f9acc73e883738965",
-              "fact_b7e4bb6add367887761d",
-              "fact_b87488bab98f067ce16c",
-              "fact_b8cd99218f85a3bd548c",
-              "fact_bd10da9e34491be5c8cf",
-              "fact_c44e9c68fdca9bc1a3a7",
-              "fact_c51d1846cd804dede16f",
-              "fact_c85491c06ecfb7a2a3df",
-              "fact_c8de2e1f5c92163aef71",
-              "fact_c9d14c133ea2f2e6e0df",
-              "fact_cf65e80fc862cb2e5746",
-              "fact_cf6dc9ccfdbdd8b9569f",
-              "fact_d2caccd38851ee427a21",
-              "fact_d31aa12453654b174f39",
-              "fact_d56c815024aa14512983",
-              "fact_d855a3beb00bc244efd0",
-              "fact_da0fa49556fa4b6749b1",
-              "fact_dd4ff6d7717311df944f",
-              "fact_df8ade4fabf85544be97",
-              "fact_dfabf98fe1438982a02a",
-              "fact_e315b75c74c3d3aa4d29",
-              "fact_e5c8f3120aeddf653929",
-              "fact_e5feb904cd0979962056",
-              "fact_ec3cfe8bdb516a6e225c",
-              "fact_ee534dad0f43bb5685d3",
-              "fact_ef50a695515cccdff4b0",
-              "fact_f2184268b377346b734d",
-              "fact_f295c5fa3ba6b3e1b81e",
-              "fact_f7f9377d504b483c6c60",
-              "fact_fa0a980be19c4737d405",
-              "fact_fa193d62c62bb50d5841",
-              "fact_fbd0b1c8cdf46a0d74ea",
-              "fact_fc6ef9b4edb37b3f6f9e",
-              "fact_fdf2648c1f120f070d8f",
-              "fact_feacb26c241bb7a9d611",
-              "fact_fec3217f3d0eb9045281"
-            ]
-          },
-          "severity": "error"
         }
       ],
       "information_gaps": [],
@@ -6436,108 +6479,6 @@
             "requested_period_end": "2026-04-06"
           },
           "severity": "error"
-        },
-        {
-          "code": "excluded_source_reason_missing",
-          "path": "$.plan.excluded",
-          "message": "Every unused numeric candidate needs an explicit exclusion reason",
-          "details": {
-            "fact_ids": [
-              "fact_029c77d2ef5d029c8dd9",
-              "fact_068f01eea395455fcd4f",
-              "fact_1278cde71592cb4bbf3a",
-              "fact_1524ea9a369a3bbd2aaa",
-              "fact_15f175c23d14524e61ca",
-              "fact_1613ac2437e3df782c0b",
-              "fact_1755f03c79848892de65",
-              "fact_1a51a1676bacc66df5fd",
-              "fact_1aeacba045543b97ee6e",
-              "fact_23cdbc7129a59c0a41ee",
-              "fact_2b2bca44b09677d7ac26",
-              "fact_320729101153a4c64f09",
-              "fact_321e2b5393205dc5c3a3",
-              "fact_35be543256f1e2ef0add",
-              "fact_35f2721822648f3751ae",
-              "fact_3828813fc723b14598df",
-              "fact_42ae21490a9f0b131e14",
-              "fact_4886a61dfd9c42e6325f",
-              "fact_4b5960eb281ec2700f2e",
-              "fact_4cc65519da3b8a91d7d2",
-              "fact_4f7d4390a53290043273",
-              "fact_509ca4f7773d3774ee9e",
-              "fact_51d5aaf6dc1a7fd5b8d7",
-              "fact_52162838be24b8c69b09",
-              "fact_52e91c403cb8cd933494",
-              "fact_580efcd78fc317ee5dc1",
-              "fact_5d74df0b7bd1abe5ad7b",
-              "fact_5f35bb6c3637601ca741",
-              "fact_5f7a50d3aa1b6b2d3ad9",
-              "fact_65cfe1d25387e6260a9b",
-              "fact_69bcf30f4b8dc70731b3",
-              "fact_6a09052e0bca36b7e894",
-              "fact_6ef6a405e4b61c9f3e95",
-              "fact_7117d5a9483b5ca87f64",
-              "fact_749460519781bd4575fc",
-              "fact_74a7cce8a47a45807757",
-              "fact_76e904062f0646b38571",
-              "fact_78b51c190eaaafabae96",
-              "fact_7d6fd6260dcaac22e9d6",
-              "fact_7f6d8ee38de538dc82ff",
-              "fact_820c4cda8ad1b607a99a",
-              "fact_8311b7340c8168fccc09",
-              "fact_83783e525570c7eeb9d8",
-              "fact_83d1f90e5cd64bab1e2e",
-              "fact_88be8b4abad5fc372442",
-              "fact_8ddec013e0320eaa24f7",
-              "fact_93e0a99652b70547125c",
-              "fact_99b44b7525cb1e1a9902",
-              "fact_9bce123c06b51f98178d",
-              "fact_a26403c83723af33be86",
-              "fact_a59c3f4f114ec9a8c3e6",
-              "fact_a6b93f042b6e42facc0d",
-              "fact_a9be85e46efd0d04b622",
-              "fact_af87c724d20acb66a5f5",
-              "fact_b156950b4be551caad2d",
-              "fact_b2e31c8169cbfef83e23",
-              "fact_b55f9acc73e883738965",
-              "fact_b7e4bb6add367887761d",
-              "fact_b87488bab98f067ce16c",
-              "fact_b8cd99218f85a3bd548c",
-              "fact_bd10da9e34491be5c8cf",
-              "fact_c44e9c68fdca9bc1a3a7",
-              "fact_c51d1846cd804dede16f",
-              "fact_c85491c06ecfb7a2a3df",
-              "fact_c8de2e1f5c92163aef71",
-              "fact_c9d14c133ea2f2e6e0df",
-              "fact_cf65e80fc862cb2e5746",
-              "fact_cf6dc9ccfdbdd8b9569f",
-              "fact_d2caccd38851ee427a21",
-              "fact_d31aa12453654b174f39",
-              "fact_d56c815024aa14512983",
-              "fact_d855a3beb00bc244efd0",
-              "fact_da0fa49556fa4b6749b1",
-              "fact_dd4ff6d7717311df944f",
-              "fact_df8ade4fabf85544be97",
-              "fact_dfabf98fe1438982a02a",
-              "fact_e315b75c74c3d3aa4d29",
-              "fact_e5c8f3120aeddf653929",
-              "fact_e5feb904cd0979962056",
-              "fact_ec3cfe8bdb516a6e225c",
-              "fact_ee534dad0f43bb5685d3",
-              "fact_ef50a695515cccdff4b0",
-              "fact_f2184268b377346b734d",
-              "fact_f295c5fa3ba6b3e1b81e",
-              "fact_f7f9377d504b483c6c60",
-              "fact_fa0a980be19c4737d405",
-              "fact_fa193d62c62bb50d5841",
-              "fact_fbd0b1c8cdf46a0d74ea",
-              "fact_fc6ef9b4edb37b3f6f9e",
-              "fact_fdf2648c1f120f070d8f",
-              "fact_feacb26c241bb7a9d611",
-              "fact_fec3217f3d0eb9045281"
-            ]
-          },
-          "severity": "error"
         }
       ],
       "manual_review_required": true,
@@ -6551,7 +6492,7 @@
           "extraction_version": 1,
           "schema_version": "1.2.0",
           "input_version": 1,
-          "linking_input_hash": null,
+          "linking_input_hash": "6e0b7af2a894d113c4da7d9caf05bc2687f1c8cd3bff2d1c6847aa095aceb66a",
           "reconciliation_input_hash": "2de96e3f597a6aca721c11e54c2b0fa40eaff2b0d5a56589f696ab1ad679de78"
         },
         {
@@ -6561,7 +6502,7 @@
           "extraction_version": 1,
           "schema_version": "1.2.0",
           "input_version": 1,
-          "linking_input_hash": null,
+          "linking_input_hash": "ad1aadbda1e8b506e88f8e5e45f5c63303e80fde75741fca64a532e92ddbaad1",
           "reconciliation_input_hash": "b39eff2e3d05280f56780dc56e8a946255df51a0ac3fc211399465f27f9e07bb"
         }
       ],
@@ -6586,108 +6527,6 @@
         "target_period_end": "2026-03-31",
         "requested_period_start": "2026-04-01",
         "requested_period_end": "2026-04-06"
-      },
-      "severity": "error"
-    },
-    {
-      "code": "excluded_source_reason_missing",
-      "path": "$.plan.excluded",
-      "message": "Every unused numeric candidate needs an explicit exclusion reason",
-      "details": {
-        "fact_ids": [
-          "fact_029c77d2ef5d029c8dd9",
-          "fact_068f01eea395455fcd4f",
-          "fact_1278cde71592cb4bbf3a",
-          "fact_1524ea9a369a3bbd2aaa",
-          "fact_15f175c23d14524e61ca",
-          "fact_1613ac2437e3df782c0b",
-          "fact_1755f03c79848892de65",
-          "fact_1a51a1676bacc66df5fd",
-          "fact_1aeacba045543b97ee6e",
-          "fact_23cdbc7129a59c0a41ee",
-          "fact_2b2bca44b09677d7ac26",
-          "fact_320729101153a4c64f09",
-          "fact_321e2b5393205dc5c3a3",
-          "fact_35be543256f1e2ef0add",
-          "fact_35f2721822648f3751ae",
-          "fact_3828813fc723b14598df",
-          "fact_42ae21490a9f0b131e14",
-          "fact_4886a61dfd9c42e6325f",
-          "fact_4b5960eb281ec2700f2e",
-          "fact_4cc65519da3b8a91d7d2",
-          "fact_4f7d4390a53290043273",
-          "fact_509ca4f7773d3774ee9e",
-          "fact_51d5aaf6dc1a7fd5b8d7",
-          "fact_52162838be24b8c69b09",
-          "fact_52e91c403cb8cd933494",
-          "fact_580efcd78fc317ee5dc1",
-          "fact_5d74df0b7bd1abe5ad7b",
-          "fact_5f35bb6c3637601ca741",
-          "fact_5f7a50d3aa1b6b2d3ad9",
-          "fact_65cfe1d25387e6260a9b",
-          "fact_69bcf30f4b8dc70731b3",
-          "fact_6a09052e0bca36b7e894",
-          "fact_6ef6a405e4b61c9f3e95",
-          "fact_7117d5a9483b5ca87f64",
-          "fact_749460519781bd4575fc",
-          "fact_74a7cce8a47a45807757",
-          "fact_76e904062f0646b38571",
-          "fact_78b51c190eaaafabae96",
-          "fact_7d6fd6260dcaac22e9d6",
-          "fact_7f6d8ee38de538dc82ff",
-          "fact_820c4cda8ad1b607a99a",
-          "fact_8311b7340c8168fccc09",
-          "fact_83783e525570c7eeb9d8",
-          "fact_83d1f90e5cd64bab1e2e",
-          "fact_88be8b4abad5fc372442",
-          "fact_8ddec013e0320eaa24f7",
-          "fact_93e0a99652b70547125c",
-          "fact_99b44b7525cb1e1a9902",
-          "fact_9bce123c06b51f98178d",
-          "fact_a26403c83723af33be86",
-          "fact_a59c3f4f114ec9a8c3e6",
-          "fact_a6b93f042b6e42facc0d",
-          "fact_a9be85e46efd0d04b622",
-          "fact_af87c724d20acb66a5f5",
-          "fact_b156950b4be551caad2d",
-          "fact_b2e31c8169cbfef83e23",
-          "fact_b55f9acc73e883738965",
-          "fact_b7e4bb6add367887761d",
-          "fact_b87488bab98f067ce16c",
-          "fact_b8cd99218f85a3bd548c",
-          "fact_bd10da9e34491be5c8cf",
-          "fact_c44e9c68fdca9bc1a3a7",
-          "fact_c51d1846cd804dede16f",
-          "fact_c85491c06ecfb7a2a3df",
-          "fact_c8de2e1f5c92163aef71",
-          "fact_c9d14c133ea2f2e6e0df",
-          "fact_cf65e80fc862cb2e5746",
-          "fact_cf6dc9ccfdbdd8b9569f",
-          "fact_d2caccd38851ee427a21",
-          "fact_d31aa12453654b174f39",
-          "fact_d56c815024aa14512983",
-          "fact_d855a3beb00bc244efd0",
-          "fact_da0fa49556fa4b6749b1",
-          "fact_dd4ff6d7717311df944f",
-          "fact_df8ade4fabf85544be97",
-          "fact_dfabf98fe1438982a02a",
-          "fact_e315b75c74c3d3aa4d29",
-          "fact_e5c8f3120aeddf653929",
-          "fact_e5feb904cd0979962056",
-          "fact_ec3cfe8bdb516a6e225c",
-          "fact_ee534dad0f43bb5685d3",
-          "fact_ef50a695515cccdff4b0",
-          "fact_f2184268b377346b734d",
-          "fact_f295c5fa3ba6b3e1b81e",
-          "fact_f7f9377d504b483c6c60",
-          "fact_fa0a980be19c4737d405",
-          "fact_fa193d62c62bb50d5841",
-          "fact_fbd0b1c8cdf46a0d74ea",
-          "fact_fc6ef9b4edb37b3f6f9e",
-          "fact_fdf2648c1f120f070d8f",
-          "fact_feacb26c241bb7a9d611",
-          "fact_fec3217f3d0eb9045281"
-        ]
       },
       "severity": "error"
     }

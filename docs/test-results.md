@@ -19,6 +19,13 @@
 - Агрегация также исправлена для вызовов без HTTP status (таймаутов); добавлен regression test.
 - Только синтетические входы отправлялись провайдеру. Сводка и status: `tests/results/live_e2e/evaluation-summary.json` и `evaluation-status.json`.
 
+## Проверка реального upstream-примера
+
+- `examples/build_upstream_example.py` теперь копирует `input_hash` из каждой Extraction в Linking snapshot и связывает prior decision с точным snapshot через штатный `bind_decision_to_request`.
+- Регрессионная проверка подтверждает upstream contracts и отсутствие `stale_human_decision`; `target_period_mismatch` всё ещё блокирует публикацию.
+- Gemma 4 26B A4B четыре раза дала план на акте и КФЗ: по пять источников, локальное выполнение плана — `1180300.00`. API-ответ остаётся `manual_review`, `expected_value=null`, поскольку период апреля не соответствует Q1, а путь Linking не подтверждён.
+- Полные фактические суммы и ответы модели не сохранялись в репозитории; только безопасная сводка в локальном `data/`.
+
 Проверено 13 ноября 2026 года.
 
 - `pytest`: **46 passed** в последнем завершённом прогоне. Включает шесть настоящих upstream Extraction 1.2.0 fixtures, проверку legacy Linking 1.0.0 примера, API POST/GET round-trip, валидацию API-ответа опубликованной result schema, отдельные contract tests, псевдонимизацию LLM payload, независимые планы и Decimal арифметику. Предупреждений pytest нет. LLM mock не выдаётся за реальный модельный прогон.
