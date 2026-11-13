@@ -29,6 +29,8 @@ After adding deterministic dimension filtering, the real act example was run onc
 
 A separate run used all six authentic Extraction fixtures (113 numeric candidates, empty Linking graph) in batches of 40. Prompt 1.0.2 states generic dimension and candidate-accounting requirements. Explicitly incompatible currency/unit facts are now excluded before transmission based only on structured target/fact dimensions; merge independently checks the actual dimensions of model-selected facts. On the rerun, all 91 dimension-compatible candidates were handled in three model responses, selected dimensions were consistently RUB with no unit, and the prior `mixed_units`/`currency_missing` diagnostics disappeared. Result stayed `manual_review` due unprocessed ambiguous facts, period mismatch, and absent human-confirmed Linking. No expected value is published without a human-reviewed Linking path.
 
+When the target indicator and period are derived directly from the upstream KFZ Extraction, the six-document run also completes all three candidate batches. Gemma returned three valid plans with no `ValidationError`; the result remains `manual_review` because the real fixtures contain no human-confirmed Linking path and leave unresolved evidence gaps. The planner now discards only exact echoes of request-only metadata before schema validation; altered or invented fields remain errors.
+
 ## Reproduction
 
 After provider billing is available, run from Windows PowerShell:

@@ -41,6 +41,20 @@ def _json_content(content: str) -> dict[str, Any]:
     return json.loads(text)
 
 
+def _validated_plan(content: str, request_payload: dict[str, Any]) -> CalculationPlan:
+    decoded = _json_content(content)
+    if not isinstance(decoded, dict):
+        raise ValueError("LLM plan response must be a JSON object")
+    plan_fields = set(CalculationPlan.model_fields)
+    # Models sometimes echo request-only context into their answer. Remove only
+    # exact echoes of fields outside the response contract; do not forgive
+    # invented or altered fields that could change calculation semantics.
+    for key in set(request_payload) - plan_fields:
+        if key in decoded and decoded[key] == request_payload[key]:
+            del decoded[key]
+    return CalculationPlan.model_validate(decoded)
+
+
 class LLMPlanner:
     def __init__(self, settings: Settings):
         self.settings = settings
@@ -286,7 +300,7 @@ class LLMPlanner:
             "http_status": response.status_code,
         })
         try:
-            return CalculationPlan.model_validate(_json_content(content))
+            return _validated_plan(content, payload)
         except (TypeError, ValueError) as exc:
             self.call_records[-1]["error_type"] = type(exc).__name__
             raise PlannerUnavailable(f"LLM returned an invalid plan: {exc}") from exc

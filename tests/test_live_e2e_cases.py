@@ -18,7 +18,7 @@ from reconciliation_engine.engine import execute_plan, validate_plan
 from reconciliation_engine.facts import extract_facts, numeric_value
 from reconciliation_engine.models import ReconciliationRequest
 from reconciliation_engine.plans import CalculationPlan, PlanExclusion, PlanInclusion, PlanStep
-from reconciliation_engine.planner import IncompatibleChunkPlans, LLMPlanner, _dimension_mismatch
+from reconciliation_engine.planner import IncompatibleChunkPlans, LLMPlanner, _dimension_mismatch, _validated_plan
 
 
 def test_live_e2e_cases_are_synthetic_contract_valid_and_have_independent_references():
@@ -74,6 +74,17 @@ def test_live_metrics_tolerate_timeouts_without_http_status():
     aggregate = _aggregate("case", [{"repeat": 1, "comparison": {}, "llm_calls": [{"http_status": None, "error_type": "ReadTimeout"}]}])
     assert aggregate["provider_error_calls"] == 0
     assert aggregate["llm_calls"] == 1
+
+
+def test_planner_discards_exact_echo_of_request_metadata_but_rejects_altered_metadata():
+    request = {"candidate_batch": {"index": 1, "total_batches": 2}}
+    response = {"target_id": "target", "method_description": "review", "candidate_batch": request["candidate_batch"]}
+    plan = _validated_plan(json.dumps(response), request)
+    assert plan.target_id == "target"
+
+    response["candidate_batch"] = {"index": 2, "total_batches": 2}
+    with pytest.raises(ValueError):
+        _validated_plan(json.dumps(response), request)
 
 
 def test_duplicate_representation_metrics_allow_one_source_but_count_double_inclusion():
