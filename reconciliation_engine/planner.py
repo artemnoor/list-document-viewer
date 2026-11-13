@@ -367,6 +367,9 @@ class LLMPlanner:
             if plan.result_step_id and plan.result_step_id in step_ids:
                 roots.append(step_ids[plan.result_step_id])
         result_step_id: str | None = None
+        signatures = {(plan.currency, plan.unit, plan.amount_basis) for _, plan in plans}
+        if len(signatures) > 1:
+            raise ValueError("Cannot merge chunk plans with incompatible currency, unit, or amount basis")
         if len(roots) == 1:
             result_step_id = roots[0]
         elif roots:

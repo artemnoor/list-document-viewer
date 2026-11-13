@@ -1,10 +1,10 @@
 # Gemma 4 live evaluation status
 
-## Status: blocked before the first Gemma completion
+## Status: real Gemma evaluation completed with two timeouts
 
 The requested label is “Gemma 4 30B A4”. Polza's current model catalog exposes the A4B Gemma 4 variant under the exact ID `google/gemma-4-26b-a4b-it`; it also lists `google/gemma-4-31b-it`. Google names the available MoE family member **Gemma 4 26B A4B**, while 31B is a separate dense model ([Google Gemma 4 model overview](https://ai.google.dev/gemma/docs/core.md)). The E2E harness is pinned to the A4B ID and refuses any other configured model.
 
-The available provider key was used only for the model-catalog GET during this Gemma setup. **No completion request has been made with Gemma 4.** An earlier completion attempt with a different model returned HTTP 402 Payment Required. The Gemma E2E run is still waiting for the provider to accept paid completions; the earlier model's outputs were removed and are not presented as Gemma results.
+The live evaluation was run on 14 November 2026 against `google/gemma-4-26b-a4b-it`, using only synthetic data. It completed all ten scenarios at three repeats within the 40-call cap: 31 scenario calls plus one protocol preflight. The provider returned 29 model responses; two calls timed out in the 320-candidate scenario. Across scored responses, mean source F1 was 0.714, formula accuracy was 0.950 (20 scored formulas), and expected-value accuracy was 0.412 (17 scored values). The timeouts were retained as failed attempts and not retried. Detailed metrics are in [`evaluation-summary.json`](../tests/results/live_e2e/evaluation-summary.json); bulky per-repeat raw snapshots are not committed.
 
 The evaluation harness has ten synthetic, contract-validated cases with independent golden references prepared under [`tests/results/live_e2e/`](../tests/results/live_e2e/):
 
@@ -19,7 +19,7 @@ The evaluation harness has ten synthetic, contract-validated cases with independ
 9. Similar operations with equal amounts.
 10. 320 numeric candidates split into batches.
 
-No source values from real documents were transmitted. The model payload omits numeric values and full provenance; IDs are pseudonymized. All currently prepared input documents are synthetic.
+No source values from real documents were transmitted. The model payload omits numeric values and full provenance; IDs are pseudonymized. All input documents are synthetic.
 
 ## Reproduction
 

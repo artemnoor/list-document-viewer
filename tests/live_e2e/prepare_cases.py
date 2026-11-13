@@ -211,7 +211,9 @@ def _make_case(
     if support:
         for source in source_facts:
             link_index += 1
-            links.append(_support_link(source, target_fact, f"synthetic-support-{case_id}-{link_index:04d}"))
+            # Linking is a discovery hint; synthetic fixtures should not imply
+            # that every machine-proposed relation was reviewed by a person.
+            links.append(_support_link(source, target_fact, f"synthetic-support-{case_id}-{link_index:04d}", confirmed=source.fact_id in {fact.fact_id for group in expected_groups for fact in group}))
     for index, (left, right) in enumerate(extra_correspondences or [], start=1):
         links.append(_correspondence_link(left, right, f"synthetic-correspondence-{case_id}-{index:04d}"))
     linking = _linking(extractions, links, unlinked_doc_ids)
@@ -349,6 +351,7 @@ def build_cases() -> list[dict[str, Any]]:
         scenario_note="All amounts are equal; selection must use operation semantics and location, not numeric coincidence.",
     )
 
+    # Put the sole relevant candidate beyond the first 300-item planner batch.
     many_rows = [{"amount": f"{50 + index:.2f}", "description": ("Foundation support bracket ZX-14 inspection" if index == 307 else f"Routine documentation item {index:03d}")} for index in range(320)]
     create(
         "10_hundreds_of_candidates", "320 числовых кандидатов", "Foundation support bracket ZX-14 inspection amount", f"{50 + 307:.2f}",

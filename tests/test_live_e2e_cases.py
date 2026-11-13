@@ -10,13 +10,14 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tests" / "live_e2e"))
 
 from prepare_cases import build_cases
-from run_live_evaluation import REQUESTED_MODEL_ID, _formula_matches, _runtime_settings, _source_metrics, _validate_response_models
+from run_live_evaluation import REQUESTED_MODEL_ID, _aggregate, _formula_matches, _runtime_settings, _source_metrics, _validate_response_models
 
 from reconciliation_engine.contracts import validate_upstream_inputs
 from reconciliation_engine.engine import execute_plan, validate_plan
 from reconciliation_engine.facts import extract_facts, numeric_value
 from reconciliation_engine.models import ReconciliationRequest
 from reconciliation_engine.plans import CalculationPlan, PlanInclusion, PlanStep
+from reconciliation_engine.planner import LLMPlanner
 
 
 def test_live_e2e_cases_are_synthetic_contract_valid_and_have_independent_references():
@@ -38,6 +39,13 @@ def test_live_e2e_cases_are_synthetic_contract_valid_and_have_independent_refere
 
     many = next(case for case in cases if case["reference"]["case_id"] == "10_hundreds_of_candidates")
     assert many["metadata"]["candidate_count"] == 320
+    facts = extract_facts(many["request"]["extraction_results"])
+    target_fact_id = many["reference"]["expected_source_groups"][0][0]
+    target_index = next(index for index, fact in enumerate(facts) if fact.fact_id == target_fact_id and fact.document_type != "kfz_report")
+    assert target_index >= 300
+    links = many["request"]["linking_result"]["links"]
+    assert any(link["verification_status"] == "human_confirmed" for link in links)
+    assert any(link["verification_status"] == "not_reviewed" for link in links)
 
 
 def test_live_evaluation_is_pinned_to_the_requested_gemma_model(monkeypatch):
@@ -59,6 +67,12 @@ def test_live_evaluation_rejects_unverified_or_different_response_model():
         _validate_response_models([{"assistant_content": "{}", "model_returned": None}])
 
     _validate_response_models([{"assistant_content": "{}", "model_returned": REQUESTED_MODEL_ID}])
+
+
+def test_live_metrics_tolerate_timeouts_without_http_status():
+    aggregate = _aggregate("case", [{"repeat": 1, "comparison": {}, "llm_calls": [{"http_status": None, "error_type": "ReadTimeout"}]}])
+    assert aggregate["provider_error_calls"] == 0
+    assert aggregate["llm_calls"] == 1
 
 
 def test_duplicate_representation_metrics_allow_one_source_but_count_double_inclusion():
@@ -138,6 +152,27 @@ def test_formula_metric_accepts_target_rounding_around_a_single_source_sum():
     }
 
     assert _formula_matches(plan, case["reference"])
+
+
+def test_formula_metric_rejects_malformed_tree_even_when_leaf_count_matches():
+    case = next(item for item in build_cases() if item["reference"]["case_id"] == "01_single_act")
+    fact_id = case["reference"]["expected_source_groups"][0][0]
+    plan = {"included": [{"fact_id": fact_id}], "steps": [
+        {"step_id": "bad", "operation": "sum", "inputs": [fact_id], "unexpected": True}],
+        "result_step_id": "bad", "rounding_scale": 2}
+    assert not _formula_matches(plan, case["reference"])
+
+
+@pytest.mark.parametrize("field, first, second", [
+    ("currency", "RUB", "USD"), ("unit", "kg", "piece"), ("amount_basis", "gross", "net")])
+def test_chunk_merge_rejects_incompatible_measurement_metadata(field, first, second):
+    case = next(item for item in build_cases() if item["reference"]["case_id"] == "01_single_act")
+    request = ReconciliationRequest.model_validate(case["request"])
+    target = request.context.targets[0]
+    baseline = CalculationPlan(target_id=target.target_id, method_description="test", **{field: first})
+    incompatible = baseline.model_copy(update={field: second})
+    with pytest.raises(ValueError, match="incompatible currency, unit, or amount basis"):
+        LLMPlanner._merge_chunk_plans(target, [(0, baseline), (1, incompatible)], 320)
 
 
 def test_source_identification_counts_candidates_the_model_explicitly_left_unprocessed():

@@ -163,6 +163,12 @@ def _leaves(expression: Any) -> list[str]:
 
 
 def _formula_matches(plan: dict[str, Any] | None, reference: dict[str, Any]) -> bool:
+    if not isinstance(plan, dict) or any(
+        not isinstance(step, dict)
+        or set(step) - {"step_id", "operation", "inputs", "scale"}
+        for step in plan.get("steps", [])
+    ):
+        return False
     expression = _plan_expression(plan)
     if not expression or not isinstance(expression, dict):
         return False
@@ -175,6 +181,20 @@ def _formula_matches(plan: dict[str, Any] | None, reference: dict[str, Any]) -> 
         if not isinstance(expression, dict):
             return False
     expected = reference["expected_formula"]
+    # Validate the expression tree independently of its leaves. A matching
+    # operation name and input count must not hide malformed or extra nodes.
+    allowed = {"fact_id", "operation", "inputs", "scale"}
+    def valid(node: Any) -> bool:
+        if not isinstance(node, dict) or set(node) - allowed:
+            return False
+        if "fact_id" in node:
+            return isinstance(node["fact_id"], str) and not any(k in node for k in ("operation", "inputs", "scale"))
+        op, inputs = node.get("operation"), node.get("inputs")
+        if op == "round":
+            return isinstance(node.get("scale"), int) and isinstance(inputs, list) and len(inputs) == 1 and valid(inputs[0])
+        return op in {"sum", "add", "subtract", "multiply", "divide"} and isinstance(inputs, list) and len(inputs) >= (1 if op == "sum" else 2) and "scale" not in node and all(valid(child) for child in inputs)
+    if not valid(expression):
+        return False
     expected_input_count = expected.get("input_count")
     if expression.get("operation") != expected.get("operation"):
         # A one-source sum is the identity. LLMs often make target rounding
@@ -342,7 +362,7 @@ def _aggregate(case_id: str, repeats: list[dict[str, Any]]) -> dict[str, Any]:
         "stable_run_fraction": Counter(signatures).most_common(1)[0][1] / len(signatures) if signatures else None,
         "llm_calls": sum(len(item["llm_calls"]) for item in repeats),
         "real_llm_responses": sum(any(call.get("assistant_content") for call in item["llm_calls"]) for item in repeats),
-        "provider_error_calls": sum(sum(call.get("http_status", 0) >= 400 for call in item["llm_calls"]) for item in repeats),
+        "provider_error_calls": sum(sum((call.get("http_status") or 0) >= 400 for call in item["llm_calls"]) for item in repeats),
         "usage": _usage_totals([call for item in repeats for call in item["llm_calls"]]),
         "latency_ms": sum(call.get("duration_ms", 0) for item in repeats for call in item["llm_calls"]),
         "runs": [{"repeat": item["repeat"], "comparison": item["comparison"], "llm_call_count": len(item["llm_calls"]), "real_llm_response": any(call.get("assistant_content") for call in item["llm_calls"])} for item in repeats],
@@ -431,7 +451,7 @@ def run(repeat_count: int, max_api_calls: int) -> dict[str, Any]:
         "actual_llm_call_count": sum(item["llm_calls"] for item in all_case_summaries),
         "protocol_preflight_call_count": len(preflight["llm_calls"]),
         "real_model_response_count": sum(item["real_llm_responses"] for item in all_case_summaries) + sum(bool(call.get("assistant_content")) for call in preflight["llm_calls"]),
-        "provider_error_call_count": sum(item["provider_error_calls"] for item in all_case_summaries) + sum(call.get("http_status", 0) >= 400 for call in preflight["llm_calls"]),
+        "provider_error_call_count": sum(item["provider_error_calls"] for item in all_case_summaries) + sum((call.get("http_status") or 0) >= 400 for call in preflight["llm_calls"]),
         "all_calls_used_synthetic_data": True,
         "all_call_records_include_secret": False,
         "overall_mean_precision": observed_mean("precision"),
