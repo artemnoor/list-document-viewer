@@ -205,6 +205,8 @@ def test_explicitly_incompatible_fact_dimensions_are_filtered_without_key_rules(
 
     assert _dimension_mismatch(monetary_fact, target) == []
     assert _dimension_mismatch(dimensional_fact, target)
+    unknown_dimension_target = target.model_copy(update={"currency": None, "unit": None})
+    assert _dimension_mismatch(dimensional_fact, unknown_dimension_target) == []
 
 
 def test_planner_does_not_send_explicitly_incompatible_candidates_to_llm(monkeypatch):

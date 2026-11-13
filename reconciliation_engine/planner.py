@@ -28,7 +28,7 @@ def _dimension_mismatch(fact: Fact, target: TargetIndicator) -> list[str]:
     mismatches = []
     if target.currency and fact.currency and fact.currency != target.currency:
         mismatches.append(f"currency {fact.currency} does not match target currency {target.currency}")
-    if fact.unit is not None and fact.unit != target.unit:
+    if fact.unit is not None and fact.unit != target.unit and (target.unit is not None or target.currency is not None):
         target_unit = target.unit if target.unit is not None else "unspecified"
         mismatches.append(f"unit {fact.unit} does not match target unit {target_unit}")
     return mismatches
