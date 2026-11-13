@@ -11,11 +11,13 @@
   ],
   "explicit_negative_pairs": [
     ["contract-A", "invoice-B"],
-    ["contract-B", "invoice-A"]
+    ["contract-B", "invoice-A"],
+    ["contract-A", "contract-B"],
+    ["invoice-A", "invoice-B"]
   ],
   "notes": [
     "Both contracts and invoices repeat the same amount; item/contract semantics disambiguate them.",
     "The registry confirms two separate operations and matches two rows to two invoices.",
-    "The six positive relations, directions, row IDs and two hard negative pairs were authored before running any test predictions."
+    "The six positive relations, directions, row IDs and all four negative document pairs (covering all ten unordered pairs) were authored before running any test predictions."
   ]
 }
