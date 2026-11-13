@@ -1,0 +1,21 @@
+{
+  "schema_version": "synthetic-routing-gold-v1",
+  "description": "Independent hand-authored labels for the synthetic routing fixture; not derived from mock predictions or model output.",
+  "positive_relations": [
+    { "source_document_id": "contract-A", "target_document_id": "invoice-A", "relationship_type": "invoice_based_on_contract", "source_path": "fields.subject.value", "target_path": "fields.basis.value" },
+    { "source_document_id": "contract-B", "target_document_id": "invoice-B", "relationship_type": "invoice_based_on_contract", "source_path": "fields.subject.value", "target_path": "fields.basis.value" },
+    { "source_document_id": "registry", "target_document_id": "invoice-A", "relationship_type": "payment_for_invoice", "source_path": "tables[0].rows[0].source_cells[0].extracted.value", "target_path": "tables[0].rows[0].source_cells[0].extracted.value", "source_row_id": "registry-payment-A", "target_row_id": "invoice-line-A" },
+    { "source_document_id": "registry", "target_document_id": "invoice-B", "relationship_type": "payment_for_invoice", "source_path": "tables[0].rows[1].source_cells[0].extracted.value", "target_path": "tables[0].rows[0].source_cells[0].extracted.value", "source_row_id": "registry-payment-B", "target_row_id": "invoice-line-B" },
+    { "source_document_id": "registry", "target_document_id": "contract-A", "relationship_type": "payment_under_contract", "source_path": "tables[0].rows[0].source_cells[0].extracted.value", "target_path": "fields.subject.value", "source_row_id": "registry-payment-A" },
+    { "source_document_id": "registry", "target_document_id": "contract-B", "relationship_type": "payment_under_contract", "source_path": "tables[0].rows[1].source_cells[0].extracted.value", "target_path": "fields.subject.value", "source_row_id": "registry-payment-B" }
+  ],
+  "explicit_negative_pairs": [
+    ["contract-A", "invoice-B"],
+    ["contract-B", "invoice-A"]
+  ],
+  "notes": [
+    "Both contracts and invoices repeat the same amount; item/contract semantics disambiguate them.",
+    "The registry confirms two separate operations and matches two rows to two invoices.",
+    "The six positive relations, directions, row IDs and two hard negative pairs were authored before running any test predictions."
+  ]
+}

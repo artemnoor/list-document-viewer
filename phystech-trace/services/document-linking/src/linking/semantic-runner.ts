@@ -74,9 +74,9 @@ export async function runSemanticAnalysis(documents: Extraction[], hooks: Hooks)
       const returned = new Set<string>();
       for (const fragment of value.fragments) {
         const source = fragmentMap.get(fragment?.fragment_id);
-        if (!source || !batch.fragment_ids.includes(fragment.fragment_id) || returned.has(fragment.fragment_id) || typeof fragment.summary !== "string" || !fragment.summary.trim() || fragment.summary.length > 600 || !Array.isArray(fragment.anchors) || fragment.anchors.length > 6 || !Array.isArray(fragment.open_questions) || fragment.open_questions.length > 4) throw fail("Некорректная семантическая навигация исходного фрагмента.");
-        for (const anchor of fragment.anchors) if (!source.reference_ids.includes(anchor?.reference_id) || typeof anchor.meaning !== "string" || anchor.meaning.length > 100) throw fail("Навигация ссылается на несуществующий исходный факт.");
-        if (fragment.open_questions.some((question: unknown) => typeof question !== "string" || question.length > 120)) throw fail("Слишком большой вопрос навигации.");
+        if (!source || !batch.fragment_ids.includes(fragment.fragment_id) || returned.has(fragment.fragment_id) || typeof fragment.summary !== "string" || !fragment.summary.trim() || fragment.summary.length > 800 || !Array.isArray(fragment.anchors) || fragment.anchors.length > 24 || !Array.isArray(fragment.open_questions) || fragment.open_questions.length > 6) throw fail("Некорректная семантическая навигация исходного фрагмента.");
+        for (const anchor of fragment.anchors) if (!source.reference_ids.includes(anchor?.reference_id) || typeof anchor.meaning !== "string" || anchor.meaning.length > 160) throw fail("Навигация ссылается на несуществующий исходный факт.");
+        if (fragment.open_questions.some((question: unknown) => typeof question !== "string" || question.length > 160)) throw fail("Слишком большой вопрос навигации.");
         returned.add(fragment.fragment_id);
       }
     });
@@ -107,7 +107,13 @@ export async function runSemanticAnalysis(documents: Extraction[], hooks: Hooks)
         if (decision.fragment_ids.some((id: string) => !fragmentMap.has(id) || !pair.document_ids.includes(fragmentMap.get(id)!.document_id))) throw fail("Кандидат ссылается на чужой или несуществующий фрагмент.");
         if (decision.reference_ids !== undefined) {
           if (!Array.isArray(decision.reference_ids) || decision.reference_ids.some((id: string) => !canonicalIds.has(id) || !pair.document_ids.includes(refs.get(id)!.document_id))) throw fail("Кандидат ссылается на несуществующее evidence.");
-          if (decision.state === "candidate" && pair.document_ids.some(id => !decision.reference_ids.some((referenceId: string) => refs.get(referenceId)!.document_id === id))) throw fail("Кандидату не хватает исходного факта с одной из сторон связи.");
+          if (["candidate", "no_relation"].includes(decision.state) && pair.document_ids.some(id => !decision.reference_ids.some((referenceId: string) => refs.get(referenceId)!.document_id === id))) throw fail("Решению о паре не хватает исходного факта с одной из сторон; отсутствие связи нельзя вывести из сводки.");
+          if (decision.state === "no_relation") {
+            const pairFragments = plan.fragments.filter(fragment => pair.document_ids.includes(fragment.document_id));
+            if (pairFragments.some(fragment => !decision.fragment_ids.includes(fragment.fragment_id) || !decision.reference_ids.some((id: string) => fragment.reference_ids.includes(id)))) throw fail("Предварительный no_relation не покрывает исходными anchor все фрагменты обоих документов; отсутствие связи нельзя объявить по краткой сводке.");
+          }
+        } else if (["candidate", "no_relation"].includes(decision.state)) {
+          throw fail("Кандидату или предварительному no_relation требуются проверяемые original reference_id с обеих сторон.");
         }
         if (decision.row_ids !== undefined && (!Array.isArray(decision.row_ids) || decision.row_ids.some((rowId: string) => !plan.source_coverage.row_ids.includes(`${pair.document_ids.find(id => registry.some(ref => ref.document_id === id && ref.row_id === rowId)) ?? ""}:${rowId}`)))) throw fail("Кандидат ссылается на несуществующую строку.");
         seen.add(pair.pair_id);
@@ -117,18 +123,46 @@ export async function runSemanticAnalysis(documents: Extraction[], hooks: Hooks)
   }
   state.decisions ??= state.routing.flatMap(task => task.response.decisions);
   const proof = (id: string) => { const ref = refs.get(id)!; return { reference_id: id, document_id: ref.document_id, path: ref.json_path, raw_value: ref.raw_value, ...(ref.row_id ? { row_id: ref.row_id } : {}), source_text: ref.provenance?.source_text ?? null, source_available: ref.provenance?.source_available ?? false }; };
-  const verifyPrompt = `${hooks.systemPrompt}\nVerify these semantic candidates from their ORIGINAL references. Earlier navigation is not proof. Read actual meaning, ambiguity, repeated amounts, multiple agreements and every supplied row. All reference_id resolve to original exact values and provenance; only listed IDs may be cited. Do not invent paths or coordinates. Return the usual links/unlinked_document_ids/context_requests/analysis_summary JSON plus pair_decisions:[{pair_id,state:"no_relation"|"insufficient_evidence"|"supported",reason}]. An empty link list does not mean no relation; explicitly distinguish inadequate proof. Additional original fragments may be requested by document_id and chunk_index from the manifest.`;
-  const verificationContext = (items: any[]) => JSON.stringify({ stage: "verify", source_manifest: plan.fragments.map(fragment => ({ document_id: fragment.document_id, chunk_index: fragment.chunk_index })), candidates: items });
+  const verifyPrompt = `${hooks.systemPrompt}\nVerify semantic candidates from their ORIGINAL references. Earlier navigation is not proof. A routing no_relation is a hypothesis, never a final result: independently search the supplied original facts for contrary support and return links if found. If supplied facts are insufficient, say insufficient_evidence; reaffirm no_relation only after checking the supplied originals. Read actual meaning, ambiguity, repeated amounts, multiple agreements and every supplied row. All reference_id resolve to original exact values and provenance; only listed IDs may be cited. Do not invent paths or coordinates. Return the usual links/unlinked_document_ids/context_requests/analysis_summary JSON plus pair_decisions:[{pair_id,state:"no_relation"|"insufficient_evidence"|"supported",reason}]. An empty link list does not mean no relation; explicitly distinguish inadequate proof. Additional original fragments may be requested by document_id and chunk_index from the manifest.`;
+  const verificationContext = (items: any[]) => JSON.stringify({ stage: "verify", source_manifest: plan.fragments.map(fragment => ({ document_id: fragment.document_id, chunk_index: fragment.chunk_index })), candidates: items.map(item => item.original_facts ? ({ pair_id: item.pair_id, document_pair_id: item.document_pair_id, routing_state: item.routing_state, document_ids: item.document_ids, reason: item.reason, original_facts: item.original_facts }) : item) });
   if (!state.verification) {
     const jobs: any[] = [];
-    for (const decision of state.decisions.filter(item => item.state !== "no_relation")) {
+    for (const decision of state.decisions.filter(item => item.state !== "insufficient_context")) {
+      if (decision.state === "no_relation") {
+        // A short navigation summary cannot establish absence. Recheck model-selected exact anchors
+        // from every source fragment, plus every original fact in their rows. If this cannot fit Q1,
+        // fail explicitly with the route checkpoint intact; never turn an unaudited negative into no_link_found.
+        const sourceFragments = plan.fragments.filter(fragment => decision.document_ids.includes(fragment.document_id));
+        const makeAudit = (fragments: SemanticFragment[], auditId: string) => {
+          const fragmentIds = new Set(fragments.map(fragment => fragment.fragment_id));
+          const referenceIds = new Set((decision.reference_ids ?? []).filter(id => referenceFragments.get(id)?.some(fragment => fragmentIds.has(fragment.fragment_id))));
+          const rowKeys = new Set([...referenceIds].flatMap(id => { const ref = refs.get(id)!; return ref.row_id ? [`${ref.document_id}:${ref.row_id}`] : []; }));
+          for (const id of canonicalIds) { const ref = refs.get(id)!; if (ref.row_id && rowKeys.has(`${ref.document_id}:${ref.row_id}`)) referenceIds.add(id); }
+          const originalFacts = fragments.map(fragment => ({ fragment_id: fragment.fragment_id, document_id: fragment.document_id, facts: fragment.facts.filter(fact => referenceIds.has(fact[0]) || (fact[3] && rowKeys.has(`${fragment.document_id}:${fact[3]}`))) })).filter(fragment => fragment.facts.length);
+          const auditedIds = new Set(originalFacts.flatMap(fragment => fragment.facts.map(fact => fact[0])));
+          const finalReferenceIds = [...referenceIds].filter(id => auditedIds.has(id));
+          return { pair_id: auditId, document_pair_id: decision.pair_id, routing_state: decision.state, document_ids: decision.document_ids, reason: decision.reason, original_facts: originalFacts, reference_ids: finalReferenceIds };
+        };
+        const audit = makeAudit(sourceFragments, decision.pair_id);
+        if (estimateTokens(verifyPrompt + verificationContext([audit])) <= limit) jobs.push(audit);
+        else {
+          const [leftId, rightId] = decision.document_ids;
+          const left = sourceFragments.filter(fragment => fragment.document_id === leftId), right = sourceFragments.filter(fragment => fragment.document_id === rightId);
+          for (const leftFragment of left) for (const rightFragment of right) {
+            const bounded = makeAudit([leftFragment, rightFragment], `${decision.pair_id}@${leftFragment.chunk_index}:${rightFragment.chunk_index}`);
+            if (estimateTokens(verifyPrompt + verificationContext([bounded])) > limit) throw fail(`Отрицательное решение ${decision.pair_id} не проверяется по оригинальным фрагментам ${leftFragment.chunk_index}/${rightFragment.chunk_index} в Q1; связь не объявлена отсутствующей. Routing checkpoint сохранён.`, 413);
+            jobs.push(bounded);
+          }
+        }
+        continue;
+      }
       const selected = new Set<string>(decision.reference_ids ?? []);
       if (!selected.size) for (const id of decision.fragment_ids.length ? decision.fragment_ids : plan.fragments.filter(fragment => decision.document_ids.includes(fragment.document_id)).map(fragment => fragment.fragment_id)) for (const ref of fragmentMap.get(id)!.reference_ids) selected.add(ref);
       const rowKeys = new Set([...selected].flatMap(id => { const ref = refs.get(id)!; return ref.row_id ? [`${ref.document_id}:${ref.row_id}`] : []; }));
       for (const row of decision.row_ids ?? []) for (const doc of decision.document_ids) rowKeys.add(`${doc}:${row}`);
       // Expand actual selected rows structurally, not by coincident amounts/numbers.
       for (const id of canonicalIds) { const ref = refs.get(id)!; if (ref.row_id && rowKeys.has(`${ref.document_id}:${ref.row_id}`)) selected.add(id); }
-      const candidate = { pair_id: decision.pair_id, document_ids: decision.document_ids, reason: decision.reason, hypotheses: decision.hypotheses ?? [], original_references: [...selected].map(proof) };
+      const candidate = { pair_id: decision.pair_id, document_pair_id: decision.pair_id, routing_state: decision.state, document_ids: decision.document_ids, reason: decision.reason, hypotheses: decision.hypotheses ?? [], original_references: [...selected].map(proof), reference_ids: [...selected] };
       if (estimateTokens(verifyPrompt + verificationContext([candidate])) > limit) throw fail(`Точный контекст кандидата ${decision.pair_id} не помещается в Q1; требуется более точная навигация, источники не обрезаны.`, 413);
       jobs.push(candidate);
     }
@@ -151,7 +185,7 @@ export async function runSemanticAnalysis(documents: Extraction[], hooks: Hooks)
       if (!Array.isArray(value?.links) || !Array.isArray(value?.unlinked_document_ids) || !Array.isArray(value?.context_requests)) throw fail("Невалидный контракт подробной проверки кандидатов.");
     });
     if (!okay) return partial();
-    let originalRefs = candidates.flatMap((candidate: any) => candidate.original_references);
+    let originalRefs = candidates.flatMap((candidate: any) => candidate.original_references ?? candidate.reference_ids.map((id: string) => proof(id)));
     if (saved.response.context_requests.length) {
       if (hooks.exhausted()) return partial();
       const expanded = new Set(originalRefs.map((ref: any) => ref.reference_id));
@@ -184,11 +218,13 @@ export async function runSemanticAnalysis(documents: Extraction[], hooks: Hooks)
   const links = mergeTaskLinks(state.verification.flatMap(task => task.result!.links));
   const diagnostics = state.verification.flatMap(task => task.result!.diagnostics);
   const pairOutcomes = state.decisions.map(decision => {
-    if (decision.state === "no_relation") return { ...decision, outcome: "no_link_found" };
-    const task = state.verification!.find(task => task.fragment_keys.includes(decision.pair_id));
-    const answer = (task?.followup?.response ?? task?.response)?.pair_decisions?.find((item: any) => item.pair_id === decision.pair_id);
+    if (decision.state === "insufficient_context") return { ...decision, outcome: "insufficient_evidence" };
+    const audits = state.verification_inputs!.flat().filter((item: any) => (item.document_pair_id ?? item.pair_id) === decision.pair_id);
+    const auditIds = new Set(audits.map((item: any) => item.pair_id));
+    const auditAnswers = state.verification!.flatMap(task => (task.followup?.response ?? task.response)?.pair_decisions ?? []).filter((item: any) => auditIds.has(item.pair_id));
     const supported = links.some(link => link.status !== "rejected" && decision.document_ids.includes(link.source_document_id) && decision.document_ids.includes(link.target_document_id));
-    return { ...decision, outcome: supported ? "linked" : answer?.state === "no_relation" && !diagnostics.some(item => decision.document_ids.includes(item.source_document_id!) && decision.document_ids.includes(item.target_document_id!) && !["corrected", "withdrawn"].includes(item.resolution ?? "")) ? "no_link_found" : "insufficient_evidence" };
+    const noRelationVerified = audits.length > 0 && auditAnswers.length === audits.length && auditAnswers.every((item: any) => item.state === "no_relation");
+    return { ...decision, outcome: supported ? "linked" : noRelationVerified && !diagnostics.some(item => decision.document_ids.includes(item.source_document_id!) && decision.document_ids.includes(item.target_document_id!) && !["corrected", "withdrawn"].includes(item.resolution ?? "")) ? "no_link_found" : "insufficient_evidence" };
   });
   const unlinked = documents.filter(doc => { const outcomes = pairOutcomes.filter(pair => pair.document_ids.includes(doc.document_id)); return outcomes.length > 0 && outcomes.every(pair => pair.outcome === "no_link_found"); }).map(doc => doc.document_id);
   updateCoverage();
