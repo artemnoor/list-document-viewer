@@ -233,6 +233,16 @@ def _link_review_diagnostics(target: TargetIndicator, selected: list[Fact], link
         touches_target = bool(target_docs.intersection({link.get("source_document_id"), link.get("target_document_id")}))
         if touches_selected and touches_target and (link.get("status") in {"review", "proposed", "rejected"} or link.get("verification_status") != "human_confirmed"):
             diagnostics.append(Diagnostic("link_requires_human_review", "$.linking_result.links", "A relationship used to associate a selected source with the KФЗ row is not human-confirmed", {"link_id": link.get("link_id"), "status": link.get("status"), "verification_status": link.get("verification_status")}))
+    selected_docs = {fact.document_id for fact in selected}
+
+    def touches_selected_source(link: dict[str, Any]) -> bool:
+        for document_key, row_key in (("source_document_id", "source_row_id"), ("target_document_id", "target_row_id")):
+            document_id = link.get(document_key)
+            row_id = link.get(row_key)
+            if document_id in selected_docs and (row_id is None or (document_id, row_id) in selected_rows):
+                return True
+        return False
+
     for review in linking.get("review_required", []):
         link_id = review.get("link_id")
         if link_id in human_confirmed_link_ids:
@@ -241,15 +251,12 @@ def _link_review_diagnostics(target: TargetIndicator, selected: list[Fact], link
         if not link:
             continue
         endpoints = {link.get("source_document_id"), link.get("target_document_id")}
-        selected_docs = {fact.document_id for fact in selected}
-        if endpoints.intersection(selected_docs) and (not target_docs or endpoints.intersection(target_docs)):
+        if touches_selected_source(link) and (not target_docs or endpoints.intersection(target_docs)):
             diagnostics.append(Diagnostic("link_marked_review_required", "$.linking_result.review_required", review.get("reason", "Linking requests manual review"), {"link_id": link_id, "candidate_document_ids": review.get("candidate_document_ids", [])}))
     for item in linking.get("link_validation_diagnostics", []):
         endpoints = {item.get("source_document_id"), item.get("target_document_id")}
-        selected_docs = {fact.document_id for fact in selected}
-        if endpoints.intersection(selected_docs) and (not target_docs or endpoints.intersection(target_docs)):
+        if touches_selected_source(item) and (not target_docs or endpoints.intersection(target_docs)):
             diagnostics.append(Diagnostic("link_validation_requires_review", "$.linking_result.link_validation_diagnostics", "Linking has a validation diagnostic for a selected relationship", {"diagnostic": item}))
-    selected_docs = {fact.document_id for fact in selected}
     if target_docs:
         for item in linking.get("unlinked_documents", []):
             manually_accepted_doc = any(fact.document_id == item.get("document_id") and fact.fact_id in human_confirmed_fact_ids for fact in selected)

@@ -11,6 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tests" / "live_e2e"))
 
 from prepare_cases import build_cases
+from replay_saved_results import _validate_recorded_model_identity
 from run_live_evaluation import REQUESTED_MODEL_ID, _aggregate, _formula_matches, _runtime_settings, _source_metrics, _validate_response_models
 
 from reconciliation_engine.contracts import validate_upstream_inputs
@@ -20,6 +21,7 @@ from reconciliation_engine.facts import extract_facts, numeric_value
 from reconciliation_engine.models import ReconciliationRequest
 from reconciliation_engine.plans import CalculationPlan, PlanExclusion, PlanInclusion, PlanStep
 from reconciliation_engine.planner import IncompatibleChunkPlans, LLMPlanner, PlannerUnavailable, _dimension_mismatch, _validated_plan
+from reconciliation_engine.service import reconcile
 
 
 def test_live_e2e_cases_are_synthetic_contract_valid_and_have_independent_references():
@@ -122,6 +124,33 @@ def test_all_failed_candidate_batches_leave_every_candidate_unprocessed(monkeypa
     assert result.requires_manual_review
 
 
+def test_unreviewed_link_for_another_row_does_not_block_confirmed_selected_row(monkeypatch):
+    case = next(item for item in build_cases() if item["reference"]["case_id"] == "08_actual_vs_planned")
+    request = ReconciliationRequest.model_validate(case["request"])
+    target = request.context.targets[0]
+    facts = extract_facts(request.extraction_results)
+    selected_fact_id = case["reference"]["expected_source_groups"][0][0]
+    candidates = [fact for fact in facts if fact.document_type != "kfz_report" and fact.document_id != target.kfz_document_id and numeric_value(fact) is not None]
+    plan = CalculationPlan(
+        target_id=target.target_id,
+        method_description="Use the actual completed amount.",
+        included=[PlanInclusion(fact_id=selected_fact_id, reason="This is the actual completed operation.")],
+        excluded=[PlanExclusion(fact_id=fact.fact_id, reason="This fact is not the actual completed operation.") for fact in candidates if fact.fact_id != selected_fact_id],
+        steps=[PlanStep(step_id="total", operation="sum", inputs=[selected_fact_id])],
+        result_step_id="total",
+        currency="RUB",
+        amount_basis="unspecified",
+    )
+    planner = LLMPlanner(Settings(llm_enabled=True, llm_api_key="unit-test"))
+    monkeypatch.setattr(planner, "plan", lambda *args, **kwargs: plan)
+
+    calculation = reconcile(request, planner.settings, planner)["calculations"][0]
+
+    assert calculation["status"] == "calculated"
+    assert calculation["expected_value"] == "900.00"
+    assert "link_marked_review_required" not in {item["code"] for item in calculation["diagnostics"]}
+
+
 def test_live_evaluation_is_pinned_to_the_requested_gemma_model(monkeypatch):
     monkeypatch.setenv("POLZA_AI_API_KEY", "unit-test-placeholder")
     monkeypatch.delenv("LLM_API_KEY", raising=False)
@@ -141,6 +170,23 @@ def test_live_evaluation_rejects_unverified_or_different_response_model():
         _validate_response_models([{"assistant_content": "{}", "model_returned": None}])
 
     _validate_response_models([{"assistant_content": "{}", "model_returned": REQUESTED_MODEL_ID}])
+
+
+def test_offline_replay_accepts_pinned_provider_failures_without_a_model_response():
+    _validate_recorded_model_identity({
+        "model_requested": REQUESTED_MODEL_ID,
+        "model_returned": None,
+        "llm_calls": [{"model_requested": REQUESTED_MODEL_ID, "assistant_content": None, "http_status": 402}],
+    }, "case", 1)
+
+
+def test_offline_replay_rejects_a_response_from_a_different_model():
+    with pytest.raises(RuntimeError, match="Refusing to replay a response"):
+        _validate_recorded_model_identity({
+            "model_requested": REQUESTED_MODEL_ID,
+            "model_returned": "google/other-model",
+            "llm_calls": [{"model_requested": REQUESTED_MODEL_ID, "model_returned": "google/other-model", "assistant_content": "{}"}],
+        }, "case", 1)
 
 
 def test_live_metrics_tolerate_timeouts_without_http_status():

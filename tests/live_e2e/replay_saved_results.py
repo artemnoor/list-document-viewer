@@ -17,7 +17,7 @@ if str(ROOT) not in sys.path:
 from reconciliation_engine.config import Settings
 from reconciliation_engine.facts import extract_facts
 from reconciliation_engine.models import ConfirmedDecision, ReconciliationRequest
-from reconciliation_engine.planner import LLMPlanner
+from reconciliation_engine.planner import LLMPlanner, PROMPT_PATH
 from reconciliation_engine.plans import CalculationPlan
 from reconciliation_engine.service import bind_decision_to_request, reconcile
 
@@ -32,6 +32,19 @@ class RecordedPlanPlanner:
 
     def plan(self, *args: Any, **kwargs: Any) -> CalculationPlan:  # type: ignore[no-redef]
         return self.saved_plan
+
+
+def _validate_recorded_model_identity(original: dict[str, Any], case_id: str, repeat_index: int) -> None:
+    calls = original.get("llm_calls", [])
+    if original.get("model_requested") != REQUESTED_MODEL_ID:
+        raise RuntimeError(f"Refusing to replay a non-{REQUESTED_MODEL_ID} model request in {case_id} repeat {repeat_index}.")
+    if any(call.get("model_requested") not in (None, REQUESTED_MODEL_ID) for call in calls):
+        raise RuntimeError(f"Refusing a model call not pinned to {REQUESTED_MODEL_ID} in {case_id} repeat {repeat_index}.")
+    responses = [call for call in calls if call.get("assistant_content")]
+    if responses and original.get("model_returned") != REQUESTED_MODEL_ID:
+        raise RuntimeError(f"Refusing to replay a response from a non-{REQUESTED_MODEL_ID} model in {case_id} repeat {repeat_index}.")
+    if any(call.get("model_returned") != REQUESTED_MODEL_ID for call in responses):
+        raise RuntimeError(f"Refusing to replay a response from a non-{REQUESTED_MODEL_ID} model in {case_id} repeat {repeat_index}.")
 
 
 def _sha256(value: Any) -> str:
@@ -53,13 +66,17 @@ def _replay_case(case_id: str) -> dict[str, Any]:
 
     for repeat_index in range(1, 4):
         original = _read(case_dir / f"repeat-{repeat_index:02d}.json")
-        if original.get("model_requested") != REQUESTED_MODEL_ID or original.get("model_returned") != REQUESTED_MODEL_ID:
-            raise RuntimeError(f"Refusing to replay a non-{REQUESTED_MODEL_ID} model response in {case_id} repeat {repeat_index}.")
+        _validate_recorded_model_identity(original, case_id, repeat_index)
         plan_data = original.get("calculation_plan")
         if plan_data is None:
             result = original["reconciliation_result"]
             replayed = False
-            replay_note = "No model plan existed: provider returned HTTP 402, so no engine replay could be performed."
+            failures = [
+                f"{call.get('error_type') or 'provider error'} (HTTP {call.get('http_status')})"
+                for call in original.get("llm_calls", [])
+                if call.get("error_type") or (call.get("http_status") or 0) >= 400
+            ]
+            replay_note = "No valid model plan was returned; no engine replay was possible." + (f" Attempts: {', '.join(failures)}." if failures else "")
             stored_calculation = result["calculations"][0]
             compact_result = {
                 "reconciliation_id": result["reconciliation_id"],
@@ -252,13 +269,25 @@ def run() -> dict[str, Any]:
 
     formula_scores = [item["formula_correct"] for item in model_metrics if item.get("formula_applicable")]
     value_scores = [item["value_correct"] for item in model_metrics if item.get("value_applicable")]
+    prompt_text = PROMPT_PATH.read_text(encoding="utf-8")
+    current_prompt_version = next((line.split(":", 1)[1].strip() for line in prompt_text.splitlines() if line.startswith("Prompt version:")), None)
+    current_prompt_sha256 = hashlib.sha256(prompt_text.encode("utf-8")).hexdigest()
+    live_prompt_hashes = sorted({
+        call.get("prompt_sha256")
+        for case_id in scenario_ids
+        for repeat_index in range(1, 4)
+        for call in _read(RESULTS / case_id / f"repeat-{repeat_index:02d}.json").get("llm_calls", [])
+        if call.get("prompt_sha256")
+    })
+    live_prompt_matches_current = bool(live_prompt_hashes) and live_prompt_hashes == [current_prompt_sha256]
     summary = {
         "evaluated_at": datetime.now(timezone.utc).isoformat(),
         "replay_type": "offline re-execution of saved genuine model plans through the patched engine; no provider calls",
-        "baseline_commit": "dfaf8563e4cde349abf3ea143972a7582d9d18e0",
-        "live_run_prompt_version": "1.0.0",
-        "current_prompt_version": "1.0.1",
-        "current_prompt_sha256": hashlib.sha256((ROOT / "prompts" / "calculation-plan.v1.0.2.txt").read_bytes()).hexdigest(),
+        "live_run_prompt_version": current_prompt_version if live_prompt_matches_current else None,
+        "live_run_prompt_sha256": live_prompt_hashes,
+        "live_prompt_matches_current": live_prompt_matches_current,
+        "current_prompt_version": current_prompt_version,
+        "current_prompt_sha256": current_prompt_sha256,
         "provider": original_summary["provider"],
         "model_id": original_summary["model_id"],
         "available_model_count": original_summary["available_model_count"],
@@ -266,7 +295,7 @@ def run() -> dict[str, Any]:
         "repeats_per_scenario": 3,
         "scenarios_with_real_model_responses": sum(item["real_llm_responses"] > 0 for item in scenario_metrics),
         "real_model_responses": len(model_metrics),
-        "provider_402_repeats_without_model_reply": sum(item["provider_error_calls"] for item in scenario_metrics),
+        "provider_http_error_calls_without_model_reply": sum(item["provider_error_calls"] for item in scenario_metrics),
         "additional_live_llm_calls": 0,
         "original_total_llm_calls_including_preflight": original_summary["total_llm_calls"],
         "total_provider_cost": original_summary["total_provider_cost"],
