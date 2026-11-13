@@ -185,9 +185,14 @@ test("prediction file hash tampering is represented as a failed result", async (
 
 test("invalid output schema is failed and cannot be counted as an empty successful extraction", () => {
   const fixture = makeFixture();
-  fixture.predictions.set("case-1", { status: "ready", value: {} });
+  // Pass identity gates so this fixture reaches the output-schema check.
+  fixture.predictions.set("case-1", { status: "ready", value: {
+    document_id: fixture.artifact.document_id,
+    input_hash: fixture.artifact.input_hash,
+    document_type: "contract",
+  } });
   const report = scoreRun(fixture);
-  assert.equal(report.scenarios[0].failure_code, "PREDICTION_INVALID");
+  assert.equal(report.scenarios[0].failure_code, "PREDICTION_SCHEMA_INVALID");
   assert.equal(report.metrics.critical_fields.recall, 0);
   assert.equal(report.metrics.rows.recall, 0);
 });
