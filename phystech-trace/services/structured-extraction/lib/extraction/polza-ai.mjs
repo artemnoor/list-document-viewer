@@ -291,7 +291,7 @@ async function callPolzaFragment(parsed, env = {}, context) {
     response_format: { type: "json_schema", json_schema: polzaJsonSchema },
     reasoning: { effort: "none" },
     temperature: 0,
-    max_tokens: 4096,
+    max_tokens: boundedInteger(env.POLZA_MAX_OUTPUT_TOKENS, 4096, 4096),
   };
   let raw;
   let strictSchema = true;
@@ -360,12 +360,18 @@ export function buildGroundedContexts(parsed, maxChars = 33000) {
   let current = structuredClone(base);
   const size = value => JSON.stringify(value).length;
   const flush = () => { if (current.source_elements.length || current.tables.length) contexts.push(current); current = structuredClone(base); };
+  const append = (target, key, value) => {
+    if (key === 'tables') {
+      const index = target.tables.findIndex(table => table.table_id === value.table_id);
+      if (index >= 0) return { ...target, tables: target.tables.map((table, i) => i === index ? { ...table, rows: [...table.rows, ...value.rows] } : table) };
+    }
+    return { ...target, [key]: [...target[key], value] };
+  };
   const add = (key, value) => {
-    const next = { ...current, [key]: [...current[key], value] };
-    if (size(next) > maxChars) flush();
-    const single = { ...current, [key]: [...current[key], value] };
-    if (size(single) > maxChars) throw new PolzaAiError('Исходный заголовок или структура не помещается в ограниченный фрагмент; данные не обработаны', 'POLZA_CONTEXT_LIMIT');
-    current = single;
+    if (size(append(current, key, value)) > maxChars) flush();
+    const next = append(current, key, value);
+    if (size(next) > maxChars) throw new PolzaAiError('Исходный заголовок или структура не помещается в ограниченный фрагмент; данные не обработаны', 'POLZA_CONTEXT_LIMIT');
+    current = next;
   };
   for (const element of context.source_elements) {
     const width = Math.max(1, Math.floor((maxChars - size(base) - 1000) / 6));
@@ -388,9 +394,15 @@ export function buildGroundedContexts(parsed, maxChars = 33000) {
   return contexts.length ? contexts : [base];
 }
 
+function boundedInteger(value, fallback, maximum) {
+  const number = value === undefined ? fallback : Number(value);
+  if (!Number.isInteger(number) || number < 1 || number > maximum) throw new PolzaAiError('Некорректный лимит контекста или ответа модели', 'POLZA_INVALID_LIMIT', 422);
+  return number;
+}
+
 export async function callPolzaForExtraction(parsed, env = {}) {
   const startedAt = Date.now();
-  const contexts = buildGroundedContexts(parsed);
+  const contexts = buildGroundedContexts(parsed, boundedInteger(env.POLZA_CONTEXT_MAX_CHARS, 33000, 33000));
   let modelCalls = 0;
   const attempts = [];
   const fetcher = env.POLZA_FETCH ?? fetch;

@@ -411,13 +411,15 @@ function lookupFreeText(parsed, aliases) {
 }
 
 function groundedFieldCandidate(parsed, fieldKey, llm) {
-  const candidate = llm?.field_candidates?.find((item) => item.field_key === fieldKey);
-  if (!candidate) return null;
-  const element = adapted(parsed).elements.find((item) => item.id === candidate.source_element_id);
-  const sourceValue = String(candidate.source_value ?? "");
-  if (!element || element.source_available === false || !sourceValue || !String(element.text ?? "").includes(sourceValue)) return null;
-  const provenance = element.provenance ? { ...element.provenance, source_text: element.text } : null;
-  return { cell: { id: element.id, text: sourceValue, provenance, confidence: element.provenance?.confidence ?? null }, text: sourceValue, method: "llm", model_confidence: candidate.confidence ?? null };
+  for (const candidate of llm?.field_candidates ?? []) {
+    if (candidate.field_key !== fieldKey) continue;
+    const element = adapted(parsed).elements.find((item) => item.id === candidate.source_element_id);
+    const sourceValue = String(candidate.source_value ?? "");
+    if (!element || element.source_available === false || !sourceValue || !String(element.text ?? "").includes(sourceValue)) continue;
+    const provenance = element.provenance ? { ...element.provenance, source_text: element.text } : null;
+    return { cell: { id: element.id, text: sourceValue, provenance, confidence: element.provenance?.confidence ?? null }, text: sourceValue, method: "llm", model_confidence: candidate.confidence ?? null };
+  }
+  return null;
 }
 
 function normalizedCandidate(parsed, candidate, kind, options = {}) {
@@ -781,8 +783,13 @@ export function extractStructuredDocument(parsed, options = {}) {
     if (conflict.kind === 'classification') typeResult.status = 'review';
   }
   for (const key of Object.keys(fields)) {
-    const candidates = (llm?.field_candidates ?? []).filter(candidate => candidate.field_key === key);
-    if (new Set(candidates.map(candidate => candidate.source_value)).size > 1) {
+    const candidates = (llm?.field_candidates ?? []).filter(candidate => candidate.field_key === key && groundedFieldCandidate(parsed, key, { field_candidates: [candidate] }));
+    const kind = fieldsByType[typeResult.type].find(definition => definition[0] === key)?.[3];
+    const identities = candidates.map(candidate => {
+      const normalized = normalize(candidate.source_value, kind);
+      return normalized.status === 'extracted' ? JSON.stringify(normalized.value) : JSON.stringify(candidate.source_value);
+    });
+    if (new Set(identities).size > 1) {
       fields[key] = { ...fields[key], value: null, source_value: null, provenance: null, status: 'review', source_method: 'conflict', normalization_note: 'Модель обнаружила несколько исходных значений; требуется выбор эксперта', conflict: { reason: 'multiple_grounded_candidates', rules: null, llm: candidates } };
       review.push({ path: `fields.${key}`, reason: fields[key].normalization_note, source_value: null, provenance: null });
     }
