@@ -10,6 +10,11 @@ import { resolveJsonPath } from "../src/linking/evidence-validation";
 
 const systemPrompt = readFileSync("public/prompts/document-linking-system.md", "utf8");
 const fixtureDocs = readdirSync("fixtures/upstream-structured-extraction-1.2.0").filter(name => name.endsWith(".json")).map(name => JSON.parse(readFileSync(`fixtures/upstream-structured-extraction-1.2.0/${name}`, "utf8")));
+const offlineSemanticReply = (context: any) => {
+  if (context.stage === "discover") return { fragments: context.fragments.map((fragment: any) => ({ fragment_id: fragment.fragment_id, summary: "Offline structural coverage only", anchors: [], open_questions: [] })) };
+  if (context.stage === "route") return { decisions: context.document_pairs.map((pair: any) => ({ ...pair, state: "no_relation", reason: "Offline structural fixture does not assert semantic relations", fragment_ids: [] })) };
+  return { links: [], unlinked_document_ids: [], context_requests: [], pair_decisions: [], analysis_summary: "Offline structural coverage only" };
+};
 test("evidence registry indexes arbitrary nested values and inherits row/provenance context", () => {
   const document: any = { document_id: "registry-doc", document_type: "future-kind", fields: { arbitrary: { value: "  A  B  ", provenance: { document_id: "registry-doc", source_available: true, source_text: "A B" }, future_metadata: { code: 17 } } }, tables: [{ rows: [{ row_id: "row-x", cells: [{ value: 9 }] }] }] };
   const refs = buildEvidenceRegistry([document]);
@@ -38,11 +43,10 @@ test("large upstream sets compare bounded originals with complete document cover
   const originalFetch = globalThis.fetch; const seen = new Set<string>(); let calls=0, saved:any;
   globalThis.fetch = async (_input, init) => {
     calls++; const body = JSON.parse(String(init?.body)), user=body.messages[1].content;
-    const context=JSON.parse(user.slice(user.indexOf("\n")+1));
-    assert.ok(context.documents.length<=2);
+    const context=JSON.parse(user.slice(user.indexOf("{") ));
     assert.ok(Math.ceil((body.messages[0].content.length+user.length)/2)<=180000);
-    for(const fragment of context.documents) {seen.add(fragment.document_id);assert.ok(fragment.path_values.length);}
-    return new Response(JSON.stringify({model:GEMMA_MODEL,choices:[{message:{content:JSON.stringify({links:[],unlinked_document_ids:[],context_requests:[],analysis_summary:"Reviewed originals"})}}]}),{status:200});
+    if (context.stage === "discover") for(const fragment of context.fragments) {seen.add(fragment.document_id);assert.ok(fragment.facts.length || fragment.rows.length === 0);}
+    return new Response(JSON.stringify({model:GEMMA_MODEL,choices:[{message:{content:JSON.stringify(offlineSemanticReply(context))}}]}),{status:200});
   };
   try {
     const result=await analyzeDocumentSet(fixtureDocs,{apiKey:"test-only",timeoutMs:1000,maxCalls:10000,maxInputTokens:180000,systemPrompt,onProgress:async s=>{saved=s;}});
@@ -58,7 +62,11 @@ for (const count of [3, 5]) test(`native fixture subset of ${count} documents re
   const selected = fixtureDocs.filter(doc => doc.document_type !== "addendum").slice(0, count);
   assert.equal(selected.length, count);
   const original = globalThis.fetch;
-  globalThis.fetch = async () => new Response(JSON.stringify({ model: GEMMA_MODEL, choices: [{ message: { content: JSON.stringify({ links: [], unlinked_document_ids: [], context_requests: [], analysis_summary: "Offline transport check only" }) } }] }));
+  globalThis.fetch = async (_input, init) => {
+    const user = JSON.parse(String(init?.body)).messages[1].content;
+    const context = JSON.parse(user.slice(user.indexOf("{")));
+    return new Response(JSON.stringify({ model: GEMMA_MODEL, choices: [{ message: { content: JSON.stringify(offlineSemanticReply(context)) } }] }), { status: 200 });
+  };
   try {
     const result = await analyzeDocumentSet(selected, { apiKey: "offline-only", timeoutMs: 1000, maxCalls: 10000, maxInputTokens: 180000, systemPrompt });
     assert.equal(result.complete, true);
