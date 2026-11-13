@@ -357,7 +357,7 @@ def build_cases() -> list[dict[str, Any]]:
         "10_hundreds_of_candidates", "320 числовых кандидатов", "Foundation support bracket ZX-14 inspection amount", f"{50 + 307:.2f}",
         [{"template": "act-2026-0424.json", "document_id": "live-many-candidates", "rows": many_rows}],
         [("live-many-candidates", "amount", "live-many-candidates-row-0308")], {"operation": "sum", "input_count": 1},
-        scenario_note="There are 320 numeric candidates; the uniquely relevant item is row 308 and must survive candidate batching.",
+        scenario_note="Many numeric candidates require chunked review; identify sources from operation semantics and account for every candidate across batches.",
     )
 
     return cases

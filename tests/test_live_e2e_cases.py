@@ -4,6 +4,7 @@ from decimal import Decimal
 from pathlib import Path
 
 import pytest
+import httpx
 from jsonschema import Draft202012Validator, FormatChecker
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -18,7 +19,7 @@ from reconciliation_engine.engine import execute_plan, validate_plan
 from reconciliation_engine.facts import extract_facts, numeric_value
 from reconciliation_engine.models import ReconciliationRequest
 from reconciliation_engine.plans import CalculationPlan, PlanExclusion, PlanInclusion, PlanStep
-from reconciliation_engine.planner import IncompatibleChunkPlans, LLMPlanner, _dimension_mismatch, _validated_plan
+from reconciliation_engine.planner import IncompatibleChunkPlans, LLMPlanner, PlannerUnavailable, _dimension_mismatch, _validated_plan
 
 
 def test_live_e2e_cases_are_synthetic_contract_valid_and_have_independent_references():
@@ -44,9 +45,81 @@ def test_live_e2e_cases_are_synthetic_contract_valid_and_have_independent_refere
     target_fact_id = many["reference"]["expected_source_groups"][0][0]
     target_index = next(index for index, fact in enumerate(facts) if fact.fact_id == target_fact_id and fact.document_type != "kfz_report")
     assert target_index >= 300
+    assert "308" not in many["request"]["context"]["targets"][0]["description"]
     links = many["request"]["linking_result"]["links"]
     assert any(link["verification_status"] == "human_confirmed" for link in links)
     assert any(link["verification_status"] == "not_reviewed" for link in links)
+
+
+def test_later_candidate_batch_is_sent_after_an_earlier_timeout(monkeypatch):
+    case = next(item for item in build_cases() if item["reference"]["case_id"] == "10_hundreds_of_candidates")
+    request = ReconciliationRequest.model_validate(case["request"])
+    target = request.context.targets[0]
+    facts = extract_facts(request.extraction_results)
+    source_groups = {fact.document_id: fact.document_id for fact in facts}
+    planner = LLMPlanner(Settings(llm_enabled=True, llm_api_key="unit-test", llm_max_candidates=300))
+    calls = []
+    target_alias = None
+
+    def review_batch(payload, sensitive_data):
+        nonlocal target_alias
+        calls.append(payload)
+        batch_index = payload["candidate_batch"]["index"]
+        matching = [
+            item for item in payload["candidates"]
+            if item.get("operation_description") == "Foundation support bracket ZX-14 inspection"
+        ]
+        if batch_index == 1:
+            assert not matching
+            raise httpx.ReadTimeout("synthetic first-batch timeout")
+
+        assert batch_index == 2
+        assert len(matching) == 1
+        target_alias = matching[0]["fact_id"]
+        other_ids = [item["fact_id"] for item in payload["candidates"] if item["fact_id"] != target_alias]
+        return CalculationPlan(
+            target_id="target_001",
+            method_description="Select the matching operation description.",
+            included=[PlanInclusion(fact_id=target_alias, reason="Matches the target operation.")],
+            excluded=[PlanExclusion(fact_id=fact_id, reason="Does not match the target operation.") for fact_id in other_ids],
+            steps=[PlanStep(step_id="total", operation="sum", inputs=[target_alias])],
+            result_step_id="total",
+            currency="RUB",
+            amount_basis="unspecified",
+        )
+
+    monkeypatch.setattr(planner, "_request_plan", review_batch)
+    result = planner.plan(target, facts, source_groups, request.linking_result)
+
+    assert [call["candidate_batch"]["index"] for call in calls] == [1, 2]
+    assert target_alias is not None
+    assert target_alias not in {item["fact_id"] for item in calls[0]["candidates"]}
+    assert target_alias in {item["fact_id"] for item in calls[1]["candidates"]}
+    assert result.included[0].fact_id == case["reference"]["expected_source_groups"][0][0]
+    assert len(result.unprocessed_fact_ids) == 300
+    assert result.requires_manual_review
+
+
+def test_all_failed_candidate_batches_leave_every_candidate_unprocessed(monkeypatch):
+    case = next(item for item in build_cases() if item["reference"]["case_id"] == "10_hundreds_of_candidates")
+    request = ReconciliationRequest.model_validate(case["request"])
+    target = request.context.targets[0]
+    facts = extract_facts(request.extraction_results)
+    planner = LLMPlanner(Settings(llm_enabled=True, llm_api_key="unit-test", llm_max_candidates=300))
+    batch_indices = []
+
+    def fail_batch(payload, sensitive_data):
+        batch_indices.append(payload["candidate_batch"]["index"])
+        raise PlannerUnavailable("synthetic provider failure")
+
+    monkeypatch.setattr(planner, "_request_plan", fail_batch)
+    result = planner.plan(target, facts, {}, request.linking_result)
+
+    assert batch_indices == [1, 2]
+    assert not result.included
+    assert len(result.unprocessed_fact_ids) == 320
+    assert result.currency == target.currency
+    assert result.requires_manual_review
 
 
 def test_live_evaluation_is_pinned_to_the_requested_gemma_model(monkeypatch):

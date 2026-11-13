@@ -46268,7 +46268,7 @@
         "kfz_source_path": "#/indicators/0/extracted",
         "kfz_row_id": null,
         "label": "Foundation support bracket ZX-14 inspection amount",
-        "description": "Synthetic evaluation case: 320 числовых кандидатов. There are 320 numeric candidates; the uniquely relevant item is row 308 and must survive candidate batching.",
+        "description": "Synthetic evaluation case: 320 числовых кандидатов. Many numeric candidates require chunked review; identify sources from operation semantics and account for every candidate across batches.",
         "unit": null,
         "currency": "RUB",
         "amount_basis": "unspecified",

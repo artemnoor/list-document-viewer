@@ -23,6 +23,8 @@
 
 После этого benchmark полный локальный CI повторно пройден: `pytest -q`, synthetic acceptance, Docker build и HTTP smoke (`/health`, `/docs`, `/openapi.json`).
 
+После исправления границ candidate batches полный `pytest -q` прошёл. Новый bounded live run использовал 33 scenario-вызова и один preflight: первые девять сценариев дали 27 ответов модели, а все шесть запросов сценария 320 кандидатов завершились без ответа из-за одного timeout и пяти HTTP 402. Regression test подтверждает, что target-кандидат реально попадает во второй пакет, второй пакет отправляется после сбоя первого, а факты сбойного пакета остаются `unprocessed`; итог не может публиковаться. Для повторной live-проверки модели на позднем пакете требуется доступный баланс провайдера.
+
 ## Проверка реального upstream-примера
 
 - `examples/build_upstream_example.py` теперь копирует `input_hash` из каждой Extraction в Linking snapshot и связывает prior decision с точным snapshot через штатный `bind_decision_to_request`.

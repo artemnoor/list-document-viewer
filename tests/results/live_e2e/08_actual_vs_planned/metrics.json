@@ -19,13 +19,13 @@
   "llm_calls": 3,
   "provider_error_calls": 0,
   "usage": {
-    "prompt_tokens": 8151,
-    "completion_tokens": 849,
-    "total_tokens": 9000,
-    "provider_cost_total": 0.14952248,
+    "prompt_tokens": 8169,
+    "completion_tokens": 845,
+    "total_tokens": 9014,
+    "provider_cost_total": 0.07898564,
     "provider_cost_currency": "RUB"
   },
-  "latency_ms": 12060.573999999999,
+  "latency_ms": 18626.278000000002,
   "runs": [
     {
       "repeat": 1,
@@ -63,7 +63,6 @@
         "publication_gate_observed": true,
         "safe_abstention": true,
         "diagnostic_codes": [
-          "assumptions_require_review",
           "link_marked_review_required"
         ],
         "plan_source": "llm",

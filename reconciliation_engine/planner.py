@@ -358,9 +358,15 @@ class LLMPlanner:
             score = sum(1 for term in terms if term and term in text)
             return (-score, group_by_document.get(fact.document_id, "source_unknown"), fact.source_path)
 
-        ordered = sorted(compatible_candidates, key=relevance)
-        chunks = [ordered[index:index + candidate_limit] for index in range(0, len(ordered), candidate_limit)]
+        # Fix batch boundaries in Extraction order so relevance ranking cannot
+        # pull a later source into an earlier batch. Rank only within each batch.
+        chunks = [
+            sorted(compatible_candidates[index:index + candidate_limit], key=relevance)
+            for index in range(0, len(compatible_candidates), candidate_limit)
+        ]
         plans: list[tuple[int, CalculationPlan]] = []
+        failed_fact_ids: list[str] = []
+        failed_batch_gaps: list[str] = []
         for chunk_index, chunk in enumerate(chunks, start=1):
             payload = self.build_payload(target, facts, source_groups, linking, chunk, fact_aliases)
             payload["candidate_batch"] = {
@@ -370,7 +376,16 @@ class LLMPlanner:
                 "total_candidate_count": len(candidates),
                 "all_batches_will_be_reviewed": True,
             }
-            plan = self._request_plan(payload, sensitive_data)
+            try:
+                plan = self._request_plan(payload, sensitive_data)
+            except (PlannerUnavailable, httpx.HTTPError, ValueError) as exc:
+                if len(chunks) == 1:
+                    raise
+                failed_fact_ids.extend(fact.fact_id for fact in chunk)
+                failed_batch_gaps.append(
+                    f"Candidate batch {chunk_index} of {len(chunks)} could not be reviewed; its candidates remain unprocessed ({type(exc).__name__})."
+                )
+                continue
             decoded = plan.model_dump(mode="python")
             decoded["target_id"] = target.target_id
             for inclusion in decoded.get("included", []):
@@ -385,7 +400,22 @@ class LLMPlanner:
             decoded["unprocessed_fact_ids"] = [alias_to_fact.get(value, value) for value in decoded.get("unprocessed_fact_ids", [])]
             plans.append((chunk_index, CalculationPlan.model_validate(decoded)))
 
-        merged = self._merge_chunk_plans(target, plans, len(candidates), compatible_candidates)
+        reviewed_candidate_count = len(candidates) - len(failed_fact_ids)
+        if plans:
+            merged = self._merge_chunk_plans(target, plans, reviewed_candidate_count, compatible_candidates)
+        else:
+            merged = CalculationPlan(
+                target_id=target.target_id,
+                method_description="No candidate batch produced a usable plan.",
+                rounding_scale=target.rounding_scale,
+                currency=target.currency,
+                unit=target.unit,
+                amount_basis=target.amount_basis,
+                requires_manual_review=True,
+            )
+        merged.unprocessed_fact_ids = list(dict.fromkeys([*merged.unprocessed_fact_ids, *failed_fact_ids]))
+        merged.information_gaps = list(dict.fromkeys([*merged.information_gaps, *failed_batch_gaps]))
+        merged.requires_manual_review = merged.requires_manual_review or bool(failed_fact_ids)
         merged.excluded.extend(dimension_exclusions)
         if dimension_exclusions:
             merged.method_description += f" Deterministically excluded {len(dimension_exclusions)} candidates with incompatible currency or unit metadata."

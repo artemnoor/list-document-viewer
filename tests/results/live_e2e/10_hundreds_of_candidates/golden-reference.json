@@ -2,7 +2,7 @@
   "case_id": "10_hundreds_of_candidates",
   "synthetic": true,
   "title": "320 числовых кандидатов",
-  "scenario_note": "There are 320 numeric candidates; the uniquely relevant item is row 308 and must survive candidate batching.",
+  "scenario_note": "Many numeric candidates require chunked review; identify sources from operation semantics and account for every candidate across batches.",
   "expected_source_groups": [
     [
       "fact_06a2740a513e521ac976"

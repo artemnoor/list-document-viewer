@@ -19,13 +19,13 @@
   "llm_calls": 3,
   "provider_error_calls": 0,
   "usage": {
-    "prompt_tokens": 8178,
-    "completion_tokens": 906,
-    "total_tokens": 9084,
-    "provider_cost_total": 0.09990653,
+    "prompt_tokens": 8196,
+    "completion_tokens": 808,
+    "total_tokens": 9004,
+    "provider_cost_total": 0.08075766000000001,
     "provider_cost_currency": "RUB"
   },
-  "latency_ms": 12479.135,
+  "latency_ms": 12549.984,
   "runs": [
     {
       "repeat": 1,
