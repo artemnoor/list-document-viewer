@@ -22,6 +22,18 @@
 
 Document Linking, финансовая сверка, расчёты, заключения и OCR/Docling не входят в этот этап.
 
+## Оценка Extraction
+
+MVP scorer использует вручную проверенный single-reviewer gold по JSON Schema в `evaluation/mvp-extraction-gold.schema.json`. Gold фиксирует байтовый SHA-256 Parser artifact, `input_hash`, критичные и остальные поля, typed/raw values, source path/provenance и ожидаемые row IDs. Predictions привязываются к каждому repeat через run manifest; manifest и файлы prediction хешируются. Золото и manifest не заполняются из ответов оцениваемой модели.
+
+Запуск из каталога сервиса:
+
+```bash
+node scripts/evaluate-mvp-extraction.mjs --gold evaluation/mvp-v1/extraction-gold.json --predictions evaluation/mvp-v1/runs.json --out reports/mvp-extraction-report.json
+```
+
+Если сценарий отсутствует, модель завершилась ошибкой, prediction не прошёл схему/хеш-проверку или вернулся `rules_only`, scorer сохраняет его как failed LLM-required и оставляет ожидаемые поля и строки в знаменателях recall. Q1 требует 100% critical field recall и accepted value/source correctness, а также не менее 95% recall остальных полей и строк. N/A остаётся `null`; статус отчёта не становится pass при неприменимом обязательном измерении. Логи не содержат source values или model response text; уровень задаётся через `LOG_LEVEL`.
+
 ## Архитектура
 
 | Компонент | Расположение |
