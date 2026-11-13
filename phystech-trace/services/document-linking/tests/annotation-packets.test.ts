@@ -144,6 +144,10 @@ test("single-reviewer mode rejects pending packets and missing pair decisions", 
 test("single-reviewer mode rejects changed source hashes and unsafe evidence paths or values", (t) => {
   const changedSource = createPreparedRoot("single");
   t.after(() => rmSync(changedSource.root, { recursive: true, force: true }));
+  const changedManifest = readJson(resolve(changedSource.root, changedSource.outputDirectory, "manifest.json"));
+  const changedPacketFile = changedManifest.scenarios[0].reviewer_packets[0];
+  writePacket(changedSource.root, changedSource.outputDirectory, changedPacketFile,
+    completeAsSingleReviewer(readJson(resolve(changedSource.root, changedSource.outputDirectory, changedPacketFile))));
   const sourcePath = resolve(changedSource.root, "evaluation/sources/document-1.json");
   writeFileSync(sourcePath, `${readFileSync(sourcePath, "utf8")}\n`);
   const changedHashRun = compileSingle(changedSource.root);
