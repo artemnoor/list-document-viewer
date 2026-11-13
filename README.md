@@ -1,5 +1,7 @@
 # Phystech Trace — Verification Engine
 
+[![CI](https://github.com/artemnoor/phystech-trace-verification-engine/actions/workflows/ci.yml/badge.svg)](https://github.com/artemnoor/phystech-trace-verification-engine/actions/workflows/ci.yml)
+
 Самостоятельный backend этапа Verification в Phystech Trace. Сервис сравнивает показатели итогового КФЗ из Structured Extraction с ожидаемыми значениями из предварительного контракта Reconciliation, проверяет допустимость сравнения и сохраняет доказательную цепочку. Сервис **не** извлекает данные из PDF и не пересчитывает Reconciliation.
 
 ## Что реализовано
@@ -64,6 +66,8 @@ pytest
 
 Набор проверяет числовые и содержательные сценарии, upstream-контракты, property-based арифметику, API, идемпотентность и SQLite. Фактический последний прогон описан в [`docs/test-results.md`](docs/test-results.md).
 
+GitHub Actions запускает полный набор на Python 3.11 и 3.12 при push и pull request, а отдельная задача проверяет Docker Compose и HTTP smoke flow без внешнего Polza API.
+
 ## API
 
 | Метод | Endpoint | Назначение |
@@ -96,4 +100,5 @@ pytest
 - [`docs/classification.md`](docs/classification.md) — категории и требования к доказательству причины.
 - [`docs/integration-guide.md`](docs/integration-guide.md) — подключение к Phystech Trace.
 - [`docs/test-results.md`](docs/test-results.md) — фактические тестовые результаты и ограничения.
+- [`docs/remediation-report.md`](docs/remediation-report.md) — причины дефектов, исправления и подтверждающие проверки.
 - Примеры запросов/ответов находятся в `examples/`.

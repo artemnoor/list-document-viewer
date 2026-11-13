@@ -5,7 +5,7 @@
 Полный набор `pytest`:
 
 ```text
-60 passed, 1 warning in 6.54s
+60 passed, 1 warning in 6.44s
 ```
 
 В наборе есть unit, upstream/schema contract, property-based Decimal, regression, API, security, idempotence и concurrency checks. Property test выполняет 60 Hypothesis examples. Проверяются несовпадающие и отсутствующие hashes/версии, отсутствие operation proof, противоречивые formula/input/output, Extraction period, неподтверждённые ссылки, tolerance, `not_applicable` coverage и ложные подтверждения. Проверяется, что SQLite не держит транзакцию во время optional provider call.
@@ -28,3 +28,7 @@ Docker Compose smoke после пересборки:
 Ранее был отправлен один синтетический mismatch. Gemma 4 26B A4B вернула три schema-валидные гипотезы, которые не меняли детерминированный статус. В запросе были только pseudonymous tokens и коды; финансовые значения и документы не отправлялись. Этот единичный live-запуск не является частью текущего `pytest` прогона.
 
 Полный E2E Parser → Reconciliation → Verification → Reporting не заявляется: Reconciliation 1.0.0 остаётся предварительным, а Reporting не подключён.
+
+## GitHub Actions CI
+
+Workflow `.github/workflows/ci.yml` запускает полный `pytest` набор на Python 3.11 и 3.12 при push и pull request. Отдельная задача собирает Docker Compose и проверяет синтетический API flow с отключённым внешним Polza. Локальная YAML-проверка workflow, `docker compose config --quiet` и полный набор тестов прошли; GitHub-hosted результат появляется в [Actions](https://github.com/artemnoor/phystech-trace-verification-engine/actions/workflows/ci.yml).
