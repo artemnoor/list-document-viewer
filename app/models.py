@@ -85,6 +85,26 @@ class VerificationRequest(BaseModel):
     context: VerificationContext = Field(default_factory=VerificationContext)
 
 
+class ArtifactReference(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    artifact_id: str = Field(pattern=r"^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$")
+    sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+
+
+class ArtifactBundleRequest(BaseModel):
+    """Project-scoped immutable artifact references for large input bundles."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    project_id: str = Field(min_length=1)
+    extraction: ArtifactReference
+    supporting_extractions: list[ArtifactReference] = Field(default_factory=list, max_length=32)
+    reconciliation_result: ArtifactReference
+    linking_result: ArtifactReference | None = None
+    context: VerificationContext = Field(default_factory=VerificationContext)
+
+
 class ValueEvidence(BaseModel):
     source_value: Any = None
     normalized_value: Any = None
@@ -159,6 +179,7 @@ class IndicatorResult(BaseModel):
     label: str | None = None
     value_type: str
     status: VerificationStatus
+    legacy_status: VerificationStatus | None = None
     actual: ValueEvidence | None = None
     expected: ValueEvidence | None = None
     difference: Difference = Field(default_factory=Difference)
@@ -185,10 +206,21 @@ class VerificationSummary(BaseModel):
     status_counts: dict[str, int]
 
 
+class VerificationConclusion(BaseModel):
+    overall_status: VerificationStatus
+    has_proven_mismatch: bool
+    coverage_complete: bool
+    mismatch_count: int = Field(ge=0)
+    unresolved_count: int = Field(ge=0)
+    not_applicable_count: int = Field(ge=0)
+
+
 class VerificationResult(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    schema_version: Literal["1.1.0"] = "1.1.0"
+    schema_version: Literal["1.2.0"] = "1.2.0"
+    integrity_status: Literal["verified", "legacy_unverified"] = "verified"
+    legacy_overall_status: VerificationStatus | None = None
     verification_id: str
     project_id: str
     calculation_id: str
@@ -197,6 +229,7 @@ class VerificationResult(BaseModel):
     input_metadata: dict[str, Any]
     overall_status: VerificationStatus
     summary: dict[str, int]
+    conclusion: VerificationConclusion
     completeness: VerificationCompleteness
     indicators: list[IndicatorResult]
     diagnostics: list[dict[str, Any]] = Field(default_factory=list)

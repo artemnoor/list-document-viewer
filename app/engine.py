@@ -41,6 +41,8 @@ from app.models import (
     VerificationStatus,
 )
 from app.reconciliation_adapter import ReconciliationTarget, get_reconciliation_adapter
+from app.reconciliation_adapter import is_reconciliation_engine_result, reconciliation_identity
+from app.reconciliation_proof import native_calculation_diagnostics, native_run_diagnostics, provisional_operation_diagnostics
 
 
 INSUFFICIENT_SOURCE_CODES = {
@@ -84,12 +86,19 @@ INVALID_PROOF_CODES = {
     "calculation_id_mismatch", "calculation_source_id_duplicate", "calculation_operation_id_duplicate",
     "calculation_input_source_unresolved", "calculation_operation_source_mismatch", "calculation_source_unused",
     "calculation_output_mismatch", "calculation_formula_mismatch", "calculation_formula_input_mismatch", "excluded_source_used",
+    "calculation_operation_value_mismatch", "calculation_fact_hash_mismatch", "calculation_fact_value_mismatch",
+    "calculation_fact_id_mismatch", "calculation_source_coverage_mismatch", "calculation_trace_value_mismatch",
+    "calculation_exact_value_mismatch", "calculation_expected_value_mismatch", "calculation_snapshot_hash_mismatch",
+    "calculation_plan_coverage_invalid", "calculation_step_reference_invalid", "calculation_trace_mismatch",
+    "calculation_step_id_invalid", "calculation_result_step_missing", "calculation_source_extraction_mismatch",
+    "calculation_source_pointer_unresolved", "calculation_source_nonnumeric", "calculation_operation_invalid",
 }
 
 INVALID_RUN_CODES = {
     "project_id_mismatch", "extraction_id_mismatch", "extraction_version_mismatch", "extraction_hash_mismatch",
     "linking_run_id_mismatch", "linking_result_missing", "linking_version_mismatch", "linking_run_id_missing",
     "linking_contract_version_missing", "supporting_extraction_missing", "supporting_extraction_hash_mismatch",
+    "linking_hash_mismatch", "snapshot_document_duplicate",
 }
 
 UNVERIFIED_RUN_CODES = {
@@ -283,6 +292,13 @@ def _source_data(
 
 
 def _reconciliation_run_diagnostics(request: VerificationRequest) -> list[dict[str, Any]]:
+    if is_reconciliation_engine_result(request.reconciliation_result):
+        extractions = {
+            item.get("document_id"): item
+            for item in [request.extraction, *request.supporting_extractions]
+            if isinstance(item, dict) and isinstance(item.get("document_id"), str)
+        }
+        return native_run_diagnostics(request.reconciliation_result, extractions, request.linking_result)
     metadata = request.reconciliation_result["run_metadata"]
     input_data = metadata["input_data"]
     issues: list[dict[str, Any]] = []
@@ -369,7 +385,7 @@ def _normalized_proof_value(value: Any, value_type: str, currency: str | None = 
 def _calculation_proof_diagnostics(
     expected: dict[str, Any], calculation_id: str, checks: list[SourceCheck]
 ) -> list[dict[str, Any]]:
-    """Validate the handoff proof graph without re-running Reconciliation arithmetic."""
+    """Validate provisional source/operation graph; arithmetic is checked separately."""
     issues: list[dict[str, Any]] = []
     declared_id = expected.get("calculation_id")
     if declared_id is not None and declared_id != calculation_id:
@@ -444,6 +460,25 @@ def _calculation_proof_diagnostics(
 
 
 def _validate_reconciliation_semantics(request: VerificationRequest) -> None:
+    if is_reconciliation_engine_result(request.reconciliation_result):
+        issues: list[ContractIssue] = []
+        seen_ids: set[str] = set()
+        extractions = {item.get("document_id"): item for item in [request.extraction, *request.supporting_extractions]}
+        for index, calculation in enumerate(request.reconciliation_result.get("calculations", [])):
+            target = calculation.get("target") or {}
+            origin = target.get("kfz_origin") or {}
+            target_id = (target.get("target_id") or "").strip()
+            if not target_id or target_id in seen_ids:
+                issues.append(ContractIssue(f"/reconciliation_result/calculations/{index}/target/target_id", "Native target IDs must be non-empty and unique", "reconciliation-engine-1.0.0"))
+            seen_ids.add(target_id)
+            source = extractions.get(origin.get("document_id"))
+            if source is None or source.get("document_type") != "kfz_report":
+                issues.append(ContractIssue(f"/reconciliation_result/calculations/{index}/target/kfz_origin/document_id", "Each calculation must reference a supplied KFZ Extraction", "reconciliation-engine-1.0.0"))
+            elif source.get("extraction_id") != origin.get("extraction_id"):
+                issues.append(ContractIssue(f"/reconciliation_result/calculations/{index}/target/kfz_origin/extraction_id", "Target extraction_id does not match the supplied KFZ Extraction", "reconciliation-engine-1.0.0"))
+        if issues:
+            raise ContractValidationError(issues)
+        return
     targets = request.reconciliation_result["targets"]
     seen_ids: set[str] = set()
     issues: list[ContractIssue] = []
@@ -607,15 +642,33 @@ def _make_target_result(
     checks, excluded = _source_data(item, request, extraction_index)
     source_diagnostics = [issue for check in checks for issue in check.issues]
     diagnostics = [*run_diagnostics, *actual_issues, *source_diagnostics]
-    proof_diagnostics = _calculation_proof_diagnostics(
-        expected_result,
-        request.reconciliation_result["run_metadata"]["calculation_id"],
-        checks,
-    )
+    identity = reconciliation_identity(request.reconciliation_result)
+    if item.native_calculation is not None:
+        proof_diagnostics = native_calculation_diagnostics(
+            item.native_calculation,
+            request.reconciliation_result,
+            extraction_index,
+        )
+    else:
+        proof_diagnostics = _calculation_proof_diagnostics(expected_result, str(identity.get("calculation_id")), checks)
+        proof_diagnostics.extend(provisional_operation_diagnostics(expected_result, checks))
     diagnostics.extend(proof_diagnostics)
     explicit_diagnostics = expected_result.get("diagnostics", [])
+    if item.native_calculation is not None:
+        for native_diagnostic in explicit_diagnostics:
+            if not isinstance(native_diagnostic, dict):
+                continue
+            diagnostics.append({
+                "code": native_diagnostic.get("code", "reconciliation_diagnostic"),
+                "message": native_diagnostic.get("message", "Reconciliation reported an unresolved diagnostic"),
+                "reconciliation_path": native_diagnostic.get("path"),
+                "severity": native_diagnostic.get("severity"),
+            })
+        explicit_diagnostics = []
     expected_value = expected_result.get("expected_value")
     expected = _expected_evidence(expected_result, target, target_id, item.array_index) if expected_value is not None else None
+    if expected is not None and item.reference_pointer:
+        expected.json_pointer = f"{item.reference_pointer}/expected_value"
     actual_value = actual.normalized_value if actual else None
     actual_currency = actual.currency if actual else target.get("currency")
     expected_currency = expected.currency if expected else expected_result.get("currency")
@@ -624,10 +677,10 @@ def _make_target_result(
     status = VerificationStatus.INSUFFICIENT_DATA
     uncertainty_reasons: list[str] = []
 
-    if expected_result["calculation_status"] == "not_applicable" or not expected_result["comparison_eligible"]:
+    if expected_result["calculation_status"] == "not_applicable":
         status = VerificationStatus.NOT_APPLICABLE
         diagnostics.append({"code": "comparison_not_eligible", "message": "Reconciliation declared this target non-comparable"})
-    elif expected_result["calculation_status"] in {"incomplete", "invalid"}:
+    elif expected_result["calculation_status"] in {"incomplete", "invalid"} or not expected_result["comparison_eligible"]:
         status = VerificationStatus.INSUFFICIENT_DATA
         diagnostics.append({"code": "reconciliation_incomplete", "message": f"Reconciliation calculation_status is {expected_result['calculation_status']}"})
     elif expected_value is None:
@@ -809,7 +862,7 @@ def _make_target_result(
         status = VerificationStatus.INSUFFICIENT_DATA
         uncertainty_reasons.append("reconciliation_run_metadata_mismatch")
     elif proof_diagnostics and status != VerificationStatus.NOT_APPLICABLE:
-        if any(issue.get("code") in INVALID_PROOF_CODES for issue in proof_diagnostics):
+        if any(issue.get("proof_invalid") is True or issue.get("code") in INVALID_PROOF_CODES for issue in proof_diagnostics):
             status = VerificationStatus.INSUFFICIENT_DATA
             uncertainty_reasons.append("calculation_proof_invalid")
         elif status not in {VerificationStatus.INSUFFICIENT_DATA, VerificationStatus.NEEDS_REVIEW}:
@@ -863,10 +916,10 @@ def _make_target_result(
                 "provenance": actual.provenance if actual else None,
             },
             reconciliation_reference={
-                "run_id": request.reconciliation_result["run_metadata"]["run_id"],
-                "calculation_id": request.reconciliation_result["run_metadata"]["calculation_id"],
+                "run_id": identity.get("run_id"),
+                "calculation_id": identity.get("calculation_id"),
                 "target_id": target_id,
-                "json_pointer": f"/targets/{item.array_index}/result",
+                "json_pointer": item.reference_pointer or f"/targets/{item.array_index}/result",
                 "formula": expected_result.get("formula"),
                 "operations": expected_result.get("operations", []),
                 "applied_rules": expected_result.get("applied_rules", []),
@@ -880,7 +933,7 @@ def _make_target_result(
             ],
             provenance_chain=[
                 *([{"stage": "extraction", "document_id": target.get("source_document_id"), "extraction_id": target.get("extraction_id"), "json_pointer": pointer, "provenance": actual.provenance}] if actual else []),
-                {"stage": "reconciliation", "run_id": request.reconciliation_result["run_metadata"]["run_id"], "calculation_id": request.reconciliation_result["run_metadata"]["calculation_id"], "target_id": target_id, "operations": expected_result.get("operations", []), "used_sources": [check.as_trace() for check in checks]},
+                {"stage": "reconciliation", "run_id": identity.get("run_id"), "calculation_id": identity.get("calculation_id"), "target_id": target_id, "operations": expected_result.get("operations", []), "used_sources": [check.as_trace() for check in checks]},
             ],
         ),
         trust=EvidenceTrust(
@@ -894,7 +947,8 @@ def _make_target_result(
                 else "valid"
             ),
             automatic_link_confirmation=(
-                "not_required" if not any(check.source.get("link_id") for check in checks)
+                "unconfirmed" if any(check.source.get("evidence_status") in {"unconfirmed", "unknown"} for check in checks)
+                else "not_required" if not any(check.source.get("link_id") for check in checks)
                 else "rejected" if any(check.link and check.link.get("verification_status") == "human_rejected" for check in checks)
                 else "confirmed" if all(check.is_automatically_confirmed for check in checks)
                 else "unconfirmed"
@@ -907,7 +961,7 @@ def _make_target_result(
             ),
             calculation_trust=(
                 "not_applicable" if status == VerificationStatus.NOT_APPLICABLE
-                else "invalid" if any(issue.get("code") in INVALID_PROOF_CODES | INVALID_RUN_CODES | INVALID_SOURCE_CODES for issue in [*proof_diagnostics, *run_diagnostics, *source_diagnostics])
+                else "invalid" if any(issue.get("proof_invalid") is True or issue.get("code") in INVALID_PROOF_CODES | INVALID_RUN_CODES | INVALID_SOURCE_CODES for issue in [*proof_diagnostics, *run_diagnostics, *source_diagnostics])
                 else "proven" if proof_complete
                 else "unproven"
             ),
@@ -990,11 +1044,33 @@ def run_verification(
     run_diagnostics = _reconciliation_run_diagnostics(request)
     results: list[IndicatorResult] = []
     consumed_semantics: set[str] = set()
-    adapter = get_reconciliation_adapter(request.reconciliation_result["contract_version"])
+    adapter = get_reconciliation_adapter(request.reconciliation_result)
     for item in adapter.adapt(request.reconciliation_result):
         ensure_time_remaining()
         results.append(_make_target_result(item, request, extraction_index, run_diagnostics))
         consumed_semantics.add(item.target["semantic_key"])
+        if item.target.get("json_pointer"):
+            pointer_parts = item.target["json_pointer"].strip("/").split("/")
+            primary = request.extraction
+            if len(pointer_parts) >= 3 and pointer_parts[0] == "indicators" and pointer_parts[1].isdigit():
+                index = int(pointer_parts[1])
+                indicators = primary.get("indicators", [])
+                if index < len(indicators) and isinstance(indicators[index], dict):
+                    key = indicators[index].get("key")
+                    if isinstance(key, str):
+                        consumed_semantics.add(key)
+            elif len(pointer_parts) >= 2 and pointer_parts[0] == "fields":
+                consumed_semantics.add(pointer_parts[1].replace("~1", "/").replace("~0", "~"))
+            elif len(pointer_parts) >= 4 and pointer_parts[0] == "line_items" and pointer_parts[1].isdigit():
+                rows = primary.get("line_items", [])
+                row_index = int(pointer_parts[1])
+                if row_index < len(rows) and isinstance(rows[row_index], dict):
+                    row_id = rows[row_index].get("row_id", str(row_index))
+                    consumed_semantics.add(f"line_item:{row_id}:{pointer_parts[2]}")
+            consumed_semantics.update(
+                semantic for semantic, _, _, candidate_pointer in _extraction_candidates(request.extraction)
+                if candidate_pointer == item.target["json_pointer"]
+            )
     results.extend(_make_unreconciled_results(request, consumed_semantics))
     if explanation_provider is not None:
         for indicator in results:
@@ -1023,6 +1099,14 @@ def run_verification(
         unresolved_indicators=len(results) - verified_count - not_applicable_count,
         complete=bool(results) and verified_count == len(results),
     )
+    conclusion = {
+        "overall_status": overall,
+        "has_proven_mismatch": mismatch_count > 0,
+        "coverage_complete": completeness.complete,
+        "mismatch_count": mismatch_count,
+        "unresolved_count": completeness.unresolved_indicators,
+        "not_applicable_count": not_applicable_count,
+    }
     run_diagnostics.extend(
         {"code": "indicator_requires_review", "target_id": indicator.target_id, "message": indicator.uncertainty.status_reason}
         for indicator in results
@@ -1031,7 +1115,7 @@ def run_verification(
     return VerificationResult(
         verification_id=verification_id,
         project_id=request.project_id,
-        calculation_id=request.reconciliation_result["run_metadata"]["calculation_id"],
+        calculation_id=reconciliation_identity(request.reconciliation_result).get("calculation_id") or "unknown",
         created_at=created_at,
         input_fingerprint=fingerprint,
         input_metadata={
@@ -1059,13 +1143,12 @@ def run_verification(
             },
             "reconciliation": {
                 "contract_version": request.reconciliation_result.get("contract_version"),
-                "run_id": request.reconciliation_result["run_metadata"]["run_id"],
-                "calculation_id": request.reconciliation_result["run_metadata"]["calculation_id"],
-                "engine_version": request.reconciliation_result["run_metadata"].get("reconciliation_engine_version"),
+                **reconciliation_identity(request.reconciliation_result),
             },
         },
         overall_status=overall,
         summary=counts,
+        conclusion=conclusion,
         completeness=completeness,
         indicators=results,
         diagnostics=run_diagnostics,

@@ -1,36 +1,44 @@
-# Результаты тестирования
+# Результаты проверок
 
-## Verification Engine 1.1.0 — 13 ноября 2026
+## Verification Engine 1.2.0 — 14 ноября 2026
 
-Полный набор `pytest`:
+### Локальные тесты
 
-```text
-60 passed, 1 warning in 6.44s
+Команда:
+
+```powershell
+python -m pytest --tb=short
+python -m compileall -q app tests
 ```
 
-В наборе есть unit, upstream/schema contract, property-based Decimal, regression, API, security, idempotence и concurrency checks. Property test выполняет 60 Hypothesis examples. Проверяются несовпадающие и отсутствующие hashes/версии, отсутствие operation proof, противоречивые formula/input/output, Extraction period, неподтверждённые ссылки, tolerance, `not_applicable` coverage и ложные подтверждения. Проверяется, что SQLite не держит транзакцию во время optional provider call.
+Результат последнего полного прогона: **72 passed**, 1 предупреждение Starlette TestClient о будущей замене `httpx` на `httpx2`. `pytest-asyncio` также вывел предупреждение, что scope event loop не задан.
 
-Текущие upstream Extraction 1.2.0 и Linking 1.2.0 схемы сверены с commit в `contracts/upstream-sources.json`; доступные Extraction fixtures и synthetic Linking 1.2.0 проходят контрактные проверки. Старый upstream Linking sample с payload version 1.0.0 намеренно остаётся несовместимым с декларированной схемой 1.2.0.
+Набор покрывает unit, upstream/schema contract, property-based Decimal arithmetic, regressions, API, concurrency, idempotence, storage migration, artifact references, >2 МиБ bundles, invalid hashes/versions and missing proof. Отдельно проверено, что запись одинаковых `output_value` и `expected_value` не скрывает неверную арифметику, а неполные цели не становятся `matched`.
 
-Docker Compose smoke после пересборки:
+Файл upstream-generated synthetic acceptance output отдельно проверяет native fact hashes и Decimal plan. Все исходные источники сверяются с synthetic Extraction; модифицированная операция/trace/expected value отвергается. Этот тест не считается реальным положительным Reconciliation запуском.
 
-- `docker compose config --quiet` — успешно.
-- Образ 1.1.0 собран, сервис healthy; внешний порт привязан только к `127.0.0.1:8000`.
-- `/health`, `/docs` и `/openapi.json` отвечают успешно; OpenAPI сообщает версию 1.1.0.
-- Синтетический matched request вернул `matched`, schema 1.1.0 и `completeness.complete=true`; scoped GET и project history доступны.
+### Интеграция с доступным upstream Reconciliation result
 
-В этом smoke использовался только синтетический matched запрос, поэтому внешний вызов Polza не выполнялся. Provider проверяется unit-тестами на псевдонимном payload и на независимость статуса от его ошибок.
+`tests/fixtures/upstream/reconciliation-engine/act-reconciliation-result.json` — реальный результат движка на зафиксированном upstream commit. Calculation помечен `manual_review`, `used_sources` и trace пусты; snapshot объявляет Linking run, для которого в запросе нет соответствующего Linking result. Verification принимает и разбирает контракт, но возвращает `insufficient_data`; matched и mismatch отсутствуют. Итог: 81 `insufficient_data`, 12 `needs_review`, coverage incomplete. Это успешная проверка совместимости/отказа, а не полный E2E расчёта.
 
-Предупреждение тестовой среды: установленный Starlette сообщает о будущем переходе с `httpx` на `httpx2` в `TestClient`. Также `pytest-asyncio` предупреждает о неустановленном scope event loop; тесты приложения используют синхронные fixtures.
+### Большой набор fixtures и artifact references
 
-## Историческая live-проверка Polza
+- Pretty-printed request со всеми upstream Extraction fixtures и настоящим Reconciliation result имеет 2,428,762 байта и проходит API с HTTP 200 при лимите по умолчанию 16 МиБ.
+- Полный доступный набор upstream JSON, включая старый Linking fixture с `contract_version=1.0.0`, также превышает 2 МиБ; API получает запрос и отвечает контрактной ошибкой HTTP 422, а не ошибкой размера 413. Причина — несовместимость этого fixture с заявленной Linking 1.2.0 схемой.
+- `/from-artifacts` проверен через временное project-scoped хранилище: ссылки проходят hash validation, повтор идемпотентен, чужой project scope не открывает файл, tampered content отклоняется.
 
-Ранее был отправлен один синтетический mismatch. Gemma 4 26B A4B вернула три schema-валидные гипотезы, которые не меняли детерминированный статус. В запросе были только pseudonymous tokens и коды; финансовые значения и документы не отправлялись. Этот единичный live-запуск не является частью текущего `pytest` прогона.
+### Docker Compose smoke
 
-Полный E2E Parser → Reconciliation → Verification → Reporting не заявляется: Reconciliation 1.0.0 остаётся предварительным, а Reporting не подключён.
+```powershell
+docker compose config --quiet
+$env:POLZA_AI_ENABLED = "false"
+docker compose up --build --detach
+```
 
-## GitHub Actions CI
+Обе команды завершились успешно. Образ 1.2.0 healthy; `/health`, `/docs`, `/openapi.json` отвечают, OpenAPI сообщает 1.2.0. Свежий synthetic запрос вернул `matched`, `conclusion.coverage_complete=true`; scoped GET и project history доступны. Локальная SQLite volume содержала совпадающий исторический fingerprint из 1.1.0, поэтому при первом повторе legacy adapter ожидаемо вернул `legacy_unverified`/`needs_review`. Следующий запрос с новым fingerprint подтвердил свежий путь; данные volume не удалялись.
 
-Workflow `.github/workflows/ci.yml` запускает полный `pytest` набор на Python 3.11 и 3.12 при push и pull request. Отдельная задача собирает Docker Compose и проверяет синтетический API flow с отключённым внешним Polza. Локальная YAML-проверка workflow, `docker compose config --quiet` и полный набор тестов прошли; GitHub-hosted результат появляется в [Actions](https://github.com/artemnoor/phystech-trace-verification-engine/actions/workflows/ci.yml).
+Во всех новых проверках внешние LLM-вызовы были отключены. Ни live Polza вызов, ни полный Parser → Reconciliation → Verification → Reporting E2E в этом прогоне не выполнялись.
 
-Первый GitHub Actions run [43503524091](https://github.com/artemnoor/phystech-trace-verification-engine/actions/runs/43503524091) завершился успешно: оба Python набора и Docker Compose smoke прошли. Runner оставил только информационное уведомление о миграции `ubuntu-latest` на Ubuntu 26.
+### GitHub Actions
+
+CI запускает полный pytest matrix на Python 3.11 и 3.12 и отдельный Docker Compose smoke после push и pull request. Успешные удалённые run URLs будут перечислены здесь после завершения workflow.

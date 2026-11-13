@@ -1,9 +1,11 @@
 {
-  "schema_version": "1.1.0",
+  "schema_version": "1.2.0",
+  "integrity_status": "verified",
+  "legacy_overall_status": null,
   "verification_id": "ver_cf16d7a536c9bc7ff733fd65",
   "project_id": "synthetic-project",
   "calculation_id": "synthetic-calculation-001",
-  "created_at": "2026-11-13T10:00:00Z",
+  "created_at": "2026-11-14T10:00:00Z",
   "input_fingerprint": "cf16d7a536c9bc7ff733fd65b31e4bc8065c75693951470fa5a6f0db6ebab34b",
   "input_metadata": {
     "structured_extraction": {
@@ -42,6 +44,14 @@
     "needs_review": 0,
     "not_applicable": 0
   },
+  "conclusion": {
+    "overall_status": "mismatch",
+    "has_proven_mismatch": true,
+    "coverage_complete": true,
+    "mismatch_count": 1,
+    "unresolved_count": 0,
+    "not_applicable_count": 0
+  },
   "completeness": {
     "total_indicators": 2,
     "applicable_indicators": 2,
@@ -59,6 +69,7 @@
       "label": "Reported amount",
       "value_type": "money",
       "status": "mismatch",
+      "legacy_status": null,
       "actual": {
         "source_value": "100.00 RUB",
         "normalized_value": {
@@ -355,6 +366,7 @@
       "label": "Reporting period",
       "value_type": "period",
       "status": "matched",
+      "legacy_status": null,
       "actual": {
         "source_value": "2026 Q1",
         "normalized_value": {

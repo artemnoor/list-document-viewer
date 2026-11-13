@@ -19,6 +19,7 @@ from app.models import (
     VerificationStatus,
     VerificationSummary,
     VerificationCompleteness,
+    VerificationConclusion,
 )
 
 
@@ -57,33 +58,59 @@ class SQLiteVerificationStore:
 
     @staticmethod
     def _deserialize_result(serialized: str) -> VerificationResult:
-        """Adapt v1.0.0 rows into the additive v1.1.0 result contract."""
+        """Adapt historical rows without presenting unvalidated statuses as proof."""
         data = json.loads(serialized)
-        if data.get("schema_version") == "1.0.0":
-            counts = data.get("summary", {})
-            statuses = [indicator.get("status") for indicator in data.get("indicators", [])]
-            total = len(statuses)
-            not_applicable = statuses.count(VerificationStatus.NOT_APPLICABLE.value)
-            matched = statuses.count(VerificationStatus.MATCHED.value)
-            mismatched = statuses.count(VerificationStatus.MISMATCH.value)
-            data["schema_version"] = "1.1.0"
-            data["completeness"] = VerificationCompleteness(
-                total_indicators=total,
-                applicable_indicators=total - not_applicable,
-                verified_indicators=matched + mismatched,
-                matched_indicators=matched,
-                mismatched_indicators=mismatched,
-                not_applicable_indicators=not_applicable,
-                unresolved_indicators=total - matched - mismatched - not_applicable,
-                complete=bool(total) and matched + mismatched == total,
-            ).model_dump(mode="json")
+        if data.get("schema_version") in {"1.0.0", "1.1.0"}:
+            original_overall = data.get("overall_status", "needs_review")
+            statuses: list[str] = []
             for indicator in data.get("indicators", []):
-                indicator.setdefault("trust", {
+                historic = indicator.get("status", "needs_review")
+                indicator["legacy_status"] = historic
+                if historic in {VerificationStatus.MATCHED.value, VerificationStatus.MISMATCH.value}:
+                    indicator["status"] = VerificationStatus.NEEDS_REVIEW.value
+                    indicator.setdefault("diagnostics", []).append({
+                        "code": "legacy_result_unverified",
+                        "message": "Historical result predates independent calculation and evidence integrity checks.",
+                    })
+                indicator["trust"] = {
                     "technical_validity": "not_checked",
                     "automatic_link_confirmation": "unconfirmed",
                     "human_confirmation": "unconfirmed",
                     "calculation_trust": "unproven",
-                })
+                }
+                statuses.append(indicator["status"])
+            counts = {status.value: statuses.count(status.value) for status in VerificationStatus}
+            total = len(statuses)
+            not_applicable = counts[VerificationStatus.NOT_APPLICABLE.value]
+            unresolved = total - counts[VerificationStatus.MATCHED.value] - counts[VerificationStatus.MISMATCH.value] - not_applicable
+            migrated_overall = VerificationStatus.NEEDS_REVIEW.value if original_overall in {"matched", "mismatch"} else original_overall
+            data["schema_version"] = "1.2.0"
+            data["integrity_status"] = "legacy_unverified"
+            data["legacy_overall_status"] = original_overall
+            data["overall_status"] = migrated_overall
+            data["summary"] = counts
+            data["completeness"] = VerificationCompleteness(
+                total_indicators=total,
+                applicable_indicators=total - not_applicable,
+                verified_indicators=0,
+                matched_indicators=0,
+                mismatched_indicators=0,
+                not_applicable_indicators=not_applicable,
+                unresolved_indicators=unresolved,
+                complete=False,
+            ).model_dump(mode="json")
+            data["conclusion"] = VerificationConclusion(
+                overall_status=migrated_overall,
+                has_proven_mismatch=False,
+                coverage_complete=False,
+                mismatch_count=0,
+                unresolved_count=unresolved,
+                not_applicable_count=not_applicable,
+            ).model_dump(mode="json")
+            data.setdefault("diagnostics", []).append({
+                "code": "legacy_result_unverified",
+                "message": "This stored result was adapted to Verification 1.2.0 but was not re-run through the current validators.",
+            })
         if "input_metadata" not in data:
             data["input_metadata"] = {
                 "available": False,
@@ -183,18 +210,18 @@ class SQLiteVerificationStore:
                     "SELECT * FROM verification_runs ORDER BY created_at DESC LIMIT ? OFFSET ?",
                     (limit, offset),
                 ).fetchall()
-        items = [
-            VerificationSummary(
-                verification_id=row["verification_id"],
-                project_id=row["project_id"],
-                calculation_id=row["calculation_id"],
-                created_at=row["created_at"],
-                overall_status=VerificationStatus(row["overall_status"]),
-                indicator_count=len(json.loads(row["result_json"])["indicators"]),
-                status_counts=json.loads(row["result_json"])["summary"],
-            )
-            for row in rows
-        ]
+        items = []
+        for row in rows:
+            result = self._deserialize_result(row["result_json"])
+            items.append(VerificationSummary(
+                verification_id=result.verification_id,
+                project_id=result.project_id,
+                calculation_id=result.calculation_id,
+                created_at=result.created_at,
+                overall_status=result.overall_status,
+                indicator_count=len(result.indicators),
+                status_counts=result.summary,
+            ))
         return VerificationHistory(items=items, limit=limit, offset=offset)
 
     def close(self) -> None:

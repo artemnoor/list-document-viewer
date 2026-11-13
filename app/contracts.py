@@ -8,6 +8,7 @@ from typing import Any
 from jsonschema import Draft202012Validator, FormatChecker
 
 from app.models import VerificationRequest, VerificationResult
+from app.reconciliation_adapter import is_reconciliation_engine_result
 
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -81,7 +82,11 @@ def validate_request_contracts(request: VerificationRequest) -> None:
     issues: list[ContractIssue] = []
     extraction_schema = load_schema("upstream/structured-extraction-1.2.0.schema.json")
     linking_schema = load_schema("upstream/document-linking-1.2.0.schema.json")
-    reconciliation_schema = load_schema("reconciliation-result-1.0.0.schema.json")
+    reconciliation_is_native = is_reconciliation_engine_result(request.reconciliation_result)
+    reconciliation_schema = load_schema(
+        "reconciliation-engine/reconciliation-result-1.0.0.schema.json"
+        if reconciliation_is_native else "reconciliation-result-1.0.0.schema.json"
+    )
 
     extraction_version = request.extraction.get("schema_version")
     if not isinstance(extraction_version, str) or not extraction_version.startswith("1."):
@@ -101,7 +106,8 @@ def validate_request_contracts(request: VerificationRequest) -> None:
             issues.append(ContractIssue(f"/supporting_extractions/{index}/document_id", "Duplicate document_id in extraction inputs", "structured-extraction"))
         document_ids.add(document_id)
 
-    issues.extend(_validate(request.reconciliation_result, reconciliation_schema, "reconciliation-result-1.0.0"))
+    reconciliation_contract = "reconciliation-engine-1.0.0" if reconciliation_is_native else "reconciliation-result-1.0.0"
+    issues.extend(_validate(request.reconciliation_result, reconciliation_schema, reconciliation_contract))
     if request.linking_result is not None:
         issues.extend(_validate(request.linking_result, linking_schema, "document-linking-1.2.0"))
         if request.linking_result.get("contract_version") != "1.2.0":
@@ -123,8 +129,8 @@ class ContractValidationError(ValueError):
 def validate_result_contract(result: VerificationResult) -> None:
     schema = VerificationResult.model_json_schema()
     schema["$schema"] = "https://json-schema.org/draft/2020-12/schema"
-    schema["$id"] = "https://phystech-trace.local/contracts/verification-result-1.1.0.schema.json"
-    schema["title"] = "Phystech Trace Verification Result 1.1.0"
-    errors = _validate(result.model_dump(mode="json"), schema, "verification-result-1.1.0")
+    schema["$id"] = "https://phystech-trace.local/contracts/verification-result-1.2.0.schema.json"
+    schema["title"] = "Phystech Trace Verification Result 1.2.0"
+    errors = _validate(result.model_dump(mode="json"), schema, "verification-result-1.2.0")
     if errors:
         raise ContractValidationError(errors)

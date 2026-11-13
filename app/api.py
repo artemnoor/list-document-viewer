@@ -16,7 +16,8 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from app.contracts import ContractValidationError
 from app.explanations import ReviewExplanationProvider, provider_from_environment
-from app.models import VerificationHistory, VerificationRequest, VerificationResult
+from app.artifact_adapter import ArtifactStoreError, FileArtifactAdapter
+from app.models import ArtifactBundleRequest, VerificationHistory, VerificationRequest, VerificationResult
 from app.storage import RunNotFound, SQLiteVerificationStore
 
 
@@ -101,6 +102,7 @@ def create_app(
     auth_mode: str | None = None,
     project_tokens: dict[str, str] | None = None,
     max_request_bytes: int | None = None,
+    artifact_root: str | Path | None = None,
 ) -> FastAPI:
     resolved_auth_mode = (auth_mode or os.getenv("VERIFICATION_AUTH_MODE", "required")).strip().lower()
     if resolved_auth_mode not in {"required", "development", "disabled"}:
@@ -112,18 +114,25 @@ def create_app(
             raise ValueError("VERIFICATION_PROJECT_TOKENS must be a JSON object") from exc
     if not isinstance(project_tokens, dict) or any(not isinstance(key, str) or not key or not isinstance(value, str) or not value for key, value in project_tokens.items()):
         raise ValueError("VERIFICATION_PROJECT_TOKENS must map project IDs to string tokens")
-    size_limit = max_request_bytes if max_request_bytes is not None else int(os.getenv("VERIFICATION_MAX_REQUEST_BYTES", "2097152"))
-    if size_limit < 1024:
-        raise ValueError("VERIFICATION_MAX_REQUEST_BYTES must be at least 1024")
+    size_limit = max_request_bytes if max_request_bytes is not None else int(os.getenv("VERIFICATION_MAX_REQUEST_BYTES", "16777216"))
+    if size_limit < 1024 or size_limit > 67108864:
+        raise ValueError("VERIFICATION_MAX_REQUEST_BYTES must be between 1024 and 67108864")
+    configured_artifact_root = artifact_root or os.getenv("VERIFICATION_ARTIFACT_ROOT")
+    artifact_max_bytes = int(os.getenv("VERIFICATION_MAX_ARTIFACT_BYTES", "16777216"))
+    artifact_cache_bytes = int(os.getenv("VERIFICATION_ARTIFACT_CACHE_BYTES", "67108864"))
+    if artifact_max_bytes < 1 or artifact_max_bytes > 67108864:
+        raise ValueError("VERIFICATION_MAX_ARTIFACT_BYTES must be between 1 and 67108864")
+    if artifact_cache_bytes < 0 or artifact_cache_bytes > 268435456:
+        raise ValueError("VERIFICATION_ARTIFACT_CACHE_BYTES must be between 0 and 268435456")
     request_timeout = max(1.0, float(os.getenv("VERIFICATION_REQUEST_TIMEOUT_SECONDS", "30")))
     app = FastAPI(
         title="Phystech Trace Verification Engine",
         summary="Deterministic verification of KFZ metrics against Reconciliation outputs.",
         description=(
             "Compares values supplied by Structured Extraction and Reconciliation. "
-            "It does not extract source data or recalculate Reconciliation results."
+            "It does not extract source data or plan Reconciliation; supported formal calculation proofs are independently checked."
         ),
-        version="1.1.0",
+        version="1.2.0",
         openapi_url="/openapi.json",
         docs_url="/docs",
         redoc_url="/redoc",
@@ -132,6 +141,11 @@ def create_app(
     app.state.store = SQLiteVerificationStore(configured_path, explanation_provider=explanation_provider)
     app.state.auth_mode = resolved_auth_mode
     app.state.project_tokens = project_tokens
+    app.state.artifacts = FileArtifactAdapter(
+        configured_artifact_root,
+        max_artifact_bytes=artifact_max_bytes,
+        cache_bytes=artifact_cache_bytes,
+    ) if configured_artifact_root else None
     app.add_middleware(RequestSizeLimitMiddleware, max_bytes=size_limit, timeout_seconds=request_timeout)
 
     def authorize(project_id: str, token: str | None, request: Request) -> None:
@@ -168,7 +182,7 @@ def create_app(
 
     @app.get("/health", tags=["service"])
     def health() -> dict[str, str]:
-        return {"status": "ok", "service": "verification-engine", "version": "1.1.0"}
+        return {"status": "ok", "service": "verification-engine", "version": "1.2.0"}
 
     router = APIRouter(prefix="/api/v1/verifications", tags=["verification"])
     service_token_header = APIKeyHeader(name="X-Service-Token", auto_error=False)
@@ -181,6 +195,37 @@ def create_app(
     ) -> VerificationResult:
         authorize(payload.project_id, token, request)
         return request.app.state.store.create(payload)
+
+    @router.post("/from-artifacts", response_model=VerificationResult, summary="Run verification from immutable artifact references")
+    def create_verification_from_artifacts(
+        payload: ArtifactBundleRequest,
+        request: Request,
+        token: str | None = Depends(service_token_header),
+    ) -> VerificationResult:
+        authorize(payload.project_id, token, request)
+        adapter: FileArtifactAdapter | None = request.app.state.artifacts
+        if adapter is None:
+            raise HTTPException(status_code=503, detail="Artifact storage is not configured")
+        try:
+            resolved = VerificationRequest(
+                project_id=payload.project_id,
+                extraction=adapter.resolve(payload.project_id, payload.extraction.artifact_id, payload.extraction.sha256),
+                supporting_extractions=[
+                    adapter.resolve(payload.project_id, item.artifact_id, item.sha256)
+                    for item in payload.supporting_extractions
+                ],
+                reconciliation_result=adapter.resolve(
+                    payload.project_id, payload.reconciliation_result.artifact_id, payload.reconciliation_result.sha256
+                ),
+                linking_result=(
+                    adapter.resolve(payload.project_id, payload.linking_result.artifact_id, payload.linking_result.sha256)
+                    if payload.linking_result else None
+                ),
+                context=payload.context,
+            )
+        except ArtifactStoreError as exc:
+            raise HTTPException(status_code=422, detail=str(exc)) from exc
+        return request.app.state.store.create(resolved)
 
     @router.get("", response_model=VerificationHistory, summary="List verification runs")
     def list_verifications(

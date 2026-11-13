@@ -1,0 +1,27 @@
+{
+  "repository": "https://github.com/artemnoor/phystech-trace-reconciliation-engine",
+  "ref": "master",
+  "commit": "dfaf8563e4cde349abf3ea143972a7582d9d18e0",
+  "contract_version": "1.0.0",
+  "schema": {
+    "path": "reconciliation-engine/reconciliation-result-1.0.0.schema.json",
+    "sha256": "009a5d8801346bcd718b935d73654a3e15ed25d91c348f790eafa833e49c8b7a"
+  },
+  "fixtures": [
+    {
+      "path": "../tests/fixtures/upstream/reconciliation-engine/act-reconciliation-result.json",
+      "classification": "upstream real-engine result; manual_review; not a successful calculated run",
+      "sha256": "3f5e49d5291c835fafa398779b280a2253692748464d6cdbd26e304e7814ca05"
+    },
+    {
+      "path": "../tests/fixtures/synthetic/reconciliation-engine/acceptance-result.json",
+      "classification": "upstream engine-generated synthetic acceptance result; used only to validate the formal proof evaluator",
+      "sha256": "db8048d3525b3a74abfee58d08b6936fe3bce7baa124d5dbb85e52b7bcca9265"
+    },
+    {
+      "path": "../tests/fixtures/synthetic/reconciliation-engine/acceptance-request.json",
+      "classification": "synthetic source inputs for the engine-generated acceptance result",
+      "sha256": "ef91f8f9629da9d4e4533176611903bdd8af8cd918ace953fc81102307609903"
+    }
+  ]
+}

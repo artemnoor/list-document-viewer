@@ -2,7 +2,7 @@
 
 ## Порядок допуска к сравнению
 
-Для присвоения `matched` или `mismatch` движок разрешает actual и expected value, проверяет semantic key и тип, Extraction period, currency/unit, VAT basis, comparison basis, полноту расчёта и целостность calculation trace. Также проверяются source/document/extraction/row IDs, точный JSON Pointer, provenance, входные версии и fingerprints. Несовпадение или отсутствие обязательного fingerprint блокирует окончательный статус.
+Для присвоения `matched` или `mismatch` движок разрешает actual и expected value, проверяет semantic key и тип, Extraction period, currency/unit, VAT basis, comparison basis, полноту расчёта и проверяемость calculation proof. Для native Reconciliation 1.0.0 он восстанавливает source facts, сверяет их hashes и независимо вычисляет поддерживаемые операции через Decimal. Для provisional результата арифметические операции также вычисляются для проверки, но новый финансовый движок не создаётся. Несовпадение входных версий/hash или неподтверждённая ссылка блокирует окончательный статус.
 
 Техническая валидность источника, машинная проверка связи и human review хранятся отдельно в `trust`. `system_validated` может дать автоматическое подтверждение после локальной проверки ссылки на Extraction. Для Linking `status=confirmed` недостаточно: Verification требует совпадающие документы, input fingerprints и версии, разрешаемые path/evidence, точное исходное значение, отсутствие конфликтов и unresolved diagnostics. `verification_status=human_confirmed` сохраняется отдельно и не обязателен для полного автоматического результата.
 
@@ -41,6 +41,8 @@
 
 Необязательный narrative provider Polza AI может предложить только гипотезу. Внешний запрос содержит псевдонимные tokens, статусы, категории и коды диагностики; financial values, IDs документов, source text и секреты не передаются. Ответ не влияет на значение, формулу, разницу или статус. Вызов выполняется вне SQLite транзакции, ограничен timeout и пропускается, когда не хватает времени; ошибка провайдера не отменяет детерминированный результат.
 
-## Общий статус запуска
+## Заключение и полнота запуска
 
-Сводный статус требует полного применимого охвата. `insufficient_data` и `needs_review` блокируют итог, затем учитывается `not_applicable`; `mismatch` возможен только при отсутствии непроверенных/неприменимых показателей. Общий `matched` возможен лишь когда каждый показатель проверен и сопоставлен. Отсутствующий Reconciliation target создаёт `insufficient_data` и не скрывается из сводки.
+`conclusion.has_proven_mismatch` и `conclusion.coverage_complete` отвечают на разные вопросы. Доказанный `mismatch` задаёт общий `overall_status=mismatch`, даже если другие показатели имеют `not_applicable`, `needs_review` или `insufficient_data`; полнота при этом может быть false. Без доказанного mismatch unresolved статусы имеют приоритет над `not_applicable`, а общий `matched` возможен только когда весь охват проверен. Summary и заключение сохраняют количества mismatches, unresolved и not-applicable. Любой пропущенный target остаётся `insufficient_data`.
+
+Порядок агрегирования: `mismatch` → `insufficient_data` → `needs_review` → `not_applicable` → `matched`. Полнота считается отдельно: каждый показатель должен быть проверен как `matched` или доказанно `mismatch`; `not_applicable` не является проверенным совпадением.

@@ -14,9 +14,11 @@ from jsonschema import Draft202012Validator
 
 from app.contracts import ContractValidationError, load_schema, validate_request_contracts, validate_result_contract
 from app.engine import run_verification
+from app.classification import aggregate_status
 from app.explanations import HypothesisProposal
 from app.models import DiscrepancyCategory
 from app.reconciliation_adapter import ProvisionalReconciliationAdapter
+from app.reconciliation_proof import native_calculation_diagnostics, native_run_diagnostics
 from app.models import VerificationRequest
 from tests.helpers import FIXTURES, base_payload, confirmed_linking_payload, indicator, make_request, read_json, set_actual, set_expected, set_source_amount, verify
 
@@ -89,6 +91,44 @@ def test_aggregate_status_exposes_not_applicable_coverage_instead_of_matched():
     assert result.completeness.complete is False
     assert result.completeness.not_applicable_indicators == 1
     assert result.completeness.verified_indicators == 1
+    assert result.conclusion.coverage_complete is False
+    assert result.conclusion.not_applicable_count == 1
+
+
+@pytest.mark.parametrize("unresolved", ["needs_review", "insufficient_data"])
+def test_proven_mismatch_takes_precedence_over_unresolved_and_not_applicable(unresolved):
+    from app.models import VerificationStatus
+
+    assert aggregate_status([
+        VerificationStatus.NEEDS_REVIEW if unresolved == "needs_review" else VerificationStatus.INSUFFICIENT_DATA,
+        VerificationStatus.NOT_APPLICABLE,
+        VerificationStatus.MISMATCH,
+    ]) == VerificationStatus.MISMATCH
+
+
+def test_matched_is_not_conclusive_when_unresolved_indicator_is_present():
+    from app.models import VerificationStatus
+
+    assert aggregate_status([VerificationStatus.MATCHED, VerificationStatus.INSUFFICIENT_DATA]) == VerificationStatus.INSUFFICIENT_DATA
+
+
+def test_proven_mismatch_is_reported_with_partial_unresolved_and_not_applicable_coverage():
+    payload = base_payload()
+    set_actual(payload, {"amount": "90.00", "currency": "RUB"}, source_value="90.00 RUB")
+    unresolved = payload["reconciliation_result"]["targets"][1]
+    unresolved["result"]["calculation_status"] = "incomplete"
+    unresolved["result"]["comparison_eligible"] = False
+    not_applicable = copy.deepcopy(unresolved)
+    not_applicable["target_id"] = "target-explicitly-not-applicable"
+    not_applicable["result"]["calculation_status"] = "not_applicable"
+    payload["reconciliation_result"]["targets"].append(not_applicable)
+    result = verify(payload)
+    assert result.overall_status.value == "mismatch"
+    assert result.conclusion.has_proven_mismatch is True
+    assert result.conclusion.coverage_complete is False
+    assert result.conclusion.mismatch_count == 1
+    assert result.conclusion.unresolved_count >= 1
+    assert result.conclusion.not_applicable_count == 1
 
 
 def test_actual_period_comes_from_extraction_not_reconciliation_or_context():
@@ -144,12 +184,32 @@ def test_operation_output_must_match_reconciliation_expected_value():
     assert any(item["code"] == "calculation_output_mismatch" for item in value.diagnostics)
 
 
+def test_matching_declared_output_and_expected_value_cannot_hide_wrong_arithmetic():
+    payload = base_payload()
+    result = payload["reconciliation_result"]["targets"][0]["result"]
+    result["expected_value"] = {"amount": "999.00", "currency": "RUB"}
+    result["operations"][0]["output_value"] = "999.00"
+    value = indicator(verify(payload))
+    assert value.status.value == "insufficient_data"
+    assert value.trust.calculation_trust == "invalid"
+    assert any(item["code"] == "calculation_operation_value_mismatch" for item in value.diagnostics)
+
+
 def test_operation_formula_must_reference_the_declared_inputs():
     payload = base_payload()
     payload["reconciliation_result"]["targets"][0]["result"]["operations"][0]["input_source_ids"] = []
     value = indicator(verify(payload))
     assert value.status.value == "insufficient_data"
     assert any(item["code"] == "calculation_formula_input_mismatch" for item in value.diagnostics)
+
+
+def test_operation_formula_must_encode_the_declared_operation_type():
+    payload = base_payload()
+    operation = payload["reconciliation_result"]["targets"][0]["result"]["operations"][0]
+    operation["formula"] = "SUBTRACT(src-invoice-total,another-value)"
+    value = indicator(verify(payload))
+    assert value.status.value == "insufficient_data"
+    assert any(item["code"] == "calculation_formula_mismatch" for item in value.diagnostics)
 
 
 def test_missing_calculation_operations_remains_unproven():
@@ -471,7 +531,7 @@ def test_semantic_and_comparison_basis_conflict_is_not_a_numeric_mismatch():
     assert any(item.category.value == "economic_meaning_mismatch" for item in value.discrepancies)
 
 
-def test_non_numeric_string_indicator_is_supported():
+def test_non_numeric_string_sum_operation_is_not_treated_as_proven():
     payload = base_payload()
     set_actual(payload, "Approved", source_value="Approved")
     target = payload["reconciliation_result"]["targets"][0]
@@ -479,9 +539,10 @@ def test_non_numeric_string_indicator_is_supported():
     target["result"].update({"value_type": "string", "vat_basis": "not_applicable", "currency": None, "expected_value": "Approved"})
     target["result"]["operations"][0]["output_value"] = "Approved"
     value = indicator(verify(payload))
-    assert value.status.value == EXPECTED["text_value_equal"]
+    assert value.status.value == "insufficient_data"
     assert value.difference.accepted_by == "exact"
     assert value.difference.absolute is None
+    assert any(item["code"] in {"calculation_operation_unverified", "calculation_output_mismatch"} for item in value.diagnostics)
 
 
 def test_human_confirmed_linking_evidence_is_resolved_and_preserved():
@@ -560,6 +621,13 @@ def test_upstream_source_commits_and_schema_hashes_are_pinned():
     ):
         actual = hashlib.sha256((ROOT / relative_path).read_bytes()).hexdigest()
         assert actual == expected_hash
+    native_manifest_path = ROOT / "contracts" / "reconciliation-engine-sources.json"
+    native_manifest = read_json(native_manifest_path)
+    assert len(native_manifest["commit"]) == 40
+    assert native_manifest["ref"] == "master"
+    for entry in [native_manifest["schema"], *native_manifest["fixtures"]]:
+        actual = hashlib.sha256((native_manifest_path.parent / entry["path"]).resolve().read_bytes()).hexdigest()
+        assert actual == entry["sha256"]
 
 
 def test_provisional_reconciliation_adapter_only_projects_fields_without_recalculation():
@@ -579,12 +647,58 @@ def test_upstream_linking_example_is_detected_as_incompatible_with_declared_12_s
 
 
 def test_output_schema_file_matches_pydantic_contract():
-    output_schema = load_schema("verification-result-1.1.0.schema.json")
+    output_schema = load_schema("verification-result-1.2.0.schema.json")
     Draft202012Validator.check_schema(output_schema)
     result = verify()
     validate_result_contract(result)
     Draft202012Validator(output_schema).validate(result.model_dump(mode="json"))
-    assert output_schema["$id"].endswith("verification-result-1.1.0.schema.json")
+    assert output_schema["$id"].endswith("verification-result-1.2.0.schema.json")
+    assert (ROOT / "contracts" / "verification-result-1.1.0.schema.json").exists()
+    assert (ROOT / "contracts" / "verification-result-1.0.0.schema.json").exists()
+    for example in ("response-matched.json", "response-mismatch.json"):
+        response = json.loads((ROOT / "examples" / example).read_text(encoding="utf-8"))
+        Draft202012Validator(output_schema).validate(response)
+
+
+def test_native_reconciliation_decimal_proof_and_fact_hashes_are_recomputed():
+    request = read_json(ROOT / "tests" / "fixtures" / "synthetic" / "reconciliation-engine" / "acceptance-request.json")
+    result = read_json(ROOT / "tests" / "fixtures" / "synthetic" / "reconciliation-engine" / "acceptance-result.json")
+    extraction_index = {item["document_id"]: item for item in request["extraction_results"]}
+    calculation = result["calculations"][0]
+    assert native_run_diagnostics(result, extraction_index, request["linking_result"]) == []
+    assert native_calculation_diagnostics(calculation, result, extraction_index) == []
+
+    corrupted = copy.deepcopy(calculation)
+    corrupted["steps"][0]["value"] = "999.00"
+    corrupted["expected_value"] = "999.00"
+    corrupted["exact_value_before_rounding"] = "999.00"
+    diagnostics = native_calculation_diagnostics(corrupted, result, extraction_index)
+    codes = {item["code"] for item in diagnostics}
+    assert "calculation_trace_value_mismatch" in codes
+    assert "calculation_exact_value_mismatch" in codes
+    assert "calculation_expected_value_mismatch" in codes
+
+    changed_inputs = copy.deepcopy(extraction_index)
+    changed_inputs["synthetic-act-april"]["line_items"][0]["amount"]["value"]["amount"] = "999.00"
+    assert any(
+        issue["code"] == "extraction_hash_mismatch"
+        for issue in native_run_diagnostics(result, changed_inputs, request["linking_result"])
+    )
+
+
+def test_available_real_reconciliation_result_is_consumed_without_false_match():
+    extraction_root = ROOT / "tests" / "fixtures" / "upstream" / "extraction"
+    request = {
+        "project_id": "real-reconciliation-contract-test",
+        "extraction": read_json(extraction_root / "kfz-2026-q1.json"),
+        "supporting_extractions": [read_json(extraction_root / "act-2026-0424.json")],
+        "reconciliation_result": read_json(ROOT / "tests" / "fixtures" / "upstream" / "reconciliation-engine" / "act-reconciliation-result.json"),
+    }
+    result = run_verification(VerificationRequest.model_validate(request))
+    assert result.overall_status.value != "matched"
+    assert result.conclusion.has_proven_mismatch is False
+    assert result.indicators[0].status.value == "insufficient_data"
+    assert any(item["code"] == "linking_result_missing" for item in result.indicators[0].diagnostics)
 
 
 def test_optional_explanation_provider_receives_deidentified_data_and_only_adds_hypotheses():

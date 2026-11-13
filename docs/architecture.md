@@ -20,24 +20,28 @@ Verification принимает исходные JSON предыдущих эт�
 | Модуль | Ответственность |
 | --- | --- |
 | `app/api.py` | Versioned REST endpoints, Swagger/OpenAPI и HTTP ошибки |
+| `app/artifact_adapter.py` | Project-scoped content-addressed JSON reads, SHA-256 validation and bounded cache |
 | `app/contracts.py` | Проверка upstream JSON Schema, версия адаптера, result schema |
 | `app/adapters.py` | Разрешение JSON Pointer и доступ к Extraction value wrappers |
 | `app/evidence.py` | Проверка документов, строк, provenance и Link evidence |
 | `app/comparison.py` | Decimal арифметика и типизированное сравнение |
 | `app/classification.py` | Категории доказанных причин и гипотез |
 | `app/engine.py` | Порядок проверок, статусы, неопределённость, provenance цепочка |
+| `app/reconciliation_adapter.py` | Совместимые преобразования provisional и published Reconciliation result 1.0.0 |
+| `app/reconciliation_proof.py` | Пересчёт upstream fact hashes и независимое Decimal исполнение formal calculation plan |
 | `app/storage.py` | SQLite, короткие транзакции, уникальный fingerprint идемпотентности |
 | `contracts/` | Версионированные входные и выходные JSON Schema |
 
 ## Поток запроса
 
 1. API валидирует структуру запроса Pydantic.
-2. Contract validator применяет Extraction 1.2.0, Linking 1.2.0 (если передан) и provisional Reconciliation 1.0.0 JSON Schema.
-3. Адаптер разрешает точный target JSON Pointer в основном Extraction и каждый `used_sources[].json_pointer` в поддерживающих Extraction.
-4. Evidence validator сверяет document/extraction/row IDs, provenance locator, Linking input versions/hashes, link ID, path и исходное evidence value.
-5. Calculation proof checks сверяют IDs, operation inputs/outputs, formula references и completeness без пересчёта финансовой формулы.
-6. Comparison engine берёт фактический период только из Extraction, проверяет экономический смысл, валюту, VAT basis, единицы и затем сравнивает значения.
-7. Classification сохраняет факты отдельно от гипотез и выдаёт trust dimensions. SQLite сохраняет результат и fingerprint входов.
+2. Contract validator применяет Extraction 1.2.0, Linking 1.2.0 (если передан) и выбирает provisional либо native Reconciliation 1.0.0 schema по структуре payload.
+3. Обычный endpoint принимает ограниченное JSON body; `/from-artifacts` после project auth читает immutable project/hash-addressed объекты с проверкой размера, пути и content hash.
+4. Адаптер разрешает точный target JSON Pointer в основном Extraction и каждый `used_sources[].json_pointer` в поддерживающих Extraction.
+5. Evidence validator сверяет document/extraction/row IDs, provenance locator, Linking input versions/hashes, link ID, path и исходное evidence value.
+6. Native formal plan и поддерживаемые provisional operations независимо проверяются через Decimal. Непроверяемая арифметика не получает `proven` trust.
+7. Comparison engine берёт фактический период только из Extraction, проверяет экономический смысл, валюту, VAT basis, единицы и затем сравнивает значения.
+8. Aggregate conclusion показывает mismatch отдельно от coverage. SQLite сохраняет результат и fingerprint входов.
 
 При неразрешённой ссылке результат содержит диагностику и остаётся `insufficient_data` или `needs_review`. Математически вычисленная разница может быть сохранена и при недоказанной базе; она не превращается в установленный `mismatch`.
 

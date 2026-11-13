@@ -185,8 +185,10 @@ def classify_value_difference(
 def aggregate_status(statuses: list[VerificationStatus]) -> VerificationStatus:
     if not statuses:
         return VerificationStatus.INSUFFICIENT_DATA
-    # A run-level conclusion requires complete coverage. N/A indicators do not
-    # count as successful checks and prevent both aggregate green and red claims.
+    # A proven mismatch remains actionable even when other targets are unresolved
+    # or inapplicable. Coverage is reported independently from this conclusion.
+    if VerificationStatus.MISMATCH in statuses:
+        return VerificationStatus.MISMATCH
     for status in (
         VerificationStatus.INSUFFICIENT_DATA,
         VerificationStatus.NEEDS_REVIEW,
@@ -195,6 +197,4 @@ def aggregate_status(statuses: list[VerificationStatus]) -> VerificationStatus:
             return status
     if VerificationStatus.NOT_APPLICABLE in statuses:
         return VerificationStatus.NOT_APPLICABLE
-    if VerificationStatus.MISMATCH in statuses:
-        return VerificationStatus.MISMATCH
     return VerificationStatus.MATCHED

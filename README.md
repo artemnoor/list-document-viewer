@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/artemnoor/phystech-trace-verification-engine/actions/workflows/ci.yml/badge.svg)](https://github.com/artemnoor/phystech-trace-verification-engine/actions/workflows/ci.yml)
 
-Самостоятельный backend этапа Verification в Phystech Trace. Сервис сравнивает показатели итогового КФЗ из Structured Extraction с ожидаемыми значениями из предварительного контракта Reconciliation, проверяет допустимость сравнения и сохраняет доказательную цепочку. Сервис **не** извлекает данные из PDF и не пересчитывает Reconciliation.
+Самостоятельный backend этапа Verification в Phystech Trace. Сервис сравнивает показатели итогового КФЗ из Structured Extraction с результатом Reconciliation, проверяет его входы и calculation proof, затем сохраняет доказательную цепочку. Он не выполняет планирование Reconciliation и не заменяет Extraction.
 
 ## Что реализовано
 
@@ -11,12 +11,13 @@
 - Явные статусы `matched`, `mismatch`, `insufficient_data`, `needs_review`, `not_applicable`.
 - Проверка версий, JSON Schema, точных JSON Pointer, extraction IDs, строк, provenance и Link IDs/evidence.
 - Отдельная оценка технической валидности, automatic Link validation, human confirmation и calculation trust.
-- Проверка Calculation/Reconciliation fingerprints, операций и полного охвата показателей.
+- Проверка Reconciliation snapshots, исходных fact hashes, Decimal операций и полного охвата показателей.
 - Межсервисная авторизация по отдельному токену проекта, обязательный project scope для чтения результатов и ограничение размера/time budget.
+- Обычный лимит JSON body 16 МиБ (настраивается до жёсткого предела 64 МиБ) и отдельный endpoint для неизменяемых project-scoped artifact references.
 - Классификация установленной причины отдельно от гипотезы.
 - SQLite история запусков и идемпотентное повторение одинаковых запросов.
 - Исходные Extraction 1.2.0 fixtures и Linking пример upstream сохранены в `tests/fixtures/upstream/`; синтетические данные отдельно лежат в `tests/fixtures/synthetic/`.
-- Версии upstream и commit SHA записаны в [`contracts/upstream-sources.json`](contracts/upstream-sources.json).
+- Версии upstream и commit SHA записаны в [`contracts/upstream-sources.json`](contracts/upstream-sources.json) и [`contracts/reconciliation-engine-sources.json`](contracts/reconciliation-engine-sources.json).
 
 Если задан `POLZA_AI_API_KEY` и включён `POLZA_AI_ENABLED`, сервис подключает Polza AI и Gemma 4 26B A4B (`google/gemma-4-26b-a4b-it`). Без ключа или при `POLZA_AI_ENABLED=false` Verification работает детерминированно. В модель отправляются только псевдонимные evidence tokens, статусы, коды диагностики и категории — без сумм, идентификаторов документов и исходного текста. Она может добавлять только гипотезы и не меняет результат. Timeout ограничен; вызов идёт вне транзакции SQLite.
 
@@ -45,7 +46,7 @@ Invoke-RestMethod -Uri http://127.0.0.1:8000/api/v1/verifications `
   -Method Post -ContentType "application/json" -InFile examples/request-mismatch.json
 ```
 
-Оба запроса используют только синтетические данные. Первый возвращает `matched` для суммы и периода. Второй возвращает `mismatch` для суммы: `100.00 - 110.25 = -10.25 RUB`.
+Оба запроса используют только синтетические данные. Итоговое заключение содержит отдельные `has_proven_mismatch` и `coverage_complete`.
 
 ## Docker
 
@@ -74,6 +75,7 @@ GitHub Actions запускает полный набор на Python 3.11 и 3.
 | --- | --- | --- |
 | `GET` | `/health` | Состояние сервиса |
 | `POST` | `/api/v1/verifications` | Запуск или повторное получение результата по fingerprint входов |
+| `POST` | `/api/v1/verifications/from-artifacts` | Запуск по project-scoped `{artifact_id, sha256}` ссылкам на сохранённые JSON |
 | `GET` | `/api/v1/verifications/{verification_id}?project_id=...` | Полный результат только в указанном project scope |
 | `GET` | `/api/v1/verifications?project_id=...` | История запусков |
 | `GET` | `/api/v1/verifications/{verification_id}/diagnostics?project_id=...` | Диагностика и причины проверки |
@@ -82,8 +84,8 @@ GitHub Actions запускает полный набор на Python 3.11 и 3.
 
 ## Ограничения текущей интеграции
 
-- Reconciliation Engine ещё не предоставляет финальный контракт. Текущий [`reconciliation-result-1.0.0.schema.json`](contracts/reconciliation-result-1.0.0.schema.json) — предварительный межсервисный контракт, проверяемый синтетическими fixtures.
-- Проверки полного E2E Phystech Trace не заявляются: Reconciliation и Reporting ещё не подключены.
+- Reconciliation Engine публикует результат 1.0.0 с `input_snapshot` и `calculations`; адаптер проверяет его, включая независимую Decimal оценку calculation plan. Доступный реальный fixture пока имеет `manual_review` и не подтверждает успешный расчёт. Старый provisional result с `run_metadata`/`targets` поддержан отдельным адаптером.
+- Полный E2E Phystech Trace не заявляется: доступный реальный Reconciliation output неполон (`manual_review`), а Reporting Engine ещё не подключён.
 - Пример Linking, поставляемый upstream, содержит `contract_version: 1.0.0` и не проходит приложенную там же схему результата 1.2.0. Сырые исходные данные сохранены без изменений. Контрактно валидный synthetic Linking 1.2.0 используется отдельно в тестах.
 - Автоматическая проверка может завершиться без human review, если source references, fingerprints и calculation trace прошли проверки. Human confirmation отражается отдельно; сама метка `status=confirmed` не доказывает правильность Link.
 - Неизвестный допуск не заменяется значением по умолчанию. Для денежного сравнения нужны одинаковые валюта и VAT basis; для сопоставления — совместимые периоды и economic basis.

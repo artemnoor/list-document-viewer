@@ -8,8 +8,8 @@ Commit SHA и ссылки записаны в [`contracts/upstream-sources.json
 | --- | --- | --- |
 | Structured Extraction | `1.2.0` | Текущая upstream schema сохранена побайтно; несовместимый major отклоняется |
 | Document Linking | `1.2.0` | Текущая upstream schema сохранена побайтно; `status` и `verification_status` не смешиваются |
-| Reconciliation result | `1.0.0` provisional | Версия обязательна и должна быть ровно `1.0.0` до согласования нового адаптера |
-| Verification result | `1.1.0` | Additive schema в `contracts/verification-result-1.1.0.schema.json`; v1.0.0 сохранена, SQLite reader адаптирует старые rows |
+| Reconciliation result | Provisional `run_metadata`/`targets` 1.0.0 and native `input_snapshot`/`calculations` 1.0.0 | Две формы одной версии различаются по структуре и проверяются разными адаптерами |
+| Verification result | `1.2.0` | Additive schema в `contracts/verification-result-1.2.0.schema.json`; схемы 1.0.0 и 1.1.0 сохранены, SQLite reader помечает старые результаты `legacy_unverified` |
 
 ## Входной API
 
@@ -49,13 +49,21 @@ Commit SHA и ссылки записаны в [`contracts/upstream-sources.json
 - `result`: expected value с явным `null` при отсутствии, тип/смысл, период и единицы, полнота, eligibility, формула, применённые правила, использованные/исключённые источники, операции, диагностика, warnings и provenance;
 - `used_sources`: идентификатор документа и extraction, JSON Pointer, строка при наличии, состояние доказательства и Linking evidence reference при наличии.
 
-Десятичные financial values передаются строками или объектом `{ "amount": "...", "currency": "..." }`. Verification не суммирует `used_sources` повторно. `expected_value: null` не означает ноль.
+Десятичные financial values передаются строками или объектом `{ "amount": "...", "currency": "..." }`. Для известных арифметических операций Verification независимо проверяет результат через Decimal; неподдерживаемые операции остаются непроверенными. `expected_value: null` не означает ноль.
+
+## Native Reconciliation Engine 1.0.0
+
+Опубликованная форма Reconciliation Engine также использует `contract_version: 1.0.0`, но содержит `input_snapshot`, `calculations`, `reconciliation_id` и `scope`. Схема зафиксирована в `contracts/reconciliation-engine/`; источник, commit и SHA-256 копий перечислены в `contracts/reconciliation-engine-sources.json`.
+
+Адаптер читает `target.kfz_origin`, `calculation_plan`, `used_sources`, `steps`, `provenance` и `input_snapshot`. Verification сверяет точные Extraction IDs/версии и SHA-256 canonical JSON, разрешает исходные JSON Pointer, восстанавливает fact IDs и fact input hashes, а затем повторно вычисляет поддерживаемые `sum`, `add`, `subtract`, `multiply`, `divide` и `round` операции через Decimal. Трасса, формула, exact value, округление и `expected_value` должны согласоваться. Неполная или неподдерживаемая операция не может стать окончательным `matched`/`mismatch`.
+
+Реальный upstream пример — `manual_review` без использованных значений; он проверяется как неполный и не считается успешным расчётом. Отдельный upstream-generated acceptance fixture синтетический и служит только проверке арифметического proof evaluator.
 
 ## Linking upstream discrepancy
 
 Интеграционная ветка декларирует Linking output 1.2.0 и содержит соответствующую схему. Соседний `services/document-linking/examples/linking-result.json` имеет payload `contract_version: 1.0.0` и отклоняется той схемой: пример использует `detection_method: rules` вместо schema const `llm` и не содержит обязательные `processing_metadata.llm.strategy`, `estimated_input_tokens`, `link_validation_diagnostics`, `analysis_summary`. Пример сохранён как upstream artifact без изменений, тест фиксирует несовместимость. Синтетический, явно помеченный Link result 1.2.0 используется для тестирования контракта, но не выдаётся за реальный production result.
 
-## Verification result 1.1.0
+## Verification result 1.2.0
 
 Ответ содержит run/project/calculation IDs, fingerprint, summary counts, проверяемую полноту и результат каждого Reconciliation target. На уровне показателя сохраняются:
 
@@ -66,10 +74,14 @@ Commit SHA и ссылки записаны в [`contracts/upstream-sources.json
 - абсолютная и относительная разница с формулой, правила допуска, классификации и uncertainty.
 - отдельные `trust` значения для технической валидности, автоматического Link подтверждения, human review и достоверности расчёта.
 
-`null` используется, когда относительная разница математически не определена (expected равен нулю) или вход отсутствует. Публичная схема — `contracts/verification-result-1.1.0.schema.json`; предыдущая `1.0.0` не удалена. `/openapi.json` публикует реальные Pydantic схемы API.
+`conclusion` отдельно сообщает `has_proven_mismatch`, `coverage_complete`, количество доказанных расхождений, непроверенных и неприменимых показателей. `overall_status=mismatch` сохраняет приоритет при наличии других unresolved indicators, а completeness остаётся false. `/openapi.json` публикует реальные Pydantic схемы API. Схемы 1.0.0 и 1.1.0 сохранены. Ранее сохранённые `matched`/`mismatch` не перепроверяются при чтении: адаптер сохраняет исходное значение в `legacy_status`, понижает текущий статус до `needs_review`, ставит `integrity_status=legacy_unverified` и не считает такое доказательство проверенным.
 
 ## Проверки provisional Reconciliation
 
-Входная схема 1.0.0 не менялась. До присвоения окончательного статуса Verification проверяет run calculation ID, project/extraction IDs, schema versions, первичный и используемые supporting extraction hashes; при наличии Linking сверяет Linking run/contract versions и input fingerprints. Для каждой цели также проверяются уникальные source/operation IDs, ссылки source↔operation, совпадение формулы с input source IDs там, где IDs явно указаны в формуле, и совпадение operation output с единственным заявленным expected value. Это контроль целостности handoff, не повторный расчёт суммы.
+Входные upstream схемы не менялись. Для native результата проверяются calculation/snapshot IDs, Extraction versions и hashes, source fact IDs/hashes, exact JSON Pointers, operation graph, следы шагов, формула и итоговая Decimal арифметика. Для provisional адаптера поддерживаются простые формальные операции; запись одинакового `output_value` и `expected_value` сама по себе недостаточна. Для обеих форм результат без проверяемого proof остаётся `unproven`.
+
+## Большие комплекты и ссылки на артефакты
+
+Обычный лимит HTTP body по умолчанию равен 16 МиБ и настраивается через `VERIFICATION_MAX_REQUEST_BYTES` (жёсткий предел 64 МиБ). Для больших комплектов `POST /api/v1/verifications/from-artifacts` принимает project-scoped `{artifact_id, sha256}` ссылки. Внешний доверенный artifact service предварительно кладёт JSON object по адресу `<VERIFICATION_ARTIFACT_ROOT>/<sha256(project_id)>/<sha256>.json`; API не предоставляет загрузку произвольных файлов. Каждый объект проверяется по размеру и SHA-256, а кеш ограничен `VERIFICATION_ARTIFACT_CACHE_BYTES`. При обработке адаптер всё равно передаёт материализованные JSON объекты схеме и движку.
 
 Актуальный список integration repo и точные commit/schema hashes находятся в [`contracts/upstream-sources.json`](../contracts/upstream-sources.json). Контракт Reconciliation остаётся предварительным: интеграционные детали и ограничения описаны в [`reconciliation-integration.md`](reconciliation-integration.md).

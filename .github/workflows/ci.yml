@@ -64,12 +64,12 @@ jobs:
           done
           curl --fail --silent http://127.0.0.1:8000/health | python -c 'import json,sys; assert json.load(sys.stdin)["status"] == "ok"'
           curl --fail --silent http://127.0.0.1:8000/docs >/dev/null
-          curl --fail --silent http://127.0.0.1:8000/openapi.json | python -c 'import json,sys; assert json.load(sys.stdin)["info"]["version"] == "1.1.0"'
+          curl --fail --silent http://127.0.0.1:8000/openapi.json | python -c 'import json,sys; assert json.load(sys.stdin)["info"]["version"] == "1.2.0"'
           curl --fail --silent --show-error \
             -H 'Content-Type: application/json' \
             --data-binary @examples/request-matched.json \
             http://127.0.0.1:8000/api/v1/verifications > /tmp/verification-result.json
-          python -c 'import json; r=json.load(open("/tmp/verification-result.json", encoding="utf-8")); assert r["overall_status"] == "matched"; assert r["schema_version"] == "1.1.0"; assert r["completeness"]["complete"] is True'
+          python -c 'import json; r=json.load(open("/tmp/verification-result.json", encoding="utf-8")); assert r["overall_status"] == "matched"; assert r["schema_version"] == "1.2.0"; assert r["completeness"]["complete"] is True; assert r["conclusion"]["coverage_complete"] is True'
           verification_id="$(python -c 'import json; print(json.load(open("/tmp/verification-result.json", encoding="utf-8"))["verification_id"])')"
           curl --fail --silent "http://127.0.0.1:8000/api/v1/verifications/${verification_id}?project_id=synthetic-project" | python -c 'import json,sys; assert json.load(sys.stdin)["overall_status"] == "matched"'
           curl --fail --silent 'http://127.0.0.1:8000/api/v1/verifications?project_id=synthetic-project' | python -c 'import json,sys; assert len(json.load(sys.stdin)["items"]) >= 1'
