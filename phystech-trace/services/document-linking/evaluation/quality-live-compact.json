@@ -1,0 +1,14 @@
+{
+  "schema_version": "polza-quality-inputs-v1",
+  "description": "Compact committed demo Parser snapshots; no OCR/Gateway rerun.",
+  "parser_files": [
+    "../../structured-extraction/data/parser-results/contract-2026-0315.json",
+    "../../structured-extraction/data/parser-results/act-2026-0424.json",
+    "../../structured-extraction/data/parser-results/invoice-2026-0408.json"
+  ],
+  "linking_fixture_files": [
+    "../fixtures/upstream-structured-extraction-1.2.0/contract-2026-0315.json",
+    "../fixtures/upstream-structured-extraction-1.2.0/act-2026-0424.json",
+    "../fixtures/upstream-structured-extraction-1.2.0/invoice-2026-0408.json"
+  ]
+}

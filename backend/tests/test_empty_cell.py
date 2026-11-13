@@ -6,7 +6,8 @@ sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from ocr_layout import recover_empty_cells
 class GlyphTests(unittest.TestCase):
  def test_same_page_zero_recovery_without_inventing_other_glyph(self):
-  im=Image.new('RGB',(600,300),'white');d=ImageDraw.Draw(im);font=ImageFont.truetype('C:/Windows/Fonts/arial.ttf',50)
+  # Pillow bundles this scalable font, so the fixture is identical on Linux and Windows.
+  im=Image.new('RGB',(600,300),'white');d=ImageDraw.Draw(im);font=ImageFont.load_default(size=50)
   d.text((40,105),'0',font=font,fill='black');d.text((210,105),'0',font=font,fill='black');d.text((370,105),'6',font=font,fill='black')
   ref={'text':'0','provenance':[{'bbox':{'l':38,'t':110,'r':75,'b':160}}]}
   table={'rows':[['Header'],['10'],[''],[''],['20']], 'cells':[{'row':2,'column':0,'text':'','bbox':[180,80,300,180]},{'row':3,'column':0,'text':'','bbox':[340,80,450,180]}]}

@@ -1,0 +1,18 @@
+{
+  "schema_version": "polza-quality-inputs-v1",
+  "description": "Five committed demo Parser snapshots; this exercises Parser JSON -> LLM-assisted Extraction -> Linking, not OCR re-parsing or Gateway.",
+  "parser_files": [
+    "../../structured-extraction/data/parser-results/contract-2026-0315.json",
+    "../../structured-extraction/data/parser-results/act-2026-0424.json",
+    "../../structured-extraction/data/parser-results/invoice-2026-0408.json",
+    "../../structured-extraction/data/parser-results/kfz-2026-q1.json",
+    "../../structured-extraction/data/parser-results/registry-2026-04.json"
+  ],
+  "linking_fixture_files": [
+    "../fixtures/upstream-structured-extraction-1.2.0/contract-2026-0315.json",
+    "../fixtures/upstream-structured-extraction-1.2.0/act-2026-0424.json",
+    "../fixtures/upstream-structured-extraction-1.2.0/invoice-2026-0408.json",
+    "../fixtures/upstream-structured-extraction-1.2.0/kfz-2026-q1.json",
+    "../fixtures/upstream-structured-extraction-1.2.0/registry-2026-04.json"
+  ]
+}
