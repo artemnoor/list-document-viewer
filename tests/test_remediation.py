@@ -209,6 +209,24 @@ def test_llm_selection_without_human_confirmed_target_link_stays_unresolved(sett
     assert "source_applicability_unverified" in _codes(result)
 
 
+def test_incompatible_chunk_dimensions_are_reported_as_manual_review(settings):
+    from reconciliation_engine.planner import IncompatibleChunkPlans
+
+    act = load_upstream("act-2026-0424.json")
+    request = make_request([act], None)
+    request.context = request.context.model_copy(update={"data_classification": "open", "external_llm_allowed": True})
+
+    class IncompatiblePlanner:
+        def plan(self, *args, **kwargs):
+            raise IncompatibleChunkPlans("Chunk plans selected incompatible dimensions")
+
+    result = reconcile(request, Settings(llm_enabled=True, llm_api_key="test"), planner=IncompatiblePlanner())["calculations"][0]
+
+    assert result["status"] == "manual_review"
+    assert result["expected_value"] is None
+    assert "chunk_plans_incompatible" in _codes(result)
+
+
 def test_one_bad_target_does_not_abort_other_target_results(settings):
     act = load_upstream("act-2026-0424.json")
     source = _fact(extract_facts([act]), act["document_id"], "amount_due")
