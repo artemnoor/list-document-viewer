@@ -32,3 +32,5 @@ Docker Compose smoke после пересборки:
 ## GitHub Actions CI
 
 Workflow `.github/workflows/ci.yml` запускает полный `pytest` набор на Python 3.11 и 3.12 при push и pull request. Отдельная задача собирает Docker Compose и проверяет синтетический API flow с отключённым внешним Polza. Локальная YAML-проверка workflow, `docker compose config --quiet` и полный набор тестов прошли; GitHub-hosted результат появляется в [Actions](https://github.com/artemnoor/phystech-trace-verification-engine/actions/workflows/ci.yml).
+
+Первый GitHub Actions run [43503524091](https://github.com/artemnoor/phystech-trace-verification-engine/actions/runs/43503524091) завершился успешно: оба Python набора и Docker Compose smoke прошли. Runner оставил только информационное уведомление о миграции `ubuntu-latest` на Ubuntu 26.

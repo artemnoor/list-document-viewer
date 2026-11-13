@@ -52,7 +52,7 @@
 - **Изменённые файлы:** `.github/workflows/ci.yml`, `README.md`, `docs/test-results.md`.
 - **Исправление:** workflow запускает pytest на Python 3.11 и 3.12, проверяет Compose, собирает контейнер и выполняет синтетический HTTP smoke без Polza.
 - **Проверки:** локальный эквивалент `python -m pytest --tb=short`, `docker compose config --quiet` и Compose smoke.
-- **Результат:** локально `60 passed, 1 warning`; Docker Compose smoke вернул `matched`, полную проверку, доступные scoped GET и историю. GitHub Actions запускается автоматически после push; её фактический статус публикуется в badge README.
+- **Результат:** локально `60 passed, 1 warning`; Docker Compose smoke вернул `matched`, полную проверку, доступные scoped GET и историю. GitHub Actions run [43503524091](https://github.com/artemnoor/phystech-trace-verification-engine/actions/runs/43503524091) прошёл на Python 3.11, Python 3.12 и в Docker Compose smoke.
 
 ## Что не заявляется
 
