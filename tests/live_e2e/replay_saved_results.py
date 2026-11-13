@@ -258,7 +258,7 @@ def run() -> dict[str, Any]:
         "baseline_commit": "dfaf8563e4cde349abf3ea143972a7582d9d18e0",
         "live_run_prompt_version": "1.0.0",
         "current_prompt_version": "1.0.1",
-        "current_prompt_sha256": hashlib.sha256((ROOT / "prompts" / "calculation-plan.v1.0.1.txt").read_bytes()).hexdigest(),
+        "current_prompt_sha256": hashlib.sha256((ROOT / "prompts" / "calculation-plan.v1.0.2.txt").read_bytes()).hexdigest(),
         "provider": original_summary["provider"],
         "model_id": original_summary["model_id"],
         "available_model_count": original_summary["available_model_count"],

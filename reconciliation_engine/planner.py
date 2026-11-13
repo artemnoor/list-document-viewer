@@ -13,11 +13,15 @@ from .models import TargetIndicator
 from .plans import CalculationPlan, PlanStep
 from .security import is_trusted_internal_endpoint
 
-PROMPT_PATH = Path(__file__).resolve().parents[1] / "prompts" / "calculation-plan.v1.0.1.txt"
+PROMPT_PATH = Path(__file__).resolve().parents[1] / "prompts" / "calculation-plan.v1.0.2.txt"
 
 
 class PlannerUnavailable(Exception):
     pass
+
+
+class IncompatibleChunkPlans(ValueError):
+    """Chunk plans cannot be combined without mixing measurement dimensions."""
 
 
 def _json_content(content: str) -> dict[str, Any]:
@@ -338,13 +342,14 @@ class LLMPlanner:
             decoded["unprocessed_fact_ids"] = [alias_to_fact.get(value, value) for value in decoded.get("unprocessed_fact_ids", [])]
             plans.append((chunk_index, CalculationPlan.model_validate(decoded)))
 
-        return self._merge_chunk_plans(target, plans, len(candidates))
+        return self._merge_chunk_plans(target, plans, len(candidates), candidates)
 
     @staticmethod
     def _merge_chunk_plans(
         target: TargetIndicator,
         plans: list[tuple[int, CalculationPlan]],
         candidate_count: int,
+        candidates: list[Fact] | None = None,
     ) -> CalculationPlan:
         if len(plans) == 1:
             return plans[0][1]
@@ -369,7 +374,17 @@ class LLMPlanner:
         result_step_id: str | None = None
         signatures = {(plan.currency, plan.unit, plan.amount_basis) for _, plan in plans}
         if len(signatures) > 1:
-            raise ValueError("Cannot merge chunk plans with incompatible currency, unit, or amount basis")
+            raise IncompatibleChunkPlans("Cannot merge chunk plans with incompatible currency, unit, or amount basis")
+        if candidates is not None:
+            facts_by_id = {fact.fact_id: fact for fact in candidates}
+            selected_ids = {item.fact_id for _, plan in plans for item in plan.included}
+            fact_signatures = {
+                (fact.currency, fact.unit, fact.amount_basis)
+                for fact_id in selected_ids
+                if (fact := facts_by_id.get(fact_id)) is not None
+            }
+            if len(fact_signatures) > 1:
+                raise IncompatibleChunkPlans("Cannot merge chunk plans that select facts with incompatible currency, unit, or amount basis")
         if len(roots) == 1:
             result_step_id = roots[0]
         elif roots:

@@ -25,6 +25,8 @@ No source values from real documents were transmitted. The model payload omits n
 
 On 14 November 2026, the rebuilt real request example (`act-2026-0424` plus `kfz-2026-q1`, both upstream Extraction 1.2.0) was sent to the pinned model three times before and once after repairing the example generator. All four calls returned a plan with five included source facts; deterministic local execution of the plan returned `1180300.00`. The engine correctly kept `expected_value=null` and `status=manual_review` because the April act does not match the Q1 target period and the example has no human-confirmed Linking path. Numeric source values and full provenance are omitted from the model payload. The safe run summaries are stored locally under `data/real-llm-*.json` and are not committed.
 
+A separate run used all six authentic Extraction fixtures (113 numeric candidates, empty Linking graph) in batches of 40. The model selected facts with incompatible monetary and quantity dimensions. Prompt 1.0.2 now states generic dimension and candidate-accounting requirements; batch merge also validates dimensions on the actual selected facts, independent of model-declared metadata. Such a set is rejected as an incompatible chunk plan and remains manual review. No expected value is published without a human-reviewed Linking path.
+
 ## Reproduction
 
 After provider billing is available, run from Windows PowerShell:

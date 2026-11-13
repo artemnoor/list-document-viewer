@@ -17,7 +17,7 @@ from reconciliation_engine.engine import execute_plan, validate_plan
 from reconciliation_engine.facts import extract_facts, numeric_value
 from reconciliation_engine.models import ReconciliationRequest
 from reconciliation_engine.plans import CalculationPlan, PlanInclusion, PlanStep
-from reconciliation_engine.planner import LLMPlanner
+from reconciliation_engine.planner import IncompatibleChunkPlans, LLMPlanner
 
 
 def test_live_e2e_cases_are_synthetic_contract_valid_and_have_independent_references():
@@ -171,8 +171,26 @@ def test_chunk_merge_rejects_incompatible_measurement_metadata(field, first, sec
     target = request.context.targets[0]
     baseline = CalculationPlan(target_id=target.target_id, method_description="test", **{field: first})
     incompatible = baseline.model_copy(update={field: second})
-    with pytest.raises(ValueError, match="incompatible currency, unit, or amount basis"):
+    with pytest.raises(IncompatibleChunkPlans, match="incompatible currency, unit, or amount basis"):
         LLMPlanner._merge_chunk_plans(target, [(0, baseline), (1, incompatible)], 320)
+
+
+def test_chunk_merge_checks_included_fact_dimensions_not_only_plan_labels():
+    case = next(item for item in build_cases() if item["reference"]["case_id"] == "01_single_act")
+    request = ReconciliationRequest.model_validate(case["request"])
+    target = request.context.targets[0]
+    real_act = json.loads((ROOT / "fixtures" / "upstream-structured-extraction-1.2.0" / "act-2026-0424.json").read_text(encoding="utf-8"))
+    facts = extract_facts([real_act])
+    amount = next(f for f in facts if f.key == "amount" and f.currency == "RUB")
+    quantity = next(f for f in facts if f.key == "quantity" and f.unit)
+    base = CalculationPlan(
+        target_id=target.target_id, method_description="chunk", included=[PlanInclusion(fact_id=amount.fact_id, reason="amount")],
+        steps=[PlanStep(step_id="sum_amount", operation="sum", inputs=[amount.fact_id])], result_step_id="sum_amount")
+    other = CalculationPlan(
+        target_id=target.target_id, method_description="chunk", included=[PlanInclusion(fact_id=quantity.fact_id, reason="quantity")],
+        steps=[PlanStep(step_id="sum_quantity", operation="sum", inputs=[quantity.fact_id])], result_step_id="sum_quantity")
+    with pytest.raises(IncompatibleChunkPlans, match="select facts with incompatible currency, unit, or amount basis"):
+        LLMPlanner._merge_chunk_plans(target, [(0, base), (1, other)], 2, [amount, quantity])
 
 
 def test_source_identification_counts_candidates_the_model_explicitly_left_unprocessed():

@@ -12,7 +12,7 @@ from .engine import decimal_string, execute_plan, related_links_for_fact, valida
 from .errors import Diagnostic, InputContractError
 from .facts import Fact, extract_facts, fact_input_hash, numeric_value
 from .models import ReconciliationRequest, TargetIndicator
-from .planner import LLMPlanner, PlannerUnavailable
+from .planner import IncompatibleChunkPlans, LLMPlanner, PlannerUnavailable
 from .plans import CalculationPlan
 from .security import is_trusted_internal_endpoint
 
@@ -343,6 +343,8 @@ def _calculate_target(
                 sensitive_data=request.context.data_classification == "confidential",
             )
             plan_source = "llm"
+        except IncompatibleChunkPlans as exc:
+            planner_diagnostic = Diagnostic("chunk_plans_incompatible", "$.planner.batches", str(exc))
         except (PlannerUnavailable, httpx.HTTPError, ValueError) as exc:
             if request.context.data_classification == "confidential" and not is_trusted_internal_endpoint(settings.llm_base_url, settings.llm_trusted_hosts):
                 planner_diagnostic = Diagnostic("trusted_llm_endpoint_not_local", "$.settings.llm_base_url", "Confidential data was not sent because the configured endpoint is not loopback or operator-allowlisted internal infrastructure")
