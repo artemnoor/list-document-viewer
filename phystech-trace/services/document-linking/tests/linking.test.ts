@@ -34,54 +34,72 @@ test("complete upstream set is sent as one unfiltered Gemma context", async () =
   } finally { globalThis.fetch = originalFetch; }
 });
 
-test("large complete sets use Gemma document passes before whole-set relationship analysis", async () => {
-  const docs = fixtureDocs, originalFetch = globalThis.fetch; let calls = 0, finalContext: any;
+test("large upstream sets compare bounded originals with complete document coverage", async (t) => {
+  const originalFetch = globalThis.fetch; const seen = new Set<string>(); let calls=0, saved:any;
   globalThis.fetch = async (_input, init) => {
-    calls++; const body: any = JSON.parse(String(init?.body)); const userText = body.messages[1].content;
-    if (userText.startsWith("{")) { const fragment = JSON.parse(userText).document; return new Response(JSON.stringify({ model: GEMMA_MODEL, choices: [{ message: { content: JSON.stringify({ fragments: [{ document_id: fragment.document_id, chunk_index: fragment.chunk_index, facts: [], summary: "studied" }] }) } }], usage: { prompt_tokens: 100, completion_tokens: 20 } }), { status: 200 }); }
-    finalContext = JSON.parse(userText.slice(userText.indexOf("\n") + 1));
-    return new Response(JSON.stringify({ model: GEMMA_MODEL, choices: [{ message: { content: JSON.stringify({ links: [], unlinked_document_ids: docs.map(d => d.document_id), analysis_summary: "All reviewed.", context_requests: [] }) } }], usage: { prompt_tokens: 100, completion_tokens: 10 } }), { status: 200 });
+    calls++; const body = JSON.parse(String(init?.body)), user=body.messages[1].content;
+    const context=JSON.parse(user.slice(user.indexOf("\n")+1));
+    assert.ok(context.documents.length<=2);
+    assert.ok(Math.ceil((body.messages[0].content.length+user.length)/2)<=180000);
+    for(const fragment of context.documents) {seen.add(fragment.document_id);assert.ok(fragment.path_values.length);}
+    return new Response(JSON.stringify({model:GEMMA_MODEL,choices:[{message:{content:JSON.stringify({links:[],unlinked_document_ids:[],context_requests:[],analysis_summary:"Reviewed originals"})}}]}),{status:200});
   };
   try {
-    const result = await analyzeDocumentSet(docs as any, { apiKey: "test-only", timeoutMs: 1000, maxCalls: 52, maxInputTokens: 180000, systemPrompt });
-    assert.ok(calls > 1); assert.equal(result.calls, calls); assert.equal(finalContext.documents.length, docs.length); assert.equal(result.unlinkedDocumentIds.length, docs.length);
-  } finally { globalThis.fetch = originalFetch; }
+    const result=await analyzeDocumentSet(fixtureDocs,{apiKey:"test-only",timeoutMs:1000,maxCalls:10000,maxInputTokens:180000,systemPrompt,onProgress:async s=>{saved=s;}});
+    assert.equal(result.complete,true); assert.ok(calls>1);assert.equal(result.calls,calls);
+    assert.deepEqual([...seen].sort(),fixtureDocs.map(d=>d.document_id).sort());
+    assert.equal(saved.coverage.completed_tasks,saved.coverage.total_tasks);
+    assert.equal(saved.coverage.reference_ids.length,buildEvidenceRegistry(fixtureDocs).length);
+    t.diagnostic(JSON.stringify({kind:"offline_transport_coverage",documents:fixtureDocs.length,calls,fragments:saved.total_fragments,tasks:saved.coverage.total_tasks,references:saved.coverage.reference_ids.length}));
+  } finally {globalThis.fetch=originalFetch;}
 });
 
-test("completed Gemma document fragments persist and resume after an interrupted run", async () => {
-  const docs = ["contract-ambiguous-a.json", "contract-ambiguous-b.json", "act-ambiguous-1.json", "receipt-unknown-1.json"].map(name => JSON.parse(readFileSync(`fixtures/demo-structured-extraction/${name}`, "utf8"))) as any[];
-  const originalFetch = globalThis.fetch; let saved: any, firstCalls = 0;
-  globalThis.fetch = async (_input, init) => {
-    firstCalls++; const request: any = JSON.parse(String(init?.body)), user = request.messages[1].content;
-    if (user.startsWith("{")) { const fragment = JSON.parse(user).document; return new Response(JSON.stringify({ model: GEMMA_MODEL, choices: [{ message: { content: JSON.stringify({ fragments: [{ document_id: fragment.document_id, chunk_index: fragment.chunk_index, summary: "checkpoint", facts: [] }] }) } }], usage: { prompt_tokens: 11, completion_tokens: 4 } }), { status: 200 }); }
-    return new Response(JSON.stringify({ model: GEMMA_MODEL, choices: [{ message: { content: JSON.stringify({ links: [], unlinked_document_ids: docs.map(d => d.document_id), analysis_summary: "done", context_requests: [] }) } }], usage: { prompt_tokens: 5, completion_tokens: 2 } }), { status: 200 });
-  };
+for (const count of [3, 5]) test(`native fixture subset of ${count} documents retains complete source coverage`, async (t) => {
+  const selected = fixtureDocs.filter(doc => doc.document_type !== "addendum").slice(0, count);
+  assert.equal(selected.length, count);
+  const original = globalThis.fetch;
+  globalThis.fetch = async () => new Response(JSON.stringify({ model: GEMMA_MODEL, choices: [{ message: { content: JSON.stringify({ links: [], unlinked_document_ids: [], context_requests: [], analysis_summary: "Offline transport check only" }) } }] }));
   try {
-    const options = { apiKey: "test-only", timeoutMs: 1000, maxCalls: 52, maxInputTokens: 1800, systemPrompt: "short" };
-    await analyzeDocumentSet(docs, { ...options, onProgress: async state => { saved = state; } });
-    assert.ok(saved.completed_fragments.length >= docs.length); assert.equal(saved.calls, firstCalls);
-    const callsBeforeResume = firstCalls; let resumed: any;
-    const result = await analyzeDocumentSet(docs, { ...options, resumeProgress: saved, onProgress: async state => { resumed = state; } });
-    assert.equal(firstCalls - callsBeforeResume, 1); assert.equal(result.calls, saved.calls + 1); assert.equal(result.strategy, "document_fragments_then_full_set");
-  } finally { globalThis.fetch = originalFetch; }
+    const result = await analyzeDocumentSet(selected, { apiKey: "offline-only", timeoutMs: 1000, maxCalls: 10000, maxInputTokens: 180000, systemPrompt });
+    assert.equal(result.complete, true);
+    assert.equal(result.analysisCoverage?.processed_references, buildEvidenceRegistry(selected).length);
+    assert.equal(result.analysisCoverage?.completed_tasks, result.analysisCoverage?.total_tasks);
+    t.diagnostic(JSON.stringify({ kind: "offline_transport_coverage", documents: count, calls: result.calls, coverage: result.analysisCoverage }));
+  } finally { globalThis.fetch = original; }
 });
 
-test("staged Gemma can request an exact original fragment and reconsider the whole set", async () => {
-  const docs = [{ document_id: "long-doc", document_type: "contract", long_text: "x".repeat(12_000) }], originalFetch = globalThis.fetch; let requestedContext: any, finalPasses = 0;
-  globalThis.fetch = async (_input, init) => {
-    const request: any = JSON.parse(String(init?.body)), user = request.messages[1].content;
-    if (user.startsWith("{")) { const fragment = JSON.parse(user).document; return new Response(JSON.stringify({ model: GEMMA_MODEL, choices: [{ message: { content: JSON.stringify({ fragments: [{ document_id: fragment.document_id, chunk_index: fragment.chunk_index, summary: "navigation only", facts: [] }] }) } }], usage: { prompt_tokens: 10, completion_tokens: 2 } }), { status: 200 }); }
-    finalPasses++;
-    const context = JSON.parse(user.slice(user.indexOf("\n") + 1));
-    if (finalPasses === 1) return new Response(JSON.stringify({ model: GEMMA_MODEL, choices: [{ message: { content: JSON.stringify({ links: [], unlinked_document_ids: [docs[0].document_id], analysis_summary: "Need original source", context_requests: [{ document_id: docs[0].document_id, chunk_index: 0, reason: "Inspect source details", paths: [] }] }) } }], usage: { prompt_tokens: 10, completion_tokens: 2 } }), { status: 200 });
-    requestedContext = context.requested_source_fragments;
-    return new Response(JSON.stringify({ model: GEMMA_MODEL, choices: [{ message: { content: JSON.stringify({ links: [], unlinked_document_ids: [docs[0].document_id], analysis_summary: "Reconsidered using the original fragment", context_requests: [] }) } }], usage: { prompt_tokens: 10, completion_tokens: 2 } }), { status: 200 });
+test("completed bounded source tasks persist and resume with no repeated requests", async () => {
+  const docs=[{document_id:"single",document_type:"contract",text:"x".repeat(5000)}] as any[];
+  const originalFetch=globalThis.fetch;let saved:any,calls=0;const users=new Set<string>();
+  globalThis.fetch=async(_input,init)=>{
+    const user=JSON.parse(String(init?.body)).messages[1].content;
+    assert.equal(users.has(user),false);users.add(user);calls++;
+    return new Response(JSON.stringify({model:GEMMA_MODEL,choices:[{message:{content:JSON.stringify({links:[],unlinked_document_ids:[],context_requests:[],analysis_summary:"Read source"})}}]}),{status:200});
   };
-  try {
-    const result = await analyzeDocumentSet(docs as any, { apiKey: "test-only", timeoutMs: 1000, maxCalls: 300, maxInputTokens: 1800, systemPrompt: "short" });
-    assert.equal(result.complete, true); assert.equal(finalPasses, 2); assert.equal(result.analysisSummary, "Reconsidered using the original fragment");
-    assert.equal(requestedContext.length, 1); assert.equal(requestedContext[0].document_id, docs[0].document_id); assert.ok(requestedContext[0].fragment.path_values.length > 0);
-  } finally { globalThis.fetch = originalFetch; }
+  try{
+    const opts={apiKey:"test-only",timeoutMs:1000,maxCalls:300,maxInputTokens:2400,systemPrompt:"short",maxModelCallsPerInvocation:1,onProgress:async(s:any)=>{saved=s;}};
+    let result=await analyzeDocumentSet(docs,opts);assert.equal(result.complete,false);assert.deepEqual(result.unlinkedDocumentIds,[]);
+    for(let i=0;!result.complete&&i<300;i++)result=await analyzeDocumentSet(docs,{...opts,resumeProgress:saved});
+    assert.equal(result.complete,true);assert.equal(result.calls,calls);
+    const before=calls;await analyzeDocumentSet(docs,{...opts,resumeProgress:saved});assert.equal(calls,before);
+  }finally{globalThis.fetch=originalFetch;}
+});
+
+test("bounded Gemma can request another original fragment and preserve it across resume",async()=>{
+  const docs=[{document_id:"long-doc",document_type:"contract",text:"x".repeat(5000)}] as any[];
+  const originalFetch=globalThis.fetch;let calls=0,saved:any,expanded=false;
+  globalThis.fetch=async(_input,init)=>{
+    calls++;const user=JSON.parse(String(init?.body)).messages[1].content,context=JSON.parse(user.slice(user.indexOf("\n")+1));
+    if(calls===2) {assert.equal(context.documents.length,2);assert.ok(context.documents.some((f:any)=>f.chunk_index===1));expanded=true;}
+    return new Response(JSON.stringify({model:GEMMA_MODEL,choices:[{message:{content:JSON.stringify({links:[],unlinked_document_ids:[],context_requests:calls===1?[{document_id:"long-doc",chunk_index:1,paths:[],reason:"Read neighboring source"}]:[],analysis_summary:"Read originals"})}}]}),{status:200});
+  };
+  try{
+    const opts={apiKey:"test-only",timeoutMs:1000,maxCalls:300,maxInputTokens:2400,systemPrompt:"short",maxModelCallsPerInvocation:1,onProgress:async(s:any)=>{saved=s;}};
+    let result=await analyzeDocumentSet(docs,opts);assert.equal(result.complete,false);
+    for(let i=0;!result.complete&&i<300;i++)result=await analyzeDocumentSet(docs,{...opts,resumeProgress:saved});
+    assert.equal(result.complete,true);assert.equal(expanded,true);
+    assert.ok(saved.bounded_tasks[0].response._expanded_fragment_keys.length===2);
+  }finally{globalThis.fetch=originalFetch;}
 });
 
 test("full-set Gemma can request an original fragment and resume from its checkpoint", async () => {
