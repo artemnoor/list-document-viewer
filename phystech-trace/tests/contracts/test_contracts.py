@@ -38,12 +38,12 @@ class SharedContractTests(unittest.TestCase):
 
     def test_release_contract_schemas_match_imported_linking_sources(self):
         self.assertEqual(
-            (CONTRACTS / "structured-extraction-1.2.0.schema.json").read_bytes(),
-            (LINKING / "contracts" / "input.schema.json").read_bytes(),
+            read_json(CONTRACTS / "structured-extraction-1.2.0.schema.json"),
+            read_json(LINKING / "contracts" / "input.schema.json"),
         )
         self.assertEqual(
-            (CONTRACTS / "document-linking-1.2.0.schema.json").read_bytes(),
-            (LINKING / "contracts" / "output.schema.json").read_bytes(),
+            read_json(CONTRACTS / "document-linking-1.2.0.schema.json"),
+            read_json(LINKING / "contracts" / "output.schema.json"),
         )
 
     def test_pinned_versions_match_source_registry(self):

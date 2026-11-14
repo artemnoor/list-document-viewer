@@ -22,10 +22,12 @@ from psycopg.rows import dict_row
 from psycopg.types.json import Jsonb
 
 ROOT = Path(__file__).resolve().parent
+CONTRACTS_ROOT = ROOT / "contracts" if (ROOT / "contracts").is_dir() else ROOT.parent / "contracts"
 DATABASE_URL = os.getenv("DATABASE_URL", "postgres://trace:trace@postgres:5432/phystech_trace")
 PARSER_URL = os.getenv("PARSER_URL", "http://document-parser:18765").rstrip("/")
 EXTRACTION_URL = os.getenv("EXTRACTION_URL", "http://structured-extraction:8082").rstrip("/")
 LINKING_URL = os.getenv("LINKING_URL", "http://document-linking:3000").rstrip("/")
+RECONCILIATION_URL = os.getenv("RECONCILIATION_URL", "http://reconciliation-engine:8000").rstrip("/")
 LINKING_TOKEN = os.getenv("API_BEARER_TOKEN", "phystech_trace_local_api_token_32_chars")
 POLL_INTERVAL = max(0.25, float(os.getenv("POLL_INTERVAL_SECONDS", "2")))
 LINKING_POLL_INTERVAL = max(5.0, float(os.getenv("LINKING_POLL_INTERVAL_SECONDS", "10")))
@@ -35,9 +37,9 @@ ALLOWED_CLASSIFICATIONS = {"public", "synthetic", "anonymized"}
 ACTIVE_TASKS: dict[str, asyncio.Task] = {}
 CLIENT: httpx.AsyncClient | None = None
 CONTRACTS = {
-    "parser": json.loads((ROOT / "contracts" / "parser-to-extraction-v1.schema.json").read_text(encoding="utf-8")),
-    "extraction": json.loads((ROOT / "contracts" / "structured-extraction-1.2.0.schema.json").read_text(encoding="utf-8")),
-    "linking": json.loads((ROOT / "contracts" / "document-linking-1.2.0.schema.json").read_text(encoding="utf-8")),
+    "parser": json.loads((CONTRACTS_ROOT / "parser-to-extraction-v1.schema.json").read_text(encoding="utf-8")),
+    "extraction": json.loads((CONTRACTS_ROOT / "structured-extraction-1.2.0.schema.json").read_text(encoding="utf-8")),
+    "linking": json.loads((CONTRACTS_ROOT / "document-linking-1.2.0.schema.json").read_text(encoding="utf-8")),
 }
 VALIDATORS = {name: Draft202012Validator(schema) for name, schema in CONTRACTS.items()}
 
@@ -55,7 +57,25 @@ def initial_stages():
         "parser": {"status": "pending", "completed": 0, "total": 0, "updated_at": now()},
         "extraction": {"status": "pending", "completed": 0, "total": 0, "updated_at": now()},
         "linking": {"status": "pending", "completed": 0, "total": 0, "updated_at": now()},
+        "reconciliation": {"status": "pending", "completed": 0, "total": 0, "updated_at": now()},
     }
+
+
+def mark_reconciliation_pending(stages: dict) -> dict:
+    updated = dict(stages)
+    previous = updated.get("reconciliation", {})
+    updated["reconciliation"] = {
+        **previous, "status": "pending", "completed": 0, "error": None, "updated_at": now(),
+    }
+    return updated
+
+
+def should_resume_linking_job(job_status: str | None) -> bool:
+    return job_status != "completed"
+
+
+def should_reuse_saved_linking_result(retry_stage: str | None) -> bool:
+    return retry_stage == "reconciliation"
 
 
 def ensure_database():
@@ -65,7 +85,8 @@ def ensure_database():
             id text PRIMARY KEY, name text NOT NULL, data_classification text NOT NULL,
             allow_external_llm boolean NOT NULL DEFAULT false, created_at timestamptz NOT NULL DEFAULT now(),
             updated_at timestamptz NOT NULL DEFAULT now(), status text NOT NULL DEFAULT 'draft',
-            stages jsonb NOT NULL, linking_job_id text, linking_result jsonb, last_error jsonb
+            stages jsonb NOT NULL, linking_job_id text, linking_result jsonb,
+            reconciliation_result jsonb, last_error jsonb
           )
         """)
         conn.execute("""
@@ -79,6 +100,7 @@ def ensure_database():
           )
         """)
         conn.execute("CREATE INDEX IF NOT EXISTS trace_documents_project_idx ON trace_documents(project_id,created_at)")
+        conn.execute("ALTER TABLE trace_projects ADD COLUMN IF NOT EXISTS reconciliation_result jsonb")
         conn.commit()
 
 
@@ -129,6 +151,7 @@ def project_payload(project_id: str):
         "created_at": project["created_at"].isoformat(), "updated_at": project["updated_at"].isoformat(),
         "stages": project["stages"], "last_error": project["last_error"],
         "linking_job_id": project["linking_job_id"], "linking_result": project["linking_result"],
+        "reconciliation_result": project["reconciliation_result"],
         "documents": [
             {"id": doc["id"], "role": doc["role"], "file_name": doc["file_name"],
              "document_id": doc["parser_document_id"], "parser_state": doc["parser_state"],
@@ -152,11 +175,26 @@ def contract_errors(name: str, value, limit: int = 30):
     return issues
 
 
-def set_project_status(project_id: str, status: str, error=None, linking_job_id=None, linking_result=None):
+def set_project_status(project_id: str, status: str, error=None, linking_job_id=None, linking_result=None, reconciliation_result=None):
     with db() as conn:
         conn.execute(
-            "UPDATE trace_projects SET status=%s,last_error=%s,linking_job_id=COALESCE(%s,linking_job_id),linking_result=COALESCE(%s,linking_result),updated_at=now() WHERE id=%s",
-            (status, Jsonb(error) if error is not None else None, linking_job_id, Jsonb(linking_result) if linking_result is not None else None, project_id),
+            "UPDATE trace_projects SET status=%s,last_error=%s,linking_job_id=COALESCE(%s,linking_job_id),linking_result=COALESCE(%s,linking_result),reconciliation_result=COALESCE(%s,reconciliation_result),updated_at=now() WHERE id=%s",
+            (status, Jsonb(error) if error is not None else None, linking_job_id,
+             Jsonb(linking_result) if linking_result is not None else None,
+             Jsonb(reconciliation_result) if reconciliation_result is not None else None, project_id),
+        )
+        conn.commit()
+
+
+def invalidate_reconciliation(project_id: str, linking_result: dict | None = None):
+    with db() as conn:
+        row = conn.execute("SELECT stages FROM trace_projects WHERE id=%s", (project_id,)).fetchone()
+        if not row:
+            return
+        stages = mark_reconciliation_pending(dict(row["stages"]))
+        conn.execute(
+            "UPDATE trace_projects SET stages=%s,status='partial',reconciliation_result=NULL,linking_result=COALESCE(%s,linking_result),updated_at=now() WHERE id=%s",
+            (Jsonb(stages), Jsonb(linking_result) if linking_result is not None else None, project_id),
         )
         conn.commit()
 
@@ -193,6 +231,89 @@ async def parser_analysis(client: httpx.AsyncClient, parser_id: str, retry: bool
             raise RuntimeError(f"Document Parser returned an unsupported state: {state}")
         await asyncio.sleep(POLL_INTERVAL)
     raise TimeoutError(f"Document Parser exceeded {PARSER_TIMEOUT} seconds")
+
+
+def reconciliation_targets(kfz_extraction: dict):
+    """Select only explicit currency amount wrappers from the saved KFZ extraction."""
+    targets = []
+    indicators = kfz_extraction.get("indicators") or []
+    for key, wrapper in (kfz_extraction.get("fields") or {}).items():
+        value = wrapper.get("value") if isinstance(wrapper, dict) else None
+        if not isinstance(value, dict) or "amount" not in value or not value.get("currency"):
+            continue
+        label = str(wrapper.get("label") or key)
+        source_path = "#/fields/" + key.replace("~", "~0").replace("/", "~1")
+        provenance = wrapper.get("provenance") or {}
+        # Extraction may publish the same source value as both a field and an
+        # indicator. The Reconciliation Engine canonicalizes duplicate evidence
+        # to the indicator fact, so bind the target to that exact locator.
+        for index, indicator in enumerate(indicators):
+            extracted = indicator.get("extracted") if isinstance(indicator, dict) else None
+            indicator_provenance = extracted.get("provenance") if isinstance(extracted, dict) else None
+            if (
+                isinstance(extracted, dict)
+                and extracted.get("value") == value
+                and isinstance(indicator_provenance, dict)
+                and indicator_provenance.get("source_ref") == provenance.get("source_ref")
+                and indicator_provenance.get("source_part_id") == provenance.get("source_part_id")
+            ):
+                source_path = f"#/indicators/{index}/extracted"
+                break
+        targets.append({
+            "target_id": "kfz-" + hashlib.sha256(key.encode("utf-8")).hexdigest()[:16],
+            "kfz_document_id": kfz_extraction["document_id"],
+            "kfz_source_path": source_path,
+            "label": label,
+            "description": f"Reported monetary indicator '{label}' from the saved KФЗ extraction.",
+            "currency": value.get("currency"),
+            "amount_basis": "unspecified",
+            "economic_measure": "unspecified",
+            "period_basis": "document_period",
+            "rounding_scale": 2,
+        })
+    return targets
+
+
+async def reconcile_saved_project(client: httpx.AsyncClient, project: dict, docs: list[dict], linking_result: dict):
+    kfz = next((doc for doc in docs if doc["role"] == "kfz"), None)
+    if not kfz or not kfz.get("extraction_result"):
+        raise RuntimeError("Saved KФЗ extraction is unavailable for Reconciliation")
+    targets = reconciliation_targets(kfz["extraction_result"])
+    if not targets:
+        raise RuntimeError("KФЗ extraction contains no explicit currency amount targets; Reconciliation was not run")
+
+    reporting_period = (kfz["extraction_result"].get("fields") or {}).get("reporting_period", {})
+    period_value = reporting_period.get("value") if isinstance(reporting_period, dict) else None
+    if not isinstance(period_value, dict):
+        period_value = {}
+    context = {
+        "period_start": period_value.get("start"),
+        "period_end": period_value.get("end"),
+        "targets": targets,
+        "data_classification": "anonymized" if project["data_classification"] in {"synthetic", "anonymized"} else "open",
+        "external_llm_allowed": bool(project["allow_external_llm"]),
+        "rounding_mode": "ROUND_HALF_UP",
+    }
+    payload = {
+        "contract_version": "1.0.0",
+        "extraction_results": [doc["extraction_result"] for doc in docs],
+        "linking_result": linking_result,
+        "context": context,
+    }
+    response = await client.post(f"{RECONCILIATION_URL}/api/v1/reconciliations", json=payload, timeout=240)
+    if response.status_code not in (200, 201):
+        raise RuntimeError(f"Reconciliation Engine returned HTTP {response.status_code}: {response.text[:2000]}")
+    created = response.json()
+    reconciliation_id = created.get("reconciliation_id")
+    if not reconciliation_id:
+        raise RuntimeError("Reconciliation Engine response has no reconciliation_id")
+    saved = await client.get(f"{RECONCILIATION_URL}/api/v1/reconciliations/{reconciliation_id}", timeout=30)
+    if saved.status_code != 200:
+        raise RuntimeError(f"Reconciliation result could not be reread ({saved.status_code}): {saved.text[:1000]}")
+    result = saved.json()
+    if result.get("reconciliation_id") != reconciliation_id:
+        raise RuntimeError("Reconciliation reread returned a different result ID")
+    return result
 
 
 async def process_project(project_id: str, retry_stage: str | None = None):
@@ -290,6 +411,36 @@ async def process_project(project_id: str, retry_stage: str | None = None):
 
         docs = document_rows(project_id)
         extractions = [doc["extraction_result"] for doc in docs]
+        if should_reuse_saved_linking_result(retry_stage):
+            linking_result = project.get("linking_result")
+            if not isinstance(linking_result, dict):
+                error = {"code": "SAVED_LINKING_RESULT_MISSING", "message": "A saved Linking result is required before Reconciliation can be retried."}
+                update_stage(project_id, "reconciliation", status="failed", completed=0, total=1, error=error)
+                set_project_status(project_id, "partial", error)
+                return
+            issues = contract_errors("linking", linking_result)
+            if issues:
+                error = {"code": "LINKING_CONTRACT_INVALID", "diagnostics": issues}
+                update_stage(project_id, "reconciliation", status="failed", completed=0, total=1, error=error)
+                set_project_status(project_id, "partial", error)
+                return
+            project_document_ids = {doc["parser_document_id"] for doc in docs}
+            if any(item.get("document_id") not in project_document_ids for item in linking_result.get("input_documents", [])):
+                error = {"code": "LINKING_DOCUMENT_OUTSIDE_PROJECT", "message": "Saved Linking result refers to a document outside this project."}
+                update_stage(project_id, "reconciliation", status="failed", completed=0, total=1, error=error)
+                set_project_status(project_id, "partial", error)
+                return
+            update_stage(project_id, "linking", status="completed", completed=1, total=1, error=None)
+            update_stage(project_id, "reconciliation", status="running", completed=0, total=1, error=None)
+            try:
+                reconciliation_result = await reconcile_saved_project(client, project, docs, linking_result)
+                update_stage(project_id, "reconciliation", status="completed", completed=1, total=1, error=None)
+                set_project_status(project_id, "completed", reconciliation_result=reconciliation_result)
+            except Exception as reconciliation_exc:
+                error = {"code": "RECONCILIATION_STAGE_FAILED", "message": str(reconciliation_exc)[:2000]}
+                update_stage(project_id, "reconciliation", status="failed", completed=0, total=1, error=error)
+                set_project_status(project_id, "partial", error)
+            return
         if not project["allow_external_llm"] or project["data_classification"] not in ALLOWED_CLASSIFICATIONS:
             error = {"code": "EXTERNAL_LLM_CONSENT_REQUIRED", "message": "Document Linking uses an external LLM. Explicit consent is required for public, synthetic, or anonymized data."}
             update_stage(project_id, "linking", status="blocked", completed=0, total=1, error=error)
@@ -299,12 +450,20 @@ async def process_project(project_id: str, retry_stage: str | None = None):
         update_stage(project_id, "linking", status="running", completed=0, total=1, error=None)
         try:
             existing_job = project.get("linking_job_id")
+            resume_existing_job = False
             if retry_stage == "linking" and existing_job:
+                existing_response = await client.get(
+                    f"{LINKING_URL}/api/linking-jobs/{existing_job}", headers=auth_headers(), timeout=30,
+                )
+                if existing_response.status_code == 200:
+                    resume_existing_job = should_resume_linking_job(existing_response.json().get("status"))
+            if resume_existing_job:
                 response = await client.post(f"{LINKING_URL}/api/linking-jobs/{existing_job}/resume", headers=auth_headers(), timeout=30)
             else:
                 signature = ":".join(f"{item['document_id']}:{item['extraction_id']}" for item in extractions)
                 request_hash = hashlib.sha256(signature.encode("utf-8")).hexdigest()[:20]
-                key = f"phystech-trace:{project_id}:{request_hash}"
+                retry_nonce = f":retry:{uuid.uuid4()}" if retry_stage == "linking" else ""
+                key = f"phystech-trace:{project_id}:{request_hash}{retry_nonce}"
                 response = await client.post(
                     f"{LINKING_URL}/api/linking-jobs",
                     headers={**auth_headers(), "Idempotency-Key": key},
@@ -334,7 +493,15 @@ async def process_project(project_id: str, retry_stage: str | None = None):
                     if any(item.get("document_id") not in {doc["parser_document_id"] for doc in docs} for item in linking_result.get("input_documents", [])):
                         raise ValueError("Document Linking result refers to a document outside this project")
                     update_stage(project_id, "linking", status="completed", completed=1, total=1, error=None)
-                    set_project_status(project_id, "completed", linking_result=linking_result)
+                    update_stage(project_id, "reconciliation", status="running", completed=0, total=1, error=None)
+                    try:
+                        reconciliation_result = await reconcile_saved_project(client, project, docs, linking_result)
+                        update_stage(project_id, "reconciliation", status="completed", completed=1, total=1, error=None)
+                        set_project_status(project_id, "completed", linking_result=linking_result, reconciliation_result=reconciliation_result)
+                    except Exception as reconciliation_exc:
+                        error = {"code": "RECONCILIATION_STAGE_FAILED", "message": str(reconciliation_exc)[:2000]}
+                        update_stage(project_id, "reconciliation", status="failed", completed=0, total=1, error=error)
+                        set_project_status(project_id, "partial", error, linking_result=linking_result)
                     return
                 if state.get("status") == "failed":
                     raise RuntimeError(state.get("last_error") or "Document Linking job failed")
@@ -373,7 +540,7 @@ async def _resume_later(project_id: str):
         ACTIVE_TASKS[project_id] = asyncio.create_task(process_project(project_id))
 
 
-app = FastAPI(title="Phystech Trace Gateway API", version="1.0.0", description="Projects, source uploads and durable Parser → Extraction → Linking orchestration.", lifespan=lifespan)
+app = FastAPI(title="Phystech Trace Gateway API", version="1.1.0", description="Projects, source uploads and durable Parser → Extraction → Linking → Reconciliation orchestration.", lifespan=lifespan)
 
 
 class ProjectCreate(BaseModel):
@@ -397,7 +564,7 @@ async def health():
         dependencies["postgres"] = "unavailable"
         return {"status": "unavailable", "service": "gateway", "dependencies": dependencies, "error": str(exc)[:300]}
     if CLIENT is not None:
-        for name, url in (("parser", PARSER_URL), ("extraction", EXTRACTION_URL), ("linking", LINKING_URL)):
+        for name, url in (("parser", PARSER_URL), ("extraction", EXTRACTION_URL), ("linking", LINKING_URL), ("reconciliation", RECONCILIATION_URL)):
             try:
                 response = await CLIENT.get(f"{url}/health", timeout=5)
                 dependencies[name] = "ok" if response.status_code == 200 else f"unavailable:{response.status_code}"
@@ -496,7 +663,7 @@ async def process(project_id: str):
 
 
 @app.post("/api/projects/{project_id}/retry", status_code=202)
-async def retry(project_id: str, stage: Literal["parser", "extraction", "linking"]):
+async def retry(project_id: str, stage: Literal["parser", "extraction", "linking", "reconciliation"]):
     project = project_row(project_id)
     if not project:
         raise HTTPException(404, "Project not found")
@@ -507,6 +674,10 @@ async def retry(project_id: str, stage: Literal["parser", "extraction", "linking
         raise HTTPException(403, "External LLM retry is blocked for confidential data")
     if stage == "linking" and not project["allow_external_llm"]:
         raise HTTPException(403, "External LLM retry requires explicit project consent")
+    if stage == "reconciliation" and project["linking_result"] is None:
+        raise HTTPException(409, "A saved Linking result is required before Reconciliation can be retried")
+    if stage == "reconciliation":
+        invalidate_reconciliation(project_id)
     update_stage(project_id, stage, status="pending", error=None)
     ACTIVE_TASKS[project_id] = asyncio.create_task(process_project(project_id, retry_stage=stage))
     return {"project_id": project_id, "stage": stage, "status": "queued"}
@@ -529,6 +700,14 @@ def project_linking(project_id: str):
     return {"linking_result": project["linking_result"], "linking_job_id": project["linking_job_id"], "status": project["stages"].get("linking", {}).get("status")}
 
 
+@app.get("/api/projects/{project_id}/reconciliation")
+def get_reconciliation(project_id: str):
+    project = project_row(project_id)
+    if not project:
+        raise HTTPException(404, "Project not found")
+    return {"reconciliation_result": project["reconciliation_result"], "status": project["stages"].get("reconciliation", {}).get("status")}
+
+
 @app.patch("/api/projects/{project_id}/links/{link_id}")
 async def decide_link(project_id: str, link_id: str, decision: LinkDecision):
     project = project_row(project_id)
@@ -546,7 +725,7 @@ async def decide_link(project_id: str, link_id: str, decision: LinkDecision):
     if response.status_code != 200:
         raise HTTPException(response.status_code, f"Document Linking decision failed: {response.text[:800]}")
     updated = response.json()
-    set_project_status(project_id, "completed", linking_result=updated)
+    invalidate_reconciliation(project_id, linking_result=updated)
     return {"linking_result": updated}
 
 
@@ -585,5 +764,6 @@ async def service_links():
         "parser": {"name": "Document Parser", "docs": "http://localhost:8081/docs", "openapi": "http://localhost:8081/openapi.json"},
         "extraction": {"name": "Structured Extraction", "docs": "http://localhost:8082/docs", "openapi": "http://localhost:8082/openapi.json"},
         "linking": {"name": "Document Linking", "docs": "http://localhost:8083/docs", "openapi": "http://localhost:8083/openapi.json"},
+        "reconciliation": {"name": "Reconciliation Engine", "docs": "http://localhost:8085/docs", "openapi": "http://localhost:8085/openapi.json"},
         "gateway": {"name": "Gateway", "docs": "http://localhost:8084/docs", "openapi": "http://localhost:8084/openapi.json"},
     }

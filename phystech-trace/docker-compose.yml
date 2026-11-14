@@ -75,6 +75,7 @@ services:
       API_BEARER_TOKEN: ${API_BEARER_TOKEN:-trace_api_local_token_2026_do_not_expose}
       REQUIRE_EXTERNAL_LLM_CONSENT: "true"
       LLM_ENABLED: ${LLM_ENABLED:-true}
+      LLM_MAX_CALLS_PER_RUN: ${LLM_MAX_CALLS_PER_RUN:-52}
       LLM_TIMEOUT_MS: ${LLM_TIMEOUT_MS:-120000}
       LLM_MAX_INPUT_TOKENS: ${LLM_MAX_INPUT_TOKENS:-230000}
       POLZA_API_KEY: ${POLZA_API_KEY:-${POLZA_AI_API_KEY:-}}
@@ -105,6 +106,7 @@ services:
       API_BEARER_TOKEN: ${API_BEARER_TOKEN:-trace_api_local_token_2026_do_not_expose}
       REQUIRE_EXTERNAL_LLM_CONSENT: "true"
       LLM_ENABLED: ${LLM_ENABLED:-true}
+      LLM_MAX_CALLS_PER_RUN: ${LLM_MAX_CALLS_PER_RUN:-52}
       LLM_TIMEOUT_MS: ${LLM_TIMEOUT_MS:-120000}
       LLM_MAX_INPUT_TOKENS: ${LLM_MAX_INPUT_TOKENS:-230000}
       POLZA_API_KEY: ${POLZA_API_KEY:-${POLZA_AI_API_KEY:-}}
@@ -122,6 +124,33 @@ services:
       retries: 5
     restart: unless-stopped
 
+  reconciliation-engine:
+    build:
+      context: ./services/reconciliation-engine
+      dockerfile: Dockerfile
+    environment:
+      RESULT_STORE_DIR: /app/data/results
+      LLM_ENABLED: ${RECONCILIATION_LLM_ENABLED:-false}
+      LLM_BASE_URL: ${RECONCILIATION_LLM_BASE_URL:-https://polza.ai/api/v1}
+      LLM_API_KEY: ${POLZA_API_KEY:-${POLZA_AI_API_KEY:-}}
+      LLM_MODEL: ${RECONCILIATION_LLM_MODEL:-google/gemma-4-26b-a4b-it}
+      LLM_TIMEOUT_SECONDS: ${RECONCILIATION_LLM_TIMEOUT_SECONDS:-45}
+      API_AUTH_ENABLED: "false"
+    volumes:
+      - reconciliation-results:/app/data/results
+    ports:
+      - "127.0.0.1:8085:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=3)"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    restart: unless-stopped
+
   gateway:
     build:
       context: ..
@@ -132,6 +161,7 @@ services:
       PARSER_URL: http://document-parser:18765
       EXTRACTION_URL: http://structured-extraction:8082
       LINKING_URL: http://document-linking:3000
+      RECONCILIATION_URL: http://reconciliation-engine:8000
       API_BEARER_TOKEN: ${API_BEARER_TOKEN:-trace_api_local_token_2026_do_not_expose}
       POLL_INTERVAL_SECONDS: 2
       PARSER_TIMEOUT_SECONDS: 1800
@@ -146,6 +176,8 @@ services:
       document-linking:
         condition: service_healthy
       linking-worker:
+        condition: service_healthy
+      reconciliation-engine:
         condition: service_healthy
     ports:
       - "127.0.0.1:8084:8084"
@@ -167,3 +199,4 @@ volumes:
   redis-data:
   parser-uploads:
   parser-models:
+  reconciliation-results:
