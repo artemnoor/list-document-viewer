@@ -2,6 +2,39 @@
 
 Updated: 2026-11-14
 
+## Current unified chain — supersedes earlier gated status below
+
+Following the user's instruction to connect the entire chain for manual frontend review, Verification was imported with `git subtree` from `b1d025e738fbf5ff1b447c49608527d580ff489d`. Both engines retain their complete source, standalone API, contracts, tests and upstream history. Compose now starts all five modules. Gateway passes the unchanged saved Extraction 1.2.0 and Linking 1.2.0 snapshots plus the real Reconciliation 1.0.0 result into Verification's native `ReconciliationEngine10Adapter`. Verification 1.2.0 is validated against its published schema, reread in project scope, and stored in PostgreSQL as well as the engine's persistent SQLite volume. Reconciliation uses its existing persistent volume. Both stages have separate retry and read endpoints.
+
+The frontend now shows five stage cards and a **Сверка** tab containing reported/expected values, difference, decision reasons, evidence, calculation plans and full result links. Model-labeled `confirmed` links that are still `not_reviewed` can now be reviewed by the actual user. Link decisions invalidate both downstream results; adding a document invalidates the previous bundle's results. Verification retry reuses saved Reconciliation rather than calling paid upstream stages. Reprocessing a saved bundle reuses Extraction and Linking. Reconciliation planning is enabled by default and still obeys the existing per-project external-model consent. Verification explanations remain deterministic, with its optional LLM disabled.
+
+### Actual HTTP smoke example
+
+- Project: `ab5f2d87-1759-450d-a3dd-38c33b9ec91f` (`Synthetic E2E 20261113-152545`), three source documents.
+- Frontend: `http://localhost:8080/?project=ab5f2d87-1759-450d-a3dd-38c33b9ec91f&tab=verification`.
+- Saved Parser, Extraction and Linking inputs were reused; no mocks or fabricated human decisions were used in this HTTP run.
+- Gateway processed Reconciliation, obtained a genuine Polza plan, then submitted its real result to Verification.
+- Reconciliation ID: `91a272018ef4719051def4dba679e924`.
+- Verification ID: `ver_3fae25be79e233489643c27f`, `overall_status=insufficient_data`, three unresolved indicators, zero proven mismatches. A successful `matched` calculation is not claimed.
+- All five Gateway stage states are `completed`; this means processing finished, independently of the financial conclusion. The UI labels the project **Обработан** and separately displays **Недостаточно данных**.
+- Exact result JSON equality was checked through Gateway and both engines after restarting Gateway, Reconciliation and Verification. All health dependencies report `ok`.
+- Recreating Gateway exposed a stale Nginx upstream IP causing frontend 502 responses. The frontend now resolves Gateway through Docker DNS with a short cache; frontend HTTP returned 200 after Gateway was recreated again.
+- Browser navigation to the example and the Сверка tab was checked with Playwright, with zero console errors. Local screenshot: `output/playwright/unified-chain-front.png` at the repository root.
+
+Saved evidence: `tests/e2e/results/unified-chain-smoke.json`, `unified-chain-reconciliation.json`, `unified-chain-verification.json`.
+
+### Checks and remaining quality limits
+
+Verification's complete suite: **72 passed**. Gateway downstream contract, retry, evidence-forwarding and invalidation regressions: **11 passed**. Frontend typecheck/production build, Compose build/start, all health checks and persisted-result rereads passed. Cross-service tests compare the exact parsed published schemas for Extraction, Linking, native Reconciliation and Verification.
+
+The earlier upstream hash failure was caused by Git's Windows newline conversion. Restoring the original Git blob bytes and disabling text conversion for imported Verification JSON files makes every original pinned hash pass unchanged. The hashes, fixtures and expected outputs were not changed.
+
+This iteration added one real Reconciliation planner request: 4,557 input + 451 output = **5,008 tokens**, **0.06461336 RUB**. The recorded cumulative request count is now **139 / 150**, known cumulative spend **20.32764969 RUB**, plus the one earlier unaudited planner call described in the historical section. No new Extraction/Linking or Verification model requests were made in this iteration.
+
+All five modules are connected and available for manual frontend testing. Evidence quality remains limited: this example correctly stays insufficient rather than producing a proven expected amount. Case19's saved KFZ Extraction is `unknown` with empty fields and no monetary target; it cannot produce a calculation without correcting that upstream Extraction. No claim is made that the original broad matched/mismatch scenario matrix has passed.
+
+## Historical staged implementation notes
+
 ## Source revisions
 
 | Repository / module | Ref | Source commit |

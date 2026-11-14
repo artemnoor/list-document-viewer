@@ -1,4 +1,4 @@
-export type StageName = "parser" | "extraction" | "linking";
+export type StageName = "parser" | "extraction" | "linking" | "reconciliation" | "verification";
 export type StageState = { status: string; completed: number; total: number; mode?: string; warning?: string | null; error?: { code?: string; message?: string } | null };
 export type TraceDocument = {
   id: string; role: "kfz" | "primary"; file_name: string; document_id: string; parser_state: string;
@@ -24,6 +24,6 @@ export type TraceProject = {
   id: string; name: string; data_classification: "confidential" | "public" | "synthetic" | "anonymized";
   allow_external_llm: boolean; status: string; created_at: string; updated_at: string;
   stages: Record<StageName, StageState>; last_error?: { code?: string; message?: string } | null;
-  linking_job_id?: string | null; linking_result?: LinkingResult | null; documents: TraceDocument[];
+  reconciliation_result?: Record<string, any> | null; verification_result?: Record<string, any> | null; linking_job_id?: string | null; linking_result?: LinkingResult | null; documents: TraceDocument[];
 };
 export type DocumentResult = { parser_result?: Record<string, any> | null; extraction?: Record<string, any> | null; parser_error?: { code?: string; message?: string } | null; extraction_error?: { code?: string; message?: string } | null };

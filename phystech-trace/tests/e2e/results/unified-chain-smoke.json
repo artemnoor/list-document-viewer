@@ -1,0 +1,117 @@
+{
+  "checked_at": "2026-11-14T10:18:31.173435+00:00",
+  "project_id": "ab5f2d87-1759-450d-a3dd-38c33b9ec91f",
+  "stages": {
+    "parser": {
+      "error": null,
+      "total": 3,
+      "status": "completed",
+      "completed": 3,
+      "updated_at": "2026-11-14T10:11:14.291606+00:00"
+    },
+    "extraction": {
+      "mode": "saved_results",
+      "error": null,
+      "total": 3,
+      "status": "completed",
+      "warning": null,
+      "completed": 3,
+      "updated_at": "2026-11-14T10:11:14.317174+00:00"
+    },
+    "linking": {
+      "error": null,
+      "total": 1,
+      "status": "completed",
+      "completed": 1,
+      "updated_at": "2026-11-14T10:11:14.349322+00:00"
+    },
+    "verification": {
+      "error": null,
+      "total": 1,
+      "status": "completed",
+      "completed": 1,
+      "updated_at": "2026-11-14T10:11:17.848956+00:00"
+    },
+    "reconciliation": {
+      "error": null,
+      "total": 1,
+      "status": "completed",
+      "completed": 1,
+      "updated_at": "2026-11-14T10:11:17.621342+00:00"
+    }
+  },
+  "reconciliation_id": "91a272018ef4719051def4dba679e924",
+  "verification_id": "ver_3fae25be79e233489643c27f",
+  "verification_status": "insufficient_data",
+  "completeness": {
+    "complete": false,
+    "total_indicators": 3,
+    "matched_indicators": 0,
+    "verified_indicators": 0,
+    "applicable_indicators": 3,
+    "mismatched_indicators": 0,
+    "unresolved_indicators": 3,
+    "not_applicable_indicators": 0
+  },
+  "llm_audit": {
+    "reconciliation_id": "91a272018ef4719051def4dba679e924",
+    "calls": [
+      {
+        "response_id": "gen_2232825466178637825",
+        "model_requested": "google/gemma-4-26b-a4b-it",
+        "model_returned": "google/gemma-4-26b-a4b-it",
+        "finish_reason": "stop",
+        "duration_ms": 2937.23,
+        "prompt_sha256": "fd38a67cec0169d8baf5281e6f5e4c92705fff8e9bc406565c32df4484d0de9b",
+        "payload_sha256": "d1bf370d7600189b4022edaca3e3671766d9080b92cafef3e1f416bc96ff42d1",
+        "usage": {
+          "prompt_tokens": 4557,
+          "completion_tokens": 451,
+          "total_tokens": 5008,
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "audio_tokens": 0,
+            "image_tokens": 0,
+            "accepted_prediction_tokens": null,
+            "rejected_prediction_tokens": null
+          },
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "server_tool_use": null,
+          "cost_rub": 0.06461336,
+          "cost": 0.06461336,
+          "plugins": null
+        },
+        "provider_cost": 0.06461336,
+        "provider_cost_currency": "RUB",
+        "assistant_content": "{\"target_id\": \"target_001\", \"method_description\": \"The target 'Общая сумма по отчёту' is an indicator representing a total amount. The registry contains an indicator 'Итого по реестру' (candidate_00002) and the act contains an indicator 'Итого к оплате' (candidate_00007). However, the linking graph shows a 'review' status for the relationship between the registry and the act (link_00001) due to provenance mismatch and missing provenance, and the relationship between the report and the sources is not human-confirmed. Since the relationship between the registry total and the act total is uncertain and they might be duplicate representations of the same operation, I cannot decide which one to include without manual verification.\", \"included\": [], \"excluded\": [], \"unprocessed_fact_ids\": [\"candidate_00001\", \"candidate_00002\", \"candidate_00003\", \"candidate_00004\", \"candidate_00005\", \"candidate_00006\", \"candidate_00007\", \"candidate_00008\", \"candidate_00009\", \"candidate_00010\"], \"steps\": [], \"result_step_id\": null, \"currency\": \"RUB\", \"unit\": null, \"amount_basis\": \"unspecified\", \"rounding_scale\": 2, \"assumptions\": [], \"information_gaps\": [\"Uncertainty whether the registry total (candidate_00002) and the act total (candidate_00007) are independent additive values or duplicate representations of the same total, due to the 'review' status of link_00001 and provenance mismatch.\"], \"requires_manual_review\": true, \"candidate_batch\": {\"index\": 1, \"total_batches\": 1, \"batch_candidate_count\": 10, \"total_candidate_count\": 10, \"all_batches_will_be_reviewed\": true}}",
+        "error_type": null,
+        "http_status": 200
+      }
+    ]
+  },
+  "extraction_and_linking": "reused real saved upstream results; no new extraction/linking requests",
+  "restart_persistence": {
+    "gateway": true,
+    "reconciliation_engine": true,
+    "verification_engine": true,
+    "result_equality": "exact JSON equality after restarting all three services"
+  },
+  "frontend_http_status": 200,
+  "health": {
+    "status": "ok",
+    "service": "gateway",
+    "dependencies": {
+      "postgres": "ok",
+      "parser": "ok",
+      "extraction": "ok",
+      "linking": "ok",
+      "reconciliation": "ok",
+      "verification": "ok"
+    }
+  }
+}

@@ -29,6 +29,7 @@ PARSER_URL = os.getenv("PARSER_URL", "http://document-parser:18765").rstrip("/")
 EXTRACTION_URL = os.getenv("EXTRACTION_URL", "http://structured-extraction:8082").rstrip("/")
 LINKING_URL = os.getenv("LINKING_URL", "http://document-linking:3000").rstrip("/")
 RECONCILIATION_URL = os.getenv("RECONCILIATION_URL", "http://reconciliation-engine:8000").rstrip("/")
+VERIFICATION_URL = os.getenv("VERIFICATION_URL", "http://verification-engine:8000").rstrip("/")
 LINKING_TOKEN = os.getenv("API_BEARER_TOKEN", "phystech_trace_local_api_token_32_chars")
 POLL_INTERVAL = max(0.25, float(os.getenv("POLL_INTERVAL_SECONDS", "2")))
 LINKING_POLL_INTERVAL = max(5.0, float(os.getenv("LINKING_POLL_INTERVAL_SECONDS", "10")))
@@ -38,6 +39,8 @@ ALLOWED_CLASSIFICATIONS = {"public", "synthetic", "anonymized"}
 ACTIVE_TASKS: dict[str, asyncio.Task] = {}
 CLIENT: httpx.AsyncClient | None = None
 CONTRACTS = {
+    "reconciliation": json.loads((CONTRACTS_ROOT / "reconciliation-result-1.0.0.schema.json").read_text(encoding="utf-8")),
+    "verification": json.loads((CONTRACTS_ROOT / "verification-result-1.2.0.schema.json").read_text(encoding="utf-8")),
     "parser": json.loads((CONTRACTS_ROOT / "parser-to-extraction-v1.schema.json").read_text(encoding="utf-8")),
     "extraction": json.loads((CONTRACTS_ROOT / "structured-extraction-1.2.0.schema.json").read_text(encoding="utf-8")),
     "linking": json.loads((CONTRACTS_ROOT / "document-linking-1.2.0.schema.json").read_text(encoding="utf-8")),
@@ -58,6 +61,7 @@ def initial_stages():
         "parser": {"status": "pending", "completed": 0, "total": 0, "updated_at": now()},
         "extraction": {"status": "pending", "completed": 0, "total": 0, "updated_at": now()},
         "linking": {"status": "pending", "completed": 0, "total": 0, "updated_at": now()},
+        "verification": {"status": "pending", "completed": 0, "total": 0, "updated_at": now()},
         "reconciliation": {"status": "pending", "completed": 0, "total": 0, "updated_at": now()},
     }
 
@@ -68,6 +72,7 @@ def mark_reconciliation_pending(stages: dict) -> dict:
     updated["reconciliation"] = {
         **previous, "status": "pending", "completed": 0, "error": None, "updated_at": now(),
     }
+    updated["verification"] = {"status": "pending", "completed": 0, "total": 0, "error": None, "updated_at": now()}
     return updated
 
 
@@ -76,7 +81,7 @@ def should_resume_linking_job(job_status: str | None) -> bool:
 
 
 def should_reuse_saved_linking_result(retry_stage: str | None) -> bool:
-    return retry_stage == "reconciliation"
+    return retry_stage in {"reconciliation", "verification"}
 
 
 def parser_filename_header(name: str) -> str:
@@ -106,6 +111,7 @@ def ensure_database():
         """)
         conn.execute("CREATE INDEX IF NOT EXISTS trace_documents_project_idx ON trace_documents(project_id,created_at)")
         conn.execute("ALTER TABLE trace_projects ADD COLUMN IF NOT EXISTS reconciliation_result jsonb")
+        conn.execute("ALTER TABLE trace_projects ADD COLUMN IF NOT EXISTS verification_result jsonb")
         conn.commit()
 
 
@@ -154,9 +160,10 @@ def project_payload(project_id: str):
         "id": project["id"], "name": project["name"], "data_classification": project["data_classification"],
         "allow_external_llm": project["allow_external_llm"], "status": project["status"],
         "created_at": project["created_at"].isoformat(), "updated_at": project["updated_at"].isoformat(),
-        "stages": project["stages"], "last_error": project["last_error"],
+        "stages": {**initial_stages(), **project["stages"]}, "last_error": project["last_error"],
         "linking_job_id": project["linking_job_id"], "linking_result": project["linking_result"],
         "reconciliation_result": project["reconciliation_result"],
+        "verification_result": project.get("verification_result"),
         "documents": [
             {"id": doc["id"], "role": doc["role"], "file_name": doc["file_name"],
              "document_id": doc["parser_document_id"], "parser_state": doc["parser_state"],
@@ -180,13 +187,14 @@ def contract_errors(name: str, value, limit: int = 30):
     return issues
 
 
-def set_project_status(project_id: str, status: str, error=None, linking_job_id=None, linking_result=None, reconciliation_result=None):
+def set_project_status(project_id: str, status: str, error=None, linking_job_id=None, linking_result=None, reconciliation_result=None, verification_result=None):
     with db() as conn:
         conn.execute(
-            "UPDATE trace_projects SET status=%s,last_error=%s,linking_job_id=COALESCE(%s,linking_job_id),linking_result=COALESCE(%s,linking_result),reconciliation_result=COALESCE(%s,reconciliation_result),updated_at=now() WHERE id=%s",
+            "UPDATE trace_projects SET status=%s,last_error=%s,linking_job_id=COALESCE(%s,linking_job_id),linking_result=COALESCE(%s,linking_result),reconciliation_result=COALESCE(%s,reconciliation_result),verification_result=COALESCE(%s,verification_result),updated_at=now() WHERE id=%s",
             (status, Jsonb(error) if error is not None else None, linking_job_id,
              Jsonb(linking_result) if linking_result is not None else None,
-             Jsonb(reconciliation_result) if reconciliation_result is not None else None, project_id),
+             Jsonb(reconciliation_result) if reconciliation_result is not None else None,
+             Jsonb(verification_result) if verification_result is not None else None, project_id),
         )
         conn.commit()
 
@@ -198,7 +206,7 @@ def invalidate_reconciliation(project_id: str, linking_result: dict | None = Non
             return
         stages = mark_reconciliation_pending(dict(row["stages"]))
         conn.execute(
-            "UPDATE trace_projects SET stages=%s,status='partial',reconciliation_result=NULL,linking_result=COALESCE(%s,linking_result),updated_at=now() WHERE id=%s",
+            "UPDATE trace_projects SET stages=%s,status='partial',reconciliation_result=NULL,verification_result=NULL,linking_result=COALESCE(%s,linking_result),updated_at=now() WHERE id=%s",
             (Jsonb(stages), Jsonb(linking_result) if linking_result is not None else None, project_id),
         )
         conn.commit()
@@ -276,6 +284,23 @@ def reconciliation_targets(kfz_extraction: dict):
             "period_basis": "document_period",
             "rounding_scale": 2,
         })
+    for index, indicator in enumerate(indicators):
+        wrapper = indicator.get("extracted") if isinstance(indicator, dict) else None
+        value = wrapper.get("value") if isinstance(wrapper, dict) else None
+        pointer = f"#/indicators/{index}/extracted"
+        if not isinstance(value, dict) or "amount" not in value or not value.get("currency"):
+            continue
+        if any(target["kfz_source_path"] == pointer for target in targets):
+            continue
+        targets.append({
+            "target_id": "kfz-indicator-" + str(index),
+            "kfz_document_id": kfz_extraction["document_id"],
+            "kfz_source_path": pointer,
+            "label": str(indicator.get("label") or indicator.get("key") or f"Indicator {index + 1}"),
+            "description": "Reported monetary indicator from the saved KFZ extraction.",
+            "currency": value["currency"], "amount_basis": "unspecified",
+            "economic_measure": "unspecified", "period_basis": "document_period", "rounding_scale": 2,
+        })
     return targets
 
 
@@ -318,7 +343,56 @@ async def reconcile_saved_project(client: httpx.AsyncClient, project: dict, docs
     result = saved.json()
     if result.get("reconciliation_id") != reconciliation_id:
         raise RuntimeError("Reconciliation reread returned a different result ID")
+    issues = contract_errors("reconciliation", result)
+    if issues or result != created:
+        raise RuntimeError(f"Reconciliation result contract or reread mismatch: {issues}")
     return result
+
+
+async def verify_saved_project(client, project, docs, linking_result, reconciliation_result):
+    kfz = next(doc for doc in docs if doc["role"] == "kfz")
+    payload = {
+        "project_id": project["id"],
+        "extraction": kfz["extraction_result"],
+        "supporting_extractions": [doc["extraction_result"] for doc in docs if doc["role"] != "kfz"],
+        "linking_result": linking_result,
+        "reconciliation_result": reconciliation_result,
+    }
+    response = await client.post(f"{VERIFICATION_URL}/api/v1/verifications", json=payload, timeout=240)
+    if response.status_code not in (200, 201):
+        raise RuntimeError(f"Verification returned HTTP {response.status_code}: {response.text[:2000]}")
+    result = response.json()
+    issues = contract_errors("verification", result)
+    if issues or result.get("project_id") != project["id"]:
+        raise RuntimeError(f"Verification contract or project scope mismatch: {issues}")
+    saved = await client.get(f"{VERIFICATION_URL}/api/v1/verifications/{result['verification_id']}", params={"project_id": project["id"]}, timeout=30)
+    if saved.status_code != 200 or saved.json() != result:
+        raise RuntimeError("Verification persisted result does not match the created result")
+    return result
+
+
+async def finish_pipeline(client, project, docs, linking_result, retry_stage=None):
+    project_id = project["id"]
+    stage = "reconciliation"
+    set_project_status(project_id, "running", linking_result=linking_result)
+    try:
+        reconciliation_result = project.get("reconciliation_result") if retry_stage == "verification" else None
+        if reconciliation_result is None:
+            update_stage(project_id, stage, status="running", completed=0, total=1, error=None)
+            reconciliation_result = await reconcile_saved_project(client, project, docs, linking_result)
+        elif contract_errors("reconciliation", reconciliation_result):
+            raise RuntimeError("Saved Reconciliation result violates its contract")
+        set_project_status(project_id, "running", reconciliation_result=reconciliation_result)
+        update_stage(project_id, stage, status="completed", completed=1, total=1, error=None)
+        stage = "verification"
+        update_stage(project_id, stage, status="running", completed=0, total=1, error=None)
+        result = await verify_saved_project(client, project, docs, linking_result, reconciliation_result)
+        update_stage(project_id, stage, status="completed", completed=1, total=1, error=None)
+        set_project_status(project_id, "completed", verification_result=result)
+    except Exception as exc:
+        error = {"code": stage.upper() + "_STAGE_FAILED", "message": str(exc)[:2000]}
+        update_stage(project_id, stage, status="failed", completed=0, total=1, error=error)
+        set_project_status(project_id, "partial", error)
 
 
 async def process_project(project_id: str, retry_stage: str | None = None):
@@ -410,13 +484,13 @@ async def process_project(project_id: str, retry_stage: str | None = None):
                 completed = sum(1 for item in document_rows(project_id) if item["extraction_result"] is not None)
                 update_stage(project_id, "extraction", status="running", completed=completed, total=len(docs), error=None, mode=extraction_mode, warning=extraction_warning)
         else:
-            extraction_mode = project.get("stages", {}).get("extraction", {}).get("mode", "rules_only")
-            extraction_warning = project.get("stages", {}).get("extraction", {}).get("warning")
+            extraction_mode = "saved_results"
+            extraction_warning = None
         update_stage(project_id, "extraction", status="completed", completed=len(docs), total=len(docs), error=None, mode=extraction_mode, warning=extraction_warning)
 
         docs = document_rows(project_id)
         extractions = [doc["extraction_result"] for doc in docs]
-        if should_reuse_saved_linking_result(retry_stage):
+        if should_reuse_saved_linking_result(retry_stage) or (retry_stage is None and project.get("linking_result")):
             linking_result = project.get("linking_result")
             if not isinstance(linking_result, dict):
                 error = {"code": "SAVED_LINKING_RESULT_MISSING", "message": "A saved Linking result is required before Reconciliation can be retried."}
@@ -436,15 +510,7 @@ async def process_project(project_id: str, retry_stage: str | None = None):
                 set_project_status(project_id, "partial", error)
                 return
             update_stage(project_id, "linking", status="completed", completed=1, total=1, error=None)
-            update_stage(project_id, "reconciliation", status="running", completed=0, total=1, error=None)
-            try:
-                reconciliation_result = await reconcile_saved_project(client, project, docs, linking_result)
-                update_stage(project_id, "reconciliation", status="completed", completed=1, total=1, error=None)
-                set_project_status(project_id, "completed", reconciliation_result=reconciliation_result)
-            except Exception as reconciliation_exc:
-                error = {"code": "RECONCILIATION_STAGE_FAILED", "message": str(reconciliation_exc)[:2000]}
-                update_stage(project_id, "reconciliation", status="failed", completed=0, total=1, error=error)
-                set_project_status(project_id, "partial", error)
+            await finish_pipeline(client, project, docs, linking_result, retry_stage)
             return
         if not project["allow_external_llm"] or project["data_classification"] not in ALLOWED_CLASSIFICATIONS:
             error = {"code": "EXTERNAL_LLM_CONSENT_REQUIRED", "message": "Document Linking uses an external LLM. Explicit consent is required for public, synthetic, or anonymized data."}
@@ -498,15 +564,7 @@ async def process_project(project_id: str, retry_stage: str | None = None):
                     if any(item.get("document_id") not in {doc["parser_document_id"] for doc in docs} for item in linking_result.get("input_documents", [])):
                         raise ValueError("Document Linking result refers to a document outside this project")
                     update_stage(project_id, "linking", status="completed", completed=1, total=1, error=None)
-                    update_stage(project_id, "reconciliation", status="running", completed=0, total=1, error=None)
-                    try:
-                        reconciliation_result = await reconcile_saved_project(client, project, docs, linking_result)
-                        update_stage(project_id, "reconciliation", status="completed", completed=1, total=1, error=None)
-                        set_project_status(project_id, "completed", linking_result=linking_result, reconciliation_result=reconciliation_result)
-                    except Exception as reconciliation_exc:
-                        error = {"code": "RECONCILIATION_STAGE_FAILED", "message": str(reconciliation_exc)[:2000]}
-                        update_stage(project_id, "reconciliation", status="failed", completed=0, total=1, error=error)
-                        set_project_status(project_id, "partial", error, linking_result=linking_result)
+                    await finish_pipeline(client, project, docs, linking_result)
                     return
                 if state.get("status") == "failed":
                     raise RuntimeError(state.get("last_error") or "Document Linking job failed")
@@ -545,7 +603,7 @@ async def _resume_later(project_id: str):
         ACTIVE_TASKS[project_id] = asyncio.create_task(process_project(project_id))
 
 
-app = FastAPI(title="Phystech Trace Gateway API", version="1.1.0", description="Projects, source uploads and durable Parser → Extraction → Linking → Reconciliation orchestration.", lifespan=lifespan)
+app = FastAPI(title="Phystech Trace Gateway API", version="1.2.0", description="Projects, source uploads and durable Parser → Extraction → Linking → Reconciliation → Verification orchestration.", lifespan=lifespan)
 
 
 class ProjectCreate(BaseModel):
@@ -569,7 +627,7 @@ async def health():
         dependencies["postgres"] = "unavailable"
         return {"status": "unavailable", "service": "gateway", "dependencies": dependencies, "error": str(exc)[:300]}
     if CLIENT is not None:
-        for name, url in (("parser", PARSER_URL), ("extraction", EXTRACTION_URL), ("linking", LINKING_URL), ("reconciliation", RECONCILIATION_URL)):
+        for name, url in (("parser", PARSER_URL), ("extraction", EXTRACTION_URL), ("linking", LINKING_URL), ("reconciliation", RECONCILIATION_URL), ("verification", VERIFICATION_URL)):
             try:
                 response = await CLIENT.get(f"{url}/health", timeout=5)
                 dependencies[name] = "ok" if response.status_code == 200 else f"unavailable:{response.status_code}"
@@ -608,6 +666,10 @@ def get_project(project_id: str):
 async def upload_documents(project_id: str, role: Literal["kfz", "primary"] = Form(...), files: list[UploadFile] = File(...)):
     if not project_row(project_id):
         raise HTTPException(404, "Project not found")
+    if project_id in ACTIVE_TASKS and not ACTIVE_TASKS[project_id].done():
+        raise HTTPException(409, "Wait for project processing to finish before uploading documents")
+    if role == "kfz" and any(doc["role"] == "kfz" for doc in document_rows(project_id)):
+        raise HTTPException(409, "This project already has a KFZ report; create a new project for another report")
     if not files:
         raise HTTPException(422, "Select at least one document")
     if role == "kfz" and len(files) > 1:
@@ -638,6 +700,7 @@ async def upload_documents(project_id: str, role: Literal["kfz", "primary"] = Fo
                     "INSERT INTO trace_documents(id,project_id,role,file_name,parser_document_id,parser_state) VALUES(%s,%s,%s,%s,%s,%s)",
                     (document_id, project_id, role, name, parser_id, "queued"),
                 )
+                conn.execute("UPDATE trace_projects SET stages=%s,status='draft',linking_result=NULL,linking_job_id=NULL,reconciliation_result=NULL,verification_result=NULL,last_error=NULL,updated_at=now() WHERE id=%s", (Jsonb(initial_stages()), project_id))
                 conn.commit()
         except psycopg.errors.UniqueViolation:
             with db() as conn:
@@ -668,7 +731,7 @@ async def process(project_id: str):
 
 
 @app.post("/api/projects/{project_id}/retry", status_code=202)
-async def retry(project_id: str, stage: Literal["parser", "extraction", "linking", "reconciliation"]):
+async def retry(project_id: str, stage: Literal["parser", "extraction", "linking", "reconciliation", "verification"]):
     project = project_row(project_id)
     if not project:
         raise HTTPException(404, "Project not found")
@@ -679,9 +742,11 @@ async def retry(project_id: str, stage: Literal["parser", "extraction", "linking
         raise HTTPException(403, "External LLM retry is blocked for confidential data")
     if stage == "linking" and not project["allow_external_llm"]:
         raise HTTPException(403, "External LLM retry requires explicit project consent")
-    if stage == "reconciliation" and project["linking_result"] is None:
+    if stage in {"reconciliation", "verification"} and project["linking_result"] is None:
         raise HTTPException(409, "A saved Linking result is required before Reconciliation can be retried")
-    if stage == "reconciliation":
+    if stage == "verification" and project.get("reconciliation_result") is None:
+        raise HTTPException(409, "A saved Reconciliation result is required before Verification can be retried")
+    if stage in {"reconciliation", "linking"}:
         invalidate_reconciliation(project_id)
     update_stage(project_id, stage, status="pending", error=None)
     ACTIVE_TASKS[project_id] = asyncio.create_task(process_project(project_id, retry_stage=stage))
@@ -705,12 +770,21 @@ def project_linking(project_id: str):
     return {"linking_result": project["linking_result"], "linking_job_id": project["linking_job_id"], "status": project["stages"].get("linking", {}).get("status")}
 
 
+@app.get("/api/projects/{project_id}/verification")
+def verification_result(project_id: str):
+    project = project_row(project_id)
+    if not project:
+        raise HTTPException(404, "Project not found")
+    return {"verification_result": project.get("verification_result"), "status": project["stages"].get("verification", {}).get("status")}
+
+
 @app.get("/api/projects/{project_id}/reconciliation")
 def get_reconciliation(project_id: str):
     project = project_row(project_id)
     if not project:
         raise HTTPException(404, "Project not found")
-    return {"reconciliation_result": project["reconciliation_result"], "status": project["stages"].get("reconciliation", {}).get("status")}
+    return {"reconciliation_result": project["reconciliation_result"],
+        "verification_result": project.get("verification_result"), "status": project["stages"].get("reconciliation", {}).get("status")}
 
 
 @app.patch("/api/projects/{project_id}/links/{link_id}")
@@ -749,8 +823,8 @@ async def source_file(project_id: str, parser_id: str):
     response = await CLIENT.get(f"{PARSER_URL}/api/documents/{parser_id}/source", timeout=60)
     if response.status_code != 200:
         raise HTTPException(response.status_code, "Parser source file is unavailable")
-    name = source_lookup(project_id, parser_id).replace('"', "")
-    return Response(response.content, media_type=response.headers.get("content-type", "application/octet-stream"), headers={"Content-Disposition": f'inline; filename="{name}"'})
+    name = quote(source_lookup(project_id, parser_id), safe="")
+    return Response(response.content, media_type=response.headers.get("content-type", "application/octet-stream"), headers={"Content-Disposition": f"inline; filename*=UTF-8''{name}"})
 
 
 @app.get("/api/projects/{project_id}/sources/{parser_id}/pages/{page_no}")
@@ -770,5 +844,6 @@ async def service_links():
         "extraction": {"name": "Structured Extraction", "docs": "http://localhost:8082/docs", "openapi": "http://localhost:8082/openapi.json"},
         "linking": {"name": "Document Linking", "docs": "http://localhost:8083/docs", "openapi": "http://localhost:8083/openapi.json"},
         "reconciliation": {"name": "Reconciliation Engine", "docs": "http://localhost:8085/docs", "openapi": "http://localhost:8085/openapi.json"},
+        "verification": {"name": "Verification Engine", "docs": "http://localhost:8086/docs", "openapi": "http://localhost:8086/openapi.json"},
         "gateway": {"name": "Gateway", "docs": "http://localhost:8084/docs", "openapi": "http://localhost:8084/openapi.json"},
     }

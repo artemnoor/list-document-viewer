@@ -29,5 +29,7 @@ export const services = [
   { name: "Document Parser", kind: "Распознавание", url: "http://localhost:8081/docs" },
   { name: "Structured Extraction", kind: "Извлечение", url: "http://localhost:8082/docs" },
   { name: "Document Linking", kind: "Связи документов", url: "http://localhost:8083/docs" },
+  { name: "Reconciliation Engine", kind: "Расчёт", url: "http://localhost:8085/docs" },
+  { name: "Verification Engine", kind: "Сверка", url: "http://localhost:8086/docs" },
   { name: "Gateway API", kind: "Оркестрация", url: "http://localhost:8084/docs" },
 ];

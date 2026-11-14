@@ -130,7 +130,7 @@ services:
       dockerfile: Dockerfile
     environment:
       RESULT_STORE_DIR: /app/data/results
-      LLM_ENABLED: ${RECONCILIATION_LLM_ENABLED:-false}
+      LLM_ENABLED: ${RECONCILIATION_LLM_ENABLED:-true}
       LLM_BASE_URL: ${RECONCILIATION_LLM_BASE_URL:-https://polza.ai/api/v1}
       LLM_API_KEY: ${POLZA_API_KEY:-${POLZA_AI_API_KEY:-}}
       LLM_MODEL: ${RECONCILIATION_LLM_MODEL:-google/gemma-4-26b-a4b-it}
@@ -151,6 +151,26 @@ services:
       start_period: 10s
     restart: unless-stopped
 
+  verification-engine:
+    build:
+      context: ./services/verification-engine
+      dockerfile: Dockerfile
+    environment:
+      VERIFICATION_AUTH_MODE: development
+      VERIFICATION_DB_PATH: /data/verification.sqlite3
+      POLZA_AI_ENABLED: "false"
+      VERIFICATION_MAX_REQUEST_BYTES: "67108864"
+    volumes:
+      - verification-data:/data
+    ports:
+      - "127.0.0.1:8086:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=3)"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
   gateway:
     build:
       context: ..
@@ -161,6 +181,7 @@ services:
       PARSER_URL: http://document-parser:18765
       EXTRACTION_URL: http://structured-extraction:8082
       LINKING_URL: http://document-linking:3000
+      VERIFICATION_URL: http://verification-engine:8000
       RECONCILIATION_URL: http://reconciliation-engine:8000
       API_BEARER_TOKEN: ${API_BEARER_TOKEN:-trace_api_local_token_2026_do_not_expose}
       POLL_INTERVAL_SECONDS: 2
@@ -176,6 +197,8 @@ services:
       document-linking:
         condition: service_healthy
       linking-worker:
+        condition: service_healthy
+      verification-engine:
         condition: service_healthy
       reconciliation-engine:
         condition: service_healthy
@@ -200,3 +223,4 @@ volumes:
   parser-uploads:
   parser-models:
   reconciliation-results:
+  verification-data:

@@ -1,0 +1,1751 @@
+{
+  "summary": {
+    "matched": 0,
+    "mismatch": 0,
+    "needs_review": 0,
+    "not_applicable": 0,
+    "insufficient_data": 3
+  },
+  "conclusion": {
+    "mismatch_count": 0,
+    "overall_status": "insufficient_data",
+    "unresolved_count": 3,
+    "coverage_complete": false,
+    "has_proven_mismatch": false,
+    "not_applicable_count": 0
+  },
+  "created_at": "2026-11-14T10:11:17.648692Z",
+  "indicators": [
+    {
+      "label": "Общая сумма по отчёту",
+      "trust": {
+        "calculation_trust": "unproven",
+        "human_confirmation": "not_required",
+        "technical_validity": "incomplete",
+        "automatic_link_confirmation": "not_required"
+      },
+      "actual": {
+        "unit": null,
+        "period": {
+          "end": "2026-03-31",
+          "start": "2026-01-01"
+        },
+        "row_id": null,
+        "currency": "RUB",
+        "provenance": {
+          "bbox": {
+            "b": 680.5592041015625,
+            "l": 48.52799987792969,
+            "r": 264.24896240234375,
+            "t": 691.042236328125,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "page_no": 1,
+          "page_size": {
+            "unit": "pt",
+            "width": 595.280029296875,
+            "height": 841.8900146484375
+          },
+          "confidence": null,
+          "sheet_name": null,
+          "source_ref": "#/texts/7",
+          "document_id": "25085e18d5f04fa699f88a3cbef35328",
+          "source_text": "Общая сумма по отчёту: 1 180 300,00 руб.",
+          "cell_address": null,
+          "source_part_id": "25085e18d5f04fa699f88a3cbef35328:src:ye0im7",
+          "source_available": true,
+          "coordinate_origin": "BOTTOMLEFT"
+        },
+        "value_type": "money",
+        "document_id": "25085e18d5f04fa699f88a3cbef35328",
+        "json_pointer": "/indicators/0/extracted/value",
+        "source_value": "1 180 300,00 руб.",
+        "extraction_id": "f60ea7dc-80d1-40ec-8f76-8ec5e39c7de4",
+        "normalized_value": {
+          "amount": "1180300.00",
+          "currency": "RUB"
+        },
+        "extraction_status": "extracted"
+      },
+      "status": "insufficient_data",
+      "evidence": {
+        "used_sources": [],
+        "actual_reference": {
+          "row_id": null,
+          "provenance": {
+            "bbox": {
+              "b": 680.5592041015625,
+              "l": 48.52799987792969,
+              "r": 264.24896240234375,
+              "t": 691.042236328125,
+              "coord_origin": "BOTTOMLEFT"
+            },
+            "page_no": 1,
+            "page_size": {
+              "unit": "pt",
+              "width": 595.280029296875,
+              "height": 841.8900146484375
+            },
+            "confidence": null,
+            "sheet_name": null,
+            "source_ref": "#/texts/7",
+            "document_id": "25085e18d5f04fa699f88a3cbef35328",
+            "source_text": "Общая сумма по отчёту: 1 180 300,00 руб.",
+            "cell_address": null,
+            "source_part_id": "25085e18d5f04fa699f88a3cbef35328:src:ye0im7",
+            "source_available": true,
+            "coordinate_origin": "BOTTOMLEFT"
+          },
+          "document_id": "25085e18d5f04fa699f88a3cbef35328",
+          "json_pointer": "/indicators/0/extracted/value",
+          "source_value": "1 180 300,00 руб.",
+          "extraction_id": "f60ea7dc-80d1-40ec-8f76-8ec5e39c7de4",
+          "normalized_value": {
+            "amount": "1180300.00",
+            "currency": "RUB"
+          }
+        },
+        "excluded_sources": [
+          {
+            "reason": null,
+            "row_id": null,
+            "link_id": "b6e5553d-0317-41ec-b5fb-f201ae200cfa",
+            "raw_value": null,
+            "source_id": "fact_4526c2388a1aa71f1a2f",
+            "provenance": null,
+            "diagnostics": [
+              {
+                "code": "source_value_missing",
+                "message": "Referenced source value is missing"
+              },
+              {
+                "code": "source_provenance_missing",
+                "message": "Extraction value has no provenance object"
+              },
+              {
+                "code": "source_not_validated",
+                "message": "Reconciliation source has no human or system validation claim"
+              },
+              {
+                "code": "link_evidence_unresolved",
+                "message": "No supplied Linking evidence resolves to the referenced source document and value path"
+              }
+            ],
+            "document_id": "25085e18d5f04fa699f88a3cbef35328",
+            "json_pointer": "/fields/currency/value",
+            "extraction_id": "f60ea7dc-80d1-40ec-8f76-8ec5e39c7de4",
+            "resolved_value": null,
+            "evidence_status": "unconfirmed",
+            "linking_evidence": [],
+            "human_confirmation": "unconfirmed",
+            "reference_resolved": true,
+            "technical_validity": "invalid",
+            "automatic_confirmation": "unconfirmed",
+            "declared_evidence_status": "unconfirmed"
+          },
+          {
+            "reason": null,
+            "row_id": null,
+            "link_id": "b6e5553d-0317-41ec-b5fb-f201ae200cfa",
+            "raw_value": null,
+            "source_id": "fact_8ea7c85fef12c1916843",
+            "provenance": null,
+            "diagnostics": [
+              {
+                "code": "source_value_missing",
+                "message": "Referenced source value is missing"
+              },
+              {
+                "code": "source_provenance_missing",
+                "message": "Extraction value has no provenance object"
+              },
+              {
+                "code": "source_not_validated",
+                "message": "Reconciliation source has no human or system validation claim"
+              },
+              {
+                "code": "link_evidence_unresolved",
+                "message": "No supplied Linking evidence resolves to the referenced source document and value path"
+              }
+            ],
+            "document_id": "25085e18d5f04fa699f88a3cbef35328",
+            "json_pointer": "/fields/responsible/value",
+            "extraction_id": "f60ea7dc-80d1-40ec-8f76-8ec5e39c7de4",
+            "resolved_value": null,
+            "evidence_status": "unconfirmed",
+            "linking_evidence": [],
+            "human_confirmation": "unconfirmed",
+            "reference_resolved": true,
+            "technical_validity": "invalid",
+            "automatic_confirmation": "unconfirmed",
+            "declared_evidence_status": "unconfirmed"
+          },
+          {
+            "reason": null,
+            "row_id": null,
+            "link_id": "b6e5553d-0317-41ec-b5fb-f201ae200cfa",
+            "raw_value": "АО «Городские инженерные системы»",
+            "source_id": "fact_ed0290be3fb21aa05022",
+            "provenance": {
+              "bbox": {
+                "b": 709.5584716796875,
+                "l": 48.417999267578125,
+                "r": 297.05096435546875,
+                "t": 719.87646484375,
+                "coord_origin": "BOTTOMLEFT"
+              },
+              "page_no": 1,
+              "page_size": {
+                "unit": "pt",
+                "width": 595.280029296875,
+                "height": 841.8900146484375
+              },
+              "confidence": null,
+              "sheet_name": null,
+              "source_ref": "#/texts/5",
+              "document_id": "25085e18d5f04fa699f88a3cbef35328",
+              "source_text": "Заказчик: АО «Городские инженерные системы»",
+              "cell_address": null,
+              "source_part_id": "25085e18d5f04fa699f88a3cbef35328:src:yxzq05",
+              "source_available": true,
+              "coordinate_origin": "BOTTOMLEFT"
+            },
+            "diagnostics": [
+              {
+                "code": "source_not_extracted",
+                "message": "Structured Extraction review_required includes this source path"
+              },
+              {
+                "code": "source_not_extracted",
+                "message": "Source value is marked for review"
+              },
+              {
+                "code": "source_not_validated",
+                "message": "Reconciliation source has no human or system validation claim"
+              },
+              {
+                "code": "link_evidence_unresolved",
+                "message": "No supplied Linking evidence resolves to the referenced source document and value path"
+              }
+            ],
+            "document_id": "25085e18d5f04fa699f88a3cbef35328",
+            "json_pointer": "/fields/customer_inn/value",
+            "extraction_id": "f60ea7dc-80d1-40ec-8f76-8ec5e39c7de4",
+            "resolved_value": null,
+            "evidence_status": "unconfirmed",
+            "linking_evidence": [],
+            "human_confirmation": "unconfirmed",
+            "reference_resolved": true,
+            "technical_validity": "invalid",
+            "automatic_confirmation": "unconfirmed",
+            "declared_evidence_status": "unconfirmed"
+          },
+          {
+            "reason": null,
+            "row_id": null,
+            "link_id": "b6e5553d-0317-41ec-b5fb-f201ae200cfa",
+            "raw_value": null,
+            "source_id": "fact_0e7fec8cc630b41e8496",
+            "provenance": null,
+            "diagnostics": [
+              {
+                "code": "source_value_missing",
+                "message": "Referenced source value is missing"
+              },
+              {
+                "code": "source_provenance_missing",
+                "message": "Extraction value has no provenance object"
+              },
+              {
+                "code": "source_not_validated",
+                "message": "Reconciliation source has no human or system validation claim"
+              },
+              {
+                "code": "link_evidence_unresolved",
+                "message": "No supplied Linking evidence resolves to the referenced source document and value path"
+              }
+            ],
+            "document_id": "25085e18d5f04fa699f88a3cbef35328",
+            "json_pointer": "/fields/supplier_inn/value",
+            "extraction_id": "f60ea7dc-80d1-40ec-8f76-8ec5e39c7de4",
+            "resolved_value": null,
+            "evidence_status": "unconfirmed",
+            "linking_evidence": [],
+            "human_confirmation": "unconfirmed",
+            "reference_resolved": true,
+            "technical_validity": "invalid",
+            "automatic_confirmation": "unconfirmed",
+            "declared_evidence_status": "unconfirmed"
+          },
+          {
+            "reason": null,
+            "row_id": null,
+            "link_id": "b6e5553d-0317-41ec-b5fb-f201ae200cfa",
+            "raw_value": "1 180 300,00 руб.",
+            "source_id": "fact_be2d9e3d41a829f52562",
+            "provenance": {
+              "bbox": {
+                "b": 680.5592041015625,
+                "l": 48.52799987792969,
+                "r": 264.24896240234375,
+                "t": 691.042236328125,
+                "coord_origin": "BOTTOMLEFT"
+              },
+              "page_no": 1,
+              "page_size": {
+                "unit": "pt",
+                "width": 595.280029296875,
+                "height": 841.8900146484375
+              },
+              "confidence": null,
+              "sheet_name": null,
+              "source_ref": "#/texts/7",
+              "document_id": "25085e18d5f04fa699f88a3cbef35328",
+              "source_text": "Общая сумма по отчёту: 1 180 300,00 руб.",
+              "cell_address": null,
+              "source_part_id": "25085e18d5f04fa699f88a3cbef35328:src:ye0im7",
+              "source_available": true,
+              "coordinate_origin": "BOTTOMLEFT"
+            },
+            "diagnostics": [
+              {
+                "code": "link_evidence_unresolved",
+                "message": "No supplied Linking evidence resolves to the referenced source document and value path"
+              }
+            ],
+            "document_id": "25085e18d5f04fa699f88a3cbef35328",
+            "json_pointer": "/indicators/0/extracted/value",
+            "extraction_id": "f60ea7dc-80d1-40ec-8f76-8ec5e39c7de4",
+            "resolved_value": {
+              "amount": "1180300.00",
+              "currency": "RUB"
+            },
+            "evidence_status": "system_validated",
+            "linking_evidence": [],
+            "human_confirmation": "unconfirmed",
+            "reference_resolved": true,
+            "technical_validity": "invalid",
+            "automatic_confirmation": "unconfirmed",
+            "declared_evidence_status": "system_validated"
+          },
+          {
+            "reason": null,
+            "row_id": null,
+            "link_id": "b6e5553d-0317-41ec-b5fb-f201ae200cfa",
+            "raw_value": "0",
+            "source_id": "fact_def7cae1040fce2e7180",
+            "provenance": null,
+            "diagnostics": [
+              {
+                "code": "source_provenance_missing",
+                "message": "Extraction value has no provenance object"
+              },
+              {
+                "code": "link_evidence_unresolved",
+                "message": "No supplied Linking evidence resolves to the referenced source document and value path"
+              }
+            ],
+            "document_id": "25085e18d5f04fa699f88a3cbef35328",
+            "json_pointer": "/indicators/2/extracted/value",
+            "extraction_id": "f60ea7dc-80d1-40ec-8f76-8ec5e39c7de4",
+            "resolved_value": "0",
+            "evidence_status": "system_validated",
+            "linking_evidence": [],
+            "human_confirmation": "unconfirmed",
+            "reference_resolved": true,
+            "technical_validity": "invalid",
+            "automatic_confirmation": "unconfirmed",
+            "declared_evidence_status": "system_validated"
+          },
+          {
+            "reason": null,
+            "row_id": null,
+            "link_id": "b6e5553d-0317-41ec-b5fb-f201ae200cfa",
+            "raw_value": "1 180 300,00 руб.",
+            "source_id": "fact_6f37a5be698301418281",
+            "provenance": {
+              "bbox": null,
+              "row_id": "Реквизиты-r5",
+              "page_no": null,
+              "table_id": "xlsx-реквизиты-1",
+              "page_size": null,
+              "confidence": null,
+              "sheet_name": "Реквизиты",
+              "document_id": "530dd8207e9742098908c308ffc8be93",
+              "source_text": "1 180 300,00 руб.",
+              "cell_address": "B5",
+              "column_index": 1,
+              "source_part_id": "530dd8207e9742098908c308ffc8be93:src:9nwcee",
+              "source_available": true,
+              "coordinate_origin": null
+            },
+            "diagnostics": [
+              {
+                "code": "link_evidence_unresolved",
+                "message": "No supplied Linking evidence resolves to the referenced source document and value path"
+              }
+            ],
+            "document_id": "530dd8207e9742098908c308ffc8be93",
+            "json_pointer": "/fields/registry_total/value",
+            "extraction_id": "67fb06fb-6886-455f-8abf-d20808202553",
+            "resolved_value": {
+              "amount": "1180300.00",
+              "currency": "RUB"
+            },
+            "evidence_status": "system_validated",
+            "linking_evidence": [],
+            "human_confirmation": "unconfirmed",
+            "reference_resolved": true,
+            "technical_validity": "invalid",
+            "automatic_confirmation": "unconfirmed",
+            "declared_evidence_status": "system_validated"
+          },
+          {
+            "reason": null,
+            "row_id": null,
+            "link_id": "b6e5553d-0317-41ec-b5fb-f201ae200cfa",
+            "raw_value": null,
+            "source_id": "fact_a95689e0c2f239955a21",
+            "provenance": null,
+            "diagnostics": [
+              {
+                "code": "source_value_missing",
+                "message": "Referenced source value is missing"
+              },
+              {
+                "code": "source_provenance_missing",
+                "message": "Extraction value has no provenance object"
+              },
+              {
+                "code": "source_not_validated",
+                "message": "Reconciliation source has no human or system validation claim"
+              },
+              {
+                "code": "link_evidence_unresolved",
+                "message": "No supplied Linking evidence resolves to the referenced source document and value path"
+              }
+            ],
+            "document_id": "530dd8207e9742098908c308ffc8be93",
+            "json_pointer": "/fields/registry_status/value",
+            "extraction_id": "67fb06fb-6886-455f-8abf-d20808202553",
+            "resolved_value": null,
+            "evidence_status": "unconfirmed",
+            "linking_evidence": [],
+            "human_confirmation": "unconfirmed",
+            "reference_resolved": true,
+            "technical_validity": "invalid",
+            "automatic_confirmation": "unconfirmed",
+            "declared_evidence_status": "unconfirmed"
+          },
+          {
+            "reason": null,
+            "row_id": null,
+            "link_id": "b6e5553d-0317-41ec-b5fb-f201ae200cfa",
+            "raw_value": null,
+            "source_id": "fact_34d9bcd632fe8d88e5e3",
+            "provenance": null,
+            "diagnostics": [
+              {
+                "code": "source_value_missing",
+                "message": "Referenced source value is missing"
+              },
+              {
+                "code": "source_provenance_missing",
+                "message": "Extraction value has no provenance object"
+              },
+              {
+                "code": "source_not_validated",
+                "message": "Reconciliation source has no human or system validation claim"
+              },
+              {
+                "code": "link_evidence_unresolved",
+                "message": "No supplied Linking evidence resolves to the referenced source document and value path"
+              }
+            ],
+            "document_id": "530dd8207e9742098908c308ffc8be93",
+            "json_pointer": "/fields/reporting_period/value",
+            "extraction_id": "67fb06fb-6886-455f-8abf-d20808202553",
+            "resolved_value": null,
+            "evidence_status": "unconfirmed",
+            "linking_evidence": [],
+            "human_confirmation": "unconfirmed",
+            "reference_resolved": true,
+            "technical_validity": "invalid",
+            "automatic_confirmation": "unconfirmed",
+            "declared_evidence_status": "unconfirmed"
+          },
+          {
+            "reason": null,
+            "row_id": null,
+            "link_id": "b6e5553d-0317-41ec-b5fb-f201ae200cfa",
+            "raw_value": "1 180 300,00 руб.",
+            "source_id": "fact_62fd0cd8a0a018d6cc42",
+            "provenance": {
+              "bbox": null,
+              "row_id": "Реквизиты-r5",
+              "page_no": null,
+              "table_id": "xlsx-реквизиты-1",
+              "page_size": null,
+              "confidence": null,
+              "sheet_name": "Реквизиты",
+              "document_id": "530dd8207e9742098908c308ffc8be93",
+              "source_text": "1 180 300,00 руб.",
+              "cell_address": "B5",
+              "column_index": 1,
+              "source_part_id": "530dd8207e9742098908c308ffc8be93:src:9nwcee",
+              "source_available": true,
+              "coordinate_origin": null
+            },
+            "diagnostics": [
+              {
+                "code": "link_evidence_unresolved",
+                "message": "No supplied Linking evidence resolves to the referenced source document and value path"
+              }
+            ],
+            "document_id": "530dd8207e9742098908c308ffc8be93",
+            "json_pointer": "/indicators/0/extracted/value",
+            "extraction_id": "67fb06fb-6886-455f-8abf-d20808202553",
+            "resolved_value": {
+              "amount": "1180300.00",
+              "currency": "RUB"
+            },
+            "evidence_status": "system_validated",
+            "linking_evidence": [],
+            "human_confirmation": "unconfirmed",
+            "reference_resolved": true,
+            "technical_validity": "invalid",
+            "automatic_confirmation": "unconfirmed",
+            "declared_evidence_status": "system_validated"
+          },
+          {
+            "reason": null,
+            "row_id": null,
+            "link_id": "b6e5553d-0317-41ec-b5fb-f201ae200cfa",
+            "raw_value": "1",
+            "source_id": "fact_668b36f843c8dc3fbeac",
+            "provenance": null,
+            "diagnostics": [
+              {
+                "code": "source_provenance_missing",
+                "message": "Extraction value has no provenance object"
+              },
+              {
+                "code": "link_evidence_unresolved",
+                "message": "No supplied Linking evidence resolves to the referenced source document and value path"
+              }
+            ],
+            "document_id": "530dd8207e9742098908c308ffc8be93",
+            "json_pointer": "/indicators/1/extracted/value",
+            "extraction_id": "67fb06fb-6886-455f-8abf-d20808202553",
+            "resolved_value": "1",
+            "evidence_status": "system_validated",
+            "linking_evidence": [],
+            "human_confirmation": "unconfirmed",
+            "reference_resolved": true,
+            "technical_validity": "invalid",
+            "automatic_confirmation": "unconfirmed",
+            "declared_evidence_status": "system_validated"
+          },
+          {
+            "reason": null,
+            "row_id": "реестр-выполненных-работ-r0002",
+            "link_id": null,
+            "raw_value": null,
+            "source_id": "fact_1170481bcc3947da11ee",
+            "provenance": null,
+            "diagnostics": [
+              {
+                "code": "source_value_missing",
+                "message": "Referenced source value is missing"
+              },
+              {
+                "code": "source_provenance_missing",
+                "message": "Extraction value has no provenance object"
+              },
+              {
+                "code": "source_not_validated",
+                "message": "Reconciliation source has no human or system validation claim"
+              }
+            ],
+            "document_id": "530dd8207e9742098908c308ffc8be93",
+            "json_pointer": "/line_items/0/unit/value",
+            "extraction_id": "67fb06fb-6886-455f-8abf-d20808202553",
+            "resolved_value": null,
+            "evidence_status": "unconfirmed",
+            "linking_evidence": [],
+            "human_confirmation": "unconfirmed",
+            "reference_resolved": true,
+            "technical_validity": "invalid",
+            "automatic_confirmation": "unconfirmed",
+            "declared_evidence_status": "unconfirmed"
+          },
+          {
+            "reason": null,
+            "row_id": "реестр-выполненных-работ-r0002",
+            "link_id": null,
+            "raw_value": "286500",
+            "source_id": "fact_6a041a0381243e3942d4",
+            "provenance": {
+              "bbox": null,
+              "row_id": "Реестр выполненных работ-r2",
+              "page_no": null,
+              "table_id": "xlsx-реестр-выполненных-работ-1",
+              "page_size": null,
+              "confidence": null,
+              "sheet_name": "Реестр выполненных работ",
+              "document_id": "530dd8207e9742098908c308ffc8be93",
+              "source_text": "286500",
+              "cell_address": "D2",
+              "column_index": 3,
+              "source_part_id": "530dd8207e9742098908c308ffc8be93:src:9l1oc0",
+              "source_available": true,
+              "coordinate_origin": null
+            },
+            "diagnostics": [
+              {
+                "code": "source_not_validated",
+                "message": "Reconciliation source has no human or system validation claim"
+              }
+            ],
+            "document_id": "530dd8207e9742098908c308ffc8be93",
+            "json_pointer": "/line_items/0/amount/value",
+            "extraction_id": "67fb06fb-6886-455f-8abf-d20808202553",
+            "resolved_value": {
+              "amount": "286500",
+              "currency": "RUB"
+            },
+            "evidence_status": "unconfirmed",
+            "linking_evidence": [],
+            "human_confirmation": "unconfirmed",
+            "reference_resolved": true,
+            "technical_validity": "valid",
+            "automatic_confirmation": "unconfirmed",
+            "declared_evidence_status": "unconfirmed"
+          },
+          {
+            "reason": null,
+            "row_id": "реестр-выполненных-работ-r0002",
+            "link_id": null,
+            "raw_value": "1",
+            "source_id": "fact_8aee25cbedee43e3669e",
+            "provenance": {
+              "bbox": null,
+              "row_id": "Реестр выполненных работ-r2",
+              "page_no": null,
+              "table_id": "xlsx-реестр-выполненных-работ-1",
+              "page_size": null,
+              "confidence": null,
+              "sheet_name": "Реестр выполненных работ",
+              "document_id": "530dd8207e9742098908c308ffc8be93",
+              "source_text": "1",
+              "cell_address": "C2",
+              "column_index": 2,
+              "source_part_id": "530dd8207e9742098908c308ffc8be93:src:f0h978",
+              "source_available": true,
+              "coordinate_origin": null
+            },
+            "diagnostics": [
+              {
+                "code": "source_not_validated",
+                "message": "Reconciliation source has no human or system validation claim"
+              }
+            ],
+            "document_id": "530dd8207e9742098908c308ffc8be93",
+            "json_pointer": "/line_items/0/quantity/value",
+            "extraction_id": "67fb06fb-6886-455f-8abf-d20808202553",
+            "resolved_value": "1",
+            "evidence_status": "unconfirmed",
+            "linking_evidence": [],
+            "human_confirmation": "unconfirmed",
+            "reference_resolved": true,
+            "technical_validity": "valid",
+            "automatic_confirmation": "unconfirmed",
+            "declared_evidence_status": "unconfirmed"
+          },
+          {
+            "reason": null,
+            "row_id": "реестр-выполненных-работ-r0002",
+            "link_id": null,
+            "raw_value": null,
+            "source_id": "fact_7a1f0803f18e7483f714",
+            "provenance": null,
+            "diagnostics": [
+              {
+                "code": "source_value_missing",
+                "message": "Referenced source value is missing"
+              },
+              {
+                "code": "source_provenance_missing",
+                "message": "Extraction value has no provenance object"
+              },
+              {
+                "code": "source_not_validated",
+                "message": "Reconciliation source has no human or system validation claim"
+              }
+            ],
+            "document_id": "530dd8207e9742098908c308ffc8be93",
+            "json_pointer": "/line_items/0/unit_price/value",
+            "extraction_id": "67fb06fb-6886-455f-8abf-d20808202553",
+            "resolved_value": null,
+            "evidence_status": "unconfirmed",
+            "linking_evidence": [],
+            "human_confirmation": "unconfirmed",
+            "reference_resolved": true,
+            "technical_validity": "invalid",
+            "automatic_confirmation": "unconfirmed",
+            "declared_evidence_status": "unconfirmed"
+          },
+          {
+            "reason": null,
+            "row_id": "реестр-выполненных-работ-r0002",
+            "link_id": null,
+            "raw_value": null,
+            "source_id": "fact_ab7993433e211e128694",
+            "provenance": null,
+            "diagnostics": [
+              {
+                "code": "source_value_missing",
+                "message": "Referenced source value is missing"
+              },
+              {
+                "code": "source_provenance_missing",
+                "message": "Extraction value has no provenance object"
+              },
+              {
+                "code": "source_not_validated",
+                "message": "Reconciliation source has no human or system validation claim"
+              }
+            ],
+            "document_id": "530dd8207e9742098908c308ffc8be93",
+            "json_pointer": "/line_items/0/line_number/value",
+            "extraction_id": "67fb06fb-6886-455f-8abf-d20808202553",
+            "resolved_value": null,
+            "evidence_status": "unconfirmed",
+            "linking_evidence": [],
+            "human_confirmation": "unconfirmed",
+            "reference_resolved": true,
+            "technical_validity": "invalid",
+            "automatic_confirmation": "unconfirmed",
+            "declared_evidence_status": "unconfirmed"
+          },
+          {
+            "reason": null,
+            "row_id": "реестр-выполненных-работ-r0002",
+            "link_id": null,
+            "raw_value": null,
+            "source_id": "fact_08be111ec7f7760237e0",
+            "provenance": null,
+            "diagnostics": [
+              {
+                "code": "source_value_missing",
+                "message": "Referenced source value is missing"
+              },
+              {
+                "code": "source_provenance_missing",
+                "message": "Extraction value has no provenance object"
+              },
+              {
+                "code": "source_not_validated",
+                "message": "Reconciliation source has no human or system validation claim"
+              }
+            ],
+            "document_id": "530dd8207e9742098908c308ffc8be93",
+            "json_pointer": "/line_items/0/plan_quantity/value",
+            "extraction_id": "67fb06fb-6886-455f-8abf-d20808202553",
+            "resolved_value": null,
+            "evidence_status": "unconfirmed",
+            "linking_evidence": [],
+            "human_confirmation": "unconfirmed",
+            "reference_resolved": true,
+            "technical_validity": "invalid",
+            "automatic_confirmation": "unconfirmed",
+            "declared_evidence_status": "unconfirmed"
+          },
+          {
+            "reason": null,
+            "row_id": "реестр-выполненных-работ-r0002",
+            "link_id": null,
+            "raw_value": "1",
+            "source_id": "fact_ca1ef2ac66ea45b3e781",
+            "provenance": {
+              "bbox": null,
+              "row_id": "Реестр выполненных работ-r2",
+              "page_no": null,
+              "table_id": "xlsx-реестр-выполненных-работ-1",
+              "page_size": null,
+              "confidence": null,
+              "sheet_name": "Реестр выполненных работ",
+              "document_id": "530dd8207e9742098908c308ffc8be93",
+              "source_text": "1",
+              "cell_address": "C2",
+              "column_index": 2,
+              "source_part_id": "530dd8207e9742098908c308ffc8be93:src:f0h978",
+              "source_available": true,
+              "coordinate_origin": null
+            },
+            "diagnostics": [
+              {
+                "code": "source_not_validated",
+                "message": "Reconciliation source has no human or system validation claim"
+              }
+            ],
+            "document_id": "530dd8207e9742098908c308ffc8be93",
+            "json_pointer": "/line_items/0/actual_quantity/value",
+            "extraction_id": "67fb06fb-6886-455f-8abf-d20808202553",
+            "resolved_value": "1",
+            "evidence_status": "unconfirmed",
+            "linking_evidence": [],
+            "human_confirmation": "unconfirmed",
+            "reference_resolved": true,
+            "technical_validity": "valid",
+            "automatic_confirmation": "unconfirmed",
+            "declared_evidence_status": "unconfirmed"
+          },
+          {
+            "reason": null,
+            "row_id": null,
+            "link_id": "f05d580b-2f4d-400e-9bb5-197914474630",
+            "raw_value": null,
+            "source_id": "fact_49fd92814c2a76c1bf64",
+            "provenance": null,
+            "diagnostics": [
+              {
+                "code": "source_value_missing",
+                "message": "Referenced source value is missing"
+              },
+              {
+                "code": "source_provenance_missing",
+                "message": "Extraction value has no provenance object"
+              },
+              {
+                "code": "source_not_validated",
+                "message": "Reconciliation source has no human or system validation claim"
+              },
+              {
+                "code": "link_evidence_unresolved",
+                "message": "No supplied Linking evidence resolves to the referenced source document and value path"
+              }
+            ],
+            "document_id": "40050934d6504a6ba685b31207f2f24a",
+            "json_pointer": "/fields/vat_amount/value",
+            "extraction_id": "376cc4d3-f59f-4e53-95ae-05d107ab609c",
+            "resolved_value": null,
+            "evidence_status": "unconfirmed",
+            "linking_evidence": [],
+            "human_confirmation": "unconfirmed",
+            "reference_resolved": true,
+            "technical_validity": "invalid",
+            "automatic_confirmation": "unconfirmed",
+            "declared_evidence_status": "unconfirmed"
+          },
+          {
+            "reason": null,
+            "row_id": null,
+            "link_id": "f05d580b-2f4d-400e-9bb5-197914474630",
+            "raw_value": null,
+            "source_id": "fact_2e369215891c20960355",
+            "provenance": null,
+            "diagnostics": [
+              {
+                "code": "source_value_missing",
+                "message": "Referenced source value is missing"
+              },
+              {
+                "code": "source_provenance_missing",
+                "message": "Extraction value has no provenance object"
+              },
+              {
+                "code": "source_not_validated",
+                "message": "Reconciliation source has no human or system validation claim"
+              },
+              {
+                "code": "link_evidence_unresolved",
+                "message": "No supplied Linking evidence resolves to the referenced source document and value path"
+              }
+            ],
+            "document_id": "40050934d6504a6ba685b31207f2f24a",
+            "json_pointer": "/fields/execution_period/value",
+            "extraction_id": "376cc4d3-f59f-4e53-95ae-05d107ab609c",
+            "resolved_value": null,
+            "evidence_status": "unconfirmed",
+            "linking_evidence": [],
+            "human_confirmation": "unconfirmed",
+            "reference_resolved": true,
+            "technical_validity": "invalid",
+            "automatic_confirmation": "unconfirmed",
+            "declared_evidence_status": "unconfirmed"
+          },
+          {
+            "reason": null,
+            "row_id": null,
+            "link_id": "f05d580b-2f4d-400e-9bb5-197914474630",
+            "raw_value": null,
+            "source_id": "fact_f71baa2dfa9074ac3fb5",
+            "provenance": null,
+            "diagnostics": [
+              {
+                "code": "source_value_missing",
+                "message": "Referenced source value is missing"
+              },
+              {
+                "code": "source_provenance_missing",
+                "message": "Extraction value has no provenance object"
+              },
+              {
+                "code": "source_not_validated",
+                "message": "Reconciliation source has no human or system validation claim"
+              },
+              {
+                "code": "link_evidence_unresolved",
+                "message": "No supplied Linking evidence resolves to the referenced source document and value path"
+              }
+            ],
+            "document_id": "40050934d6504a6ba685b31207f2f24a",
+            "json_pointer": "/fields/contractor_representative/value",
+            "extraction_id": "376cc4d3-f59f-4e53-95ae-05d107ab609c",
+            "resolved_value": null,
+            "evidence_status": "unconfirmed",
+            "linking_evidence": [],
+            "human_confirmation": "unconfirmed",
+            "reference_resolved": true,
+            "technical_validity": "invalid",
+            "automatic_confirmation": "unconfirmed",
+            "declared_evidence_status": "unconfirmed"
+          },
+          {
+            "reason": null,
+            "row_id": null,
+            "link_id": "f05d580b-2f4d-400e-9bb5-197914474630",
+            "raw_value": "1 180 300,00 руб.",
+            "source_id": "fact_ed09c8b2ac22e6bfe25d",
+            "provenance": {
+              "bbox": null,
+              "page_no": null,
+              "page_size": null,
+              "confidence": null,
+              "sheet_name": null,
+              "source_ref": "#/parts/6",
+              "document_id": "40050934d6504a6ba685b31207f2f24a",
+              "source_text": "Итого к оплате: 1 180 300,00 руб.",
+              "cell_address": null,
+              "source_part_id": "40050934d6504a6ba685b31207f2f24a:src:1e6dr2m",
+              "source_available": true,
+              "coordinate_origin": null
+            },
+            "diagnostics": [
+              {
+                "code": "link_evidence_unresolved",
+                "message": "No supplied Linking evidence resolves to the referenced source document and value path"
+              }
+            ],
+            "document_id": "40050934d6504a6ba685b31207f2f24a",
+            "json_pointer": "/indicators/0/extracted/value",
+            "extraction_id": "376cc4d3-f59f-4e53-95ae-05d107ab609c",
+            "resolved_value": {
+              "amount": "1180300.00",
+              "currency": "RUB"
+            },
+            "evidence_status": "system_validated",
+            "linking_evidence": [],
+            "human_confirmation": "unconfirmed",
+            "reference_resolved": true,
+            "technical_validity": "invalid",
+            "automatic_confirmation": "unconfirmed",
+            "declared_evidence_status": "system_validated"
+          },
+          {
+            "reason": null,
+            "row_id": null,
+            "link_id": "f05d580b-2f4d-400e-9bb5-197914474630",
+            "raw_value": "1",
+            "source_id": "fact_229d84bca9317cae4faf",
+            "provenance": null,
+            "diagnostics": [
+              {
+                "code": "source_provenance_missing",
+                "message": "Extraction value has no provenance object"
+              },
+              {
+                "code": "link_evidence_unresolved",
+                "message": "No supplied Linking evidence resolves to the referenced source document and value path"
+              }
+            ],
+            "document_id": "40050934d6504a6ba685b31207f2f24a",
+            "json_pointer": "/indicators/1/extracted/value",
+            "extraction_id": "376cc4d3-f59f-4e53-95ae-05d107ab609c",
+            "resolved_value": "1",
+            "evidence_status": "system_validated",
+            "linking_evidence": [],
+            "human_confirmation": "unconfirmed",
+            "reference_resolved": true,
+            "technical_validity": "invalid",
+            "automatic_confirmation": "unconfirmed",
+            "declared_evidence_status": "system_validated"
+          },
+          {
+            "reason": null,
+            "row_id": "table-8-p1-r002",
+            "link_id": "60659b6f-9c1d-40e3-94cc-7533fa356b08",
+            "raw_value": null,
+            "source_id": "fact_70ab47b27ef16023767a",
+            "provenance": null,
+            "diagnostics": [
+              {
+                "code": "source_value_missing",
+                "message": "Referenced source value is missing"
+              },
+              {
+                "code": "source_provenance_missing",
+                "message": "Extraction value has no provenance object"
+              },
+              {
+                "code": "source_not_validated",
+                "message": "Reconciliation source has no human or system validation claim"
+              },
+              {
+                "code": "link_evidence_unresolved",
+                "message": "No supplied Linking evidence resolves to the referenced source document and value path"
+              },
+              {
+                "code": "link_not_confirmed",
+                "message": "Link status is not confirmed"
+              }
+            ],
+            "document_id": "40050934d6504a6ba685b31207f2f24a",
+            "json_pointer": "/line_items/0/unit/value",
+            "extraction_id": "376cc4d3-f59f-4e53-95ae-05d107ab609c",
+            "resolved_value": null,
+            "evidence_status": "unconfirmed",
+            "linking_evidence": [],
+            "human_confirmation": "unconfirmed",
+            "reference_resolved": true,
+            "technical_validity": "invalid",
+            "automatic_confirmation": "unconfirmed",
+            "declared_evidence_status": "unconfirmed"
+          },
+          {
+            "reason": null,
+            "row_id": "table-8-p1-r002",
+            "link_id": "60659b6f-9c1d-40e3-94cc-7533fa356b08",
+            "raw_value": "286 500",
+            "source_id": "fact_34f783a731a81ea76d48",
+            "provenance": {
+              "bbox": null,
+              "row_id": "table-8-p1-r002",
+              "page_no": null,
+              "table_id": "table-8",
+              "page_size": null,
+              "confidence": null,
+              "sheet_name": null,
+              "source_ref": "#/parts/8/rows/1/2",
+              "document_id": "40050934d6504a6ba685b31207f2f24a",
+              "source_text": "286 500",
+              "cell_address": null,
+              "column_index": 2,
+              "source_part_id": "40050934d6504a6ba685b31207f2f24a:src:ifaw5x",
+              "source_available": true,
+              "coordinate_origin": null
+            },
+            "diagnostics": [
+              {
+                "code": "link_evidence_unresolved",
+                "message": "No supplied Linking evidence resolves to the referenced source document and value path"
+              },
+              {
+                "code": "link_not_confirmed",
+                "message": "Link status is not confirmed"
+              }
+            ],
+            "document_id": "40050934d6504a6ba685b31207f2f24a",
+            "json_pointer": "/line_items/0/amount/value",
+            "extraction_id": "376cc4d3-f59f-4e53-95ae-05d107ab609c",
+            "resolved_value": {
+              "amount": "286500",
+              "currency": "RUB"
+            },
+            "evidence_status": "system_validated",
+            "linking_evidence": [],
+            "human_confirmation": "unconfirmed",
+            "reference_resolved": true,
+            "technical_validity": "invalid",
+            "automatic_confirmation": "unconfirmed",
+            "declared_evidence_status": "system_validated"
+          },
+          {
+            "reason": null,
+            "row_id": "table-8-p1-r002",
+            "link_id": "60659b6f-9c1d-40e3-94cc-7533fa356b08",
+            "raw_value": "1",
+            "source_id": "fact_8d232e0ba914585deb26",
+            "provenance": {
+              "bbox": null,
+              "row_id": "table-8-p1-r002",
+              "page_no": null,
+              "table_id": "table-8",
+              "page_size": null,
+              "confidence": null,
+              "sheet_name": null,
+              "source_ref": "#/parts/8/rows/1/1",
+              "document_id": "40050934d6504a6ba685b31207f2f24a",
+              "source_text": "1",
+              "cell_address": null,
+              "column_index": 1,
+              "source_part_id": "40050934d6504a6ba685b31207f2f24a:src:hlc330",
+              "source_available": true,
+              "coordinate_origin": null
+            },
+            "diagnostics": [
+              {
+                "code": "link_evidence_unresolved",
+                "message": "No supplied Linking evidence resolves to the referenced source document and value path"
+              },
+              {
+                "code": "link_not_confirmed",
+                "message": "Link status is not confirmed"
+              }
+            ],
+            "document_id": "40050934d6504a6ba685b31207f2f24a",
+            "json_pointer": "/line_items/0/quantity/value",
+            "extraction_id": "376cc4d3-f59f-4e53-95ae-05d107ab609c",
+            "resolved_value": "1",
+            "evidence_status": "system_validated",
+            "linking_evidence": [],
+            "human_confirmation": "unconfirmed",
+            "reference_resolved": true,
+            "technical_validity": "invalid",
+            "automatic_confirmation": "unconfirmed",
+            "declared_evidence_status": "system_validated"
+          },
+          {
+            "reason": null,
+            "row_id": "table-8-p1-r002",
+            "link_id": "60659b6f-9c1d-40e3-94cc-7533fa356b08",
+            "raw_value": null,
+            "source_id": "fact_0e0b52fa0f5ce69a8073",
+            "provenance": null,
+            "diagnostics": [
+              {
+                "code": "source_value_missing",
+                "message": "Referenced source value is missing"
+              },
+              {
+                "code": "source_provenance_missing",
+                "message": "Extraction value has no provenance object"
+              },
+              {
+                "code": "source_not_validated",
+                "message": "Reconciliation source has no human or system validation claim"
+              },
+              {
+                "code": "link_evidence_unresolved",
+                "message": "No supplied Linking evidence resolves to the referenced source document and value path"
+              },
+              {
+                "code": "link_not_confirmed",
+                "message": "Link status is not confirmed"
+              }
+            ],
+            "document_id": "40050934d6504a6ba685b31207f2f24a",
+            "json_pointer": "/line_items/0/identifier/value",
+            "extraction_id": "376cc4d3-f59f-4e53-95ae-05d107ab609c",
+            "resolved_value": null,
+            "evidence_status": "unconfirmed",
+            "linking_evidence": [],
+            "human_confirmation": "unconfirmed",
+            "reference_resolved": true,
+            "technical_validity": "invalid",
+            "automatic_confirmation": "unconfirmed",
+            "declared_evidence_status": "unconfirmed"
+          },
+          {
+            "reason": null,
+            "row_id": "table-8-p1-r002",
+            "link_id": "60659b6f-9c1d-40e3-94cc-7533fa356b08",
+            "raw_value": null,
+            "source_id": "fact_493a61090840a85b064e",
+            "provenance": null,
+            "diagnostics": [
+              {
+                "code": "source_value_missing",
+                "message": "Referenced source value is missing"
+              },
+              {
+                "code": "source_provenance_missing",
+                "message": "Extraction value has no provenance object"
+              },
+              {
+                "code": "source_not_validated",
+                "message": "Reconciliation source has no human or system validation claim"
+              },
+              {
+                "code": "link_evidence_unresolved",
+                "message": "No supplied Linking evidence resolves to the referenced source document and value path"
+              },
+              {
+                "code": "link_not_confirmed",
+                "message": "Link status is not confirmed"
+              }
+            ],
+            "document_id": "40050934d6504a6ba685b31207f2f24a",
+            "json_pointer": "/line_items/0/unit_price/value",
+            "extraction_id": "376cc4d3-f59f-4e53-95ae-05d107ab609c",
+            "resolved_value": null,
+            "evidence_status": "unconfirmed",
+            "linking_evidence": [],
+            "human_confirmation": "unconfirmed",
+            "reference_resolved": true,
+            "technical_validity": "invalid",
+            "automatic_confirmation": "unconfirmed",
+            "declared_evidence_status": "unconfirmed"
+          },
+          {
+            "reason": null,
+            "row_id": "table-8-p1-r002",
+            "link_id": "60659b6f-9c1d-40e3-94cc-7533fa356b08",
+            "raw_value": null,
+            "source_id": "fact_7041891c5c5db125c594",
+            "provenance": null,
+            "diagnostics": [
+              {
+                "code": "source_value_missing",
+                "message": "Referenced source value is missing"
+              },
+              {
+                "code": "source_provenance_missing",
+                "message": "Extraction value has no provenance object"
+              },
+              {
+                "code": "source_not_validated",
+                "message": "Reconciliation source has no human or system validation claim"
+              },
+              {
+                "code": "link_evidence_unresolved",
+                "message": "No supplied Linking evidence resolves to the referenced source document and value path"
+              },
+              {
+                "code": "link_not_confirmed",
+                "message": "Link status is not confirmed"
+              }
+            ],
+            "document_id": "40050934d6504a6ba685b31207f2f24a",
+            "json_pointer": "/line_items/0/line_number/value",
+            "extraction_id": "376cc4d3-f59f-4e53-95ae-05d107ab609c",
+            "resolved_value": null,
+            "evidence_status": "unconfirmed",
+            "linking_evidence": [],
+            "human_confirmation": "unconfirmed",
+            "reference_resolved": true,
+            "technical_validity": "invalid",
+            "automatic_confirmation": "unconfirmed",
+            "declared_evidence_status": "unconfirmed"
+          },
+          {
+            "reason": null,
+            "row_id": "table-8-p1-r002",
+            "link_id": "60659b6f-9c1d-40e3-94cc-7533fa356b08",
+            "raw_value": null,
+            "source_id": "fact_7ba04204a9f8e3b51c97",
+            "provenance": null,
+            "diagnostics": [
+              {
+                "code": "source_value_missing",
+                "message": "Referenced source value is missing"
+              },
+              {
+                "code": "source_provenance_missing",
+                "message": "Extraction value has no provenance object"
+              },
+              {
+                "code": "source_not_validated",
+                "message": "Reconciliation source has no human or system validation claim"
+              },
+              {
+                "code": "link_evidence_unresolved",
+                "message": "No supplied Linking evidence resolves to the referenced source document and value path"
+              },
+              {
+                "code": "link_not_confirmed",
+                "message": "Link status is not confirmed"
+              }
+            ],
+            "document_id": "40050934d6504a6ba685b31207f2f24a",
+            "json_pointer": "/line_items/0/plan_quantity/value",
+            "extraction_id": "376cc4d3-f59f-4e53-95ae-05d107ab609c",
+            "resolved_value": null,
+            "evidence_status": "unconfirmed",
+            "linking_evidence": [],
+            "human_confirmation": "unconfirmed",
+            "reference_resolved": true,
+            "technical_validity": "invalid",
+            "automatic_confirmation": "unconfirmed",
+            "declared_evidence_status": "unconfirmed"
+          }
+        ],
+        "provenance_chain": [
+          {
+            "stage": "extraction",
+            "provenance": {
+              "bbox": {
+                "b": 680.5592041015625,
+                "l": 48.52799987792969,
+                "r": 264.24896240234375,
+                "t": 691.042236328125,
+                "coord_origin": "BOTTOMLEFT"
+              },
+              "page_no": 1,
+              "page_size": {
+                "unit": "pt",
+                "width": 595.280029296875,
+                "height": 841.8900146484375
+              },
+              "confidence": null,
+              "sheet_name": null,
+              "source_ref": "#/texts/7",
+              "document_id": "25085e18d5f04fa699f88a3cbef35328",
+              "source_text": "Общая сумма по отчёту: 1 180 300,00 руб.",
+              "cell_address": null,
+              "source_part_id": "25085e18d5f04fa699f88a3cbef35328:src:ye0im7",
+              "source_available": true,
+              "coordinate_origin": "BOTTOMLEFT"
+            },
+            "document_id": "25085e18d5f04fa699f88a3cbef35328",
+            "json_pointer": "/indicators/0/extracted/value",
+            "extraction_id": "f60ea7dc-80d1-40ec-8f76-8ec5e39c7de4"
+          },
+          {
+            "stage": "reconciliation",
+            "run_id": "91a272018ef4719051def4dba679e924",
+            "target_id": "kfz-6b71b67967c16a65",
+            "operations": [],
+            "used_sources": [],
+            "calculation_id": "91a272018ef4719051def4dba679e924"
+          }
+        ],
+        "linking_references": [],
+        "reconciliation_reference": {
+          "run_id": "91a272018ef4719051def4dba679e924",
+          "formula": null,
+          "target_id": "kfz-6b71b67967c16a65",
+          "operations": [],
+          "provenance": {
+            "used_fact_ids": [],
+            "target_indicator": {
+              "row_id": null,
+              "fact_id": "fact_be2d9e3d41a829f52562",
+              "source_ref": "#/texts/7",
+              "document_id": "25085e18d5f04fa699f88a3cbef35328",
+              "source_path": "#/indicators/0/extracted",
+              "extraction_id": "f60ea7dc-80d1-40ec-8f76-8ec5e39c7de4"
+            },
+            "excluded_fact_ids": [
+              "fact_4526c2388a1aa71f1a2f",
+              "fact_8ea7c85fef12c1916843",
+              "fact_ed0290be3fb21aa05022",
+              "fact_0e7fec8cc630b41e8496",
+              "fact_be2d9e3d41a829f52562",
+              "fact_def7cae1040fce2e7180",
+              "fact_6f37a5be698301418281",
+              "fact_a95689e0c2f239955a21",
+              "fact_34d9bcd632fe8d88e5e3",
+              "fact_62fd0cd8a0a018d6cc42",
+              "fact_668b36f843c8dc3fbeac",
+              "fact_1170481bcc3947da11ee",
+              "fact_6a041a0381243e3942d4",
+              "fact_8aee25cbedee43e3669e",
+              "fact_7a1f0803f18e7483f714",
+              "fact_ab7993433e211e128694",
+              "fact_08be111ec7f7760237e0",
+              "fact_ca1ef2ac66ea45b3e781",
+              "fact_49fd92814c2a76c1bf64",
+              "fact_2e369215891c20960355",
+              "fact_f71baa2dfa9074ac3fb5",
+              "fact_ed09c8b2ac22e6bfe25d",
+              "fact_229d84bca9317cae4faf",
+              "fact_70ab47b27ef16023767a",
+              "fact_34f783a731a81ea76d48",
+              "fact_8d232e0ba914585deb26",
+              "fact_0e0b52fa0f5ce69a8073",
+              "fact_493a61090840a85b064e",
+              "fact_7041891c5c5db125c594",
+              "fact_7ba04204a9f8e3b51c97"
+            ],
+            "input_snapshot_sha256": "275245f845c0b7dd0ff1530a935008721262f85e345ee1ce91b8ce9841d9e04f"
+          },
+          "json_pointer": "/calculations/0",
+          "applied_rules": [
+            "The target 'Общая сумма по отчёту' is an indicator representing a total amount. The registry contains an indicator 'Итого по реестру' (candidate_00002) and the act contains an indicator 'Итого к оплате' (candidate_00007). However, the linking graph shows a 'review' status for the relationship between the registry and the act (link_00001) due to provenance mismatch and missing provenance, and the relationship between the report and the sources is not human-confirmed. Since the relationship between the registry total and the act total is uncertain and they might be duplicate representations of the same operation, I cannot decide which one to include without manual verification."
+          ],
+          "calculation_id": "91a272018ef4719051def4dba679e924"
+        }
+      },
+      "expected": null,
+      "target_id": "kfz-6b71b67967c16a65",
+      "difference": {
+        "formula": null,
+        "absolute": null,
+        "relative": null,
+        "accepted_by": "none",
+        "evaluated_actual": null,
+        "evaluated_expected": null
+      },
+      "value_type": "money",
+      "diagnostics": [
+        {
+          "code": "calculation_not_complete",
+          "message": "Reconciliation did not declare a complete calculation",
+          "proof_invalid": false
+        },
+        {
+          "code": "plan_requires_manual_review",
+          "message": "The selected plan explicitly requests manual review",
+          "severity": "error",
+          "reconciliation_path": "$.plan.requires_manual_review"
+        },
+        {
+          "code": "information_gap",
+          "message": "The plan identified missing or ambiguous evidence",
+          "severity": "error",
+          "reconciliation_path": "$.plan.information_gaps"
+        },
+        {
+          "code": "unprocessed_candidates",
+          "message": "Some candidates were not reviewed and cannot be treated as excluded",
+          "severity": "error",
+          "reconciliation_path": "$.plan.unprocessed_fact_ids"
+        },
+        {
+          "code": "reconciliation_incomplete",
+          "message": "Reconciliation calculation_status is incomplete"
+        }
+      ],
+      "uncertainty": {
+        "level": "high",
+        "reasons": [],
+        "status_reason": "A required value, source, provenance reference, or complete calculation basis is unavailable.",
+        "manual_review_required": true
+      },
+      "semantic_key": "kfz-6b71b67967c16a65",
+      "discrepancies": [],
+      "legacy_status": null,
+      "comparison_rules": {
+        "period": {
+          "actual": {
+            "end": "2026-03-31",
+            "start": "2026-01-01"
+          },
+          "expected": {
+            "end": "2026-03-31",
+            "start": "2026-01-01"
+          },
+          "expected_source": "reconciliation"
+        },
+        "formula": "actual - expected",
+        "tolerance": {
+          "absolute": null,
+          "relative": null,
+          "absolute_unit": null,
+          "rounding_mode": "HALF_UP",
+          "rounding_scale": null
+        },
+        "value_type": "money",
+        "actual_unit": null,
+        "applied_rules": [
+          "The target 'Общая сумма по отчёту' is an indicator representing a total amount. The registry contains an indicator 'Итого по реестру' (candidate_00002) and the act contains an indicator 'Итого к оплате' (candidate_00007). However, the linking graph shows a 'review' status for the relationship between the registry and the act (link_00001) due to provenance mismatch and missing provenance, and the relationship between the report and the sources is not human-confirmed. Since the relationship between the registry total and the act total is uncertain and they might be duplicate representations of the same operation, I cannot decide which one to include without manual verification."
+        ],
+        "expected_unit": null,
+        "actual_currency": "RUB",
+        "actual_vat_basis": "unknown",
+        "expected_currency": "RUB",
+        "expected_vat_basis": "unknown",
+        "actual_comparison_basis": "unknown",
+        "expected_comparison_basis": "unknown"
+      }
+    },
+    {
+      "label": "Отчётный период",
+      "trust": {
+        "calculation_trust": "unproven",
+        "human_confirmation": "unconfirmed",
+        "technical_validity": "valid",
+        "automatic_link_confirmation": "not_required"
+      },
+      "actual": {
+        "unit": null,
+        "period": {
+          "end": "2026-03-31",
+          "start": "2026-01-01"
+        },
+        "row_id": null,
+        "currency": null,
+        "provenance": {
+          "bbox": {
+            "b": 738.4367065429688,
+            "l": 48.52799987792969,
+            "r": 271.18994140625,
+            "t": 748.7546997070312,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "page_no": 1,
+          "page_size": {
+            "unit": "pt",
+            "width": 595.280029296875,
+            "height": 841.8900146484375
+          },
+          "confidence": null,
+          "sheet_name": null,
+          "source_ref": "#/texts/3",
+          "document_id": "25085e18d5f04fa699f88a3cbef35328",
+          "source_text": "Отчётный период: 01.01.2026 — 31.03.2026",
+          "cell_address": null,
+          "source_part_id": "25085e18d5f04fa699f88a3cbef35328:src:xa23ub",
+          "source_available": true,
+          "coordinate_origin": "BOTTOMLEFT"
+        },
+        "value_type": "period",
+        "document_id": "25085e18d5f04fa699f88a3cbef35328",
+        "json_pointer": "/fields/reporting_period/value",
+        "source_value": "01.01.2026 — 31.03.2026",
+        "extraction_id": "f60ea7dc-80d1-40ec-8f76-8ec5e39c7de4",
+        "normalized_value": {
+          "end": "2026-03-31",
+          "start": "2026-01-01"
+        },
+        "extraction_status": "extracted"
+      },
+      "status": "insufficient_data",
+      "evidence": {
+        "used_sources": [],
+        "actual_reference": {
+          "unit": null,
+          "period": {
+            "end": "2026-03-31",
+            "start": "2026-01-01"
+          },
+          "row_id": null,
+          "currency": null,
+          "provenance": {
+            "bbox": {
+              "b": 738.4367065429688,
+              "l": 48.52799987792969,
+              "r": 271.18994140625,
+              "t": 748.7546997070312,
+              "coord_origin": "BOTTOMLEFT"
+            },
+            "page_no": 1,
+            "page_size": {
+              "unit": "pt",
+              "width": 595.280029296875,
+              "height": 841.8900146484375
+            },
+            "confidence": null,
+            "sheet_name": null,
+            "source_ref": "#/texts/3",
+            "document_id": "25085e18d5f04fa699f88a3cbef35328",
+            "source_text": "Отчётный период: 01.01.2026 — 31.03.2026",
+            "cell_address": null,
+            "source_part_id": "25085e18d5f04fa699f88a3cbef35328:src:xa23ub",
+            "source_available": true,
+            "coordinate_origin": "BOTTOMLEFT"
+          },
+          "value_type": "period",
+          "document_id": "25085e18d5f04fa699f88a3cbef35328",
+          "json_pointer": "/fields/reporting_period/value",
+          "source_value": "01.01.2026 — 31.03.2026",
+          "extraction_id": "f60ea7dc-80d1-40ec-8f76-8ec5e39c7de4",
+          "normalized_value": {
+            "end": "2026-03-31",
+            "start": "2026-01-01"
+          },
+          "extraction_status": "extracted"
+        },
+        "excluded_sources": [],
+        "provenance_chain": [],
+        "linking_references": [],
+        "reconciliation_reference": null
+      },
+      "expected": null,
+      "target_id": "unreconciled:reporting_period",
+      "difference": {
+        "formula": null,
+        "absolute": null,
+        "relative": null,
+        "accepted_by": "none",
+        "evaluated_actual": null,
+        "evaluated_expected": null
+      },
+      "value_type": "period",
+      "diagnostics": [
+        {
+          "code": "expected_value_not_provided",
+          "message": "No matching target was present in the Reconciliation result"
+        }
+      ],
+      "uncertainty": {
+        "level": "high",
+        "reasons": [
+          "reconciliation_target_missing"
+        ],
+        "status_reason": "The actual metric exists, but no expected value was supplied.",
+        "manual_review_required": true
+      },
+      "semantic_key": "reporting_period",
+      "discrepancies": [],
+      "legacy_status": null,
+      "comparison_rules": {}
+    },
+    {
+      "label": "Извлечено строк",
+      "trust": {
+        "calculation_trust": "unproven",
+        "human_confirmation": "unconfirmed",
+        "technical_validity": "incomplete",
+        "automatic_link_confirmation": "not_required"
+      },
+      "actual": {
+        "unit": null,
+        "period": {
+          "end": "2026-03-31",
+          "start": "2026-01-01"
+        },
+        "row_id": null,
+        "currency": null,
+        "provenance": null,
+        "value_type": "string",
+        "document_id": "25085e18d5f04fa699f88a3cbef35328",
+        "json_pointer": "/indicators/2/extracted/value",
+        "source_value": "0",
+        "extraction_id": "f60ea7dc-80d1-40ec-8f76-8ec5e39c7de4",
+        "normalized_value": "0",
+        "extraction_status": "extracted"
+      },
+      "status": "insufficient_data",
+      "evidence": {
+        "used_sources": [],
+        "actual_reference": {
+          "unit": null,
+          "period": {
+            "end": "2026-03-31",
+            "start": "2026-01-01"
+          },
+          "row_id": null,
+          "currency": null,
+          "provenance": null,
+          "value_type": "string",
+          "document_id": "25085e18d5f04fa699f88a3cbef35328",
+          "json_pointer": "/indicators/2/extracted/value",
+          "source_value": "0",
+          "extraction_id": "f60ea7dc-80d1-40ec-8f76-8ec5e39c7de4",
+          "normalized_value": "0",
+          "extraction_status": "extracted"
+        },
+        "excluded_sources": [],
+        "provenance_chain": [],
+        "linking_references": [],
+        "reconciliation_reference": null
+      },
+      "expected": null,
+      "target_id": "unreconciled:extracted_line_count",
+      "difference": {
+        "formula": null,
+        "absolute": null,
+        "relative": null,
+        "accepted_by": "none",
+        "evaluated_actual": null,
+        "evaluated_expected": null
+      },
+      "value_type": "string",
+      "diagnostics": [
+        {
+          "code": "expected_value_not_provided",
+          "message": "No matching target was present in the Reconciliation result"
+        },
+        {
+          "code": "actual_provenance_missing",
+          "message": "Actual value has no provenance object"
+        }
+      ],
+      "uncertainty": {
+        "level": "high",
+        "reasons": [
+          "reconciliation_target_missing"
+        ],
+        "status_reason": "The actual metric exists, but no expected value was supplied.",
+        "manual_review_required": true
+      },
+      "semantic_key": "extracted_line_count",
+      "discrepancies": [],
+      "legacy_status": null,
+      "comparison_rules": {}
+    }
+  ],
+  "project_id": "ab5f2d87-1759-450d-a3dd-38c33b9ec91f",
+  "diagnostics": [
+    {
+      "code": "indicator_requires_review",
+      "message": "A required value, source, provenance reference, or complete calculation basis is unavailable.",
+      "target_id": "kfz-6b71b67967c16a65"
+    },
+    {
+      "code": "indicator_requires_review",
+      "message": "The actual metric exists, but no expected value was supplied.",
+      "target_id": "unreconciled:reporting_period"
+    },
+    {
+      "code": "indicator_requires_review",
+      "message": "The actual metric exists, but no expected value was supplied.",
+      "target_id": "unreconciled:extracted_line_count"
+    }
+  ],
+  "completeness": {
+    "complete": false,
+    "total_indicators": 3,
+    "matched_indicators": 0,
+    "verified_indicators": 0,
+    "applicable_indicators": 3,
+    "mismatched_indicators": 0,
+    "unresolved_indicators": 3,
+    "not_applicable_indicators": 0
+  },
+  "calculation_id": "91a272018ef4719051def4dba679e924",
+  "input_metadata": {
+    "reconciliation": {
+      "run_id": "91a272018ef4719051def4dba679e924",
+      "calculation_id": "91a272018ef4719051def4dba679e924",
+      "engine_version": "0.1.0",
+      "contract_version": "1.0.0"
+    },
+    "document_linking": {
+      "linking_run_id": "351caa01-1e97-467d-ad60-a26820069274",
+      "schema_version": "1.2.0",
+      "payload_contract_version": "1.2.0"
+    },
+    "structured_extraction": {
+      "primary": {
+        "input_hash": "b430400fd1946ce2a0d3e8daa8ec774b086020128e14f05b919504fc5b4ecc64",
+        "document_id": "25085e18d5f04fa699f88a3cbef35328",
+        "extraction_id": "f60ea7dc-80d1-40ec-8f76-8ec5e39c7de4",
+        "schema_version": "1.2.0"
+      },
+      "supporting": [
+        {
+          "input_hash": "b740e83a13e78be2499dae2efee100dac1ae82b301c647e05f5b6a33ccac7798",
+          "document_id": "530dd8207e9742098908c308ffc8be93",
+          "extraction_id": "67fb06fb-6886-455f-8abf-d20808202553",
+          "schema_version": "1.2.0"
+        },
+        {
+          "input_hash": "50ae0528e7c11eda056da4edbae4cd9370926103149c2dd52b8cdaa139e7d5e3",
+          "document_id": "40050934d6504a6ba685b31207f2f24a",
+          "extraction_id": "376cc4d3-f59f-4e53-95ae-05d107ab609c",
+          "schema_version": "1.2.0"
+        }
+      ]
+    }
+  },
+  "overall_status": "insufficient_data",
+  "schema_version": "1.2.0",
+  "verification_id": "ver_3fae25be79e233489643c27f",
+  "integrity_status": "verified",
+  "input_fingerprint": "3fae25be79e233489643c27f352a0440dedf0a5469277b80dfdbcec0a1cd1def",
+  "legacy_overall_status": null
+}
