@@ -210,7 +210,10 @@ export async function analyzeDocumentSet(documents: Extraction[], options: { api
         if (correction.action === "withdraw") { previous.withdrawn = true; if (currentProposals[index] !== null) { currentProposals[index] = null; changed = true; } }
         else if (correction.link && typeof correction.link === "object") {
           previous.withdrawn = false; previous.corrected = correction.link;
-          if (JSON.stringify(currentProposals[index]) !== JSON.stringify(correction.link)) { currentProposals[index] = correction.link; changed = true; }
+          const priorProposal = currentProposals[index] && typeof currentProposals[index] === "object" ? currentProposals[index] : {};
+          const correctedProposal = { ...priorProposal, ...correction.link };
+          previous.corrected = correctedProposal;
+          if (JSON.stringify(priorProposal) !== JSON.stringify(correctedProposal)) { currentProposals[index] = correctedProposal; changed = true; }
         }
         corrections.set(index, previous);
       }

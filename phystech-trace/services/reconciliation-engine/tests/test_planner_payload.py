@@ -44,6 +44,34 @@ def test_planner_payload_contains_pseudonymized_link_graph_without_raw_locators_
     assert all("value" not in candidate for candidate in payload["candidates"])
 
 
+def test_planner_payload_omits_corrected_and_withdrawn_link_diagnostics():
+    act = load_upstream("act-2026-0424.json")
+    invoice = load_upstream("invoice-2026-0408.json")
+    facts = extract_facts([act, invoice])
+    target_fact = next(fact for fact in facts if fact.document_id == act["document_id"])
+    target = TargetIndicator(target_id="target", label="Open target", kfz_document_id=act["document_id"], kfz_source_path=target_fact.source_path, target_fact_id=target_fact.fact_id)
+    linking = make_linking([act, invoice])
+    diagnostic = {
+        "relationship_type": "line_item_correspondence",
+        "source_document_id": invoice["document_id"],
+        "target_document_id": act["document_id"],
+        "reason_codes": ["raw_value_mismatch"],
+        "candidate_status": "review",
+    }
+    linking["link_validation_diagnostics"] = [
+        {**diagnostic, "resolution": "corrected"},
+        {**diagnostic, "resolution": "unresolved"},
+        {**diagnostic, "resolution": "withdrawn"},
+    ]
+
+    payload = LLMPlanner(Settings(llm_enabled=True, llm_api_key="configured")).build_payload(
+        target, facts, {"opaque-a": act["document_id"], "opaque-b": invoice["document_id"]}, linking,
+    )
+
+    assert len(payload["linking_graph"]["validation_diagnostics"]) == 1
+    assert payload["linking_graph"]["validation_diagnostics"][0]["reason_codes"] == ["raw_value_mismatch"]
+
+
 def test_planner_omits_missing_nonnumeric_placeholders_from_candidate_batches():
     act = load_upstream("act-2026-0424.json")
     kfz = load_upstream("kfz-2026-q1.json")

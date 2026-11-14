@@ -4,7 +4,7 @@ from reconciliation_engine.engine import execute_plan, validate_plan
 from reconciliation_engine.facts import extract_facts
 from reconciliation_engine.models import ReconciliationRequest
 from reconciliation_engine.plans import CalculationPlan, PlanInclusion, PlanStep
-from reconciliation_engine.service import reconcile
+from reconciliation_engine.service import _link_review_diagnostics, engine_code_sha256, reconcile
 
 from conftest import (
     clone_extraction,
@@ -281,6 +281,36 @@ def test_repeated_run_has_same_numeric_result_and_snapshot_identity(settings):
     assert first["reconciliation_id"] == second["reconciliation_id"]
 
 
+def test_result_identity_changes_when_planner_becomes_available(settings):
+    act = load_upstream("act-2026-0424.json")
+    request = make_request([act], None)
+    disabled = reconcile(request, settings)
+    enabled_settings = settings.model_copy(update={
+        "llm_enabled": True,
+        "llm_model": "google/gemma-4-26b-a4b-it",
+        "llm_api_key": "configured-for-test",
+    })
+    # The fixture has no external LLM consent, so this checks the result-store
+    # identity without making a provider request.
+    enabled = reconcile(request, enabled_settings)
+
+    assert disabled["input_snapshot"]["snapshot_sha256"] == enabled["input_snapshot"]["snapshot_sha256"]
+    assert disabled["reconciliation_id"] != enabled["reconciliation_id"]
+
+
+def test_engine_fingerprint_includes_planner_module_changes(tmp_path):
+    package = tmp_path / "reconciliation_engine"
+    package.mkdir()
+    (package / "service.py").write_text("service = 1", encoding="utf-8")
+    planner = package / "planner.py"
+    planner.write_text("planner = 1", encoding="utf-8")
+    before = engine_code_sha256(tmp_path)
+
+    planner.write_text("planner = 2", encoding="utf-8")
+
+    assert engine_code_sha256(tmp_path) != before
+
+
 def test_provenance_is_preserved_from_kfz_target_to_xlsx_source(settings):
     kfz = load_upstream("kfz-2026-q1.json")
     registry = load_upstream("registry-2026-04.json")
@@ -313,6 +343,28 @@ def test_link_status_confirmed_without_human_confirmation_is_not_treated_as_huma
     result = reconcile(make_request([act, other], plan_for([act, other], [source]), target, links=[link]), settings)["calculations"][0]
     assert result["expected_value"] is None
     assert "link_requires_human_review" in _codes({"calculations": [result]})
+
+
+def test_resolved_link_validation_diagnostic_does_not_reblock_corrected_evidence():
+    kfz = load_upstream("kfz-2026-q1.json")
+    source_doc = clone_extraction(load_upstream("act-2026-0424.json"), "source-act")
+    facts = extract_facts([kfz, source_doc])
+    selected = _fact(facts, source_doc["document_id"], "line_item", "amount", source_doc["line_items"][0]["row_id"])
+    target_row = kfz["line_items"][0]["row_id"]
+    target = make_target(kfz_document_id=kfz["document_id"], kfz_row_id=target_row)
+    linking = make_linking([kfz, source_doc])
+    linking["link_validation_diagnostics"] = [{
+        "source_document_id": source_doc["document_id"],
+        "target_document_id": kfz["document_id"],
+        "source_row_id": selected.row_id,
+        "target_row_id": target_row,
+        "resolution": "corrected",
+        "reason_codes": ["raw_value_mismatch"],
+    }]
+
+    diagnostics = _link_review_diagnostics(target, [selected], linking, {item.fact_id: item for item in facts}, set(), set())
+
+    assert "link_validation_requires_review" not in {item.code for item in diagnostics}
 
 
 def test_summary_and_its_line_items_are_not_added_together(settings):

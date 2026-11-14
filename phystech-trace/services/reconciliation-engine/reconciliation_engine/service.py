@@ -1,6 +1,7 @@
 import hashlib
 from datetime import datetime, timezone
 from decimal import Decimal
+from pathlib import Path
 from typing import Any
 
 import httpx
@@ -12,13 +13,35 @@ from .engine import decimal_string, execute_plan, related_links_for_fact, valida
 from .errors import Diagnostic, InputContractError
 from .facts import Fact, extract_facts, fact_input_hash, numeric_value
 from .models import ReconciliationRequest, TargetIndicator
-from .planner import IncompatibleChunkPlans, LLMPlanner, PlannerUnavailable
+from .planner import PROMPT_PATH, IncompatibleChunkPlans, LLMPlanner, PlannerUnavailable
 from .plans import CalculationPlan
 from .security import is_trusted_internal_endpoint
+
+ENGINE_ROOT = Path(__file__).resolve().parents[1]
 
 
 def _hash(value: Any) -> str:
     return hashlib.sha256(canonical_json(value).encode("utf-8")).hexdigest()
+
+
+def engine_code_sha256(root: Path = ENGINE_ROOT) -> str:
+    root = Path(root)
+    source_files = [
+        path for path in root.rglob("*")
+        if path.is_file()
+        and (
+            (path.suffix == ".py" and "tests" not in path.relative_to(root).parts)
+            or (path.suffix == ".json" and path.relative_to(root).parts[:1] == ("schemas",))
+            or path.name == "pyproject.toml"
+        )
+    ]
+    digest = hashlib.sha256()
+    for path in sorted(source_files, key=lambda item: item.relative_to(root).as_posix()):
+        digest.update(path.relative_to(root).as_posix().encode("utf-8"))
+        digest.update(b"\0")
+        digest.update(path.read_bytes())
+        digest.update(b"\0")
+    return digest.hexdigest()
 
 
 def _group_id(document_id: str) -> str:
@@ -53,6 +76,21 @@ def input_snapshot_identity(request: ReconciliationRequest) -> dict[str, Any]:
         "snapshot_sha256": snapshot_hash,
         "extraction_versions": extraction_versions,
     }
+
+
+def reconciliation_id_for(request: ReconciliationRequest, settings: Settings) -> str:
+    identity = input_snapshot_identity(request)
+    planner_profile = {
+        "enabled": settings.llm_enabled,
+        "model": settings.llm_model if settings.llm_enabled else None,
+        "prompt_sha256": hashlib.sha256(PROMPT_PATH.read_bytes()).hexdigest() if settings.llm_enabled else None,
+        "engine_code_sha256": engine_code_sha256(),
+    }
+    return _hash({
+        "snapshot_sha256": identity["snapshot_sha256"],
+        "decisions": [decision.model_dump(mode="json") for decision in request.prior_decisions],
+        "planner_profile": planner_profile,
+    })[:32]
 
 
 def bind_decision_to_request(
@@ -254,6 +292,8 @@ def _link_review_diagnostics(target: TargetIndicator, selected: list[Fact], link
         if touches_selected_source(link) and (not target_docs or endpoints.intersection(target_docs)):
             diagnostics.append(Diagnostic("link_marked_review_required", "$.linking_result.review_required", review.get("reason", "Linking requests manual review"), {"link_id": link_id, "candidate_document_ids": review.get("candidate_document_ids", [])}))
     for item in linking.get("link_validation_diagnostics", []):
+        if item.get("resolution") in {"corrected", "withdrawn"}:
+            continue
         endpoints = {item.get("source_document_id"), item.get("target_document_id")}
         if touches_selected_source(item) and (not target_docs or endpoints.intersection(target_docs)):
             diagnostics.append(Diagnostic("link_validation_requires_review", "$.linking_result.link_validation_diagnostics", "Linking has a validation diagnostic for a selected relationship", {"diagnostic": item}))
@@ -610,7 +650,7 @@ def reconcile(request: ReconciliationRequest, settings: Settings, planner: LLMPl
     facts = extract_facts(request.extraction_results)
     identity = input_snapshot_identity(request)
     snapshot_hash = identity["snapshot_sha256"]
-    reconciliation_id = _hash({"snapshot_sha256": snapshot_hash, "decisions": [decision.model_dump(mode="json") for decision in request.prior_decisions]})[:32]
+    reconciliation_id = reconciliation_id_for(request, settings)
     calculations = []
     for target in request.context.targets:
         try:

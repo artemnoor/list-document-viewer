@@ -49,6 +49,38 @@ def test_post_and_get_result_round_trip_and_output_schema(tmp_path):
     assert fetched.json()["reconciliation_id"] == result["reconciliation_id"]
 
 
+def test_idempotent_post_does_not_repeat_planner_work(tmp_path, monkeypatch):
+    from reconciliation_engine import api
+    from reconciliation_engine.config import Settings
+
+    app.state.result_store = ResultStore(str(tmp_path / "store"))
+    monkeypatch.setattr(api, "settings", Settings(llm_enabled=True, llm_api_key="test-key"))
+    act = load_upstream("act-2026-0424.json")
+    source = next(fact for fact in extract_facts([act]) if fact.role == "indicator" and fact.key == "amount_due")
+    payload = make_request([act], plan_for([act], [source])).model_dump(mode="json")
+    first = _request("POST", "/api/v1/reconciliations", payload)
+    assert first.status_code == 201, first.text
+
+    def planner_must_not_run(_settings):
+        raise AssertionError("idempotent replay must return before constructing a planner")
+
+    monkeypatch.setattr(api, "LLMPlanner", planner_must_not_run)
+    replay = _request("POST", "/api/v1/reconciliations", payload)
+
+    assert replay.status_code == 200
+    assert replay.json()["reconciliation_id"] == first.json()["reconciliation_id"]
+
+
+def test_llm_audit_sidecar_is_persisted_separately_from_result_contract(tmp_path):
+    store = ResultStore(str(tmp_path / "store"))
+    records = [{"prompt_sha256": "abc", "assistant_content": "synthetic response", "usage": {"total_tokens": 12}}]
+
+    store.save_llm_audit("a" * 32, records, "project-a")
+
+    assert store.get_llm_audit("a" * 32, "project-a")["calls"] == records
+    assert store.get_llm_audit("a" * 32, "project-b") is None
+
+
 def test_project_authentication_and_result_isolation(tmp_path, monkeypatch):
     from reconciliation_engine import api
     from reconciliation_engine.config import Settings

@@ -41,3 +41,24 @@ class ResultStore:
                 return None
             return json.loads(path.read_text(encoding="utf-8"))
 
+    def save_llm_audit(self, result_id: str, records: list[dict[str, Any]], project_id: str = "local") -> None:
+        if not result_id.isalnum():
+            raise ValueError("Invalid reconciliation ID")
+        payload = json.dumps({"reconciliation_id": result_id, "calls": records}, ensure_ascii=False, indent=2)
+        with self._lock:
+            directory = self._project_directory(project_id) / "llm-audit"
+            directory.mkdir(parents=True, exist_ok=True)
+            destination = directory / f"{result_id}.json"
+            temporary = directory / f".{result_id}.tmp"
+            temporary.write_text(payload, encoding="utf-8")
+            os.replace(temporary, destination)
+
+    def get_llm_audit(self, result_id: str, project_id: str = "local") -> dict[str, Any] | None:
+        if not result_id.isalnum():
+            return None
+        path = self._project_directory(project_id) / "llm-audit" / f"{result_id}.json"
+        with self._lock:
+            if not path.is_file():
+                return None
+            return json.loads(path.read_text(encoding="utf-8"))
+

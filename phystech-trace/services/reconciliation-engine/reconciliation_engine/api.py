@@ -7,7 +7,8 @@ from . import __version__
 from .config import get_settings
 from .errors import InputContractError
 from .models import HealthResponse, ReconciliationRequest, ReconciliationResult
-from .service import reconcile
+from .planner import LLMPlanner
+from .service import reconcile, reconciliation_id_for
 from .storage import ResultStore
 
 settings = get_settings()
@@ -58,17 +59,36 @@ def create_reconciliation(
     project_id: str | None = Header(default=None, alias="X-Project-ID", description="Project scope assigned to the bearer token"),
 ) -> ReconciliationResult:
     project_scope = _project_scope(authorization, project_id)
-    try:
-        result = reconcile(payload, get_settings())
-    except InputContractError as exc:
-        raise HTTPException(status_code=422, detail={"code": "input_contract_error", "diagnostics": [item.as_dict() for item in exc.diagnostics]}) from exc
     store_instance: ResultStore = request.app.state.result_store
-    existing = store_instance.get(result["reconciliation_id"], project_scope)
+    expected_id = reconciliation_id_for(payload, settings)
+    existing = store_instance.get(expected_id, project_scope)
     if existing is not None:
         response.status_code = 200
         return ReconciliationResult.model_validate(existing)
+    planner = LLMPlanner(settings) if settings.llm_enabled else None
+    try:
+        result = reconcile(payload, settings, planner)
+    except InputContractError as exc:
+        raise HTTPException(status_code=422, detail={"code": "input_contract_error", "diagnostics": [item.as_dict() for item in exc.diagnostics]}) from exc
+    if result["reconciliation_id"] != expected_id:
+        raise HTTPException(status_code=500, detail={"code": "reconciliation_identity_mismatch"})
     store_instance.save(result, project_scope)
+    store_instance.save_llm_audit(result["reconciliation_id"], planner.call_records if planner is not None else [], project_scope)
     return ReconciliationResult.model_validate(result)
+
+
+@app.get("/api/v1/reconciliations/{reconciliation_id}/llm-audit", tags=["reconciliations"])
+def get_llm_audit(
+    reconciliation_id: Annotated[str, Path(min_length=32, max_length=32, pattern="^[0-9a-f]{32}$")],
+    request: Request,
+    authorization: str | None = Header(default=None, alias="Authorization"),
+    project_id: str | None = Header(default=None, alias="X-Project-ID"),
+) -> dict:
+    project_scope = _project_scope(authorization, project_id)
+    store_instance: ResultStore = request.app.state.result_store
+    if store_instance.get(reconciliation_id, project_scope) is None:
+        raise HTTPException(status_code=404, detail={"code": "reconciliation_not_found", "reconciliation_id": reconciliation_id})
+    return store_instance.get_llm_audit(reconciliation_id, project_scope) or {"reconciliation_id": reconciliation_id, "calls": []}
 
 
 @app.get("/api/v1/reconciliations/{reconciliation_id}", tags=["reconciliations"])

@@ -205,7 +205,8 @@ class LLMPlanner:
                 "candidate_status": item.get("candidate_status"),
             }
             for item in linking.get("link_validation_diagnostics", [])
-            if ({item.get("source_document_id"), item.get("target_document_id")} & relevant_documents)
+            if item.get("resolution") not in {"corrected", "withdrawn"}
+            and ({item.get("source_document_id"), item.get("target_document_id")} & relevant_documents)
             and relationship_applies_to_candidates(item)
         ]
         safe_unlinked = [

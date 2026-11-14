@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { validateEvidenceSide, pathContainsRowId, rowIdExists } from "../src/linking/evidence-validation";
+import { buildEvidenceRegistry, resolveEvidenceReference } from "../src/linking/evidence-registry";
 import type { Extraction } from "../src/contracts/input";
 
 const dir = resolve("fixtures/upstream-structured-extraction-1.2.0");
@@ -56,6 +57,29 @@ test("source text normalization handles OCR formatting and reports uncertain OCR
   const supported = validateEvidenceSide({ document: source, expectedDocumentId: source.document_id, reportedDocumentId: source.document_id, path, rawValue: entry.value });
   assert.equal(supported.valid, true);
   assert.deepEqual(supported.warnings, []);
+});
+
+test("numeric amount evidence uses its wrapper source_value to validate formatted source text", () => {
+  const extraction = {
+    document_id: "synthetic-kfz",
+    document_type: "kfz_report",
+    fields: {
+      reported_total: {
+        value: { amount: "1180300.00", currency: "RUB" },
+        source_value: "1 180 300,00 руб.",
+        provenance: {
+          document_id: "synthetic-kfz",
+          source_available: true,
+          source_text: "Общая сумма по отчёту: 1 180 300,00 руб.",
+        },
+      },
+    },
+  } as any as Extraction;
+  const reference = buildEvidenceRegistry([extraction]).find(item => item.json_path === "fields.reported_total.value.amount");
+
+  assert.equal(reference?.raw_value, "1180300.00");
+  assert.equal(reference?.source_value, "1 180 300,00 руб.");
+  assert.deepEqual(resolveEvidenceReference(reference, extraction.document_id).warnings, []);
 });
 
 test("row evidence requires an existing row and a path that crosses that row", () => {

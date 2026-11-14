@@ -7,6 +7,7 @@ export type EvidenceReference = {
   document_id: string;
   json_path: string;
   raw_value: unknown;
+  source_value?: unknown;
   normalized_value: string;
   row_id?: string;
   provenance: Record<string, unknown> | null;
@@ -24,15 +25,17 @@ function normalize(value: unknown): string {
   return String(value);
 }
 
-function metadataFor(ancestors: { path: string; value: Record<string, unknown> }[]): { provenance: Record<string, unknown> | null; row_id?: string } {
+function metadataFor(ancestors: { path: string; value: Record<string, unknown> }[]): { provenance: Record<string, unknown> | null; source_value?: unknown; row_id?: string } {
   let provenance: Record<string, unknown> | null = null;
+  let source_value: unknown;
   let row_id: string | undefined;
   for (let index = ancestors.length - 1; index >= 0; index--) {
     const value = ancestors[index].value;
     if (!provenance && value.provenance && typeof value.provenance === "object" && !Array.isArray(value.provenance)) provenance = value.provenance as Record<string, unknown>;
+    if (source_value === undefined && value.source_value !== undefined) source_value = value.source_value;
     if (!row_id && typeof value.row_id === "string") row_id = value.row_id;
   }
-  return { provenance, ...(row_id ? { row_id } : {}) };
+  return { provenance, ...(source_value !== undefined ? { source_value } : {}), ...(row_id ? { row_id } : {}) };
 }
 
 /** Build stable, unique references for every JSON scalar without interpreting document semantics. */
@@ -63,6 +66,7 @@ export function buildEvidenceRegistry(documents: Extraction[]): EvidenceReferenc
         document_id: document.document_id,
         json_path: path,
         raw_value: value,
+        ...(metadata.source_value !== undefined ? { source_value: metadata.source_value } : {}),
         normalized_value: normalize(value),
         ...(metadata.row_id ? { row_id: metadata.row_id } : {}),
         provenance: metadata.provenance,
@@ -92,7 +96,11 @@ export function resolveEvidenceReference(reference: EvidenceReference | undefine
   if (!reference.provenance || reference.provenance.document_id !== expectedDocumentId || reference.provenance.source_available === false || typeof reference.provenance.source_text !== "string" || !reference.provenance.source_text.trim()) {
     return { valid: false, issues: [!reference.provenance ? "provenance_missing" : reference.provenance.document_id !== expectedDocumentId ? "provenance_document_mismatch" : reference.provenance.source_available === false ? "source_unavailable" : "source_text_missing"], warnings: [] };
   }
-  const warnings: EvidenceIssueCode[] = typeof reference.raw_value === "string" && !comparableText(reference.provenance.source_text).includes(comparableText(reference.raw_value)) ? ["source_text_value_mismatch"] : [];
+  const sourceText = comparableText(reference.provenance.source_text);
+  const sourceCandidates = [reference.source_value, reference.raw_value]
+    .filter((value): value is string => typeof value === "string" && value.length > 0)
+    .map(comparableText);
+  const warnings: EvidenceIssueCode[] = sourceCandidates.length > 0 && !sourceCandidates.some(value => sourceText.includes(value)) ? ["source_text_value_mismatch"] : [];
   return {
     valid: true,
     evidence: {

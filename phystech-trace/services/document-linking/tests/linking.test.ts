@@ -157,6 +157,31 @@ test("unknown evidence references are diagnosed, then Gemma can repair its own p
   finally { globalThis.fetch = originalFetch; }
 });
 
+test("evidence-only correction keeps valid status and confidence when omitted from the patch", async () => {
+  const docs = fixtureDocs.slice(0, 2), originalFetch = globalThis.fetch;
+  const registry = buildEvidenceRegistry(docs);
+  const sourceRef = registry.find(ref => ref.document_id === docs[0].document_id && ref.provenance?.source_available === true && typeof ref.raw_value === "string")!;
+  const targetRef = registry.find(ref => ref.document_id === docs[1].document_id && ref.provenance?.source_available === true && typeof ref.raw_value === "string")!;
+  const proposal = { relationship_type: "references_contract", source_document_id: docs[0].document_id, target_document_id: docs[1].document_id, evidence: [{ source_reference_id: "missing", target_reference_id: "missing", signal: "context", explanation: "initial proposal" }], confidence: 0.73, status: "proposed" };
+  let calls = 0;
+  globalThis.fetch = async () => {
+    calls++;
+    const value = calls === 1
+      ? { links: [proposal], unlinked_document_ids: [], analysis_summary: "", context_requests: [] }
+      : { corrections: [{ proposal_index: 0, action: "replace", link: { relationship_type: proposal.relationship_type, source_document_id: proposal.source_document_id, target_document_id: proposal.target_document_id, evidence: [{ source_reference_id: sourceRef.reference_id, target_reference_id: targetRef.reference_id, signal: "context", explanation: "corrected citations" }] } }] };
+    return new Response(JSON.stringify({ model: GEMMA_MODEL, choices: [{ message: { content: JSON.stringify(value) } }] }), { status: 200 });
+  };
+  try {
+    const result = await analyzeDocumentSet(docs as any, { apiKey: "test-only", timeoutMs: 1000, maxCalls: 52, maxInputTokens: 999999, systemPrompt });
+    assert.equal(result.links.length, 1);
+    assert.equal(result.links[0].status, "proposed");
+    assert.equal(result.links[0].confidence, 0.73);
+    assert.equal(result.invalidRelationshipDiagnostics.length, 1);
+    assert.equal(result.invalidRelationshipDiagnostics[0].resolution, "corrected");
+    assert.equal(result.invalidRelationshipDiagnostics[0].reason_codes.includes("invalid_link_metadata"), false);
+  } finally { globalThis.fetch = originalFetch; }
+});
+
 test("source text OCR uncertainty keeps the Gemma link for review with a diagnostic", async () => {
   const docs = structuredClone(fixtureDocs.filter(doc => ["contract-2026-0315", "addendum-2026-04"].includes(doc.document_id))) as any[];
   const source = docs.find(doc => doc.document_id === "contract-2026-0315");
