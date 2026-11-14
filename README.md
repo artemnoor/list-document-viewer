@@ -8,6 +8,12 @@
 
 **[Открыть сайт → trace.andromedabmstu.ru](https://trace.andromedabmstu.ru/)**
 
+### Видео работы · 1 минута 9 секунд
+
+[![Видео работы Phystech Trace: загрузка документов, сверка и заключение](docs/assets/demo.gif)](https://trace.andromedabmstu.ru/local-assets/phystech-trace-demo.mp4)
+
+**[Смотреть полное видео со звуком](https://trace.andromedabmstu.ru/local-assets/phystech-trace-demo.mp4)** · [Скачать MP4 из релиза](https://github.com/artemnoor/list-document-viewer/releases/download/v1.0.0/phystech-trace-demo-final.mp4)
+
 [![CI](https://github.com/artemnoor/list-document-viewer/actions/workflows/integration.yml/badge.svg?branch=main)](https://github.com/artemnoor/list-document-viewer/actions/workflows/integration.yml)
 [![Release](https://img.shields.io/github/v/release/artemnoor/list-document-viewer)](https://github.com/artemnoor/list-document-viewer/releases/latest)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
@@ -16,8 +22,6 @@
 ![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)
 
 [Быстрый старт](#быстрый-старт) · [Для жюри](#соответствие-критериям-кейса) · [Бенчмарки](benchmarks/README.md) · [Модели](docs/models.md) · [Архитектура](phystech-trace/docs/architecture.md)
-
-![Сверка КФЗ: расхождение 12 500 рублей и подтверждающие документы](docs/assets/verification.png)
 
 </div>
 
