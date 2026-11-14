@@ -1,5 +1,6 @@
 from gateway.main import (
     mark_reconciliation_pending,
+    parser_filename_header,
     reconciliation_targets,
     should_resume_linking_job,
     should_reuse_saved_linking_result,
@@ -32,6 +33,14 @@ def test_completed_linking_job_is_rerun_while_incomplete_job_is_resumed():
 def test_reconciliation_retry_reuses_saved_linking_result():
     assert should_reuse_saved_linking_result("reconciliation")
     assert not should_reuse_saved_linking_result("linking")
+
+
+def test_parser_filename_header_encodes_unicode_without_losing_extension():
+    header = parser_filename_header("Карточка отчёта.pdf")
+
+    assert header.isascii()
+    assert header.endswith(".pdf")
+    assert "%D0%9A" in header
 
 
 def _amount_wrapper(source_ref: str, source_part_id: str):

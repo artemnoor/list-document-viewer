@@ -73,3 +73,39 @@ The pre-existing, untracked synthetic `tests/e2e/data/case19` package was inspec
 ## Remaining acceptance work
 
 Stage 1 is not complete: there is not yet a positive real-source Reconciliation calculation with independently sufficient evidence. The fresh Linking result still has an unresolved row-level provenance issue and has no human-confirmed path; the engine correctly withholds an expected value. Per the staged acceptance criteria, Verification integration and five-stage E2E have not started. No `matched` result is claimed. The current worktree must also be committed and pushed after the remaining modules and scenarios are implemented.
+
+## Case19 controlled live run
+
+The synthetic case19 package was uploaded through Gateway after fixing its Unicode filename encoding. It contains 23 source files; the byte-identical duplicate act was deduplicated, leaving 22 stored documents (the KFZ workbook plus 21 source documents). The Gateway project is `0fd998d0-c25e-4bfa-b672-284c3ad33acd`. The saved Parser results were consumed by Structured Extraction and Linking rather than rerunning Parser or rebuilding simplified inputs.
+
+| Stage / evidence | Observed result |
+| --- | --- |
+| Parser upload and persistence | 22 documents stored; one duplicate source file removed by content deduplication |
+| Structured Extraction 1.2.0 | 22 real Polza calls; 109,721 tokens; provider cost `1.48233391 RUB`; 7 `act`, 1 `invoice`, 14 `unknown`; 11 documents flagged for review |
+| Document Linking 1.2.0 | Saved run `8570cd58-ad92-44ef-9900-14ba53a4abb2`; complete after 107 real calls, 835,425 input tokens, 188,379 output tokens, provider cost `15.02228690 RUB` |
+| Linking saved result | 21 links, 13 `status=confirmed` but all 13 have `verification_status=not_reviewed`, 3 proposed, 5 review; 8 review-required items; 3 diagnostics corrected and 2 remain `review_required` for `row_provenance_mismatch` |
+| Reconciliation and Verification on case19 | Not run. The Reconciliation acceptance gate is still unmet; no link has human-confirmed provenance. Reconciliation LLM planning remains disabled in Compose. Verification remains unimported and gated. |
+
+The live Linker job initially exposed truncated discovery batches, invalid route citations, oversized candidate context, and repeated source follow-ups. The runner now recovers omitted fragments with separate requests, groups route work within bounded tasks, validates and replays persisted responses through the current validators, derives only exact source references from cited navigation anchors, caps candidate evidence, and safely closes repeated follow-ups as `insufficient_evidence`. Checkpoints compact only pending verification work and preserve already completed responses. These recovery paths are covered by offline regression tests. The final case19 Linker result still cannot establish review-grade provenance: model-labeled confirmed links remain explicitly unreviewed, and the remaining row citations fail validation. This is a quality failure, not a positive Reconciliation input.
+
+The gold workbook remains unchanged and was never uploaded. It records reported `11,580,377.40 RUB`, independently supported `11,567,877.40 RUB`, and a `12,500.00 RUB` discrepancy in code 0800. These are reference values only; the live model output did not calculate or validate them. Excluded gold items include the duplicate act, a June-period act, and an act for another contract. The run therefore does not establish either `matched` or a proven numeric `mismatch`.
+
+The Gateway filename fix percent-encodes raw Unicode names in multipart headers while retaining the file extension. A regression test covers this; the original upload error created only an empty draft and incurred no paid calls. The existing draft was reused after the fix.
+
+### Final checks and budget
+
+After the Linker runtime fixes, `npm test` passed 87 tests with 0 failures and 5 existing skips; `npm run typecheck` and `npm run build` passed. Gateway reconciliation regression tests passed 6/6. Earlier in this integration, the Reconciliation Engine suite, compose validation, Docker builds and service health checks also passed as recorded above.
+
+The counted total is 138 paid requests: 9 earlier Linking/Reconciliation requests, 22 case19 Extraction requests, and 107 case19 Linking requests. Known provider-reported spend is `20.26303633 RUB`, plus one earlier planner request whose individual provider usage and cost were not captured before the audit sidecar existed. Current-run Linker usage is fully captured above. No new paid request was started after the case19 Linking run completed. Known total is far below the `100 RUB` cap; exact total spend cannot be reconstructed for that one unaudited planner call. Total request count remains below the 150-call cap.
+
+## Updated readiness
+
+| Module | Status | Current evidence |
+| --- | --- | --- |
+| Document Parser | Partially ready | Case19 uploaded through Gateway; duplicate source deduplicated; 22 documents persisted. |
+| Structured Extraction | Partially ready | Case19 saved 1.2.0 output from 22 real requests; 14 unknown classifications and 11 review flags limit downstream evidence. |
+| Document Linking | Partially ready | Case19 live run completed and persisted; 13 model-confirmed labels are all `not_reviewed`, 8 items need review, and 2 row-provenance diagnostics remain unresolved. |
+| Reconciliation Engine | Partially ready; acceptance gate blocked | Full source suite and earlier Gateway integration/persistence/audit checks pass. Case19 has not been sent to planning because its evidence lacks a human-confirmed path. Prior real planner output correctly remained `manual_review`. No positive calculated case is demonstrated. |
+| Verification Engine | Blocked on Stage 1 | Not imported or connected because the required positive Reconciliation scenario has not passed. The upstream pinned-schema hash mismatch also remains unresolved. |
+
+The work therefore stops at the explicit Stage 1 acceptance gate. Completing Stage 2–3, including Verification import and the required matched, proven mismatch, and review E2E scenarios, requires new source evidence with valid row-level provenance and genuine human review where required. No confirmation was fabricated and no gold expectation was changed.

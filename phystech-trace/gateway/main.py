@@ -11,6 +11,7 @@ from contextlib import asynccontextmanager
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Literal
+from urllib.parse import quote
 
 import httpx
 import psycopg
@@ -76,6 +77,10 @@ def should_resume_linking_job(job_status: str | None) -> bool:
 
 def should_reuse_saved_linking_result(retry_stage: str | None) -> bool:
     return retry_stage == "reconciliation"
+
+
+def parser_filename_header(name: str) -> str:
+    return quote(name, safe=" ._-()")
 
 
 def ensure_database():
@@ -618,7 +623,7 @@ async def upload_documents(project_id: str, role: Literal["kfz", "primary"] = Fo
         name = Path(upload.filename or "document").name[:200]
         response = await CLIENT.post(
             f"{PARSER_URL}/api/documents", content=data,
-            headers={"X-File-Name": name, "Content-Type": upload.content_type or "application/octet-stream"}, timeout=60,
+            headers={"X-File-Name": parser_filename_header(name), "Content-Type": upload.content_type or "application/octet-stream"}, timeout=60,
         )
         if response.status_code not in (200, 201):
             raise HTTPException(response.status_code, f"Document Parser upload failed: {response.text[:800]}")

@@ -2,12 +2,40 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readdirSync, readFileSync } from "node:fs";
 import { analyzeDocumentSet, GEMMA_MODEL } from "../src/linking/llm-matcher";
+import { runSemanticAnalysis } from "../src/linking/semantic-runner";
 import { planSemanticLinking } from "../src/linking/semantic-plan";
 import { estimateRequestInputTokens } from "../scripts/quality-live-budget";
 
 const documents = readdirSync("fixtures/upstream-structured-extraction-1.2.0").filter(name => name.endsWith(".json")).map(name => JSON.parse(readFileSync(`fixtures/upstream-structured-extraction-1.2.0/${name}`, "utf8"))).filter(doc => doc.document_type !== "addendum");
 const systemPrompt = readFileSync("prompts/document-linking-system.md", "utf8");
 const reply = (value: unknown) => new Response(JSON.stringify({ model: GEMMA_MODEL, choices: [{ message: { content: JSON.stringify(value) }, finish_reason: "stop" }], usage: { prompt_tokens: 100, completion_tokens: 20 } }));
+
+test("discovery retries missing source fragments individually after an incomplete batch", async () => {
+  const smallDocuments = documents.slice(0, 3).map((document: any) => ({ ...document, fields: {}, tables: [], line_items: [], payment_schedule: [], amendments: [] }));
+  const calls: string[] = [];
+  const progress: any = { version: 2, started_at: new Date().toISOString(), fragment_budget_tokens: 4000, completed_fragments: [], calls: 0, input_tokens: 0, output_tokens: 0, has_cost: false };
+  const result = await runSemanticAnalysis(smallDocuments as any, {
+    systemPrompt, maxInputTokens: 16000, maxCalls: 20, progress,
+    checkpoint: async () => {}, exhausted: () => false,
+    request: async (context, _prompt, _maxOutput, label) => {
+      calls.push(label);
+      const correctionAt = context.indexOf("\n\nValidation correction:");
+      const request = JSON.parse(correctionAt < 0 ? context : context.slice(0, correctionAt));
+      if (request.stage === "discover") {
+        const fragments = request.fragments.map((fragment: any) => ({ fragment_id: fragment.fragment_id, summary: "Source fragment read", anchors: [], open_questions: [] }));
+        if (request.fragments.length > 1 && !label.includes(":recover:")) return { value: { fragments: fragments.slice(0, 1) } };
+        return { value: { fragments } };
+      }
+      return { value: { decisions: request.document_pairs.map((pair: any) => ({ ...pair, state: "insufficient_context", reason: "No original evidence is available in this fixture.", fragment_ids: [] })) } };
+    },
+    validate: async () => { throw new Error("Verification should not run for insufficient_context."); },
+    result: () => ({} as any),
+  });
+  assert.ok(calls.some(label => label.includes(":recover:")), "missing fragment recovery should call the model once per missing fragment");
+  assert.equal(progress.semantic.discovery[0].response.fragments.length, 3);
+  assert.equal(progress.semantic.routing[0].response.decisions[0].state, "insufficient_context");
+  assert.equal(result.complete, true);
+});
 
 test("full five-document fixture leaves room for Extraction within Q1 without skipping semantic sources", async (t) => {
   const original = globalThis.fetch;
@@ -24,7 +52,7 @@ test("full five-document fixture leaves room for Extraction within Q1 without sk
     const user = body.messages[1].content;
     const context = JSON.parse(user.slice(user.indexOf("{")));
     if (context.stage === "discover") return reply({ fragments: context.fragments.map((fragment: any) => ({ fragment_id: fragment.fragment_id, summary: "Financial facts, original rows and possible documentary relations", anchors: fragment.facts.slice(0, 2).map((fact: any) => ({ reference_id: fact[0], meaning: "Source fact for detailed comparison" })), open_questions: [] })) });
-    if (context.stage === "route") return reply({ decisions: context.document_pairs.map((pair: any) => ({ ...pair, state: "candidate", reference_ids: pair.document_ids.map((docId: string) => context.navigation.find((fragment: any) => context.fragment_manifest.find((f: any) => f.fragment_id === fragment.fragment_id)?.document_id === docId)?.anchors?.[0]?.reference_id).filter(Boolean), reason: "Needs original factual verification", fragment_ids: context.fragment_manifest.filter((fragment: any) => pair.document_ids.includes(fragment.document_id)).map((fragment: any) => fragment.fragment_id) })) });
+    if (context.stage === "route") { assert.ok(context.document_pairs.length <= 12); return reply({ decisions: context.document_pairs.map((pair: any) => ({ ...pair, state: "candidate", reference_ids: pair.document_ids.map((docId: string) => context.navigation.find((fragment: any) => context.fragment_manifest.find((f: any) => f.fragment_id === fragment.fragment_id)?.document_id === docId)?.anchors?.[0]?.reference_id).filter(Boolean), reason: "Needs original factual verification", fragment_ids: context.fragment_manifest.filter((fragment: any) => pair.document_ids.includes(fragment.document_id)).map((fragment: any) => fragment.fragment_id) })) }); }
     return reply({ links: [], unlinked_document_ids: [], context_requests: [], pair_decisions: context.candidates.map((candidate: any) => ({ pair_id: candidate.pair_id, state: "insufficient_evidence", reason: "Offline structural verification does not make semantic negative claims" })), analysis_summary: "Offline structural verification; no semantic gold claim" });
   };
   try {
