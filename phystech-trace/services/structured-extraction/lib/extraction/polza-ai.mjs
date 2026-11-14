@@ -3,8 +3,11 @@ import { adaptDocumentParserResult } from "../parser/document-parser-adapter.mjs
 import { classifyDocument, fieldDefinitions } from "./structured-extraction.mjs";
 
 export const POLZA_BASE_URL = "https://polza.ai/api/v1";
-export const POLZA_MODEL = "deepseek/deepseek-v4-flash";
+export const POLZA_MODEL = "deepseek/deepseek-v4.1-flash";
 
+export function modelForClassification(classification) {
+  return classification === "confidential" ? "google/gemma-4-26b-a4b-it" : POLZA_MODEL;
+}
 const semanticKeys = ["line_number", "identifier", "description", "unit", "planned_quantity", "actual_quantity", "quantity", "unit_price", "amount", "parameter", "old_value", "new_value", "reason", "unknown"];
 const tableRoles = ["metadata", "line_items", "payment_schedule", "amendments", "reference", "summary", "appendix", "table"];
 const normalizeClassificationConfidence = (value) => typeof value === "number" && Number.isFinite(value) && value >= 0 && value <= 1 ? value : null;
@@ -107,7 +110,7 @@ export function buildGroundedContext(parsed) {
         tableSourceIds.add(cell.id);
         if (cell.source_available === false || !cell.text && !cell.address) continue;
         const text = String(cell.text);
-        cells.push({ source_element_id: cell.id, text });
+        cells.push({ source_element_id: cell.id, column_index: cell.column, text });
       }
       if (cells.length) rows.push({ row_id: row.row_id, page_no: row.page_no ?? null, sheet_name: row.sheet_name ?? null, cells });
     }
@@ -240,7 +243,7 @@ function validateGrounding(result, context, parsed) {
   const validFields = new Set(Object.values(fieldDefinitions).flat().map(([key]) => key));
   const fieldCandidates = result.field_candidates.filter((candidate) => {
     const element = elements.get(candidate.source_element_id);
-    return validFields.has(candidate.field_key) && element?.source_available !== false && element && String(element.text).includes(candidate.source_value);
+    return (validFields.has(candidate.field_key) || /^indicator_(money|number):.{1,200}$/u.test(candidate.field_key)) && element?.source_available !== false && element && String(element.text).includes(candidate.source_value);
   });
   const tableMappings = result.table_mappings.map((mapping) => {
     const table = tables.get(mapping.table_id);
@@ -280,16 +283,17 @@ function validateGrounding(result, context, parsed) {
 }
 
 async function callPolzaFragment(parsed, env = {}, context) {
+  const model = modelForClassification(env.DATA_CLASSIFICATION);
   const readiness = polzaAiReadiness(env);
   if (!readiness.configured) throw new PolzaAiError("Polza AI не настроен. Добавьте POLZA_API_KEY в локальные или Worker secrets.", "POLZA_NOT_CONFIGURED", 503, { provider: null, validation_status: "not_run" });
   const started = Date.now();
 
   const input = {
-    model: POLZA_MODEL,
+    model,
     messages: [
       {
         role: "system",
-        content: "Ты извлекаешь реквизиты и семантическую структуру финансовых документов на русском языке. Используй только приведённые source_element_id. Для поля верни точную подстроку текста источника, без перефразирования и нормализации. Не придумывай ID, координаты, страницы, адреса ячеек и отсутствующие значения. Идентификаторы table_id и source_element_id — непрозрачные машинные строки: копируй их посимвольно только из текущего контекста. Не выводи table_id из названия роли/заголовка, не создавай псевдо-ID и не используй ID из другой таблицы. source_element_id столбца должен быть одним из ID в headers[].source_element_ids той же таблицы; ID строки/cell не является ID заголовка. Если корректный mapping нельзя построить, опусти его. Для таблиц сопоставляй смысл заголовков; неизвестные колонки помечай unknown, а роли определяй как metadata, line_items, payment_schedule, amendments, reference, summary, appendix или table. Таблицы могут продолжаться на разных страницах внутри одного table_id: используй представительные строки только для понимания схемы, не смешивай разные table_id. Для изменений выделяй parameter, old_value, new_value и reason. Самооценка confidence не является доказательством. Если доказательства нет, не создавай запись. Верни только JSON по схеме.",
+        content: "Ты извлекаешь реквизиты и семантическую структуру финансовых документов на русском языке. Используй только приведённые source_element_id. Для поля верни точную подстроку текста источника, без перефразирования и нормализации. Не придумывай ID, координаты, страницы, адреса ячеек и отсутствующие значения. Идентификаторы table_id и source_element_id — непрозрачные машинные строки: копируй их посимвольно только из текущего контекста. Не выводи table_id из названия роли/заголовка, не создавай псевдо-ID и не используй ID из другой таблицы. source_element_id столбца должен быть одним из ID в headers[].source_element_ids той же таблицы; ID строки/cell не является ID заголовка. Если корректный mapping нельзя построить, опусти его. Для таблиц сопоставляй смысл заголовков. В columns перечисляй только колонки с установленной семантикой; неизвестные колонки опускай (исходные ячейки сохраняются автоматически). Не трать ответ на перечисление unknown для всех столбцов. Если все колонки неизвестны, опусти table_mapping и сосредоточься на grounded показателях. Роли определяй как metadata, line_items, payment_schedule, amendments, reference, summary, appendix или table. Таблицы могут продолжаться на разных страницах внутри одного table_id: используй представительные строки только для понимания схемы, не смешивай разные table_id. Для изменений выделяй parameter, old_value, new_value и reason. Самооценка confidence не является доказательством. Если доказательства нет, не создавай запись. Для отчетов КФЗ извлекай каждый числовой показатель, включая статьи затрат и непроверяемые подпоказатели, в field_candidates: field_key indicator_money:<название показателя и период/строка> для денежных значений, indicator_number:<название показателя и период/строка> для остальных. source_value должен быть точной числовой подстрокой с валютой, если она есть; не вычисляй значения и не включай номера документов, даты, коды статей и служебные счетчики. Не считай плановые суммы фактическими. Верни только JSON по схеме.",
       },
       { role: "user", content: JSON.stringify(context) },
     ],
@@ -307,21 +311,21 @@ async function callPolzaFragment(parsed, env = {}, context) {
     strictSchema = response.strictSchema;
     modelCalls = response.calls;
   } catch (error) {
-    if (error instanceof PolzaAiError) throw new PolzaAiError(error.message, error.code, error.status, { ...error.details, provider: "polza_ai", model: POLZA_MODEL, duration_ms: Date.now() - started });
+    if (error instanceof PolzaAiError) throw new PolzaAiError(error.message, error.code, error.status, { ...error.details, provider: "polza_ai", model, duration_ms: Date.now() - started });
     const timeout = error?.name === "TimeoutError" || error?.name === "AbortError";
-    throw new PolzaAiError(timeout ? "Истекло время ожидания Polza AI" : "Не удалось подключиться к Polza AI", timeout ? "POLZA_TIMEOUT" : "POLZA_NETWORK_ERROR", timeout ? 504 : 502, { provider: "polza_ai", model: POLZA_MODEL, duration_ms: Date.now() - started });
+    throw new PolzaAiError(timeout ? "Истекло время ожидания Polza AI" : "Не удалось подключиться к Polza AI", timeout ? "POLZA_TIMEOUT" : "POLZA_NETWORK_ERROR", timeout ? 504 : 502, { provider: "polza_ai", model, duration_ms: Date.now() - started });
   }
   if (raw?.choices?.[0]?.finish_reason === "length") throw new PolzaAiError("Ответ модели обрезан", "POLZA_INVALID_JSON");
   let parsedResponse;
   try { parsedResponse = groundedResponseSchema.parse(parseModelResult(raw)); }
   catch (error) {
-    if (error instanceof PolzaAiError) throw new PolzaAiError(error.message, error.code, error.status, { ...error.details, provider: "polza_ai", model: POLZA_MODEL, duration_ms: Date.now() - started, validation_status: "invalid_json" });
-    throw new PolzaAiError("Ответ Polza AI не прошёл локальную проверку выходной схемы", "POLZA_SCHEMA_INVALID", 502, { provider: "polza_ai", model: POLZA_MODEL, duration_ms: Date.now() - started, validation_status: "schema_invalid" });
+    if (error instanceof PolzaAiError) throw new PolzaAiError(error.message, error.code, error.status, { ...error.details, provider: "polza_ai", model, duration_ms: Date.now() - started, validation_status: "invalid_json" });
+    throw new PolzaAiError("Ответ Polza AI не прошёл локальную проверку выходной схемы", "POLZA_SCHEMA_INVALID", 502, { provider: "polza_ai", model, duration_ms: Date.now() - started, validation_status: "schema_invalid" });
   }
   let grounded;
   try { grounded = validateGrounding(parsedResponse, context, parsed); }
   catch (error) {
-    if (error instanceof PolzaAiError) throw new PolzaAiError(error.message, error.code, error.status, { ...error.details, provider: "polza_ai", model: POLZA_MODEL, duration_ms: Date.now() - started, validation_status: "ungrounded" });
+    if (error instanceof PolzaAiError) throw new PolzaAiError(error.message, error.code, error.status, { ...error.details, provider: "polza_ai", model, duration_ms: Date.now() - started, validation_status: "ungrounded" });
     throw error;
   }
   const sourceColumnCount = (items) => items.reduce((sum, item) => sum + item.columns.length, 0);
@@ -329,7 +333,7 @@ async function callPolzaFragment(parsed, env = {}, context) {
   const groundedColumnCount = sourceColumnCount(grounded.table_mappings);
   if (grounded.table_mappings.length !== parsedResponse.table_mappings.length || groundedColumnCount !== inputColumnCount) {
     throw new PolzaAiError("Ответ модели содержал ссылки на отсутствующие или не совпадающие исходные фрагменты", "POLZA_UNGROUNDED_OUTPUT", 502, {
-      provider: "polza_ai", model: POLZA_MODEL, duration_ms: Date.now() - started, validation_status: "ungrounded",
+      provider: "polza_ai", model, duration_ms: Date.now() - started, validation_status: "ungrounded",
       field_candidates_received: parsedResponse.field_candidates.length,
       field_candidates_grounded: grounded.field_candidates.length,
       table_mappings_received: parsedResponse.table_mappings.length,
@@ -345,7 +349,7 @@ async function callPolzaFragment(parsed, env = {}, context) {
     model_calls: modelCalls,
     grounding_rejections: parsedResponse.field_candidates.filter(candidate => !grounded.field_candidates.includes(candidate)).map(candidate => ({ candidate, reason: 'source_not_visible_or_exact_value_mismatch' })),
     provider: "polza_ai",
-    model: POLZA_MODEL,
+    model,
     called: true,
     response_validated: true,
     validation_status: rejectedFieldCandidates
@@ -383,12 +387,20 @@ export function buildGroundedContexts(parsed, maxChars = 33000) {
     for (let offset = 0; offset < element.text.length; offset += Math.max(1, width - Math.min(256, Math.floor(width / 4)))) add('source_elements', { ...element, text: element.text.slice(offset, offset + width), text_offset: offset });
   }
   for (const table of context.tables) {
-    const metadata = { ...table, rows: [] };
+    // Logical tables may expose generic headers while their labels occupy the
+    // first source rows. Repeat those exact texts so later chunks can interpret
+    // columns without treating these contextual rows as new evidence IDs.
+    const leadingRows = table.headers.every(header => /^Колонка \d+$/.test(header.label))
+      ? table.rows.slice(0, 3).map(row => ({ row_id: row.row_id, cells: row.cells.map(cell => ({ column_index: cell.column_index, text: cell.text })) }))
+      : [];
+    const metadata = { ...table, rows: [], ...(leadingRows.length && size(leadingRows) < maxChars / 4 ? { leading_rows: leadingRows } : {}) };
     if (!table.rows.length) { add('tables', metadata); continue; }
     for (const row of table.rows) {
+      const separateReportRow = context.detected_type_by_rules === 'kfz_report';
+      if (separateReportRow) flush();
       const available = maxChars - size(base) - size(metadata) - 1000;
       if (available < 100) throw new PolzaAiError('Заголовки таблицы превышают бюджет; данные не обработаны', 'POLZA_CONTEXT_LIMIT');
-      if (size({...metadata,rows:[row]}) < available) { add('tables', { ...metadata, rows: [row] }); continue; }
+      if (size({...metadata,rows:[row]}) < available) { add('tables', { ...metadata, rows: [row] }); if (separateReportRow) flush(); continue; }
       for (const cell of row.cells) {
         const width = Math.max(1, Math.floor(available / 6));
         for (let offset = 0; offset < Math.max(1, cell.text.length); offset += Math.max(1, width - Math.min(256, Math.floor(width / 4)))) add('tables', { ...metadata, rows: [{ ...row, cells: [{ ...cell, text: cell.text.slice(offset, offset + width), text_offset: offset }] }] });

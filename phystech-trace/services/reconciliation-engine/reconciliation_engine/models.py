@@ -40,8 +40,6 @@ class ReconciliationContext(StrictModel):
         target_ids = [target.target_id for target in self.targets]
         if len(target_ids) != len(set(target_ids)):
             raise ValueError("target_id values must be unique")
-        if self.external_llm_allowed and self.data_classification == "confidential":
-            raise ValueError("confidential data cannot be sent to an external LLM")
         return self
 
 

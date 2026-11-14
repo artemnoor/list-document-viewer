@@ -8,6 +8,59 @@ permissions:
   contents: read
 
 jobs:
+  gateway-and-benchmarks:
+    name: Gateway and public financial benchmark
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python -m pip install -r phystech-trace/tests/requirements.txt
+      - run: python -m pytest tests -q
+        working-directory: phystech-trace
+      - run: python benchmarks/run.py --output benchmarks/results/ci-financial-audit.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: financial-benchmark
+          path: benchmarks/results/ci-financial-audit.json
+
+  calculation-engines:
+    name: Reconciliation and Verification tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      matrix:
+        engine: [reconciliation-engine, verification-engine]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python -m pip install -e ".[test]"
+        working-directory: phystech-trace/services/${{ matrix.engine }}
+      - run: python -m pytest -q
+        working-directory: phystech-trace/services/${{ matrix.engine }}
+
+  docker-smoke:
+    name: Fresh-volume Docker Compose smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Build, start, probe and clean up isolated stack
+        run: python scripts/verify_docker.py --build --output benchmarks/results/ci-docker-smoke.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: docker-smoke
+          path: benchmarks/results/ci-docker-smoke.*
+
   backend-unit:
     name: Backend unit tests
     runs-on: ubuntu-latest
@@ -22,9 +75,9 @@ jobs:
           cache: pip
           cache-dependency-path: backend/requirements.txt
       - name: Install backend dependencies
-        run: python -m pip install -r backend/requirements.txt
+        run: python -m pip install -r backend/requirements.txt "pytest>=8,<9"
       - name: Run backend unit tests
-        run: python -m unittest discover -s backend/tests
+        run: python -m pytest backend/tests -q
 
   shared-contracts:
     name: Shared contract tests

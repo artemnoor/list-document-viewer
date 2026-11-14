@@ -40,6 +40,7 @@ services:
       DOCLING_DEVICE: cpu
       POLZA_OCR_ENABLED: "0"
       POLZA_DOCUMENT_REVIEW_ENABLED: "0"
+      POLZA_AI_API_KEY: ${POLZA_API_KEY:-${POLZA_AI_API_KEY:-}}
     volumes:
       - parser-uploads:/app/backend/uploads
       - parser-models:/models
@@ -75,7 +76,8 @@ services:
       API_BEARER_TOKEN: ${API_BEARER_TOKEN:-trace_api_local_token_2026_do_not_expose}
       REQUIRE_EXTERNAL_LLM_CONSENT: "true"
       LLM_ENABLED: ${LLM_ENABLED:-true}
-      LLM_MAX_CALLS_PER_RUN: ${LLM_MAX_CALLS_PER_RUN:-52}
+      LLM_MAX_CALLS_PER_RUN: ${LLM_MAX_CALLS_PER_RUN:-256}
+      LLM_MAX_RUN_MS: ${LLM_MAX_RUN_MS:-1800000}
       LLM_TIMEOUT_MS: ${LLM_TIMEOUT_MS:-120000}
       LLM_MAX_INPUT_TOKENS: ${LLM_MAX_INPUT_TOKENS:-230000}
       POLZA_API_KEY: ${POLZA_API_KEY:-${POLZA_AI_API_KEY:-}}
@@ -106,7 +108,8 @@ services:
       API_BEARER_TOKEN: ${API_BEARER_TOKEN:-trace_api_local_token_2026_do_not_expose}
       REQUIRE_EXTERNAL_LLM_CONSENT: "true"
       LLM_ENABLED: ${LLM_ENABLED:-true}
-      LLM_MAX_CALLS_PER_RUN: ${LLM_MAX_CALLS_PER_RUN:-52}
+      LLM_MAX_CALLS_PER_RUN: ${LLM_MAX_CALLS_PER_RUN:-256}
+      LLM_MAX_RUN_MS: ${LLM_MAX_RUN_MS:-1800000}
       LLM_TIMEOUT_MS: ${LLM_TIMEOUT_MS:-120000}
       LLM_MAX_INPUT_TOKENS: ${LLM_MAX_INPUT_TOKENS:-230000}
       POLZA_API_KEY: ${POLZA_API_KEY:-${POLZA_AI_API_KEY:-}}
@@ -130,6 +133,7 @@ services:
       dockerfile: Dockerfile
     environment:
       RESULT_STORE_DIR: /app/data/results
+      TARGET_WORKERS: 4
       LLM_ENABLED: ${RECONCILIATION_LLM_ENABLED:-true}
       LLM_BASE_URL: ${RECONCILIATION_LLM_BASE_URL:-https://polza.ai/api/v1}
       LLM_API_KEY: ${POLZA_API_KEY:-${POLZA_AI_API_KEY:-}}
@@ -208,8 +212,8 @@ services:
 
   frontend:
     build:
-      context: ./frontend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: frontend/Dockerfile
     depends_on:
       gateway:
         condition: service_healthy

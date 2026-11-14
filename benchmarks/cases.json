@@ -1,0 +1,2727 @@
+{
+  "dataset": "phystech-trace-public-synthetic-v1",
+  "scope": "local calculation after extraction; no OCR or LLM calls",
+  "cases": [
+    {
+      "id": "01-independent-sum",
+      "project": {
+        "id": "01-independent-sum",
+        "verification_scope": {}
+      },
+      "documents": [
+        {
+          "id": "report",
+          "parser_document_id": "report",
+          "file_name": "synthetic-report.xlsx",
+          "role": "kfz",
+          "extraction_result": {
+            "fields": {
+              "contract_reference": {
+                "value": "DEMO-2026",
+                "source_value": "\"DEMO-2026\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "r-contract",
+                  "source_part_id": "r-contract",
+                  "source_available": true
+                }
+              },
+              "reporting_period": {
+                "value": {
+                  "start": "2026-01-01",
+                  "end": "2026-01-31"
+                },
+                "source_value": "{\"start\": \"2026-01-01\", \"end\": \"2026-01-31\"}",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "r-period",
+                  "source_part_id": "r-period",
+                  "source_available": true
+                }
+              }
+            },
+            "indicators": [
+              {
+                "label": "Общехозяйственные затраты",
+                "extracted": {
+                  "value": {
+                    "amount": "120000",
+                    "currency": "RUB"
+                  },
+                  "source_value": "{\"amount\": \"120000\", \"currency\": \"RUB\"}",
+                  "status": "extracted",
+                  "provenance": {
+                    "source_ref": "r-amount",
+                    "source_part_id": "r-amount",
+                    "source_available": true
+                  }
+                }
+              }
+            ],
+            "tables": []
+          }
+        },
+        {
+          "id": "act-1",
+          "parser_document_id": "act-1",
+          "file_name": "act-1.pdf",
+          "role": "primary",
+          "extraction_result": {
+            "fields": {
+              "contract_reference": {
+                "value": "DEMO-2026",
+                "source_value": "\"DEMO-2026\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-1-contract",
+                  "source_part_id": "act-1-contract",
+                  "source_available": true
+                }
+              },
+              "document_date": {
+                "value": "2026-01-15",
+                "source_value": "\"2026-01-15\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-1-date",
+                  "source_part_id": "act-1-date",
+                  "source_available": true
+                }
+              },
+              "act_number": {
+                "value": "act-1",
+                "source_value": "\"act-1\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-1-number",
+                  "source_part_id": "act-1-number",
+                  "source_available": true
+                }
+              },
+              "total_amount": {
+                "value": {
+                  "amount": "70000",
+                  "currency": "RUB"
+                },
+                "source_value": "{\"amount\": \"70000\", \"currency\": \"RUB\"}",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-1-amount",
+                  "source_part_id": "act-1-amount",
+                  "source_available": true
+                }
+              },
+              "source_text_1": {
+                "value": "Административное сопровождение",
+                "source_value": "\"Административное сопровождение\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-1-text",
+                  "source_part_id": "act-1-text",
+                  "source_available": true
+                }
+              }
+            },
+            "indicators": [],
+            "tables": []
+          }
+        },
+        {
+          "id": "act-2",
+          "parser_document_id": "act-2",
+          "file_name": "act-2.pdf",
+          "role": "primary",
+          "extraction_result": {
+            "fields": {
+              "contract_reference": {
+                "value": "DEMO-2026",
+                "source_value": "\"DEMO-2026\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-2-contract",
+                  "source_part_id": "act-2-contract",
+                  "source_available": true
+                }
+              },
+              "document_date": {
+                "value": "2026-01-15",
+                "source_value": "\"2026-01-15\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-2-date",
+                  "source_part_id": "act-2-date",
+                  "source_available": true
+                }
+              },
+              "act_number": {
+                "value": "act-2",
+                "source_value": "\"act-2\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-2-number",
+                  "source_part_id": "act-2-number",
+                  "source_available": true
+                }
+              },
+              "total_amount": {
+                "value": {
+                  "amount": "50000",
+                  "currency": "RUB"
+                },
+                "source_value": "{\"amount\": \"50000\", \"currency\": \"RUB\"}",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-2-amount",
+                  "source_part_id": "act-2-amount",
+                  "source_available": true
+                }
+              },
+              "source_text_1": {
+                "value": "Административное сопровождение",
+                "source_value": "\"Административное сопровождение\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-2-text",
+                  "source_part_id": "act-2-text",
+                  "source_available": true
+                }
+              }
+            },
+            "indicators": [],
+            "tables": []
+          }
+        }
+      ],
+      "expected": {
+        "status": "matched",
+        "expected": "120000.00",
+        "difference": "0.00",
+        "categories": []
+      }
+    },
+    {
+      "id": "02-proven-difference",
+      "project": {
+        "id": "02-proven-difference",
+        "verification_scope": {}
+      },
+      "documents": [
+        {
+          "id": "report",
+          "parser_document_id": "report",
+          "file_name": "synthetic-report.xlsx",
+          "role": "kfz",
+          "extraction_result": {
+            "fields": {
+              "contract_reference": {
+                "value": "DEMO-2026",
+                "source_value": "\"DEMO-2026\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "r-contract",
+                  "source_part_id": "r-contract",
+                  "source_available": true
+                }
+              },
+              "reporting_period": {
+                "value": {
+                  "start": "2026-01-01",
+                  "end": "2026-01-31"
+                },
+                "source_value": "{\"start\": \"2026-01-01\", \"end\": \"2026-01-31\"}",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "r-period",
+                  "source_part_id": "r-period",
+                  "source_available": true
+                }
+              }
+            },
+            "indicators": [
+              {
+                "label": "Общехозяйственные затраты",
+                "extracted": {
+                  "value": {
+                    "amount": "132500",
+                    "currency": "RUB"
+                  },
+                  "source_value": "{\"amount\": \"132500\", \"currency\": \"RUB\"}",
+                  "status": "extracted",
+                  "provenance": {
+                    "source_ref": "r-amount",
+                    "source_part_id": "r-amount",
+                    "source_available": true
+                  }
+                }
+              }
+            ],
+            "tables": []
+          }
+        },
+        {
+          "id": "act-1",
+          "parser_document_id": "act-1",
+          "file_name": "act-1.pdf",
+          "role": "primary",
+          "extraction_result": {
+            "fields": {
+              "contract_reference": {
+                "value": "DEMO-2026",
+                "source_value": "\"DEMO-2026\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-1-contract",
+                  "source_part_id": "act-1-contract",
+                  "source_available": true
+                }
+              },
+              "document_date": {
+                "value": "2026-01-15",
+                "source_value": "\"2026-01-15\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-1-date",
+                  "source_part_id": "act-1-date",
+                  "source_available": true
+                }
+              },
+              "act_number": {
+                "value": "act-1",
+                "source_value": "\"act-1\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-1-number",
+                  "source_part_id": "act-1-number",
+                  "source_available": true
+                }
+              },
+              "total_amount": {
+                "value": {
+                  "amount": "70000",
+                  "currency": "RUB"
+                },
+                "source_value": "{\"amount\": \"70000\", \"currency\": \"RUB\"}",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-1-amount",
+                  "source_part_id": "act-1-amount",
+                  "source_available": true
+                }
+              },
+              "source_text_1": {
+                "value": "Административное сопровождение",
+                "source_value": "\"Административное сопровождение\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-1-text",
+                  "source_part_id": "act-1-text",
+                  "source_available": true
+                }
+              }
+            },
+            "indicators": [],
+            "tables": []
+          }
+        },
+        {
+          "id": "act-2",
+          "parser_document_id": "act-2",
+          "file_name": "act-2.pdf",
+          "role": "primary",
+          "extraction_result": {
+            "fields": {
+              "contract_reference": {
+                "value": "DEMO-2026",
+                "source_value": "\"DEMO-2026\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-2-contract",
+                  "source_part_id": "act-2-contract",
+                  "source_available": true
+                }
+              },
+              "document_date": {
+                "value": "2026-01-15",
+                "source_value": "\"2026-01-15\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-2-date",
+                  "source_part_id": "act-2-date",
+                  "source_available": true
+                }
+              },
+              "act_number": {
+                "value": "act-2",
+                "source_value": "\"act-2\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-2-number",
+                  "source_part_id": "act-2-number",
+                  "source_available": true
+                }
+              },
+              "total_amount": {
+                "value": {
+                  "amount": "50000",
+                  "currency": "RUB"
+                },
+                "source_value": "{\"amount\": \"50000\", \"currency\": \"RUB\"}",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-2-amount",
+                  "source_part_id": "act-2-amount",
+                  "source_available": true
+                }
+              },
+              "source_text_1": {
+                "value": "Административное сопровождение",
+                "source_value": "\"Административное сопровождение\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-2-text",
+                  "source_part_id": "act-2-text",
+                  "source_available": true
+                }
+              }
+            },
+            "indicators": [],
+            "tables": []
+          }
+        }
+      ],
+      "expected": {
+        "status": "mismatch",
+        "expected": "120000.00",
+        "difference": "12500.00",
+        "categories": []
+      }
+    },
+    {
+      "id": "03-ocr-duplicate",
+      "project": {
+        "id": "03-ocr-duplicate",
+        "verification_scope": {}
+      },
+      "documents": [
+        {
+          "id": "report",
+          "parser_document_id": "report",
+          "file_name": "synthetic-report.xlsx",
+          "role": "kfz",
+          "extraction_result": {
+            "fields": {
+              "contract_reference": {
+                "value": "DEMO-2026",
+                "source_value": "\"DEMO-2026\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "r-contract",
+                  "source_part_id": "r-contract",
+                  "source_available": true
+                }
+              },
+              "reporting_period": {
+                "value": {
+                  "start": "2026-01-01",
+                  "end": "2026-01-31"
+                },
+                "source_value": "{\"start\": \"2026-01-01\", \"end\": \"2026-01-31\"}",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "r-period",
+                  "source_part_id": "r-period",
+                  "source_available": true
+                }
+              }
+            },
+            "indicators": [
+              {
+                "label": "Общехозяйственные затраты",
+                "extracted": {
+                  "value": {
+                    "amount": "120000",
+                    "currency": "RUB"
+                  },
+                  "source_value": "{\"amount\": \"120000\", \"currency\": \"RUB\"}",
+                  "status": "extracted",
+                  "provenance": {
+                    "source_ref": "r-amount",
+                    "source_part_id": "r-amount",
+                    "source_available": true
+                  }
+                }
+              }
+            ],
+            "tables": []
+          }
+        },
+        {
+          "id": "act",
+          "parser_document_id": "act",
+          "file_name": "act.pdf",
+          "role": "primary",
+          "extraction_result": {
+            "fields": {
+              "contract_reference": {
+                "value": "DEMO-2026",
+                "source_value": "\"DEMO-2026\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-contract",
+                  "source_part_id": "act-contract",
+                  "source_available": true
+                }
+              },
+              "document_date": {
+                "value": "2026-01-15",
+                "source_value": "\"2026-01-15\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-date",
+                  "source_part_id": "act-date",
+                  "source_available": true
+                }
+              },
+              "act_number": {
+                "value": "act",
+                "source_value": "\"act\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-number",
+                  "source_part_id": "act-number",
+                  "source_available": true
+                }
+              },
+              "total_amount": {
+                "value": {
+                  "amount": "120000",
+                  "currency": "RUB"
+                },
+                "source_value": "{\"amount\": \"120000\", \"currency\": \"RUB\"}",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-amount",
+                  "source_part_id": "act-amount",
+                  "source_available": true
+                }
+              },
+              "source_text_1": {
+                "value": "Административное сопровождение",
+                "source_value": "\"Административное сопровождение\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-text",
+                  "source_part_id": "act-text",
+                  "source_available": true
+                }
+              }
+            },
+            "indicators": [],
+            "tables": []
+          }
+        },
+        {
+          "id": "copy",
+          "parser_document_id": "copy",
+          "file_name": "copy.png",
+          "role": "primary",
+          "extraction_result": {
+            "fields": {
+              "contract_reference": {
+                "value": "DEMO-2026",
+                "source_value": "\"DEMO-2026\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-contract",
+                  "source_part_id": "act-contract",
+                  "source_available": true
+                }
+              },
+              "document_date": {
+                "value": "2026-01-15",
+                "source_value": "\"2026-01-15\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-date",
+                  "source_part_id": "act-date",
+                  "source_available": true
+                }
+              },
+              "act_number": {
+                "value": "act",
+                "source_value": "\"act\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-number",
+                  "source_part_id": "act-number",
+                  "source_available": true
+                }
+              },
+              "total_amount": {
+                "value": {
+                  "amount": "120000",
+                  "currency": "RUB"
+                },
+                "source_value": "{\"amount\": \"120000\", \"currency\": \"RUB\"}",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-amount",
+                  "source_part_id": "act-amount",
+                  "source_available": true
+                }
+              },
+              "source_text_1": {
+                "value": "Административное сопровождение. Повторный скан.",
+                "source_value": "\"Административное сопровождение. Повторный скан.\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "copy-text",
+                  "source_part_id": "copy-text",
+                  "source_available": true
+                }
+              }
+            },
+            "indicators": [],
+            "tables": []
+          }
+        }
+      ],
+      "expected": {
+        "status": "matched",
+        "expected": "120000.00",
+        "difference": "0.00",
+        "categories": [
+          "duplicate_operation"
+        ]
+      }
+    },
+    {
+      "id": "04-wrong-period",
+      "project": {
+        "id": "04-wrong-period",
+        "verification_scope": {}
+      },
+      "documents": [
+        {
+          "id": "report",
+          "parser_document_id": "report",
+          "file_name": "synthetic-report.xlsx",
+          "role": "kfz",
+          "extraction_result": {
+            "fields": {
+              "contract_reference": {
+                "value": "DEMO-2026",
+                "source_value": "\"DEMO-2026\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "r-contract",
+                  "source_part_id": "r-contract",
+                  "source_available": true
+                }
+              },
+              "reporting_period": {
+                "value": {
+                  "start": "2026-01-01",
+                  "end": "2026-01-31"
+                },
+                "source_value": "{\"start\": \"2026-01-01\", \"end\": \"2026-01-31\"}",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "r-period",
+                  "source_part_id": "r-period",
+                  "source_available": true
+                }
+              }
+            },
+            "indicators": [
+              {
+                "label": "Общехозяйственные затраты",
+                "extracted": {
+                  "value": {
+                    "amount": "120000",
+                    "currency": "RUB"
+                  },
+                  "source_value": "{\"amount\": \"120000\", \"currency\": \"RUB\"}",
+                  "status": "extracted",
+                  "provenance": {
+                    "source_ref": "r-amount",
+                    "source_part_id": "r-amount",
+                    "source_available": true
+                  }
+                }
+              }
+            ],
+            "tables": []
+          }
+        },
+        {
+          "id": "act",
+          "parser_document_id": "act",
+          "file_name": "act.pdf",
+          "role": "primary",
+          "extraction_result": {
+            "fields": {
+              "contract_reference": {
+                "value": "DEMO-2026",
+                "source_value": "\"DEMO-2026\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-contract",
+                  "source_part_id": "act-contract",
+                  "source_available": true
+                }
+              },
+              "document_date": {
+                "value": "2026-01-15",
+                "source_value": "\"2026-01-15\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-date",
+                  "source_part_id": "act-date",
+                  "source_available": true
+                }
+              },
+              "act_number": {
+                "value": "act",
+                "source_value": "\"act\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-number",
+                  "source_part_id": "act-number",
+                  "source_available": true
+                }
+              },
+              "total_amount": {
+                "value": {
+                  "amount": "120000",
+                  "currency": "RUB"
+                },
+                "source_value": "{\"amount\": \"120000\", \"currency\": \"RUB\"}",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-amount",
+                  "source_part_id": "act-amount",
+                  "source_available": true
+                }
+              },
+              "source_text_1": {
+                "value": "Административное сопровождение",
+                "source_value": "\"Административное сопровождение\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-text",
+                  "source_part_id": "act-text",
+                  "source_available": true
+                }
+              }
+            },
+            "indicators": [],
+            "tables": []
+          }
+        },
+        {
+          "id": "june",
+          "parser_document_id": "june",
+          "file_name": "june.pdf",
+          "role": "primary",
+          "extraction_result": {
+            "fields": {
+              "contract_reference": {
+                "value": "DEMO-2026",
+                "source_value": "\"DEMO-2026\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "june-contract",
+                  "source_part_id": "june-contract",
+                  "source_available": true
+                }
+              },
+              "document_date": {
+                "value": "2026-06-01",
+                "source_value": "\"2026-06-01\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "june-date",
+                  "source_part_id": "june-date",
+                  "source_available": true
+                }
+              },
+              "act_number": {
+                "value": "june",
+                "source_value": "\"june\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "june-number",
+                  "source_part_id": "june-number",
+                  "source_available": true
+                }
+              },
+              "total_amount": {
+                "value": {
+                  "amount": "90000",
+                  "currency": "RUB"
+                },
+                "source_value": "{\"amount\": \"90000\", \"currency\": \"RUB\"}",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "june-amount",
+                  "source_part_id": "june-amount",
+                  "source_available": true
+                }
+              },
+              "source_text_1": {
+                "value": "Административное сопровождение",
+                "source_value": "\"Административное сопровождение\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "june-text",
+                  "source_part_id": "june-text",
+                  "source_available": true
+                }
+              }
+            },
+            "indicators": [],
+            "tables": []
+          }
+        }
+      ],
+      "expected": {
+        "status": "matched",
+        "expected": "120000.00",
+        "difference": "0.00",
+        "categories": [
+          "wrong_period"
+        ]
+      }
+    },
+    {
+      "id": "05-other-agreement",
+      "project": {
+        "id": "05-other-agreement",
+        "verification_scope": {}
+      },
+      "documents": [
+        {
+          "id": "report",
+          "parser_document_id": "report",
+          "file_name": "synthetic-report.xlsx",
+          "role": "kfz",
+          "extraction_result": {
+            "fields": {
+              "contract_reference": {
+                "value": "DEMO-2026",
+                "source_value": "\"DEMO-2026\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "r-contract",
+                  "source_part_id": "r-contract",
+                  "source_available": true
+                }
+              },
+              "reporting_period": {
+                "value": {
+                  "start": "2026-01-01",
+                  "end": "2026-01-31"
+                },
+                "source_value": "{\"start\": \"2026-01-01\", \"end\": \"2026-01-31\"}",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "r-period",
+                  "source_part_id": "r-period",
+                  "source_available": true
+                }
+              }
+            },
+            "indicators": [
+              {
+                "label": "Общехозяйственные затраты",
+                "extracted": {
+                  "value": {
+                    "amount": "120000",
+                    "currency": "RUB"
+                  },
+                  "source_value": "{\"amount\": \"120000\", \"currency\": \"RUB\"}",
+                  "status": "extracted",
+                  "provenance": {
+                    "source_ref": "r-amount",
+                    "source_part_id": "r-amount",
+                    "source_available": true
+                  }
+                }
+              }
+            ],
+            "tables": []
+          }
+        },
+        {
+          "id": "act",
+          "parser_document_id": "act",
+          "file_name": "act.pdf",
+          "role": "primary",
+          "extraction_result": {
+            "fields": {
+              "contract_reference": {
+                "value": "DEMO-2026",
+                "source_value": "\"DEMO-2026\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-contract",
+                  "source_part_id": "act-contract",
+                  "source_available": true
+                }
+              },
+              "document_date": {
+                "value": "2026-01-15",
+                "source_value": "\"2026-01-15\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-date",
+                  "source_part_id": "act-date",
+                  "source_available": true
+                }
+              },
+              "act_number": {
+                "value": "act",
+                "source_value": "\"act\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-number",
+                  "source_part_id": "act-number",
+                  "source_available": true
+                }
+              },
+              "total_amount": {
+                "value": {
+                  "amount": "120000",
+                  "currency": "RUB"
+                },
+                "source_value": "{\"amount\": \"120000\", \"currency\": \"RUB\"}",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-amount",
+                  "source_part_id": "act-amount",
+                  "source_available": true
+                }
+              },
+              "source_text_1": {
+                "value": "Административное сопровождение",
+                "source_value": "\"Административное сопровождение\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-text",
+                  "source_part_id": "act-text",
+                  "source_available": true
+                }
+              }
+            },
+            "indicators": [],
+            "tables": []
+          }
+        },
+        {
+          "id": "other",
+          "parser_document_id": "other",
+          "file_name": "other.pdf",
+          "role": "primary",
+          "extraction_result": {
+            "fields": {
+              "contract_reference": {
+                "value": "OTHER",
+                "source_value": "\"OTHER\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "other-contract",
+                  "source_part_id": "other-contract",
+                  "source_available": true
+                }
+              },
+              "document_date": {
+                "value": "2026-01-15",
+                "source_value": "\"2026-01-15\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "other-date",
+                  "source_part_id": "other-date",
+                  "source_available": true
+                }
+              },
+              "act_number": {
+                "value": "other",
+                "source_value": "\"other\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "other-number",
+                  "source_part_id": "other-number",
+                  "source_available": true
+                }
+              },
+              "total_amount": {
+                "value": {
+                  "amount": "90000",
+                  "currency": "RUB"
+                },
+                "source_value": "{\"amount\": \"90000\", \"currency\": \"RUB\"}",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "other-amount",
+                  "source_part_id": "other-amount",
+                  "source_available": true
+                }
+              },
+              "source_text_1": {
+                "value": "Административное сопровождение",
+                "source_value": "\"Административное сопровождение\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "other-text",
+                  "source_part_id": "other-text",
+                  "source_available": true
+                }
+              }
+            },
+            "indicators": [],
+            "tables": []
+          }
+        }
+      ],
+      "expected": {
+        "status": "matched",
+        "expected": "120000.00",
+        "difference": "0.00",
+        "categories": [
+          "incorrect_document_link"
+        ]
+      }
+    },
+    {
+      "id": "06-unknown-period",
+      "project": {
+        "id": "06-unknown-period",
+        "verification_scope": {}
+      },
+      "documents": [
+        {
+          "id": "report",
+          "parser_document_id": "report",
+          "file_name": "synthetic-report.xlsx",
+          "role": "kfz",
+          "extraction_result": {
+            "fields": {
+              "contract_reference": {
+                "value": "DEMO-2026",
+                "source_value": "\"DEMO-2026\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "r-contract",
+                  "source_part_id": "r-contract",
+                  "source_available": true
+                }
+              }
+            },
+            "indicators": [
+              {
+                "label": "Общехозяйственные затраты",
+                "extracted": {
+                  "value": {
+                    "amount": "120000",
+                    "currency": "RUB"
+                  },
+                  "source_value": "{\"amount\": \"120000\", \"currency\": \"RUB\"}",
+                  "status": "extracted",
+                  "provenance": {
+                    "source_ref": "r-amount",
+                    "source_part_id": "r-amount",
+                    "source_available": true
+                  }
+                }
+              }
+            ],
+            "tables": []
+          }
+        },
+        {
+          "id": "act-1",
+          "parser_document_id": "act-1",
+          "file_name": "act-1.pdf",
+          "role": "primary",
+          "extraction_result": {
+            "fields": {
+              "contract_reference": {
+                "value": "DEMO-2026",
+                "source_value": "\"DEMO-2026\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-1-contract",
+                  "source_part_id": "act-1-contract",
+                  "source_available": true
+                }
+              },
+              "document_date": {
+                "value": "2026-01-15",
+                "source_value": "\"2026-01-15\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-1-date",
+                  "source_part_id": "act-1-date",
+                  "source_available": true
+                }
+              },
+              "act_number": {
+                "value": "act-1",
+                "source_value": "\"act-1\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-1-number",
+                  "source_part_id": "act-1-number",
+                  "source_available": true
+                }
+              },
+              "total_amount": {
+                "value": {
+                  "amount": "70000",
+                  "currency": "RUB"
+                },
+                "source_value": "{\"amount\": \"70000\", \"currency\": \"RUB\"}",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-1-amount",
+                  "source_part_id": "act-1-amount",
+                  "source_available": true
+                }
+              },
+              "source_text_1": {
+                "value": "Административное сопровождение",
+                "source_value": "\"Административное сопровождение\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-1-text",
+                  "source_part_id": "act-1-text",
+                  "source_available": true
+                }
+              }
+            },
+            "indicators": [],
+            "tables": []
+          }
+        },
+        {
+          "id": "act-2",
+          "parser_document_id": "act-2",
+          "file_name": "act-2.pdf",
+          "role": "primary",
+          "extraction_result": {
+            "fields": {
+              "contract_reference": {
+                "value": "DEMO-2026",
+                "source_value": "\"DEMO-2026\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-2-contract",
+                  "source_part_id": "act-2-contract",
+                  "source_available": true
+                }
+              },
+              "document_date": {
+                "value": "2026-01-15",
+                "source_value": "\"2026-01-15\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-2-date",
+                  "source_part_id": "act-2-date",
+                  "source_available": true
+                }
+              },
+              "act_number": {
+                "value": "act-2",
+                "source_value": "\"act-2\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-2-number",
+                  "source_part_id": "act-2-number",
+                  "source_available": true
+                }
+              },
+              "total_amount": {
+                "value": {
+                  "amount": "50000",
+                  "currency": "RUB"
+                },
+                "source_value": "{\"amount\": \"50000\", \"currency\": \"RUB\"}",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-2-amount",
+                  "source_part_id": "act-2-amount",
+                  "source_available": true
+                }
+              },
+              "source_text_1": {
+                "value": "Административное сопровождение",
+                "source_value": "\"Административное сопровождение\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-2-text",
+                  "source_part_id": "act-2-text",
+                  "source_available": true
+                }
+              }
+            },
+            "indicators": [],
+            "tables": []
+          }
+        }
+      ],
+      "expected": {
+        "status": "insufficient_data",
+        "expected": null,
+        "difference": null,
+        "categories": []
+      }
+    },
+    {
+      "id": "07-negative-adjustment",
+      "project": {
+        "id": "07-negative-adjustment",
+        "verification_scope": {}
+      },
+      "documents": [
+        {
+          "id": "report",
+          "parser_document_id": "report",
+          "file_name": "synthetic-report.xlsx",
+          "role": "kfz",
+          "extraction_result": {
+            "fields": {
+              "contract_reference": {
+                "value": "DEMO-2026",
+                "source_value": "\"DEMO-2026\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "r-contract",
+                  "source_part_id": "r-contract",
+                  "source_available": true
+                }
+              },
+              "reporting_period": {
+                "value": {
+                  "start": "2026-01-01",
+                  "end": "2026-01-31"
+                },
+                "source_value": "{\"start\": \"2026-01-01\", \"end\": \"2026-01-31\"}",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "r-period",
+                  "source_part_id": "r-period",
+                  "source_available": true
+                }
+              }
+            },
+            "indicators": [
+              {
+                "label": "Общехозяйственные затраты",
+                "extracted": {
+                  "value": {
+                    "amount": "120000",
+                    "currency": "RUB"
+                  },
+                  "source_value": "{\"amount\": \"120000\", \"currency\": \"RUB\"}",
+                  "status": "extracted",
+                  "provenance": {
+                    "source_ref": "r-amount",
+                    "source_part_id": "r-amount",
+                    "source_available": true
+                  }
+                }
+              }
+            ],
+            "tables": []
+          }
+        },
+        {
+          "id": "base",
+          "parser_document_id": "base",
+          "file_name": "base.pdf",
+          "role": "primary",
+          "extraction_result": {
+            "fields": {
+              "contract_reference": {
+                "value": "DEMO-2026",
+                "source_value": "\"DEMO-2026\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "base-contract",
+                  "source_part_id": "base-contract",
+                  "source_available": true
+                }
+              },
+              "document_date": {
+                "value": "2026-01-15",
+                "source_value": "\"2026-01-15\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "base-date",
+                  "source_part_id": "base-date",
+                  "source_available": true
+                }
+              },
+              "act_number": {
+                "value": "base",
+                "source_value": "\"base\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "base-number",
+                  "source_part_id": "base-number",
+                  "source_available": true
+                }
+              },
+              "total_amount": {
+                "value": {
+                  "amount": "130000",
+                  "currency": "RUB"
+                },
+                "source_value": "{\"amount\": \"130000\", \"currency\": \"RUB\"}",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "base-amount",
+                  "source_part_id": "base-amount",
+                  "source_available": true
+                }
+              },
+              "source_text_1": {
+                "value": "Административное сопровождение",
+                "source_value": "\"Административное сопровождение\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "base-text",
+                  "source_part_id": "base-text",
+                  "source_available": true
+                }
+              }
+            },
+            "indicators": [],
+            "tables": []
+          }
+        },
+        {
+          "id": "credit",
+          "parser_document_id": "credit",
+          "file_name": "credit.pdf",
+          "role": "primary",
+          "extraction_result": {
+            "fields": {
+              "contract_reference": {
+                "value": "DEMO-2026",
+                "source_value": "\"DEMO-2026\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "credit-contract",
+                  "source_part_id": "credit-contract",
+                  "source_available": true
+                }
+              },
+              "document_date": {
+                "value": "2026-01-15",
+                "source_value": "\"2026-01-15\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "credit-date",
+                  "source_part_id": "credit-date",
+                  "source_available": true
+                }
+              },
+              "act_number": {
+                "value": "credit",
+                "source_value": "\"credit\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "credit-number",
+                  "source_part_id": "credit-number",
+                  "source_available": true
+                }
+              },
+              "total_amount": {
+                "value": {
+                  "amount": "-10000",
+                  "currency": "RUB"
+                },
+                "source_value": "{\"amount\": \"-10000\", \"currency\": \"RUB\"}",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "credit-amount",
+                  "source_part_id": "credit-amount",
+                  "source_available": true
+                }
+              },
+              "source_text_1": {
+                "value": "Административное сопровождение",
+                "source_value": "\"Административное сопровождение\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "credit-text",
+                  "source_part_id": "credit-text",
+                  "source_available": true
+                }
+              }
+            },
+            "indicators": [],
+            "tables": []
+          }
+        }
+      ],
+      "expected": {
+        "status": "matched",
+        "expected": "120000.00",
+        "difference": "0.00",
+        "categories": []
+      }
+    },
+    {
+      "id": "08-currency-conflict",
+      "project": {
+        "id": "08-currency-conflict",
+        "verification_scope": {}
+      },
+      "documents": [
+        {
+          "id": "report",
+          "parser_document_id": "report",
+          "file_name": "synthetic-report.xlsx",
+          "role": "kfz",
+          "extraction_result": {
+            "fields": {
+              "contract_reference": {
+                "value": "DEMO-2026",
+                "source_value": "\"DEMO-2026\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "r-contract",
+                  "source_part_id": "r-contract",
+                  "source_available": true
+                }
+              },
+              "reporting_period": {
+                "value": {
+                  "start": "2026-01-01",
+                  "end": "2026-01-31"
+                },
+                "source_value": "{\"start\": \"2026-01-01\", \"end\": \"2026-01-31\"}",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "r-period",
+                  "source_part_id": "r-period",
+                  "source_available": true
+                }
+              }
+            },
+            "indicators": [
+              {
+                "label": "Общехозяйственные затраты",
+                "extracted": {
+                  "value": {
+                    "amount": "120000",
+                    "currency": "RUB"
+                  },
+                  "source_value": "{\"amount\": \"120000\", \"currency\": \"RUB\"}",
+                  "status": "extracted",
+                  "provenance": {
+                    "source_ref": "r-amount",
+                    "source_part_id": "r-amount",
+                    "source_available": true
+                  }
+                }
+              }
+            ],
+            "tables": []
+          }
+        },
+        {
+          "id": "usd",
+          "parser_document_id": "usd",
+          "file_name": "usd.pdf",
+          "role": "primary",
+          "extraction_result": {
+            "fields": {
+              "contract_reference": {
+                "value": "DEMO-2026",
+                "source_value": "\"DEMO-2026\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "usd-contract",
+                  "source_part_id": "usd-contract",
+                  "source_available": true
+                }
+              },
+              "document_date": {
+                "value": "2026-01-15",
+                "source_value": "\"2026-01-15\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "usd-date",
+                  "source_part_id": "usd-date",
+                  "source_available": true
+                }
+              },
+              "act_number": {
+                "value": "usd",
+                "source_value": "\"usd\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "usd-number",
+                  "source_part_id": "usd-number",
+                  "source_available": true
+                }
+              },
+              "total_amount": {
+                "value": {
+                  "amount": "120000",
+                  "currency": "USD"
+                },
+                "source_value": "{\"amount\": \"120000\", \"currency\": \"RUB\"}",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "usd-amount",
+                  "source_part_id": "usd-amount",
+                  "source_available": true
+                }
+              },
+              "source_text_1": {
+                "value": "Административное сопровождение",
+                "source_value": "\"Административное сопровождение\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "usd-text",
+                  "source_part_id": "usd-text",
+                  "source_available": true
+                }
+              }
+            },
+            "indicators": [],
+            "tables": []
+          }
+        }
+      ],
+      "expected": {
+        "status": "insufficient_data",
+        "expected": null,
+        "difference": null,
+        "categories": []
+      }
+    },
+    {
+      "id": "09-half-up-rounding",
+      "project": {
+        "id": "09-half-up-rounding",
+        "verification_scope": {}
+      },
+      "documents": [
+        {
+          "id": "report",
+          "parser_document_id": "report",
+          "file_name": "synthetic-report.xlsx",
+          "role": "kfz",
+          "extraction_result": {
+            "fields": {
+              "contract_reference": {
+                "value": "DEMO-2026",
+                "source_value": "\"DEMO-2026\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "r-contract",
+                  "source_part_id": "r-contract",
+                  "source_available": true
+                }
+              },
+              "reporting_period": {
+                "value": {
+                  "start": "2026-01-01",
+                  "end": "2026-01-31"
+                },
+                "source_value": "{\"start\": \"2026-01-01\", \"end\": \"2026-01-31\"}",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "r-period",
+                  "source_part_id": "r-period",
+                  "source_available": true
+                }
+              }
+            },
+            "indicators": [
+              {
+                "label": "Общехозяйственные затраты",
+                "extracted": {
+                  "value": {
+                    "amount": "-10.01",
+                    "currency": "RUB"
+                  },
+                  "source_value": "{\"amount\": \"-10.01\", \"currency\": \"RUB\"}",
+                  "status": "extracted",
+                  "provenance": {
+                    "source_ref": "r-amount",
+                    "source_part_id": "r-amount",
+                    "source_available": true
+                  }
+                }
+              }
+            ],
+            "tables": []
+          }
+        },
+        {
+          "id": "credit",
+          "parser_document_id": "credit",
+          "file_name": "credit.pdf",
+          "role": "primary",
+          "extraction_result": {
+            "fields": {
+              "contract_reference": {
+                "value": "DEMO-2026",
+                "source_value": "\"DEMO-2026\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "credit-contract",
+                  "source_part_id": "credit-contract",
+                  "source_available": true
+                }
+              },
+              "document_date": {
+                "value": "2026-01-15",
+                "source_value": "\"2026-01-15\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "credit-date",
+                  "source_part_id": "credit-date",
+                  "source_available": true
+                }
+              },
+              "act_number": {
+                "value": "credit",
+                "source_value": "\"credit\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "credit-number",
+                  "source_part_id": "credit-number",
+                  "source_available": true
+                }
+              },
+              "total_amount": {
+                "value": {
+                  "amount": "-10.005",
+                  "currency": "RUB"
+                },
+                "source_value": "{\"amount\": \"-10.005\", \"currency\": \"RUB\"}",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "credit-amount",
+                  "source_part_id": "credit-amount",
+                  "source_available": true
+                }
+              },
+              "source_text_1": {
+                "value": "Административное сопровождение",
+                "source_value": "\"Административное сопровождение\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "credit-text",
+                  "source_part_id": "credit-text",
+                  "source_available": true
+                }
+              }
+            },
+            "indicators": [],
+            "tables": []
+          }
+        }
+      ],
+      "expected": {
+        "status": "matched",
+        "expected": "-10.01",
+        "difference": "0.00",
+        "categories": []
+      }
+    },
+    {
+      "id": "10-operation-conflict",
+      "project": {
+        "id": "10-operation-conflict",
+        "verification_scope": {}
+      },
+      "documents": [
+        {
+          "id": "report",
+          "parser_document_id": "report",
+          "file_name": "synthetic-report.xlsx",
+          "role": "kfz",
+          "extraction_result": {
+            "fields": {
+              "contract_reference": {
+                "value": "DEMO-2026",
+                "source_value": "\"DEMO-2026\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "r-contract",
+                  "source_part_id": "r-contract",
+                  "source_available": true
+                }
+              },
+              "reporting_period": {
+                "value": {
+                  "start": "2026-01-01",
+                  "end": "2026-01-31"
+                },
+                "source_value": "{\"start\": \"2026-01-01\", \"end\": \"2026-01-31\"}",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "r-period",
+                  "source_part_id": "r-period",
+                  "source_available": true
+                }
+              }
+            },
+            "indicators": [
+              {
+                "label": "Общехозяйственные затраты",
+                "extracted": {
+                  "value": {
+                    "amount": "120000",
+                    "currency": "RUB"
+                  },
+                  "source_value": "{\"amount\": \"120000\", \"currency\": \"RUB\"}",
+                  "status": "extracted",
+                  "provenance": {
+                    "source_ref": "r-amount",
+                    "source_part_id": "r-amount",
+                    "source_available": true
+                  }
+                }
+              }
+            ],
+            "tables": []
+          }
+        },
+        {
+          "id": "act",
+          "parser_document_id": "act",
+          "file_name": "act.pdf",
+          "role": "primary",
+          "extraction_result": {
+            "fields": {
+              "contract_reference": {
+                "value": "DEMO-2026",
+                "source_value": "\"DEMO-2026\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-contract",
+                  "source_part_id": "act-contract",
+                  "source_available": true
+                }
+              },
+              "document_date": {
+                "value": "2026-01-15",
+                "source_value": "\"2026-01-15\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-date",
+                  "source_part_id": "act-date",
+                  "source_available": true
+                }
+              },
+              "act_number": {
+                "value": "act",
+                "source_value": "\"act\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-number",
+                  "source_part_id": "act-number",
+                  "source_available": true
+                }
+              },
+              "total_amount": {
+                "value": {
+                  "amount": "120000",
+                  "currency": "RUB"
+                },
+                "source_value": "{\"amount\": \"120000\", \"currency\": \"RUB\"}",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-amount",
+                  "source_part_id": "act-amount",
+                  "source_available": true
+                }
+              },
+              "source_text_1": {
+                "value": "Административное сопровождение",
+                "source_value": "\"Административное сопровождение\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-text",
+                  "source_part_id": "act-text",
+                  "source_available": true
+                }
+              }
+            },
+            "indicators": [],
+            "tables": []
+          }
+        },
+        {
+          "id": "conflict",
+          "parser_document_id": "conflict",
+          "file_name": "act.pdf",
+          "role": "primary",
+          "extraction_result": {
+            "fields": {
+              "contract_reference": {
+                "value": "DEMO-2026",
+                "source_value": "\"DEMO-2026\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-contract",
+                  "source_part_id": "act-contract",
+                  "source_available": true
+                }
+              },
+              "document_date": {
+                "value": "2026-01-15",
+                "source_value": "\"2026-01-15\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-date",
+                  "source_part_id": "act-date",
+                  "source_available": true
+                }
+              },
+              "act_number": {
+                "value": "act",
+                "source_value": "\"act\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-number",
+                  "source_part_id": "act-number",
+                  "source_available": true
+                }
+              },
+              "total_amount": {
+                "value": {
+                  "amount": "121000",
+                  "currency": "RUB"
+                },
+                "source_value": "{\"amount\": \"120000\", \"currency\": \"RUB\"}",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-amount",
+                  "source_part_id": "act-amount",
+                  "source_available": true
+                }
+              },
+              "source_text_1": {
+                "value": "Административное сопровождение",
+                "source_value": "\"Административное сопровождение\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-text",
+                  "source_part_id": "act-text",
+                  "source_available": true
+                }
+              }
+            },
+            "indicators": [],
+            "tables": []
+          }
+        }
+      ],
+      "expected": {
+        "status": "insufficient_data",
+        "expected": null,
+        "difference": null,
+        "categories": [
+          "needs_review"
+        ]
+      }
+    },
+    {
+      "id": "11-supplier-ambiguity",
+      "project": {
+        "id": "11-supplier-ambiguity",
+        "verification_scope": {}
+      },
+      "documents": [
+        {
+          "id": "report",
+          "parser_document_id": "report",
+          "file_name": "synthetic-report.xlsx",
+          "role": "kfz",
+          "extraction_result": {
+            "fields": {
+              "contract_reference": {
+                "value": "DEMO-2026",
+                "source_value": "\"DEMO-2026\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "r-contract",
+                  "source_part_id": "r-contract",
+                  "source_available": true
+                }
+              },
+              "reporting_period": {
+                "value": {
+                  "start": "2026-01-01",
+                  "end": "2026-01-31"
+                },
+                "source_value": "{\"start\": \"2026-01-01\", \"end\": \"2026-01-31\"}",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "r-period",
+                  "source_part_id": "r-period",
+                  "source_available": true
+                }
+              }
+            },
+            "indicators": [
+              {
+                "label": "Общехозяйственные затраты",
+                "extracted": {
+                  "value": {
+                    "amount": "120000",
+                    "currency": "RUB"
+                  },
+                  "source_value": "{\"amount\": \"120000\", \"currency\": \"RUB\"}",
+                  "status": "extracted",
+                  "provenance": {
+                    "source_ref": "r-amount",
+                    "source_part_id": "r-amount",
+                    "source_available": true
+                  }
+                }
+              }
+            ],
+            "tables": []
+          }
+        },
+        {
+          "id": "act",
+          "parser_document_id": "act",
+          "file_name": "act.pdf",
+          "role": "primary",
+          "extraction_result": {
+            "fields": {
+              "contract_reference": {
+                "value": "DEMO-2026",
+                "source_value": "\"DEMO-2026\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-contract",
+                  "source_part_id": "act-contract",
+                  "source_available": true
+                }
+              },
+              "document_date": {
+                "value": "2026-01-15",
+                "source_value": "\"2026-01-15\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-date",
+                  "source_part_id": "act-date",
+                  "source_available": true
+                }
+              },
+              "act_number": {
+                "value": "act",
+                "source_value": "\"act\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-number",
+                  "source_part_id": "act-number",
+                  "source_available": true
+                }
+              },
+              "total_amount": {
+                "value": {
+                  "amount": "120000",
+                  "currency": "RUB"
+                },
+                "source_value": "{\"amount\": \"120000\", \"currency\": \"RUB\"}",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-amount",
+                  "source_part_id": "act-amount",
+                  "source_available": true
+                }
+              },
+              "source_text_1": {
+                "value": "Административное сопровождение",
+                "source_value": "\"Административное сопровождение\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-text",
+                  "source_part_id": "act-text",
+                  "source_available": true
+                }
+              }
+            },
+            "indicators": [],
+            "tables": []
+          }
+        },
+        {
+          "id": "ambiguous",
+          "parser_document_id": "ambiguous",
+          "file_name": "act.pdf",
+          "role": "primary",
+          "extraction_result": {
+            "fields": {
+              "contract_reference": {
+                "value": "DEMO-2026",
+                "source_value": "\"DEMO-2026\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-contract",
+                  "source_part_id": "act-contract",
+                  "source_available": true
+                }
+              },
+              "document_date": {
+                "value": "2026-01-15",
+                "source_value": "\"2026-01-15\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-date",
+                  "source_part_id": "act-date",
+                  "source_available": true
+                }
+              },
+              "act_number": {
+                "value": "act",
+                "source_value": "\"act\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-number",
+                  "source_part_id": "act-number",
+                  "source_available": true
+                }
+              },
+              "total_amount": {
+                "value": {
+                  "amount": "120000",
+                  "currency": "RUB"
+                },
+                "source_value": "{\"amount\": \"120000\", \"currency\": \"RUB\"}",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-amount",
+                  "source_part_id": "act-amount",
+                  "source_available": true
+                }
+              },
+              "source_text_1": {
+                "value": "Административное сопровождение",
+                "source_value": "\"Административное сопровождение\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-text",
+                  "source_part_id": "act-text",
+                  "source_available": true
+                }
+              },
+              "supplier_inn": {
+                "value": "1111111111",
+                "source_value": "\"1111111111\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "supplier",
+                  "source_part_id": "supplier",
+                  "source_available": true
+                }
+              }
+            },
+            "indicators": [],
+            "tables": []
+          }
+        }
+      ],
+      "expected": {
+        "status": "insufficient_data",
+        "expected": null,
+        "difference": null,
+        "categories": []
+      }
+    },
+    {
+      "id": "12-different-suppliers",
+      "project": {
+        "id": "12-different-suppliers",
+        "verification_scope": {}
+      },
+      "documents": [
+        {
+          "id": "report",
+          "parser_document_id": "report",
+          "file_name": "synthetic-report.xlsx",
+          "role": "kfz",
+          "extraction_result": {
+            "fields": {
+              "contract_reference": {
+                "value": "DEMO-2026",
+                "source_value": "\"DEMO-2026\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "r-contract",
+                  "source_part_id": "r-contract",
+                  "source_available": true
+                }
+              },
+              "reporting_period": {
+                "value": {
+                  "start": "2026-01-01",
+                  "end": "2026-01-31"
+                },
+                "source_value": "{\"start\": \"2026-01-01\", \"end\": \"2026-01-31\"}",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "r-period",
+                  "source_part_id": "r-period",
+                  "source_available": true
+                }
+              }
+            },
+            "indicators": [
+              {
+                "label": "Общехозяйственные затраты",
+                "extracted": {
+                  "value": {
+                    "amount": "240000",
+                    "currency": "RUB"
+                  },
+                  "source_value": "{\"amount\": \"240000\", \"currency\": \"RUB\"}",
+                  "status": "extracted",
+                  "provenance": {
+                    "source_ref": "r-amount",
+                    "source_part_id": "r-amount",
+                    "source_available": true
+                  }
+                }
+              }
+            ],
+            "tables": []
+          }
+        },
+        {
+          "id": "act",
+          "parser_document_id": "act",
+          "file_name": "act.pdf",
+          "role": "primary",
+          "extraction_result": {
+            "fields": {
+              "contract_reference": {
+                "value": "DEMO-2026",
+                "source_value": "\"DEMO-2026\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-contract",
+                  "source_part_id": "act-contract",
+                  "source_available": true
+                }
+              },
+              "document_date": {
+                "value": "2026-01-15",
+                "source_value": "\"2026-01-15\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-date",
+                  "source_part_id": "act-date",
+                  "source_available": true
+                }
+              },
+              "act_number": {
+                "value": "act",
+                "source_value": "\"act\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-number",
+                  "source_part_id": "act-number",
+                  "source_available": true
+                }
+              },
+              "total_amount": {
+                "value": {
+                  "amount": "120000",
+                  "currency": "RUB"
+                },
+                "source_value": "{\"amount\": \"120000\", \"currency\": \"RUB\"}",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-amount",
+                  "source_part_id": "act-amount",
+                  "source_available": true
+                }
+              },
+              "source_text_1": {
+                "value": "Административное сопровождение",
+                "source_value": "\"Административное сопровождение\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-text",
+                  "source_part_id": "act-text",
+                  "source_available": true
+                }
+              },
+              "supplier_inn": {
+                "value": "1111111111",
+                "source_value": "\"1111111111\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "inn-1",
+                  "source_part_id": "inn-1",
+                  "source_available": true
+                }
+              }
+            },
+            "indicators": [],
+            "tables": []
+          }
+        },
+        {
+          "id": "second",
+          "parser_document_id": "second",
+          "file_name": "act.pdf",
+          "role": "primary",
+          "extraction_result": {
+            "fields": {
+              "contract_reference": {
+                "value": "DEMO-2026",
+                "source_value": "\"DEMO-2026\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-contract",
+                  "source_part_id": "act-contract",
+                  "source_available": true
+                }
+              },
+              "document_date": {
+                "value": "2026-01-15",
+                "source_value": "\"2026-01-15\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-date",
+                  "source_part_id": "act-date",
+                  "source_available": true
+                }
+              },
+              "act_number": {
+                "value": "act",
+                "source_value": "\"act\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-number",
+                  "source_part_id": "act-number",
+                  "source_available": true
+                }
+              },
+              "total_amount": {
+                "value": {
+                  "amount": "120000",
+                  "currency": "RUB"
+                },
+                "source_value": "{\"amount\": \"120000\", \"currency\": \"RUB\"}",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-amount",
+                  "source_part_id": "act-amount",
+                  "source_available": true
+                }
+              },
+              "source_text_1": {
+                "value": "Административное сопровождение",
+                "source_value": "\"Административное сопровождение\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-text",
+                  "source_part_id": "act-text",
+                  "source_available": true
+                }
+              },
+              "supplier_inn": {
+                "value": "2222222222",
+                "source_value": "\"2222222222\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "inn-2",
+                  "source_part_id": "inn-2",
+                  "source_available": true
+                }
+              }
+            },
+            "indicators": [],
+            "tables": []
+          }
+        }
+      ],
+      "expected": {
+        "status": "matched",
+        "expected": "240000.00",
+        "difference": "0.00",
+        "categories": []
+      }
+    },
+    {
+      "id": "13-unverified-materials",
+      "project": {
+        "id": "13-unverified-materials",
+        "verification_scope": {}
+      },
+      "documents": [
+        {
+          "id": "report",
+          "parser_document_id": "report",
+          "file_name": "synthetic-report.xlsx",
+          "role": "kfz",
+          "extraction_result": {
+            "fields": {
+              "contract_reference": {
+                "value": "DEMO-2026",
+                "source_value": "\"DEMO-2026\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "r-contract",
+                  "source_part_id": "r-contract",
+                  "source_available": true
+                }
+              },
+              "reporting_period": {
+                "value": {
+                  "start": "2026-01-01",
+                  "end": "2026-01-31"
+                },
+                "source_value": "{\"start\": \"2026-01-01\", \"end\": \"2026-01-31\"}",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "r-period",
+                  "source_part_id": "r-period",
+                  "source_available": true
+                }
+              }
+            },
+            "indicators": [
+              {
+                "label": "Общехозяйственные затраты",
+                "extracted": {
+                  "value": {
+                    "amount": "120000",
+                    "currency": "RUB"
+                  },
+                  "source_value": "{\"amount\": \"120000\", \"currency\": \"RUB\"}",
+                  "status": "extracted",
+                  "provenance": {
+                    "source_ref": "r-amount",
+                    "source_part_id": "r-amount",
+                    "source_available": true
+                  }
+                }
+              },
+              {
+                "label": "Материалы",
+                "extracted": {
+                  "value": {
+                    "amount": "500",
+                    "currency": "RUB"
+                  },
+                  "source_value": "{\"amount\": \"500\", \"currency\": \"RUB\"}",
+                  "status": "extracted",
+                  "provenance": {
+                    "source_ref": "materials",
+                    "source_part_id": "materials",
+                    "source_available": true
+                  }
+                }
+              },
+              {
+                "label": "ИТОГО",
+                "extracted": {
+                  "value": {
+                    "amount": "120000",
+                    "currency": "RUB"
+                  },
+                  "source_value": "{\"amount\": \"120000\", \"currency\": \"RUB\"}",
+                  "status": "extracted",
+                  "provenance": {
+                    "source_ref": "total",
+                    "source_part_id": "total",
+                    "source_available": true
+                  }
+                }
+              }
+            ],
+            "tables": []
+          }
+        },
+        {
+          "id": "act",
+          "parser_document_id": "act",
+          "file_name": "act.pdf",
+          "role": "primary",
+          "extraction_result": {
+            "fields": {
+              "contract_reference": {
+                "value": "DEMO-2026",
+                "source_value": "\"DEMO-2026\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-contract",
+                  "source_part_id": "act-contract",
+                  "source_available": true
+                }
+              },
+              "document_date": {
+                "value": "2026-01-15",
+                "source_value": "\"2026-01-15\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-date",
+                  "source_part_id": "act-date",
+                  "source_available": true
+                }
+              },
+              "act_number": {
+                "value": "act",
+                "source_value": "\"act\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-number",
+                  "source_part_id": "act-number",
+                  "source_available": true
+                }
+              },
+              "total_amount": {
+                "value": {
+                  "amount": "120000",
+                  "currency": "RUB"
+                },
+                "source_value": "{\"amount\": \"120000\", \"currency\": \"RUB\"}",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-amount",
+                  "source_part_id": "act-amount",
+                  "source_available": true
+                }
+              },
+              "source_text_1": {
+                "value": "Административное сопровождение",
+                "source_value": "\"Административное сопровождение\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-text",
+                  "source_part_id": "act-text",
+                  "source_available": true
+                }
+              }
+            },
+            "indicators": [],
+            "tables": []
+          }
+        }
+      ],
+      "expected": {
+        "status": "insufficient_data",
+        "expected": null,
+        "difference": null,
+        "categories": []
+      },
+      "target_label": "ИТОГО"
+    },
+    {
+      "id": "14-unverified-zero",
+      "project": {
+        "id": "14-unverified-zero",
+        "verification_scope": {}
+      },
+      "documents": [
+        {
+          "id": "report",
+          "parser_document_id": "report",
+          "file_name": "synthetic-report.xlsx",
+          "role": "kfz",
+          "extraction_result": {
+            "fields": {
+              "contract_reference": {
+                "value": "DEMO-2026",
+                "source_value": "\"DEMO-2026\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "r-contract",
+                  "source_part_id": "r-contract",
+                  "source_available": true
+                }
+              },
+              "reporting_period": {
+                "value": {
+                  "start": "2026-01-01",
+                  "end": "2026-01-31"
+                },
+                "source_value": "{\"start\": \"2026-01-01\", \"end\": \"2026-01-31\"}",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "r-period",
+                  "source_part_id": "r-period",
+                  "source_available": true
+                }
+              }
+            },
+            "indicators": [
+              {
+                "label": "Общехозяйственные затраты",
+                "extracted": {
+                  "value": {
+                    "amount": "120000",
+                    "currency": "RUB"
+                  },
+                  "source_value": "{\"amount\": \"120000\", \"currency\": \"RUB\"}",
+                  "status": "extracted",
+                  "provenance": {
+                    "source_ref": "r-amount",
+                    "source_part_id": "r-amount",
+                    "source_available": true
+                  }
+                }
+              },
+              {
+                "label": "Материалы",
+                "extracted": {
+                  "value": {
+                    "amount": "0",
+                    "currency": null
+                  },
+                  "source_value": "{\"amount\": \"0\", \"currency\": null}",
+                  "status": "review",
+                  "provenance": {
+                    "source_ref": "materials",
+                    "source_part_id": "materials",
+                    "source_available": true
+                  }
+                }
+              },
+              {
+                "label": "ИТОГО",
+                "extracted": {
+                  "value": {
+                    "amount": "120000",
+                    "currency": "RUB"
+                  },
+                  "source_value": "{\"amount\": \"120000\", \"currency\": \"RUB\"}",
+                  "status": "extracted",
+                  "provenance": {
+                    "source_ref": "total",
+                    "source_part_id": "total",
+                    "source_available": true
+                  }
+                }
+              }
+            ],
+            "tables": []
+          }
+        },
+        {
+          "id": "act",
+          "parser_document_id": "act",
+          "file_name": "act.pdf",
+          "role": "primary",
+          "extraction_result": {
+            "fields": {
+              "contract_reference": {
+                "value": "DEMO-2026",
+                "source_value": "\"DEMO-2026\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-contract",
+                  "source_part_id": "act-contract",
+                  "source_available": true
+                }
+              },
+              "document_date": {
+                "value": "2026-01-15",
+                "source_value": "\"2026-01-15\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-date",
+                  "source_part_id": "act-date",
+                  "source_available": true
+                }
+              },
+              "act_number": {
+                "value": "act",
+                "source_value": "\"act\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-number",
+                  "source_part_id": "act-number",
+                  "source_available": true
+                }
+              },
+              "total_amount": {
+                "value": {
+                  "amount": "120000",
+                  "currency": "RUB"
+                },
+                "source_value": "{\"amount\": \"120000\", \"currency\": \"RUB\"}",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-amount",
+                  "source_part_id": "act-amount",
+                  "source_available": true
+                }
+              },
+              "source_text_1": {
+                "value": "Административное сопровождение",
+                "source_value": "\"Административное сопровождение\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "act-text",
+                  "source_part_id": "act-text",
+                  "source_available": true
+                }
+              }
+            },
+            "indicators": [],
+            "tables": []
+          }
+        }
+      ],
+      "expected": {
+        "status": "insufficient_data",
+        "expected": null,
+        "difference": null,
+        "categories": []
+      },
+      "target_label": "ИТОГО"
+    },
+    {
+      "id": "15-incomplete-payroll",
+      "project": {
+        "id": "15-incomplete-payroll",
+        "verification_scope": {}
+      },
+      "documents": [
+        {
+          "id": "report",
+          "parser_document_id": "report",
+          "file_name": "synthetic-report.xlsx",
+          "role": "kfz",
+          "extraction_result": {
+            "fields": {
+              "contract_reference": {
+                "value": "DEMO-2026",
+                "source_value": "\"DEMO-2026\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "r-contract",
+                  "source_part_id": "r-contract",
+                  "source_available": true
+                }
+              },
+              "reporting_period": {
+                "value": {
+                  "start": "2026-01-01",
+                  "end": "2026-01-31"
+                },
+                "source_value": "{\"start\": \"2026-01-01\", \"end\": \"2026-01-31\"}",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "r-period",
+                  "source_part_id": "r-period",
+                  "source_available": true
+                }
+              }
+            },
+            "indicators": [
+              {
+                "label": "Оплата труда",
+                "extracted": {
+                  "value": {
+                    "amount": "100",
+                    "currency": "RUB"
+                  },
+                  "source_value": "{\"amount\": \"100\", \"currency\": \"RUB\"}",
+                  "status": "extracted",
+                  "provenance": {
+                    "source_ref": "r-amount",
+                    "source_part_id": "r-amount",
+                    "source_available": true
+                  }
+                }
+              }
+            ],
+            "tables": []
+          }
+        },
+        {
+          "id": "payroll",
+          "parser_document_id": "payroll",
+          "file_name": "payroll.pdf",
+          "role": "primary",
+          "extraction_result": {
+            "fields": {
+              "contract_reference": {
+                "value": "DEMO-2026",
+                "source_value": "\"DEMO-2026\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "payroll-contract",
+                  "source_part_id": "payroll-contract",
+                  "source_available": true
+                }
+              },
+              "document_date": {
+                "value": "2026-01-15",
+                "source_value": "\"2026-01-15\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "payroll-date",
+                  "source_part_id": "payroll-date",
+                  "source_available": true
+                }
+              },
+              "act_number": {
+                "value": "payroll",
+                "source_value": "\"payroll\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "payroll-number",
+                  "source_part_id": "payroll-number",
+                  "source_available": true
+                }
+              },
+              "total_amount": {
+                "value": {
+                  "amount": "100",
+                  "currency": "RUB"
+                },
+                "source_value": "{\"amount\": \"100\", \"currency\": \"RUB\"}",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "payroll-amount",
+                  "source_part_id": "payroll-amount",
+                  "source_available": true
+                }
+              },
+              "source_text_1": {
+                "value": "Оплата труда",
+                "source_value": "\"Оплата труда\"",
+                "status": "extracted",
+                "provenance": {
+                  "source_ref": "payroll-text",
+                  "source_part_id": "payroll-text",
+                  "source_available": true
+                }
+              }
+            },
+            "indicators": [],
+            "tables": []
+          }
+        }
+      ],
+      "expected": {
+        "status": "insufficient_data",
+        "expected": null,
+        "difference": null,
+        "categories": []
+      }
+    }
+  ]
+}

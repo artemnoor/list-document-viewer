@@ -62,7 +62,7 @@ export async function processAnalysisJob(job: Job<{ job_id: string }>, deps: { s
       const remainingMs = deps.maxRunMs - (Date.now() - attemptStarted);
       if (remainingMs <= 0) throw Object.assign(new Error(`Фоновое задание превысило лимит выполнения ${deps.maxRunMs} мс`), { status: 504 });
       const analysis = await analyzeDocumentSet(checked.documents, {
-        apiKey: deps.apiKey, model: GEMMA_MODEL, maxCalls: deps.maxCalls, timeoutMs: deps.timeoutMs,
+        apiKey: deps.apiKey, model: raw.model ?? GEMMA_MODEL, maxCalls: deps.maxCalls, timeoutMs: deps.timeoutMs,
         maxRunMs: remainingMs, maxInputTokens: deps.maxInputTokens, systemPrompt,
         resumeProgress: progress, maxModelCallsPerInvocation: 1,
         onProgress: async state => { progress = state; await storage.saveJobProgress(id, state, LEASE_MS); },

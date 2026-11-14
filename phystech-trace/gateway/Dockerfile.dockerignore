@@ -1,0 +1,8 @@
+**
+!phystech-trace/
+!phystech-trace/gateway/
+!phystech-trace/gateway/**
+!phystech-trace/contracts/
+!phystech-trace/contracts/**
+**/__pycache__/
+**/.venv/

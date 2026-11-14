@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { POLZA_MODEL, PolzaRequestError, requestPolzaJson } from "../src/linking/polza-client";
+import { POLZA_MODEL, DEEPSEEK_MODEL, modelForClassification, PolzaRequestError, requestPolzaJson } from "../src/linking/polza-client";
 import { analysisBackoff, isRetryableAnalysisError } from "../server/worker";
 
 const args = { apiKey: "test-key", model: POLZA_MODEL, timeoutMs: 1000, maxTokens: 100, systemPrompt: "json", userContent: "data" };
@@ -52,4 +52,34 @@ test("BullMQ retries only transient Polza errors with exponential delay and resp
   assert.equal(isRetryableAnalysisError(new PolzaRequestError("unavailable", 503, true)), true);
   assert.equal(analysisBackoff(1, "polza-exponential", new PolzaRequestError("temporary", 503, true)), 3_000);
   assert.equal(analysisBackoff(3, "polza-exponential", new PolzaRequestError("limited", 429, true, 17_000)), 17_000);
+});
+
+
+test("classification routes actual requests to Gemma or DeepSeek without cross-model fallback", async () => {
+  const original = globalThis.fetch;
+  try {
+    for (const classification of ["confidential", "public", "synthetic", "anonymized"]) {
+      const model = modelForClassification(classification);
+      assert.equal(model, classification === "confidential" ? POLZA_MODEL : DEEPSEEK_MODEL);
+      let requested: any;
+      globalThis.fetch = async (_url, init) => {
+        requested = JSON.parse(init!.body as string);
+        return new Response(JSON.stringify({model, choices:[{message:{content:"{}"}}]}), {status:200});
+      };
+      assert.equal((await requestPolzaJson({...args, model})).model, model);
+      assert.equal(requested.model, model);
+      globalThis.fetch = async () => new Response(JSON.stringify({model:model === POLZA_MODEL ? DEEPSEEK_MODEL : POLZA_MODEL}), {status:200});
+      await assert.rejects(requestPolzaJson({...args, model}), (error:any) => error.status === 502 && !error.retryable);
+    }
+  } finally { globalThis.fetch = original; }
+});
+
+test('JSON fenced response is parsed without accepting arbitrary prose',async()=>{
+ const original=globalThis.fetch;
+ try {
+  globalThis.fetch=async()=>new Response(JSON.stringify({model:POLZA_MODEL,choices:[{message:{content:'```json\n{"links":[]}\n```'}}]}));
+  assert.deepEqual((await requestPolzaJson(args)).value,{links:[]});
+  globalThis.fetch=async()=>new Response(JSON.stringify({model:POLZA_MODEL,choices:[{message:{content:'Guess: {"links":[]}'}}]}));
+  await assert.rejects(requestPolzaJson(args));
+ } finally {globalThis.fetch=original;}
 });

@@ -177,3 +177,20 @@ def test_recorded_upstream_example_remains_reproducible():
     assert result["calculations"][0]["used_sources"] == []
     assert result["calculations"][0]["comparison_performed"] is False
     assert "stale_human_decision" not in {item["code"] for item in result["calculations"][0]["errors"]}
+
+
+def test_polza_model_choice_follows_explicitly_authorized_classification(tmp_path, monkeypatch):
+    from reconciliation_engine.config import Settings
+    from reconciliation_engine.service import reconcile
+    from reconciliation_engine.planner import LLMPlanner, PlannerUnavailable
+    from conftest import make_request
+    seen = []
+    def plan(self, *args, **kwargs):
+        seen.append((self.settings.llm_model, kwargs["sensitive_data"]))
+        raise PlannerUnavailable("offline model routing check")
+    monkeypatch.setattr(LLMPlanner, "plan", plan)
+    for classification in ["confidential", "open"]:
+        request = make_request([load_upstream("act-2026-0424.json")], None)
+        request.context = request.context.model_copy(update={"data_classification": classification, "external_llm_allowed": True})
+        reconcile(request, Settings(llm_enabled=True, llm_base_url="https://polza.ai/api/v1", llm_api_key="unit-test", result_store_dir=str(tmp_path)))
+    assert seen == [("google/gemma-4-26b-a4b-it", False), ("deepseek/deepseek-v4.1-flash", False)]

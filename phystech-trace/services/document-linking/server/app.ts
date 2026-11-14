@@ -5,6 +5,7 @@ import { parse as parseYaml } from "yaml";
 import { Hono } from "hono";
 import { serveStatic } from "@hono/node-server/serve-static";
 import { linkDocuments } from "../src/linking/link-resolver";
+import { modelForClassification } from "../src/linking/polza-client";
 import { GEMMA_MODEL } from "../src/linking/llm-matcher";
 import { validateInput } from "../src/contracts/input";
 import { linkingOutputSchema } from "../src/contracts/output";
@@ -100,7 +101,7 @@ export function createApp(deps: AppDependencies) {
   app.post("/api/linking-runs", limit("run"), async c => {
     const parsed = await jsonBody(c.req.raw, deps.config.maxRequestBytes ?? DEFAULT_LIMITS.maxRequestBytes); if (parsed.error) return c.json({ error: parsed.error }, parsed.status as any);
     const body = parsed.body, documents = documentsFrom(body);
-    if (deps.config.requireExternalLlmConsent && (body?.allow_external_llm !== true || !["public", "synthetic", "anonymized"].includes(body?.data_classification))) return c.json({ error: "Вызов внешней модели требует явного согласия и публичных, синтетических или обезличенных данных", code: "LLM_EXTERNAL_PROCESSING_DENIED" }, 403);
+    if (deps.config.requireExternalLlmConsent && (body?.allow_external_llm !== true || !["confidential", "public", "synthetic", "anonymized"].includes(body?.data_classification))) return c.json({ error: "Вызов Polza AI требует явного согласия на внешнюю обработку", code: "LLM_EXTERNAL_PROCESSING_DENIED" }, 403);
     if (!Array.isArray(documents)) return c.json({ error: "Ожидается массив документов" }, 422);
     if (documents.length > (deps.config.maxDocuments ?? DEFAULT_LIMITS.maxDocuments)) return c.json({ error: `Количество документов превышает лимит ${deps.config.maxDocuments ?? DEFAULT_LIMITS.maxDocuments}` }, 413);
     const sizeError = documentSizeError(documents, deps.config); if (sizeError) return c.json({ error: sizeError }, 413);
@@ -109,7 +110,7 @@ export function createApp(deps: AppDependencies) {
     const key = rawKey ? await sha256(rawKey) : payloadHash, existing = await deps.storage.findRunByIdempotency(key);
     if (existing) return existing.payload_hash === payloadHash ? c.json(existing.result_json, 200) : c.json({ error: "Idempotency-Key уже использован для другого содержимого" }, 409);
     const prompt = deps.config.systemPrompt ?? await readFile(resolve(process.cwd(), "prompts/document-linking-system.md"), "utf8");
-    const result = await linkDocuments(documents, { llm: { enabled: deps.config.llmEnabled, apiKey: deps.config.polzaApiKey, model: GEMMA_MODEL, maxCalls: deps.config.maxCalls, timeoutMs: deps.config.timeoutMs, maxRunMs: deps.config.maxRunMs, maxInputTokens: deps.config.maxInputTokens, systemPrompt: prompt, resumeProgress: await deps.storage.readProgress(payloadHash), onProgress: state => deps.storage.saveProgress(payloadHash, state) } });
+    const result = await linkDocuments(documents, { llm: { enabled: deps.config.llmEnabled, apiKey: deps.config.polzaApiKey, model: modelForClassification(body?.data_classification), maxCalls: deps.config.maxCalls, timeoutMs: deps.config.timeoutMs, maxRunMs: deps.config.maxRunMs, maxInputTokens: deps.config.maxInputTokens, systemPrompt: prompt, resumeProgress: await deps.storage.readProgress(payloadHash), onProgress: state => deps.storage.saveProgress(payloadHash, state) } });
     const valid = linkingOutputSchema.safeParse(result); if (!valid.success) return c.json({ error: "Ошибка внутреннего выходного контракта", diagnostics: valid.error.issues }, 500);
     try { await deps.storage.saveRun(result, key, payloadHash); } catch (error) { const retry = await deps.storage.findRunByIdempotency(key); if (retry?.payload_hash === payloadHash) return c.json(retry.result_json, 200); throw error; }
     return c.json(result, 201);
@@ -134,14 +135,14 @@ export function createApp(deps: AppDependencies) {
   app.post("/api/linking-jobs", limit("run"), async c => {
     const parsed = await jsonBody(c.req.raw, deps.config.maxRequestBytes ?? DEFAULT_LIMITS.maxRequestBytes); if (parsed.error) return c.json({ error: parsed.error }, parsed.status as any);
     const body = parsed.body, input = documentsFrom(body);
-    if (deps.config.requireExternalLlmConsent && (body?.allow_external_llm !== true || !["public", "synthetic", "anonymized"].includes(body?.data_classification))) return c.json({ error: "Вызов внешней модели требует явного согласия и публичных, синтетических или обезличенных данных", code: "LLM_EXTERNAL_PROCESSING_DENIED" }, 403);
+    if (deps.config.requireExternalLlmConsent && (body?.allow_external_llm !== true || !["confidential", "public", "synthetic", "anonymized"].includes(body?.data_classification))) return c.json({ error: "Вызов Polza AI требует явного согласия на внешнюю обработку", code: "LLM_EXTERNAL_PROCESSING_DENIED" }, 403);
     if (!Array.isArray(input)) return c.json({ error: "Ожидается массив документов" }, 422);
     if (input.length > (deps.config.maxDocuments ?? DEFAULT_LIMITS.maxDocuments)) return c.json({ error: `Количество документов превышает лимит ${deps.config.maxDocuments ?? DEFAULT_LIMITS.maxDocuments}` }, 413);
     const sizeError = documentSizeError(input, deps.config); if (sizeError) return c.json({ error: sizeError }, 413);
     if (!deps.config.llmEnabled) return c.json({ error: "LLM-анализ отключён; включите Gemma через Polza AI" }, 503);
     if (!deps.config.polzaApiKey) return c.json({ error: "Задайте POLZA_API_KEY для создания задания анализа" }, 503);
     const checked = validateInput(input); if (!checked.success) return c.json({ error: "Входные данные не соответствуют Structured Extraction 1.2.0", diagnostics: checked.diagnostics }, 422);
-    const payload = JSON.stringify({ documents: checked.documents }), payloadHash = await sha256(payload), rawKey = c.req.header("Idempotency-Key");
+    const payload = JSON.stringify({ documents: checked.documents, model: modelForClassification(body?.data_classification) }), payloadHash = await sha256(payload), rawKey = c.req.header("Idempotency-Key");
     if (rawKey && (rawKey.length > 128 || !/^[\w.:-]+$/.test(rawKey))) return c.json({ error: "Некорректный Idempotency-Key" }, 400);
     const key = rawKey ? await sha256(rawKey) : payloadHash, existing = await deps.storage.findJobByIdempotency(key);
     if (existing) return existing.payload_hash === payloadHash ? c.json({ job_id: existing.id, status: existing.status }, 200) : c.json({ error: "Idempotency-Key уже использован для другого содержимого" }, 409);
@@ -152,7 +153,8 @@ export function createApp(deps: AppDependencies) {
   app.get("/api/linking-jobs/:id", limit("read"), async c => {
     const job = await deps.storage.readJob(c.req.param("id")); if (!job) return c.json({ error: "Задание не найдено" }, 404);
     const progress: any = job.progress_json ?? {};
-    return c.json({ job_id: job.id, status: job.status, phase: progress.phase ?? (job.status === "queued" ? "queued" : job.status), progress: { completed_fragments: progress.completed_fragments?.length ?? 0, total_fragments: progress.total_fragments ?? null, model_calls: progress.calls ?? 0, input_tokens: progress.input_tokens ?? 0, output_tokens: progress.output_tokens ?? 0, cost_amount: progress.has_cost ? progress.cost_amount : null, cost_currency: progress.cost_currency ?? null, context_rounds: progress.context_rounds ?? 0 }, model: GEMMA_MODEL, provider: "Polza AI", attempts: job.attempts, last_error: job.last_error, run_id: job.run_id, ...(job.status === "completed" ? { result: job.result_json } : {}), created_at: job.created_at, updated_at: job.updated_at });
+    const savedPayload = JSON.parse(await deps.storage.readJobPayload(job));
+    return c.json({ job_id: job.id, status: job.status, phase: progress.phase ?? (job.status === "queued" ? "queued" : job.status), progress: { completed_fragments: progress.completed_fragments?.length ?? 0, total_fragments: progress.total_fragments ?? null, model_calls: progress.calls ?? 0, input_tokens: progress.input_tokens ?? 0, output_tokens: progress.output_tokens ?? 0, cost_amount: progress.has_cost ? progress.cost_amount : null, cost_currency: progress.cost_currency ?? null, context_rounds: progress.context_rounds ?? 0 }, model: savedPayload.model ?? GEMMA_MODEL, provider: "Polza AI", attempts: job.attempts, last_error: job.last_error, run_id: job.run_id, ...(job.status === "completed" ? { result: job.result_json } : {}), created_at: job.created_at, updated_at: job.updated_at });
   });
   app.post("/api/linking-jobs/:id/resume", limit("run"), async c => {
     if (!deps.config.llmEnabled) return c.json({ error: "LLM-анализ отключён; включите Gemma через Polza AI" }, 503);

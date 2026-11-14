@@ -1,16 +1,17 @@
 {
   "status": "saved-project-verified",
-  "project_id": "ab5f2d87-1759-450d-a3dd-38c33b9ec91f",
+  "project_id": "6e8f846d-07ac-4b23-9477-0a379e4916bf",
   "model_provider": "Polza AI",
-  "model": "google/gemma-4-26b-a4b-it",
+  "model": "deepseek/deepseek-v4.1-flash",
   "model_calls": 3,
   "known_relations": [
-    "act_contains_line_item",
-    "act_validates_registry",
-    "report_summarizes_registry"
+    "report_registry_total",
+    "act_registry_total",
+    "report_act_total",
+    "act_registry_matching_work_row"
   ],
-  "evidence_sides_resolved": 16,
+  "evidence_sides_resolved": 30,
   "source_documents_resolved": 3,
   "pdf_page_preview": "passed",
-  "verified_at": "2026-11-13T15:40:04.211312+00:00"
+  "verified_at": "2026-11-14T13:04:09.838460+00:00"
 }

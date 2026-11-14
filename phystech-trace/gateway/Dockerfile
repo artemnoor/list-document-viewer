@@ -3,6 +3,10 @@ WORKDIR /app
 COPY phystech-trace/gateway/requirements.txt ./requirements.txt
 RUN python -m pip install --no-cache-dir -r requirements.txt
 COPY phystech-trace/gateway/main.py ./main.py
+COPY phystech-trace/gateway/accounts.py ./accounts.py
+COPY phystech-trace/gateway/financial_audit.py ./financial_audit.py
+COPY phystech-trace/gateway/pdf_report.py ./pdf_report.py
+COPY phystech-trace/gateway/assets ./assets
 COPY phystech-trace/contracts ./contracts
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 PORT=8084
 EXPOSE 8084

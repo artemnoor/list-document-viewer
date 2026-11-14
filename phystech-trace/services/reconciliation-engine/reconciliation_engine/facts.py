@@ -61,6 +61,12 @@ def _period(extraction: dict[str, Any]) -> tuple[date | None, date | None]:
             value = ((item.get("extracted") or {}).get("value"))
             if isinstance(value, dict):
                 return _as_date(value.get("start")), _as_date(value.get("end"))
+    for key in ("operation_date", "service_date", "act_date", "invoice_date", "document_date", *(() if extraction.get("document_type") == "kfz_report" else ("report_date",))):
+        wrapper = fields.get(key) if isinstance(fields, dict) else None
+        if isinstance(wrapper, dict) and wrapper.get("status") == "extracted":
+            parsed = _as_date(wrapper.get("value"))
+            if parsed:
+                return parsed, parsed
     return None, None
 
 
@@ -178,6 +184,18 @@ def extract_facts(extractions: list[dict[str, Any]]) -> list[Fact]:
                 fact = _fact(extraction, f"#/line_items/{index}/{key}", "line_item", key, wrapper, row_id, _row_period(row, period), unit_override, row)
                 if fact:
                     facts.append(fact)
+        # An unrecognized form can still contain typed, grounded table values.
+        # Keep these sources; canonical fields/rows win the provenance dedup below.
+        for table_index, table in enumerate(extraction.get("tables") or []):
+            for row_index, row in enumerate(table.get("rows") or []):
+                for cell_index, cell in enumerate(row.get("source_cells") or []):
+                    wrapper = cell.get("extracted")
+                    if not isinstance(wrapper, dict):
+                        continue
+                    label = str(cell.get("header") or f"column_{cell_index}")
+                    fact = _fact(extraction, f"#/tables/{table_index}/rows/{row_index}/source_cells/{cell_index}/extracted", "table_cell", label, {**wrapper, "label": label}, row.get("row_id"), _row_period(row, period))
+                    if fact:
+                        facts.append(fact)
         # Contract schedules and payment schedules are separate from completed operations.
         # They remain candidates for semantic planning and are never implicitly summed.
         for index, row in enumerate(extraction.get("payment_schedule") or []):
@@ -227,3 +245,15 @@ def numeric_value(fact: Fact) -> Decimal | None:
 def fact_input_hash(fact: Fact) -> str:
     return hashlib.sha256(canonical_json(fact.as_dict()).encode("utf-8")).hexdigest()
 
+
+
+def document_agreements(facts: list[Fact]) -> dict[str, set[str]]:
+    import re
+    result: dict[str, set[str]] = {}
+    for fact in facts:
+        if fact.key not in {"contract_reference", "contract_number", "project_reference"} or fact.status != "extracted" or not isinstance(fact.normalized_value, str):
+            continue
+        reference = re.sub(r"\s+", "", fact.normalized_value.casefold()).strip('«»" .')
+        if reference:
+            result.setdefault(fact.document_id, set()).add(reference)
+    return result

@@ -296,6 +296,25 @@ class Handler(BaseHTTPRequestHandler):
                 return self.reply(200, {'decision': action, 'result': result})
             except (OSError, ValueError, TypeError, KeyError):
                 return self.reply(422, {'error': 'Не удалось сохранить решение по предложению'})
+        review_match = re.fullmatch(r'/api/documents/([a-f0-9]{32})/ai-review', urlparse(self.path).path)
+        if review_match:
+            ident = review_match.group(1)
+            try:
+                size = int(self.headers.get('Content-Length', '0'))
+                if not 0 < size <= 2048:
+                    return self.reply(400, {'error': 'Invalid review settings'})
+                payload = json.loads(self.rfile.read(size))
+                if payload.get('allow_external_llm') is not True:
+                    return self.reply(403, {'error': 'External review consent required'})
+                meta = read_json(STORAGE / (ident + '.json'))
+                result = read_json(STORAGE / (ident + '.analysis.json'))
+                if not meta or not result:
+                    return self.reply(404, {'error': 'Recognized document not found'})
+                from polza_document_review import review_document
+                review = review_document(STORAGE / ident, meta['extension'], result, model=payload.get('model'))
+                return self.reply(200, {'document_review': review})
+            except (ValueError, TypeError, OSError):
+                return self.reply(422, {'error': 'Unable to review document'})
         retry_match = re.fullmatch(r'/api/documents/([a-f0-9]{32})/retry', urlparse(self.path).path)
         if retry_match:
             ident = retry_match.group(1)

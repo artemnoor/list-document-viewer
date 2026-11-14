@@ -1,0 +1,313 @@
+{
+  "dataset": "phystech-trace-public-synthetic-v1",
+  "scope": "local calculation after extraction; no OCR or LLM calls",
+  "engine": "local-cost-audit/1.1",
+  "recorded_at": "2026-11-14T19:34:34.360257+00:00",
+  "python": "3.11.9",
+  "hash_normalization": "UTF-8 file bytes with CRLF normalized to LF",
+  "dataset_sha256": "8917c3dbeb0ccd16d8ea0f1bf3cdf2086286999fa6d2803b27ab88ff05776eb8",
+  "implementation_sha256": "359581ac6302a1b0767a0d8a1b0e2749b6e89188bb7ea0f4a4bc49c3a6bae922",
+  "total": 15,
+  "passed": 15,
+  "failed": 0,
+  "results": [
+    {
+      "id": "01-independent-sum",
+      "passed": true,
+      "expected": {
+        "status": "matched",
+        "expected": "120000.00",
+        "difference": "0.00",
+        "categories": []
+      },
+      "actual": {
+        "status": "matched",
+        "expected": "120000.00",
+        "difference": "0.00"
+      },
+      "document_categories": [
+        "included"
+      ],
+      "citations_resolved": 3
+    },
+    {
+      "id": "02-proven-difference",
+      "passed": true,
+      "expected": {
+        "status": "mismatch",
+        "expected": "120000.00",
+        "difference": "12500.00",
+        "categories": []
+      },
+      "actual": {
+        "status": "mismatch",
+        "expected": "120000.00",
+        "difference": "12500.00"
+      },
+      "document_categories": [
+        "included"
+      ],
+      "citations_resolved": 3
+    },
+    {
+      "id": "03-ocr-duplicate",
+      "passed": true,
+      "expected": {
+        "status": "matched",
+        "expected": "120000.00",
+        "difference": "0.00",
+        "categories": [
+          "duplicate_operation"
+        ]
+      },
+      "actual": {
+        "status": "matched",
+        "expected": "120000.00",
+        "difference": "0.00"
+      },
+      "document_categories": [
+        "duplicate_operation",
+        "included"
+      ],
+      "citations_resolved": 2
+    },
+    {
+      "id": "04-wrong-period",
+      "passed": true,
+      "expected": {
+        "status": "matched",
+        "expected": "120000.00",
+        "difference": "0.00",
+        "categories": [
+          "wrong_period"
+        ]
+      },
+      "actual": {
+        "status": "matched",
+        "expected": "120000.00",
+        "difference": "0.00"
+      },
+      "document_categories": [
+        "included",
+        "wrong_period"
+      ],
+      "citations_resolved": 2
+    },
+    {
+      "id": "05-other-agreement",
+      "passed": true,
+      "expected": {
+        "status": "matched",
+        "expected": "120000.00",
+        "difference": "0.00",
+        "categories": [
+          "incorrect_document_link"
+        ]
+      },
+      "actual": {
+        "status": "matched",
+        "expected": "120000.00",
+        "difference": "0.00"
+      },
+      "document_categories": [
+        "included",
+        "incorrect_document_link"
+      ],
+      "citations_resolved": 2
+    },
+    {
+      "id": "06-unknown-period",
+      "passed": true,
+      "expected": {
+        "status": "insufficient_data",
+        "expected": null,
+        "difference": null,
+        "categories": []
+      },
+      "actual": {
+        "status": "insufficient_data",
+        "expected": null,
+        "difference": null
+      },
+      "document_categories": [
+        "included"
+      ],
+      "citations_resolved": 3
+    },
+    {
+      "id": "07-negative-adjustment",
+      "passed": true,
+      "expected": {
+        "status": "matched",
+        "expected": "120000.00",
+        "difference": "0.00",
+        "categories": []
+      },
+      "actual": {
+        "status": "matched",
+        "expected": "120000.00",
+        "difference": "0.00"
+      },
+      "document_categories": [
+        "included"
+      ],
+      "citations_resolved": 3
+    },
+    {
+      "id": "08-currency-conflict",
+      "passed": true,
+      "expected": {
+        "status": "insufficient_data",
+        "expected": null,
+        "difference": null,
+        "categories": []
+      },
+      "actual": {
+        "status": "insufficient_data",
+        "expected": null,
+        "difference": null
+      },
+      "document_categories": [
+        "included"
+      ],
+      "citations_resolved": 2
+    },
+    {
+      "id": "09-half-up-rounding",
+      "passed": true,
+      "expected": {
+        "status": "matched",
+        "expected": "-10.01",
+        "difference": "0.00",
+        "categories": []
+      },
+      "actual": {
+        "status": "matched",
+        "expected": "-10.01",
+        "difference": "0.00"
+      },
+      "document_categories": [
+        "included"
+      ],
+      "citations_resolved": 2
+    },
+    {
+      "id": "10-operation-conflict",
+      "passed": true,
+      "expected": {
+        "status": "insufficient_data",
+        "expected": null,
+        "difference": null,
+        "categories": [
+          "needs_review"
+        ]
+      },
+      "actual": {
+        "status": "insufficient_data",
+        "expected": null,
+        "difference": null
+      },
+      "document_categories": [
+        "included",
+        "needs_review"
+      ],
+      "citations_resolved": 2
+    },
+    {
+      "id": "11-supplier-ambiguity",
+      "passed": true,
+      "expected": {
+        "status": "insufficient_data",
+        "expected": null,
+        "difference": null,
+        "categories": []
+      },
+      "actual": {
+        "status": "insufficient_data",
+        "expected": null,
+        "difference": null
+      },
+      "document_categories": [
+        "included",
+        "needs_review"
+      ],
+      "citations_resolved": 2
+    },
+    {
+      "id": "12-different-suppliers",
+      "passed": true,
+      "expected": {
+        "status": "matched",
+        "expected": "240000.00",
+        "difference": "0.00",
+        "categories": []
+      },
+      "actual": {
+        "status": "matched",
+        "expected": "240000.00",
+        "difference": "0.00"
+      },
+      "document_categories": [
+        "included"
+      ],
+      "citations_resolved": 3
+    },
+    {
+      "id": "13-unverified-materials",
+      "passed": true,
+      "expected": {
+        "status": "insufficient_data",
+        "expected": null,
+        "difference": null,
+        "categories": []
+      },
+      "actual": {
+        "status": "insufficient_data",
+        "expected": null,
+        "difference": null
+      },
+      "document_categories": [
+        "included"
+      ],
+      "citations_resolved": 5
+    },
+    {
+      "id": "14-unverified-zero",
+      "passed": true,
+      "expected": {
+        "status": "insufficient_data",
+        "expected": null,
+        "difference": null,
+        "categories": []
+      },
+      "actual": {
+        "status": "insufficient_data",
+        "expected": null,
+        "difference": null
+      },
+      "document_categories": [
+        "included"
+      ],
+      "citations_resolved": 5
+    },
+    {
+      "id": "15-incomplete-payroll",
+      "passed": true,
+      "expected": {
+        "status": "insufficient_data",
+        "expected": null,
+        "difference": null,
+        "categories": []
+      },
+      "actual": {
+        "status": "insufficient_data",
+        "expected": null,
+        "difference": null
+      },
+      "document_categories": [
+        "included"
+      ],
+      "citations_resolved": 2
+    }
+  ]
+}

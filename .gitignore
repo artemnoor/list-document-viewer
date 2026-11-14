@@ -6,6 +6,10 @@ backend/tests/*.log
 backend/tests/artifacts/
 backend/ocr-check-result.json
 backend/tests/corpus/
+output/
+.pytest_cache/
+phystech-trace/tests/e2e/data/
+benchmarks/results/*.log
 .env
 phystech-trace/frontend/node_modules/
 phystech-trace/frontend/dist/

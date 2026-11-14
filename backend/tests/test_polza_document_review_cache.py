@@ -521,3 +521,19 @@ class DocumentReviewCacheTests(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+def test_project_model_settings_are_request_local():
+    import polza_document_review as review
+    from unittest.mock import patch
+    seen = []
+    def execute(*args):
+        seen.append(review._review_setting('POLZA_DOCUMENT_REVIEW_MODEL'))
+        assert review._review_setting('POLZA_DOCUMENT_REVIEW_ENABLED') == '1'
+        return {'status': 'ok'}
+    before = review._review_setting('POLZA_DOCUMENT_REVIEW_MODEL')
+    with patch.object(review, '_review_document', side_effect=execute):
+        for model in ['google/gemma-4-26b-a4b-it', 'deepseek/deepseek-v4.1-flash']:
+            review.review_document(None, '.txt', {}, model=model)
+            assert review._review_setting('POLZA_DOCUMENT_REVIEW_MODEL') == before
+    assert seen == ['google/gemma-4-26b-a4b-it', 'deepseek/deepseek-v4.1-flash']

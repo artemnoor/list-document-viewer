@@ -56,10 +56,10 @@ function safeMessage(error) {
   return message.slice(0, 1000);
 }
 function allowedForExternalModel(classification) {
-  return ["public", "synthetic", "anonymized"].includes(classification);
+  return ["confidential", "public", "synthetic", "anonymized"].includes(classification);
 }
 async function storeExtraction(result, inputHash, mode) {
-  const existing = await sql`SELECT payload FROM trace_extractions WHERE document_id=${result.document_id} AND input_hash=${inputHash} AND mode=${mode} ORDER BY version DESC LIMIT 1`;
+  const existing = await sql`SELECT payload FROM trace_extractions WHERE document_id=${result.document_id} AND input_hash=${inputHash} AND mode=${mode} AND payload->>'model_version' IS NOT DISTINCT FROM ${result.model_version} AND (payload - ARRAY['extraction_id','extracted_at','version','extraction_engine','input_version','input_hash','model_version']) = ${sql.json(Object.fromEntries(Object.entries(result).filter(([key]) => !['extraction_id','extracted_at','version','extraction_engine','input_version','input_hash','model_version'].includes(key))))}::jsonb ORDER BY version DESC LIMIT 1`;
   if (existing.length) return existing[0].payload;
   const rows = await sql`SELECT COALESCE(MAX(version),0)::int AS version FROM trace_extractions WHERE document_id=${result.document_id}`;
   const version = rows[0].version + 1;
@@ -96,7 +96,7 @@ const server = createServer(async (req, res) => {
       if (!validateParserContract(parserResult)) return json(res, 422, { code: "PARSER_CONTRACT_INVALID", error: "Parser result does not match parser-to-extraction v1", diagnostics: errorIssues(validateParserContract.errors) });
       const parserErrors = parserJsonShapeErrors(parserResult);
       if (parserErrors.length) return json(res, 422, { code: "PARSER_RESULT_INVALID", error: "Parser adapter rejected the input", diagnostics: parserErrors });
-      if (mode !== "rules_only" && (!allowExternalLlm || !allowedForExternalModel(dataClassification))) return json(res, 403, { code: "LLM_EXTERNAL_PROCESSING_DENIED", error: "External model calls require explicit consent and public, synthetic or anonymized project data" });
+      if (mode !== "rules_only" && (!allowExternalLlm || !allowedForExternalModel(dataClassification))) return json(res, 403, { code: "LLM_EXTERNAL_PROCESSING_DENIED", error: "External model calls require explicit consent and a supported data classification" });
       if (mode !== "rules_only" && !process.env.POLZA_API_KEY) return json(res, 503, { code: "POLZA_NOT_CONFIGURED", error: "Polza API key is not configured; rules_only mode remains available" });
 
       const adapted = adaptDocumentParserResult(parserResult);
@@ -104,7 +104,7 @@ const server = createServer(async (req, res) => {
       if (parserResult.document_id !== documentId) return json(res, 422, { code: "DOCUMENT_ID_MISMATCH", error: "Parser adapter changed document_id", diagnostics: [{ path: "document_id", expected: parserResult.document_id, actual: documentId }] });
       const inputHash = createHash("sha256").update(JSON.stringify(parserResult)).digest("hex");
       let llm = null;
-      if (mode !== "rules_only") llm = await callPolzaForExtraction(parserResult, process.env);
+      if (mode !== "rules_only") llm = await callPolzaForExtraction(parserResult, { ...process.env, DATA_CLASSIFICATION: dataClassification });
       const rulesResult = mode === "compare" ? extractStructuredDocument(parserResult, { extractionId: randomUUID(), mode: "rules_only" }) : null;
       const result = extractStructuredDocument(parserResult, { extractionId: randomUUID(), mode, llm });
       result.input_hash = inputHash;

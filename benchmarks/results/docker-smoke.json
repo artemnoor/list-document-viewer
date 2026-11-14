@@ -1,0 +1,41 @@
+{
+  "project": "trace-jury-smoke-fd927593",
+  "recorded_at": "2026-11-14T19:24:47.338244+00:00",
+  "fresh_volumes": true,
+  "host_ports_published": false,
+  "model_calls": 0,
+  "build_requested": true,
+  "passed": true,
+  "checks": {
+    "parser": {
+      "http_status": 200,
+      "nonempty": true
+    },
+    "extraction": {
+      "http_status": 200,
+      "nonempty": true
+    },
+    "linking": {
+      "http_status": 200,
+      "nonempty": true
+    },
+    "reconciliation": {
+      "http_status": 200,
+      "nonempty": true
+    },
+    "verification": {
+      "http_status": 200,
+      "nonempty": true
+    },
+    "gateway": {
+      "http_status": 200,
+      "nonempty": true
+    },
+    "frontend": {
+      "http_status": 200,
+      "nonempty": true
+    }
+  },
+  "cleanup_passed": true,
+  "duration_seconds": 80.28
+}

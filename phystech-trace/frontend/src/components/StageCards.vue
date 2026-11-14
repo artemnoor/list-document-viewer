@@ -3,11 +3,11 @@ import type { StageName, StageState } from "../types";
 
 defineProps<{ stages: Record<StageName, StageState>; onRetry: (stage: StageName) => void }>();
 const stageInfo: { id: StageName; title: string; hint: string; icon: string }[] = [
-  { id: "parser", title: "Parser", hint: "Распознавание и структура", icon: "01" },
-  { id: "extraction", title: "Extraction", hint: "Реквизиты и строки", icon: "02" },
-  { id: "linking", title: "Linking", hint: "Связи и evidence", icon: "03" },
-  { id: "reconciliation", title: "Reconciliation", hint: "Расчёт по источникам", icon: "04" },
-  { id: "verification", title: "Verification", hint: "Независимая проверка", icon: "05" },
+  { id: "parser", title: "Распознавание", hint: "Распознавание и структура", icon: "01" },
+  { id: "extraction", title: "Извлечение данных", hint: "Реквизиты и строки", icon: "02" },
+  { id: "linking", title: "Поиск пар", hint: "Пары и подтверждающие фрагменты", icon: "03" },
+  { id: "reconciliation", title: "Расчёт", hint: "Расчёт по источникам", icon: "04" },
+  { id: "verification", title: "Сверка", hint: "Независимая проверка", icon: "05" },
 ];
 const labels: Record<string, string> = { pending: "Ожидает", queued: "В очереди", running: "В работе", completed: "Готово", failed: "Ошибка", blocked: "Заблокировано", skipped: "Пропущено" };
 </script>
@@ -20,9 +20,9 @@ const labels: Record<string, string> = { pending: "Ожидает", queued: "В 
       <p>{{ item.hint }}</p>
       <div v-if="stages[item.id]?.status === 'running'" class="stage-progress"><span :style="{ width: `${stages[item.id]?.total ? Math.max(8, (stages[item.id]?.completed / stages[item.id]?.total) * 100) : 8}%` }"></span></div>
       <div v-if="stages[item.id]?.total" class="stage-count">{{ stages[item.id]?.completed }} / {{ stages[item.id]?.total }} {{ ["reconciliation", "verification", "linking"].includes(item.id) ? "комплектов" : "документов" }}</div>
-      <div v-if="stages[item.id]?.error?.message" class="stage-error">{{ stages[item.id]?.error?.message }}</div>
+      <div v-if="stages[item.id]?.error?.message" class="stage-error">{{ stages[item.id]?.error?.code === 'EXTERNAL_LLM_CONSENT_REQUIRED' ? 'Для поиска связей разрешите внешнюю модель в настройках проекта.' : stages[item.id]?.error?.message }}</div>
       <div v-if="stages[item.id]?.warning" class="stage-warning">{{ stages[item.id]?.warning }}</div>
-      <button v-if="['failed','blocked'].includes(stages[item.id]?.status)" class="text-button stage-retry" @click="onRetry(item.id)">Повторить этап <span>↻</span></button>
+      <button v-if="['failed','blocked'].includes(stages[item.id]?.status) && stages[item.id]?.error?.code !== 'EXTERNAL_LLM_CONSENT_REQUIRED'" class="text-button stage-retry" @click="onRetry(item.id)">Повторить этап <span>↻</span></button>
     </article>
   </div>
 </template>

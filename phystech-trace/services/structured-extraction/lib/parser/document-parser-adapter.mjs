@@ -215,7 +215,30 @@ function inferRole(caption, headers, rows) {
 
 function normalizeEnvelopeTables(parsed, state) {
   const rawTables = Array.isArray(parsed.logical_tables) ? parsed.logical_tables : [];
-  return rawTables.map((table, tableIndex) => normalizeExplicitTable(table, tableIndex, state, "logical_tables"));
+  const text = cell => typeof cell === "object" && cell !== null ? partText(cell) : asString(cell);
+  const rowsOf = table => rowCollection(table).map(({ raw }) => rowValues(raw).map(text));
+  const amounts = table => rowsOf(table).flat().flatMap(value => [...value.matchAll(/\d[\d \u00a0\u202f]*[.,]\d{2}(?!\d)/g)].map(match => match[0].replace(/\s/g, "").replace(",", ".")));
+  const ambiguous = table => rowsOf(table).flat().filter(value => !/[\p{L}]/u.test(value) && [...value.matchAll(/\d[\d \u00a0\u202f]*[.,]\d{2}(?!\d)/g)].length > 1).length;
+  const labels = table => new Set(rowsOf(table).map(row => clean(row[0])).filter(value => /[\p{L}]/u.test(value) && /\d/.test(value)));
+  const native = (parsed.parts ?? []).map((table, index) => ({ table, index })).filter(({ table }) => table.kind === "table" && table.source === "ocr_raster_grid" && Array.isArray(table.rows));
+  return rawTables.map((table, tableIndex) => {
+    if (ambiguous(table)) {
+      const originalLabels = labels(table), originalAmounts = new Set(amounts(table));
+      const page = firstProvenance(table)?.page_no ?? firstProvenance(table.fragments?.[0])?.page_no;
+      const candidate = native.find(({ table: grid }) => {
+        if (page && firstProvenance(grid)?.page_no && page !== firstProvenance(grid).page_no) return false;
+        if (ambiguous(grid)) return false;
+        const sharedLabels = [...labels(grid)].filter(label => originalLabels.has(label));
+        const gridAmounts = new Set(amounts(grid));
+        const overlap = [...gridAmounts].filter(value => originalAmounts.has(value)).length;
+        return sharedLabels.length >= 2 && gridAmounts.size >= 2 && overlap / gridAmounts.size >= .8;
+      });
+      if (candidate) {
+        return normalizeExplicitTable({ ...candidate.table, source_ref: `#/parts/${candidate.index}`, index: candidate.index }, tableIndex, state, "native_parts");
+      }
+    }
+    return normalizeExplicitTable(table, tableIndex, state, "logical_tables");
+  });
 }
 
 function normalizeExplicitTable(table, tableIndex, state, sourceType) {
@@ -237,11 +260,13 @@ function normalizeExplicitTable(table, tableIndex, state, sourceType) {
   }
   let rawHeaderCells = Array.isArray(table.header_cells) ? table.header_cells : [];
   let headerSource = table;
+  let inferredHeader = null;
   if (!headers.length && sourceRows.length) {
     const firstCells = rowValues(sourceRows[0].raw);
     const explicitHeader = sourceRows[0].raw?.is_header === true || sourceRows[0].raw?.header === true || firstCells.some((cell) => cell?.column_header === true);
     const inferHeader = explicitHeader || sourceType !== "logical_tables";
     if (inferHeader) {
+      inferredHeader = sourceRows[0];
       headers = firstCells.map((cell) => typeof cell === "object" ? partText(cell) : asString(cell));
       rawHeaderCells = firstCells;
       headerSource = sourceRows[0].fragment;
@@ -254,7 +279,7 @@ function normalizeExplicitTable(table, tableIndex, state, sourceType) {
   const headerElements = headers.map((header, column) => {
     const nativeCell = table.cells?.find((item) => Number(item.row) === 0 && Number(item.column) === column);
     const source = rawHeaderCells[column] && typeof rawHeaderCells[column] === "object" ? { ...rawHeaderCells[column] } : nativeCell ? { ...nativeCell } : { text: header };
-    if (tableRef && !sourceReference(source)) source.source_ref = `${tableRef}/headers/${column}`;
+    if (tableRef && !sourceReference(source)) source.source_ref = inferredHeader ? `${tableRef}/rows/${inferredHeader.source_row_index}/${Array.isArray(inferredHeader.raw) ? "" : "values/"}${column}` : `${tableRef}/headers/${column}`;
     const cell = state.makeCell(source, { tableId, rowIndex: -1, column, fallback: headerSource?.provenance ?? tableProv, sheetName: table.sheet_name ?? table.sheet, pageNo: table.page_no ?? table.page ?? table.slide });
     cell.text ||= header;
     return cell;
@@ -448,6 +473,11 @@ function officeTables(parsed, state) {
     if (!headers.length) {
       const fallback = candidateRows.find((item) => item.nonEmpty >= 2);
       if (fallback) headers.push(fallback);
+    }
+    const firstHeaderRow = headers[0]?.row ?? Infinity;
+    for (const cell of sheetCells.filter(cell => cell._row < firstHeaderRow && clean(partText(cell)))) {
+      const sourceIndex = parts.findIndex(part => part.kind === "cell" && String(part.sheet ?? "Лист1") === sheetName && (part.coordinate ?? part.address) === cell._address);
+      state.addElement({ ...cell, source_ref: cell.source_ref ?? `#/parts/${sourceIndex}` }, { kind: "text", text: partText(cell), sheetName, cellAddress: cell._address });
     }
     for (const [tableIndex, header] of headers.entries()) {
       const nextHeaderRow = headers[tableIndex + 1]?.row ?? Infinity;

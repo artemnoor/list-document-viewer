@@ -12,7 +12,7 @@ const systemPrompt = readFileSync("public/prompts/document-linking-system.md", "
 const fixtureDocs = readdirSync("fixtures/upstream-structured-extraction-1.2.0").filter(name => name.endsWith(".json")).map(name => JSON.parse(readFileSync(`fixtures/upstream-structured-extraction-1.2.0/${name}`, "utf8")));
 const offlineSemanticReply = (context: any) => {
   if (context.stage === "discover") return { fragments: context.fragments.map((fragment: any) => ({ fragment_id: fragment.fragment_id, summary: "Offline structural coverage only", anchors: fragment.facts.slice(0, 2).map((fact: any) => ({ reference_id: fact[0], meaning: "Offline source anchor" })), open_questions: [] })) };
-  if (context.stage === "route") return { decisions: context.document_pairs.map((pair: any) => ({ ...pair, state: "candidate", reason: "Offline structural fixture checks the candidate verifier path only", reference_ids: pair.document_ids.map((documentId: string) => context.navigation.find((fragment: any) => context.fragment_manifest.find((item: any) => item.fragment_id === fragment.fragment_id)?.document_id === documentId)?.anchors?.[0]?.reference_id).filter(Boolean), fragment_ids: context.fragment_manifest.filter((fragment: any) => pair.document_ids.includes(fragment.document_id)).map((fragment: any) => fragment.fragment_id) })) };
+  if (context.stage === "route") return { decisions: context.document_pairs.map((pair: any) => ({ ...pair, state: "candidate", reason: "Offline structural fixture checks the candidate verifier path only", reference_ids: pair.document_ids.map((documentId: string) => context.navigation.find((fragment: any) => context.fragment_manifest.find((item: any) => item.fragment_id === fragment.fragment_id)?.document_id === documentId)?.anchors?.[0]?.reference_id ?? context.navigation.find((fragment: any) => context.fragment_manifest.find((item: any) => item.fragment_id === fragment.fragment_id)?.document_id === documentId)?.anchors?.[0]?.[0]).filter(Boolean), fragment_ids: context.fragment_manifest.filter((fragment: any) => pair.document_ids.includes(fragment.document_id)).map((fragment: any) => fragment.fragment_id) })) };
   return { links: [], unlinked_document_ids: [], context_requests: [], pair_decisions: context.candidates.map((candidate: any) => ({ pair_id: candidate.pair_id, state: "no_relation", reason: "Offline verifier inspected supplied originals; semantic gold not measured" })), analysis_summary: "Offline structural coverage only" };
 };
 test("evidence registry indexes arbitrary nested values and inherits row/provenance context", () => {
@@ -133,7 +133,7 @@ test("full-set Gemma can request an original fragment and resume from its checkp
 });
 
 test("model choice is pinned and missing credentials fail without fallback", async () => {
-  await assert.rejects(() => analyzeDocumentSet([], { apiKey: "test-only", timeoutMs: 10, maxCalls: 1, model: "other/model" }), /Разрешена только модель/);
+  await assert.rejects(() => analyzeDocumentSet([], { apiKey: "test-only", timeoutMs: 10, maxCalls: 1, model: "other/model" }), /Модель не разрешена политикой проекта/);
   await assert.rejects(() => linkDocuments(fixtureDocs), /POLZA_API_KEY/);
 });
 
@@ -245,4 +245,63 @@ test("LLM-only output satisfies the versioned stage 4 contract", async () => {
   globalThis.fetch = async () => new Response(JSON.stringify({ model: GEMMA_MODEL, choices: [{ message: { content: JSON.stringify({ links: [], unlinked_document_ids: docs.map(d => d.document_id), analysis_summary: "Complete set reviewed.", context_requests: [] }) } }], usage: { prompt_tokens: 100, completion_tokens: 10 } }), { status: 200 });
   try { const result = await linkDocuments(docs, { llm: { enabled: true, apiKey: "test-only", maxCalls: 52, maxInputTokens: 4_000_000, systemPrompt } }); assert.equal(linkingOutputSchema.safeParse(result).success, true); assert.equal(result.contract_version, "1.2.0"); assert.equal(result.processing_metadata.llm.model, GEMMA_MODEL); }
   finally { globalThis.fetch = originalFetch; }
+});
+
+
+for (const failureMode of ["missing", "invalid"]) test(`single-fragment recovery repairs ${failureMode} navigation before failing the set`, async () => {
+  const original=globalThis.fetch; let discoveryCalls=0;
+  globalThis.fetch=async(_input,init)=>{
+    const user=JSON.parse(String(init?.body)).messages[1].content;
+    const raw=user.slice(user.indexOf("{")).split("\n\nValidation correction:")[0];
+    const context=JSON.parse(raw);
+    let answer=offlineSemanticReply(context);
+    if(context.stage==='discover') {
+      discoveryCalls++;
+      if(discoveryCalls<=3) answer=failureMode==='missing' ? {fragments:[]} : {fragments:offlineSemanticReply(context).fragments.map((fragment:any)=>({...fragment,open_questions:['q'.repeat(200)]}))};
+      else if(discoveryCalls===4) answer={fragments:[{...offlineSemanticReply(context).fragments[0],open_questions:['q'.repeat(200)]}]};
+    }
+    return new Response(JSON.stringify({model:GEMMA_MODEL,choices:[{message:{content:JSON.stringify(answer)}}]}),{status:200});
+  };
+  try {
+    const result=await analyzeDocumentSet(fixtureDocs,{apiKey:'test-only',timeoutMs:1000,maxCalls:10000,maxInputTokens:180000,systemPrompt});
+    assert.equal(result.complete,true);
+    assert.ok(discoveryCalls>=5);
+  } finally {globalThis.fetch=original;}
+});
+
+
+test("discovery retains more than 24 valid source anchors without rejecting the set", async () => {
+ const original=globalThis.fetch; let sawMany=false;
+ globalThis.fetch=async(_input,init)=>{
+  const user=JSON.parse(String(init?.body)).messages[1].content;
+  const context=JSON.parse(user.slice(user.indexOf('{')).split('\n\nValidation correction:')[0]);
+  const answer=offlineSemanticReply(context);
+  if(context.stage==='discover') for(let i=0;i<answer.fragments.length;i++) {
+   const facts=context.fragments[i].facts;
+   answer.fragments[i].anchors=[...new Map(facts.map((f:any)=>[f[0],f])).values()].slice(0,32).map((fact:any)=>({reference_id:fact[0],meaning:'Original source fact'}));
+   if(answer.fragments[i].anchors.length>24) sawMany=true;
+  }
+  return new Response(JSON.stringify({model:GEMMA_MODEL,choices:[{message:{content:JSON.stringify(answer)}}]}),{status:200});
+ };
+ try {
+  const result=await analyzeDocumentSet(fixtureDocs,{apiKey:'test-only',timeoutMs:1000,maxCalls:10000,maxInputTokens:180000,systemPrompt});
+  assert.ok(sawMany);assert.equal(result.complete,true);
+ } finally {globalThis.fetch=original;}
+});
+
+
+test('routing requests contain only manifests for their supplied document pairs', async()=>{
+ const original=globalThis.fetch;let routes=0;let unrelated=false;
+ globalThis.fetch=async(_input,init)=>{
+  const user=JSON.parse(String(init?.body)).messages[1].content;
+  const context=JSON.parse(user.slice(user.indexOf('{')).split('\n\nValidation correction:')[0]);
+  if(context.stage==='route') {
+   routes++;
+   const visible=new Set(context.document_pairs.flatMap((pair:any)=>pair.document_ids));
+   unrelated ||= !context.fragment_manifest.every((fragment:any)=>visible.has(fragment.document_id));
+  }
+  return new Response(JSON.stringify({model:GEMMA_MODEL,choices:[{message:{content:JSON.stringify(offlineSemanticReply(context))}}]}),{status:200});
+ };
+ try {const result=await analyzeDocumentSet(fixtureDocs,{apiKey:'test-only',timeoutMs:1000,maxCalls:10000,maxInputTokens:180000,systemPrompt});assert.ok(routes);assert.equal(unrelated,false,'Unrelated manifests consume pair context');assert.equal(result.complete,true);}
+ finally {globalThis.fetch=original;}
 });

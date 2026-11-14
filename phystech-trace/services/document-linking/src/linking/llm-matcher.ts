@@ -3,7 +3,7 @@ import { runSemanticAnalysis } from "./semantic-runner";
 import { mergeTaskLinks } from "./bounded-merge";
 import type { Extraction } from "../contracts/input";
 import type { AnalysisCoverage, AnalysisProgressState, BoundedTaskCheckpoint, ProposalValidationCheckpoint, Evidence, Link, LinkStatus } from "./types";
-import { POLZA_BASE_URL, POLZA_MODEL, requestPolzaJson } from "./polza-client";
+import { POLZA_BASE_URL, ALLOWED_MODELS, requestPolzaJson } from "./polza-client";
 import { pathContainsRowId, resolveJsonPath, rowIdExists, type EvidenceIssueCode, type InvalidRelationshipDiagnostic } from "./evidence-validation";
 import { buildEvidenceRegistry, resolveEvidenceReference } from "./evidence-registry";
 
@@ -48,7 +48,7 @@ export type ModelRun = { analysisCoverage?: AnalysisCoverage; complete: boolean;
 export async function analyzeDocumentSet(documents: Extraction[], options: { apiKey: string; timeoutMs: number; maxRunMs?: number; maxCalls: number; maxEvidenceCorrectionAttempts?: number; model?: string; maxInputTokens?: number; systemPrompt?: string; resumeProgress?: AnalysisProgressState; onProgress?: (state: AnalysisProgressState) => Promise<void>; maxModelCallsPerInvocation?: number; beforeModelRequest?: (request: { label: string; estimatedInputTokens: number; maxOutputTokens: number }) => Promise<void> | void; onModelResponse?: (response: { label: string; value: unknown; model: string; promptTokens: number; completionTokens: number; cost?: number; currency?: string; durationMs: number }) => Promise<void> | void }): Promise<ModelRun> {
   if (!options.apiKey) throw Object.assign(new Error("POLZA_API_KEY не задан; LLM-анализ недоступен"), { status: 503, retryable: false });
   const model = options.model ?? GEMMA_MODEL;
-  if (model !== GEMMA_MODEL || model !== POLZA_MODEL) throw Object.assign(new Error(`Разрешена только модель ${GEMMA_MODEL}`), { status: 500, retryable: false });
+  if (!ALLOWED_MODELS.includes(model)) throw Object.assign(new Error("Модель не разрешена политикой проекта"), { status: 500, retryable: false });
   if (!options.systemPrompt?.trim()) throw Object.assign(new Error("Не загружена системная инструкция prompts/document-linking-system.md"), { status: 503, retryable: false });
   const systemPrompt = options.systemPrompt;
   if (options.maxCalls < 1) throw Object.assign(new Error("Лимит Polza вызовов должен быть не меньше 1"), { status: 503, retryable: false });
@@ -350,7 +350,7 @@ This is one bounded source comparison, not the complete set. Analyze all meaning
         analysisSummary: `Bounded source analysis: ${saved.length}/${planned.length} tasks; ${fragments.length} original fragments. ${insufficient.size} documents have insufficient evidence. Technical coverage does not establish semantic recall.`,
       };
     };
-    if (staged && maxInputTokens >= 8000) {
+    if ((staged || progressState.semantic || ((progressState.failed_model_calls ?? 0) > 0 && estimatedInputTokens > 16000)) && maxInputTokens >= 8000) {
       activeInputBudget = Math.min(16000, maxInputTokens);
       return await runSemanticAnalysis(documents, { systemPrompt, maxInputTokens: activeInputBudget, maxCalls: options.maxCalls, progress: progressState, checkpoint, exhausted: invocationExhausted, request: requestModel, validate: validateResponse, result: partialResult });
     }
@@ -363,7 +363,7 @@ This is one bounded source comparison, not the complete set. Analyze all meaning
     let parsed: any = progressState.full_response;
     while (!parsed) {
       const responseBody = await requestModel(context, systemPrompt, 16_384, progressState!.requested_source_fragments?.length ? "baseline.requested-source-review" : "baseline.relationship-analysis");
-      if (responseBody.finishReason === "length") throw Object.assign(new Error("Ответ Gemma достиг лимита генерации и был обрезан."), { status: 502 });
+      if (responseBody.finishReason === "length") { progressState.failed_model_calls = (progressState.failed_model_calls ?? 0) + 1; await checkpoint(); throw Object.assign(new Error("Ответ модели достиг лимита генерации; повтор продолжится по фрагментам."), { status: 502 }); }
       parsed = responseBody.value;
       if (!Array.isArray(parsed.links) || !Array.isArray(parsed.unlinked_document_ids) || !Array.isArray(parsed.context_requests)) throw Object.assign(new Error("Ответ Gemma не соответствует структурированному контракту: links, unlinked_document_ids и context_requests обязательны."), { status: 502 });
       if (parsed.context_requests.length === 0) { progressState.full_response = parsed; await checkpoint(); break; }

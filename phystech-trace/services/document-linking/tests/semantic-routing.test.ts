@@ -35,10 +35,10 @@ test("negative routing is provisional: original-anchor verification recovers rep
       return response({ fragments: context.fragments.map((fragment: any) => ({ fragment_id: fragment.fragment_id, summary: fragment.facts.map((fact: any) => fact[2]).filter((raw: any) => typeof raw === "string").join(" | ").slice(0, 800) || "Source rows", anchors: fragment.facts.slice(0, 24).map((fact: any) => ({ reference_id: fact[0], meaning: String(fact[1].join("; ")).slice(0, 160) })), open_questions: [] })) });
     }
     if (context.stage === "route") {
-      routingPairs = context.document_pairs.map((pair: any) => ({ ...pair, state: "no_relation" }));
+      routingPairs.push(...context.document_pairs.map((pair: any) => ({ ...pair, state: "no_relation" })));
       // Adversarial mock route: it marks every pair negative, including gold positives.
       // This models a false negative from condensed navigation; independent labels stay in the gold file.
-      return response({ decisions: context.document_pairs.map((pair: any) => ({ ...pair, state: "no_relation", reason: "Only a compact summary was considered; verify original anchors", reference_ids: [...new Set(context.navigation.filter((nav: any) => pair.document_ids.includes(context.fragment_manifest.find((item: any) => item.fragment_id === nav.fragment_id)?.document_id)).flatMap((nav: any) => nav.anchors.map((anchor: any) => anchor.reference_id)))], fragment_ids: context.fragment_manifest.filter((fragment: any) => pair.document_ids.includes(fragment.document_id)).map((fragment: any) => fragment.fragment_id) })) });
+      return response({ decisions: context.document_pairs.map((pair: any) => ({ ...pair, state: "no_relation", reason: "Only a compact summary was considered; verify original anchors", reference_ids: [...new Set(context.navigation.filter((nav: any) => pair.document_ids.includes(context.fragment_manifest.find((item: any) => item.fragment_id === nav.fragment_id)?.document_id)).flatMap((nav: any) => nav.anchors.map((anchor: any) => (anchor.reference_id ?? anchor[0]))))], fragment_ids: context.fragment_manifest.filter((fragment: any) => pair.document_ids.includes(fragment.document_id)).map((fragment: any) => fragment.fragment_id) })) });
     }
     const links: any[] = [], pairDecisions: any[] = [];
     for (const candidate of context.candidates) {
@@ -98,7 +98,7 @@ test("an oversized negative audit stays unprocessed in the routing checkpoint", 
     calls++;
     const user = JSON.parse(String(init?.body)).messages[1].content, request = JSON.parse(user.slice(user.indexOf("{")));
     if (request.stage === "discover") return response({ fragments: request.fragments.map((fragment: any) => ({ fragment_id: fragment.fragment_id, summary: "All supplied source slices were read", anchors: fragment.facts.slice(0, 24).map((fact: any) => ({ reference_id: fact[0], meaning: "Original source slice" })), open_questions: [] })) });
-    if (request.stage === "route") return response({ decisions: request.document_pairs.map((pair: any) => ({ ...pair, state: "no_relation", reason: "Tentative negative; original audit required", reference_ids: [...new Set(request.navigation.filter((nav: any) => pair.document_ids.includes(request.fragment_manifest.find((item: any) => item.fragment_id === nav.fragment_id)?.document_id)).flatMap((nav: any) => nav.anchors.map((anchor: any) => anchor.reference_id)))], fragment_ids: request.fragment_manifest.filter((fragment: any) => pair.document_ids.includes(fragment.document_id)).map((fragment: any) => fragment.fragment_id) })) });
+    if (request.stage === "route") return response({ decisions: request.document_pairs.map((pair: any) => ({ ...pair, state: "no_relation", reason: "Tentative negative; original audit required", reference_ids: [...new Set(request.navigation.filter((nav: any) => pair.document_ids.includes(request.fragment_manifest.find((item: any) => item.fragment_id === nav.fragment_id)?.document_id)).flatMap((nav: any) => nav.anchors.map((anchor: any) => (anchor.reference_id ?? anchor[0]))))], fragment_ids: request.fragment_manifest.filter((fragment: any) => pair.document_ids.includes(fragment.document_id)).map((fragment: any) => fragment.fragment_id) })) });
     throw new Error("Oversized no_relation audit must fail before a provider request");
   };
   try {

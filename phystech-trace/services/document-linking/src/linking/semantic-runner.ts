@@ -39,9 +39,17 @@ export function hasCompleteNoRelationAudit(expectedPairIds: string[], decisions:
   catch { return false; }
 }
 
+export function correctionContext(context: string, correction: string, prompt: string, budget: number): string {
+  if (!correction) return context;
+  const request = `${context}\n\nValidation correction: ${correction.slice(0, 240)}. Return complete corrected JSON, preserving all source items and using only supplied IDs.`;
+  if (estimateTokens(prompt + request) > budget) throw fail("Для исправления ответа не хватает контекста. Уменьшите размер задачи; исходные данные сохранены.", 413);
+  return request;
+}
+
 export async function runSemanticAnalysis(documents: Extraction[], hooks: Hooks): Promise<ModelRun> {
   // Reserve room for the JSON request envelope and provider schema included by the shared Q1 ledger.
-  const limit = Math.min(15400, hooks.maxInputTokens);
+  const requestLimit = Math.min(16000, hooks.maxInputTokens) - 200;
+  const limit = Math.min(15400, requestLimit - 256);
   const plan = planSemanticLinking(documents, { systemPrompt: hooks.systemPrompt, maxInputTokens: limit });
   const progress = hooks.progress;
   if (progress.bounded_plan_hash && !progress.semantic) throw fail("Checkpoint старого полного перебора сохранён; для новой стратегии требуется отдельный запуск.", 409);
@@ -82,8 +90,7 @@ export async function runSemanticAnalysis(documents: Extraction[], hooks: Hooks)
     let correction = task.failures?.at(-1)?.message ?? "";
     while (task.attempts < 3) {
       if (hooks.exhausted()) return false;
-      const requestContext = correction ? `${context}\n\nValidation correction: the previous response failed local structural/provenance validation (${correction}). Return a complete corrected response for this exact task. Keep every required source item; use only IDs present in the supplied context. Do not add explanations outside JSON.` : context;
-      if (estimateTokens(prompt + requestContext) > limit) throw fail("Семантическая задача с коррекцией превышает Q1-контекст; исходные данные не обрезаны.", 413);
+      const requestContext = correctionContext(context, correction, prompt, requestLimit);
       task.attempts++; await hooks.checkpoint();
       let received: unknown;
       try {
@@ -103,7 +110,7 @@ export async function runSemanticAnalysis(documents: Extraction[], hooks: Hooks)
   };
   const validateFragment = (fragment: any, expectedId: string, allowedIds: Set<string>) => {
     const source = fragmentMap.get(fragment?.fragment_id);
-    if (!source || fragment.fragment_id !== expectedId || !allowedIds.has(fragment.fragment_id) || typeof fragment.summary !== "string" || !fragment.summary.trim() || fragment.summary.length > 800 || !Array.isArray(fragment.anchors) || fragment.anchors.length > 24 || !Array.isArray(fragment.open_questions) || fragment.open_questions.length > 6) throw fail("Некорректная семантическая навигация исходного фрагмента.");
+    if (!source || fragment.fragment_id !== expectedId || !allowedIds.has(fragment.fragment_id) || typeof fragment.summary !== "string" || !fragment.summary.trim() || fragment.summary.length > 800 || !Array.isArray(fragment.anchors) || fragment.anchors.length > source.reference_ids.length || !Array.isArray(fragment.open_questions) || fragment.open_questions.length > 6) throw fail("Некорректная семантическая навигация исходного фрагмента.");
     for (const anchor of fragment.anchors) if (!source.reference_ids.includes(anchor?.reference_id) || typeof anchor.meaning !== "string" || anchor.meaning.length > 160) throw fail("Навигация ссылается на несуществующий исходный факт.");
     if (fragment.open_questions.some((question: unknown) => typeof question !== "string" || question.length > 160)) throw fail("Слишком большой вопрос навигации.");
   };
@@ -122,11 +129,15 @@ export async function runSemanticAnalysis(documents: Extraction[], hooks: Hooks)
       if (hooks.exhausted()) return false;
       const source = fragmentMap.get(fragmentId)!;
       if (estimateTokens(DISCOVERY_PROMPT + source.context) > limit) throw fail("Исходный фрагмент превышает Q1-контекст; данные не обрезаны.", 413);
-      const response = await hooks.request(source.context, DISCOVERY_PROMPT, 4000, `semantic.${task.task_id}:recover:${fragmentId}`);
-      if (response.finishReason === "length" || !Array.isArray((response.value as any)?.fragments) || (response.value as any).fragments.length !== 1) throw fail("Повторное чтение отдельного исходного фрагмента вернуло неполный ответ.");
-      const fragment = (response.value as any).fragments[0];
-      validateFragment(fragment, fragmentId, new Set([fragmentId]));
-      recovered.set(fragmentId, fragment);
+      // Recovery uses the same bounded corrections and durable attempts as discovery.
+      const recoveries = task.fragment_recoveries ??= {};
+      const recovery = recoveries[fragmentId] ??= taskState(`${task.task_id}:recover:${fragmentId}`, [fragmentId]);
+      const complete = await requestTask(recovery, source.context, DISCOVERY_PROMPT, value => {
+        if (!Array.isArray(value?.fragments) || value.fragments.length !== 1) throw fail("Повторное чтение отдельного исходного фрагмента вернуло неполный ответ.");
+        validateFragment(value.fragments[0], fragmentId, new Set([fragmentId]));
+      });
+      if (!complete) return false;
+      recovered.set(fragmentId, recovery.response.fragments[0]);
       await hooks.checkpoint();
     }
     task.response = { fragments: batch.fragment_ids.map(id => recovered.get(id)) };
@@ -148,19 +159,19 @@ export async function runSemanticAnalysis(documents: Extraction[], hooks: Hooks)
         returned.add(fragment.fragment_id);
       }
     }); } catch (error: any) {
-      const exhaustedAfterIncompleteBatch = saved.attempts >= 3 && saved.failures?.some(failure => failure.message === "Потерян результат исходного фрагмента.");
-      if (error.message !== "Потерян результат исходного фрагмента." && !exhaustedAfterIncompleteBatch) throw error;
+      const hasMalformedResponse = saved.failures?.some(failure => failure.response !== undefined);
+      if (error.status !== 502 || !hasMalformedResponse) throw error;
       okay = await recoverMissingFragments(batch, saved);
       if (!okay) return partial();
     }
     if (!okay) return partial();
   }
   const navigation = state.discovery.flatMap(task => task.response.fragments);
-  const routeContext = (items: Pair[]) => JSON.stringify({ stage: "route", document_pairs: items, fragment_manifest: plan.fragments.map(fragment => ({ fragment_id: fragment.fragment_id, document_id: fragment.document_id, rows: fragment.rows })), navigation: navigation.filter(fragment => items.some(pair => pair.document_ids.includes(fragmentMap.get(fragment.fragment_id)!.document_id))) });
+  const routeContext = (items: Pair[]) => JSON.stringify({ stage: "route", document_pairs: items, anchor_format: ["reference_id", "meaning"], fragment_manifest: plan.fragments.filter(fragment => items.some(pair => pair.document_ids.includes(fragment.document_id))).map(fragment => ({ fragment_id: fragment.fragment_id, document_id: fragment.document_id })), navigation: navigation.filter(fragment => items.some(pair => pair.document_ids.includes(fragmentMap.get(fragment.fragment_id)!.document_id))).map(fragment => ({ ...fragment, anchors: fragment.anchors.map((anchor: any) => [anchor.reference_id, anchor.meaning]) })) });
   if (!state.routing) {
     const groups: Pair[][] = []; let current: Pair[] = [];
     for (const pair of pairs) {
-      if (current.length && (current.length >= 12 || estimateTokens(ROUTING_PROMPT + routeContext([...current, pair])) > limit)) { groups.push(current); current = []; }
+      if (current.length && (current.length >= 4 || estimateTokens(ROUTING_PROMPT + routeContext([...current, pair])) > limit)) { groups.push(current); current = []; }
       current.push(pair);
       if (estimateTokens(ROUTING_PROMPT + routeContext(current)) > limit) throw fail("Навигация пары превышает Q1; данные не обработаны.", 413);
     }
@@ -169,7 +180,7 @@ export async function runSemanticAnalysis(documents: Extraction[], hooks: Hooks)
     updateCoverage(); await hooks.checkpoint();
   } else if (state.routing.some(task => {
     const taskPairs = pairs.filter(pair => task.fragment_keys.includes(pair.pair_id));
-    return taskPairs.length > 12 || estimateTokens(ROUTING_PROMPT + routeContext(taskPairs)) > limit;
+    return taskPairs.length > 4 || estimateTokens(ROUTING_PROMPT + routeContext(taskPairs)) > limit;
   })) {
     // Migrate older input-token-only route batches: they could require the model to emit
     // over a hundred decisions in one 4k-token response. Keep any complete saved decisions,
@@ -179,7 +190,7 @@ export async function runSemanticAnalysis(documents: Extraction[], hooks: Hooks)
     const failures = prior.flatMap(task => task.failures ?? []);
     const groups: Pair[][] = []; let current: Pair[] = [];
     for (const pair of pairs) {
-      if (current.length && (current.length >= 12 || estimateTokens(ROUTING_PROMPT + routeContext([...current, pair])) > limit)) { groups.push(current); current = []; }
+      if (current.length && (current.length >= 4 || estimateTokens(ROUTING_PROMPT + routeContext([...current, pair])) > limit)) { groups.push(current); current = []; }
       current.push(pair);
       if (estimateTokens(ROUTING_PROMPT + routeContext(current)) > limit) throw fail("Навигация пары превышает Q1; данные не обработаны.", 413);
     }

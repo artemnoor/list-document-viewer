@@ -1,3 +1,4 @@
+from contextvars import ContextVar
 """Budgeted page-by-page vision review with human-approved, bounded edits."""
 import base64
 import copy
@@ -1244,8 +1245,8 @@ def _review_page(path, extension, result, page_no, scope, parts, max_output_toke
             page_size = page['size']
             break
     page_parts, recognised, source_parts, truncated = _text_parts(parts, page_no if scope != 'source_text' else None, page_size)
-    key = os.environ.get('POLZA_AI_API_KEY', '').strip()
-    model = os.environ.get('POLZA_DOCUMENT_REVIEW_MODEL', MODEL).strip()[:160] or MODEL
+    key = _review_setting('POLZA_AI_API_KEY', '').strip()
+    model = _review_setting('POLZA_DOCUMENT_REVIEW_MODEL', MODEL).strip()[:160] or MODEL
     structure_review = {'status': 'not_applicable', 'tables': [], 'matched_tables': {},
                         'unmatched_extracted_tables': [], 'problems': []}
     structure_cost = 0.0
@@ -1370,7 +1371,7 @@ def _review_page(path, extension, result, page_no, scope, parts, max_output_toke
     if model.startswith(('deepseek/', 'qwen/')):
         payload['reasoning_effort'] = 'none'
     request_data = json.dumps(payload, ensure_ascii=False).encode('utf-8')
-    cache_enabled = os.environ.get('POLZA_DOCUMENT_REVIEW_CACHE_ENABLED', '1') != '0'
+    cache_enabled = _review_setting('POLZA_DOCUMENT_REVIEW_CACHE_ENABLED', '1') != '0'
     cache_key = None
     if cache_enabled:
         page_sizes = {}
@@ -1470,13 +1471,29 @@ def _review_page(path, extension, result, page_no, scope, parts, max_output_toke
     return result
 
 
-def review_document(path, extension, result, selected_pages=None):
+_request_review_settings = ContextVar('request_review_settings', default={})
+
+def _review_setting(name, default=None):
+    return _request_review_settings.get().get(name, os.environ.get(name, default))
+
+def review_document(path, extension, result, selected_pages=None, *, model=None):
+    if model is None:
+        return _review_document(path, extension, result, selected_pages)
+    if model not in {'google/gemma-4-26b-a4b-it', 'deepseek/deepseek-v4.1-flash'}:
+        raise ValueError('Unsupported project review model')
+    token = _request_review_settings.set({'POLZA_DOCUMENT_REVIEW_MODEL': model, 'POLZA_DOCUMENT_REVIEW_ENABLED': '1'})
+    try:
+        return _review_document(path, extension, result, selected_pages)
+    finally:
+        _request_review_settings.reset(token)
+
+def _review_document(path, extension, result, selected_pages=None):
     """Send every source page (or source text) alongside its current extraction."""
-    key = os.environ.get('POLZA_AI_API_KEY', '').strip()
+    key = _review_setting('POLZA_AI_API_KEY', '').strip()
     # AI review is a separate processing stage from local OCR. Disabling OCR
     # must not silently disable review of the source page or native text.
-    if not key or os.environ.get('POLZA_DOCUMENT_REVIEW_ENABLED', '1') == '0':
-        return {'status': 'disabled', 'model': os.environ.get('POLZA_DOCUMENT_REVIEW_MODEL', MODEL),
+    if not key or _review_setting('POLZA_DOCUMENT_REVIEW_ENABLED', '1') == '0':
+        return {'status': 'disabled', 'model': _review_setting('POLZA_DOCUMENT_REVIEW_MODEL', MODEL),
                 'pages_total': 0, 'pages_checked': 0, 'suggestions': [], 'cost_rub': None}
 
     extension = extension.lower()
@@ -1503,11 +1520,11 @@ def review_document(path, extension, result, selected_pages=None):
         page_numbers = list(dict.fromkeys(number for number in selected_pages
                                           if type(number) is int and number in allowed))
         if not page_numbers:
-            return {'status': 'no_pages', 'model': os.environ.get('POLZA_DOCUMENT_REVIEW_MODEL', MODEL),
+            return {'status': 'no_pages', 'model': _review_setting('POLZA_DOCUMENT_REVIEW_MODEL', MODEL),
                     'pages_total': page_count, 'pages_checked': 0, 'pages': [], 'suggestions': [], 'cost_rub': 0}
 
     if page_count <= 0:
-        return {'status': 'no_pages', 'model': os.environ.get('POLZA_DOCUMENT_REVIEW_MODEL', MODEL),
+        return {'status': 'no_pages', 'model': _review_setting('POLZA_DOCUMENT_REVIEW_MODEL', MODEL),
                 'pages_total': 0, 'pages_checked': 0, 'suggestions': [], 'cost_rub': None}
 
     def check(page_no):
@@ -1529,7 +1546,7 @@ def review_document(path, extension, result, selected_pages=None):
             error_label = 'Нет соединения с Polza или истекло время ожидания.'
         except ModelOutputError as error:
             error_label = 'Модель исчерпала лимит вывода до JSON-ответа.' if error.reason == 'output_limit' else 'Модель вернула ответ не в ожидаемом JSON-формате.'
-            return {'status': 'failed', 'suggestions': [], 'model': os.environ.get('POLZA_DOCUMENT_REVIEW_MODEL', MODEL),
+            return {'status': 'failed', 'suggestions': [], 'model': _review_setting('POLZA_DOCUMENT_REVIEW_MODEL', MODEL),
                     'error': error_label, 'cost_rub': error.cost_rub,
                     'finish_reason': error.finish_reason, 'completion_tokens': error.completion_tokens,
                     'reasoning_tokens': error.reasoning_tokens, 'parse_error': error.parse_reason}
@@ -1539,10 +1556,10 @@ def review_document(path, extension, result, selected_pages=None):
             import logging
             logging.getLogger(__name__).warning('[FIX:document_review] page %s failed (%s)', page_no, type(error).__name__)
             error_label = 'Не удалось обработать страницу или ответ модели.'
-        return {'status': 'failed', 'suggestions': [], 'model': os.environ.get('POLZA_DOCUMENT_REVIEW_MODEL', MODEL), 'error': error_label}
+        return {'status': 'failed', 'suggestions': [], 'model': _review_setting('POLZA_DOCUMENT_REVIEW_MODEL', MODEL), 'error': error_label}
 
     try:
-        requested_workers = int(os.environ.get('POLZA_DOCUMENT_REVIEW_WORKERS', '2'))
+        requested_workers = int(_review_setting('POLZA_DOCUMENT_REVIEW_WORKERS', '2'))
     except (TypeError, ValueError):
         requested_workers = 2
     workers = max(1, min(4, requested_workers, len(page_numbers)))

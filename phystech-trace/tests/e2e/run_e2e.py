@@ -143,6 +143,25 @@ def require(condition: bool, message: str) -> None:
         raise AssertionError(message)
 
 
+def validate_compact_relations(links, documents):
+    from decimal import Decimal, InvalidOperation
+    ids = {doc['file_name']: doc['document_id'] for doc in documents}
+    report_id = ids['synthetic_kfz_report.pdf']
+    act_id = ids['synthetic_acceptance_act.docx']
+    registry_id = ids['synthetic_primary_register.xlsx']
+    def same_number(value, expected):
+        try: return Decimal(re.sub(r'\s', '', str(value)).replace(',', '.')) == Decimal(expected)
+        except (InvalidOperation, ValueError): return False
+    for left, right in [(report_id, registry_id), (act_id, registry_id), (report_id, act_id)]:
+        pair = [link for link in links if {link['source_document_id'], link['target_document_id']} == {left, right}]
+        require(pair, 'Known synthetic document pair is absent')
+        require(any('fields.' in e['source']['path'] and 'fields.' in e['target']['path'] and same_number(e['source']['raw_value'], '1180300') and same_number(e['target']['raw_value'], '1180300') for link in pair for e in link.get('evidence', [])), 'Known document totals lack exact source evidence')
+    rows = [link for link in links if {link['source_document_id'], link['target_document_id']} == {act_id, registry_id}]
+    expected = [('description.value', 'Обследование насосного узла № 4'), ('quantity.value', '1'), ('amount.value.amount', '286500')]
+    require(any(all(any(any(e['source']['path'].endswith(path) for path in (suffix, suffix.split('.')[0] + '.source_value')) and any(e['target']['path'].endswith(path) for path in (suffix, suffix.split('.')[0] + '.source_value')) and (e['source']['raw_value'] == e['target']['raw_value'] == value if suffix.startswith('description') else same_number(e['source']['raw_value'], value) and same_number(e['target']['raw_value'], value)) for e in link.get('evidence', [])) for suffix, value in expected) for link in rows), 'Known row description, quantity and amount lack joint evidence')
+    return ['report_registry_total', 'act_registry_total', 'report_act_total', 'act_registry_matching_work_row']
+
+
 def wait_for_project(client: httpx.Client, base: str, project_id: str, timeout_seconds: int) -> dict[str, Any]:
     deadline = time.monotonic() + timeout_seconds
     while time.monotonic() < deadline:
@@ -152,7 +171,7 @@ def wait_for_project(client: httpx.Client, base: str, project_id: str, timeout_s
         stages = project.get("stages", {})
         all_stages_terminal = all(
             stages.get(name, {}).get("status") in {"completed", "failed", "blocked"}
-            for name in ("parser", "extraction", "linking")
+            for name in ("parser", "extraction", "linking", "reconciliation", "verification")
         )
         if project["status"] in {"completed", "partial", "failed"} or all_stages_terminal:
             return project
@@ -165,6 +184,7 @@ def main() -> int:
     parser.add_argument("--base-url", default="http://127.0.0.1:8084", help="Gateway URL")
     parser.add_argument("--timeout", type=int, default=1800, help="Maximum end-to-end wait in seconds")
     parser.add_argument("--compact-linking", action="store_true", help="Use three synthetic documents and one row each for a bounded live LLM check")
+    parser.add_argument("--public", action="store_true", help="Test the HTTPS frontend with a fresh account; omit private service documentation checks")
     args = parser.parse_args()
     report: dict[str, Any] = {
         "started_at": datetime.now(timezone.utc).isoformat(),
@@ -192,7 +212,17 @@ def main() -> int:
 
         with httpx.Client(timeout=httpx.Timeout(45, connect=8), follow_redirects=False) as client:
             base = args.base_url.rstrip("/")
-            for port, service in ((8081, "document-parser"), (8082, "structured-extraction"), (8083, "document-linking")):
+            if args.public:
+                require(base.startswith("https://"), "Public deployment check requires HTTPS")
+                require(client.get(f"{base}/api/projects").status_code == 401, "Public API must reject an unauthenticated request")
+                import secrets
+                credentials = {"email": f"deploy-e2e-{secrets.token_hex(8)}@example.test", "password": secrets.token_urlsafe(24)}
+                registration = client.post(f"{base}/api/auth/register", json=credentials)
+                require(registration.status_code == 201, f"Registration failed: {registration.status_code}")
+                require(any(cookie.name == "trace_session" and cookie.secure for cookie in client.cookies.jar), "HTTPS session cookie must be Secure")
+                require(client.get(f"{base}/api/auth/me").status_code == 200, "Session did not authenticate")
+                report["checks"].append("Public HTTPS registration, Secure session cookie and anonymous API rejection")
+            for port, service in (() if args.public else ((8081, "document-parser"), (8082, "structured-extraction"), (8083, "document-linking"))):
                 for route in ("/health", "/openapi.json", "/docs"):
                     response = client.get(f"http://127.0.0.1:{port}{route}")
                     require(response.status_code == 200, f"{service}{route} returned {response.status_code}")
@@ -201,19 +231,24 @@ def main() -> int:
                     if route == "/openapi.json":
                         body = response.json()
                         require(str(body.get("openapi", "")).startswith("3."), f"{service} OpenAPI document is invalid")
-            report["checks"].append("Parser, Extraction and Linking health/OpenAPI/Swagger endpoints")
+            if not args.public:
+                report["checks"].append("Parser, Extraction and Linking health/OpenAPI/Swagger endpoints")
 
-            frontend = client.get("http://127.0.0.1:8080/")
+            frontend = client.get(f"{base}/" if args.public else "http://127.0.0.1:8080/")
             require(frontend.status_code == 200 and "Phystech Trace" in frontend.text, "Vue frontend did not serve the application")
             report["checks"].append("Vue production frontend is served")
 
             gateway_health = client.get(f"{base}/health")
             require(gateway_health.status_code == 200, f"Gateway health returned {gateway_health.status_code}: {gateway_health.text[:500]}")
-            openapi = client.get(f"{base}/openapi.json")
-            require(openapi.status_code == 200 and str(openapi.json().get("openapi", "")).startswith("3."), "Gateway OpenAPI endpoint is invalid")
-            gateway_docs = client.get(f"{base}/docs")
-            require(gateway_docs.status_code == 200 and "swagger-ui" in gateway_docs.text.lower(), "Gateway Swagger UI is unavailable")
-            report["checks"].append("Gateway health, Swagger UI and OpenAPI endpoints")
+            require(gateway_health.json().get("status") == "ok", "Gateway reports unavailable dependencies")
+            if not args.public:
+                openapi = client.get(f"{base}/openapi.json")
+                require(openapi.status_code == 200 and str(openapi.json().get("openapi", "")).startswith("3."), "Gateway OpenAPI endpoint is invalid")
+                gateway_docs = client.get(f"{base}/docs")
+                require(gateway_docs.status_code == 200 and "swagger-ui" in gateway_docs.text.lower(), "Gateway Swagger UI is unavailable")
+                report["checks"].append("Gateway health, Swagger UI and OpenAPI endpoints")
+            else:
+                report["checks"].append("Public Gateway health confirms all service dependencies")
 
             created = client.post(f"{base}/api/projects", json={
                 "name": f"Synthetic E2E {datetime.now(timezone.utc).strftime('%Y%m%d-%H%M%S')}",
@@ -318,9 +353,10 @@ def main() -> int:
             require(pdf_page.status_code == 200 and pdf_page.headers.get("content-type", "").startswith("image/png"), "PDF page source navigation did not return a rendered image")
             report["checks"].append("Persisted parser/extraction results, stable IDs, XLSX cell and PDF bbox provenance, source file and page re-resolution")
 
-            bad_contract = client.post("http://127.0.0.1:8082/api/extractions", json={"parser_result": {}})
-            require(bad_contract.status_code == 422 and bad_contract.json().get("code") == "PARSER_CONTRACT_INVALID", "Structured Extraction did not diagnose an invalid parser contract")
-            report["checks"].append("Invalid Parser payload is rejected with a diagnostic contract error")
+            if not args.public:
+                bad_contract = client.post("http://127.0.0.1:8082/api/extractions", json={"parser_result": {}})
+                require(bad_contract.status_code == 422 and bad_contract.json().get("code") == "PARSER_CONTRACT_INVALID", "Structured Extraction did not diagnose an invalid parser contract")
+                report["checks"].append("Invalid Parser payload is rejected with a diagnostic contract error")
 
             first_ids = {doc["document_id"]: doc.get("extraction_id") for doc in project["documents"]}
             linking = project["stages"]["linking"]
@@ -355,19 +391,20 @@ def main() -> int:
                     "pending_review": sum(1 for link in linking_result.get("links", []) if link.get("status") in {"proposed", "review"}),
                 }
                 if args.compact_linking:
-                    relations = {link.get("relationship_type") for link in linking_result.get("links", [])}
-                    expected_relations = {"report_summarizes_registry", "act_validates_registry", "act_contains_line_item"}
-                    require(expected_relations <= relations, f"Known synthetic relations were not found: {sorted(expected_relations - relations)}")
-                    line_link = next(link for link in linking_result["links"] if link.get("relationship_type") == "act_contains_line_item")
-                    require(any(
-                        evidence.get("source", {}).get("path") == "line_items[0].description.value"
-                        and evidence.get("target", {}).get("path") == "tables[0].rows[0].description.value"
-                        and evidence.get("source", {}).get("raw_value") == evidence.get("target", {}).get("raw_value")
-                        for evidence in line_link.get("evidence", [])
-                    ), "Known act-to-register row relation has no equal, resolvable description evidence")
-                    report["linking"]["known_relations"] = sorted(expected_relations)
+                    report["linking"]["known_relations"] = validate_compact_relations(linking_result['links'], docs)
                     report["checks"].append("Live Linking found the expected report, act, registry and matching line-item relationships")
                 if linking_result.get("links") and evidence_count:
+                    if args.public:
+                        for stage_name in ("reconciliation", "verification"):
+                            require(project["stages"][stage_name]["status"] == "completed", f"{stage_name} did not complete: {project['stages'][stage_name]}")
+                        for route in ("reconciliation", "verification"):
+                            saved = client.get(f"{base}/api/projects/{project_id}/{route}")
+                            require(saved.status_code == 200 and saved.json().get(f"{route}_result"), f"Public {route} result is unavailable")
+                        if project.get("financial_audit"):
+                            pdf_report = client.get(f"{base}/api/projects/{project_id}/report.pdf")
+                            require(pdf_report.status_code == 200 and pdf_report.content.startswith(b"%PDF-"), "Public PDF report download failed")
+                            report["checks"].append("Authenticated financial audit PDF download")
+                        report["checks"].append("Completed Reconciliation and Verification results are available through HTTPS")
                     report["status"] = "full-e2e-passed"
                     report["checks"].append("Live Linking relations resolve back to exact extracted values and their source provenance")
                     exit_code = 0

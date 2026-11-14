@@ -1,0 +1,1259 @@
+{
+  "dataset": "public-synthetic-model-selection-v2",
+  "recorded_at": "2026-11-14T19:28:08.100Z",
+  "scope": "six short Russian text reasoning cases; no OCR, no production-pipeline quality claim",
+  "settings": {
+    "temperature": 0,
+    "max_tokens": 2048,
+    "repeats": 2
+  },
+  "cases": [
+    {
+      "id": "independent-acts",
+      "input": "Договор DEMO-1, январь 2026. Отчёт: общехозяйственные 120000. a: акт №1, 70000, январь, DEMO-1. b: акт №2, 50000, январь, DEMO-1.",
+      "gold": {
+        "sources": [
+          "a",
+          "b"
+        ],
+        "expected": "120000.00",
+        "status": "matched"
+      }
+    },
+    {
+      "id": "duplicate-representations",
+      "input": "Договор DEMO-1, январь. Отчёт 100000. act: акт №7 на 100000. invoice: счёт по акту №7 на 100000. registry: строка реестра оплаты акта №7 на 100000. Это одна операция. Не складывай представления.",
+      "gold": {
+        "sources": [
+          "act"
+        ],
+        "expected": "100000.00",
+        "status": "matched"
+      }
+    },
+    {
+      "id": "period-and-agreement",
+      "input": "Проверяется DEMO-1 за январь 2026. Отчёт 112500. a: акт DEMO-1 от 20.01.2026 за январь на 100000. june: акт DEMO-1 за июнь на 40000. other: акт OTHER за январь на 12500. Рекламный план на 112500 не является первичкой.",
+      "gold": {
+        "sources": [
+          "a"
+        ],
+        "expected": "100000.00",
+        "status": "mismatch"
+      }
+    },
+    {
+      "id": "missing-month",
+      "input": "Отчёт: оплата труда за январь и февраль 2026 — 200000. jan: ведомость зарплаты только за 01.01–31.01.2026 на 100000. Других документов нет. Неизвестно, был ли февральский расход нулевым.",
+      "gold": {
+        "sources": [],
+        "expected": null,
+        "status": "insufficient_data"
+      }
+    },
+    {
+      "id": "net-vs-vat",
+      "input": "Договор DEMO-1, январь, все документы представлены. Отчёт проверяет стоимость услуги БЕЗ НДС: 100000. a: единственный акт, стоимость без НДС 100000, НДС 20000, всего к оплате 120000. Это три колонки одной операции.",
+      "gold": {
+        "sources": [
+          "a"
+        ],
+        "expected": "100000.00",
+        "status": "matched"
+      }
+    },
+    {
+      "id": "negative-adjustment",
+      "input": "Договор DEMO-1, январь. Отчёт 90000. a: акт базовой услуги 100000. credit: отдельный корректировочный акт уменьшает стоимость на 10000; сумма корректировки -10000. Это разные номера операций. Счёт-оферта 150000 — план, не исполнение.",
+      "gold": {
+        "sources": [
+          "a",
+          "credit"
+        ],
+        "expected": "90000.00",
+        "status": "matched"
+      }
+    }
+  ],
+  "summary": [
+    {
+      "model": "google/gemma-4-26b-a4b-it",
+      "calls": 12,
+      "passed": 8,
+      "correct_amount": 9,
+      "correct_status": 11,
+      "correct_sources": 9,
+      "errors": 0,
+      "mean_duration_ms": 1681
+    },
+    {
+      "model": "qwen/qwen3.8-27b",
+      "calls": 12,
+      "passed": 12,
+      "correct_amount": 12,
+      "correct_status": 12,
+      "correct_sources": 12,
+      "errors": 0,
+      "mean_duration_ms": 5361
+    }
+  ],
+  "results": [
+    {
+      "model_requested": "google/gemma-4-26b-a4b-it",
+      "case_id": "independent-acts",
+      "repeat": 1,
+      "prompt_sha256": "2df2a667353b23a7dd973c503e014c27f4e530866aa54c4a2e45c1f5fe06b334",
+      "expected": {
+        "sources": [
+          "a",
+          "b"
+        ],
+        "expected": "120000.00",
+        "status": "matched"
+      },
+      "http_status": 200,
+      "model_returned": "google/gemma-4-26b-a4b-it",
+      "usage": {
+        "prompt_tokens": 261,
+        "completion_tokens": 52,
+        "total_tokens": 313,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "audio_tokens": 0,
+          "image_tokens": 0,
+          "accepted_prediction_tokens": null,
+          "rejected_prediction_tokens": null
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "server_tool_use": null,
+        "cost_rub": 0.00659251,
+        "cost": 0.00659251,
+        "plugins": null
+      },
+      "finish_reason": "stop",
+      "response": "```json\n{\n  \"sources\": [\n    \"a\",\n    \"b\"\n  ],\n  \"expected\": \"120000.00\",\n  \"status\": \"matched\"\n}\n```",
+      "actual": {
+        "sources": [
+          "a",
+          "b"
+        ],
+        "expected": "120000.00",
+        "status": "matched"
+      },
+      "passed": true,
+      "duration_ms": 2658
+    },
+    {
+      "model_requested": "google/gemma-4-26b-a4b-it",
+      "case_id": "duplicate-representations",
+      "repeat": 1,
+      "prompt_sha256": "9a2bb6d0e6fc05b83459ba801c83f100c0831faeb2b814e4bd5695fb47644840",
+      "expected": {
+        "sources": [
+          "act"
+        ],
+        "expected": "100000.00",
+        "status": "matched"
+      },
+      "http_status": 200,
+      "model_returned": "google/gemma-4-26b-a4b-it",
+      "usage": {
+        "prompt_tokens": 269,
+        "completion_tokens": 47,
+        "total_tokens": 316,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "audio_tokens": 0,
+          "image_tokens": 0,
+          "accepted_prediction_tokens": null,
+          "rejected_prediction_tokens": null
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "server_tool_use": null,
+        "cost_rub": 0.00419304,
+        "cost": 0.00419304,
+        "plugins": null
+      },
+      "finish_reason": "stop",
+      "response": "```json\n{\n  \"sources\": [\n    \"act\"\n  ],\n  \"expected\": \"100000.00\",\n  \"status\": \"matched\"\n}\n```",
+      "actual": {
+        "sources": [
+          "act"
+        ],
+        "expected": "100000.00",
+        "status": "matched"
+      },
+      "passed": true,
+      "duration_ms": 1579
+    },
+    {
+      "model_requested": "google/gemma-4-26b-a4b-it",
+      "case_id": "period-and-agreement",
+      "repeat": 1,
+      "prompt_sha256": "9d42d4bea6647e812479af977df91cec76eb6c227cd8646df8e682de142f1f38",
+      "expected": {
+        "sources": [
+          "a"
+        ],
+        "expected": "100000.00",
+        "status": "mismatch"
+      },
+      "http_status": 200,
+      "model_returned": "google/gemma-4-26b-a4b-it",
+      "usage": {
+        "prompt_tokens": 297,
+        "completion_tokens": 48,
+        "total_tokens": 345,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "audio_tokens": 0,
+          "image_tokens": 0,
+          "accepted_prediction_tokens": null,
+          "rejected_prediction_tokens": null
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "server_tool_use": null,
+        "cost_rub": 0.00488756,
+        "cost": 0.00488756,
+        "plugins": null
+      },
+      "finish_reason": "stop",
+      "response": "```json\n{\n  \"sources\": [\n    \"a\"\n  ],\n  \"expected\": \"112500.00\",\n  \"status\": \"mismatch\"\n}\n```",
+      "actual": {
+        "sources": [
+          "a"
+        ],
+        "expected": "112500.00",
+        "status": "mismatch"
+      },
+      "passed": false,
+      "duration_ms": 774
+    },
+    {
+      "model_requested": "google/gemma-4-26b-a4b-it",
+      "case_id": "missing-month",
+      "repeat": 1,
+      "prompt_sha256": "f12dcdea2fd8806dca6302e31058957d9921a0e423ff3d3291172ee495b80a5b",
+      "expected": {
+        "sources": [],
+        "expected": null,
+        "status": "insufficient_data"
+      },
+      "http_status": 200,
+      "model_returned": "google/gemma-4-26b-a4b-it",
+      "usage": {
+        "prompt_tokens": 268,
+        "completion_tokens": 48,
+        "total_tokens": 316,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "audio_tokens": 0,
+          "image_tokens": 0,
+          "accepted_prediction_tokens": null,
+          "rejected_prediction_tokens": null
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 128,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "server_tool_use": null,
+        "cost_rub": 0.00389215,
+        "cost": 0.00389215,
+        "plugins": null
+      },
+      "finish_reason": "stop",
+      "response": "```json\n{\n  \"sources\": [\n    \"jan\"\n  ],\n  \"expected\": \"200000.00\",\n  \"status\": \"mismatch\"\n}\n```",
+      "actual": {
+        "sources": [
+          "jan"
+        ],
+        "expected": "200000.00",
+        "status": "mismatch"
+      },
+      "passed": false,
+      "duration_ms": 865
+    },
+    {
+      "model_requested": "google/gemma-4-26b-a4b-it",
+      "case_id": "net-vs-vat",
+      "repeat": 1,
+      "prompt_sha256": "ae4bb39a9aa73924b383097a508984ededf780b6f45856f37b872067dcffbe72",
+      "expected": {
+        "sources": [
+          "a"
+        ],
+        "expected": "100000.00",
+        "status": "matched"
+      },
+      "http_status": 200,
+      "model_returned": "google/gemma-4-26b-a4b-it",
+      "usage": {
+        "prompt_tokens": 269,
+        "completion_tokens": 47,
+        "total_tokens": 316,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "audio_tokens": 0,
+          "image_tokens": 0,
+          "accepted_prediction_tokens": null,
+          "rejected_prediction_tokens": null
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "server_tool_use": null,
+        "cost_rub": 0.00647688,
+        "cost": 0.00647688,
+        "plugins": null
+      },
+      "finish_reason": "stop",
+      "response": "```json\n{\n  \"sources\": [\n    \"a\"\n  ],\n  \"expected\": \"100000.00\",\n  \"status\": \"matched\"\n}\n```",
+      "actual": {
+        "sources": [
+          "a"
+        ],
+        "expected": "100000.00",
+        "status": "matched"
+      },
+      "passed": true,
+      "duration_ms": 1189
+    },
+    {
+      "model_requested": "google/gemma-4-26b-a4b-it",
+      "case_id": "negative-adjustment",
+      "repeat": 1,
+      "prompt_sha256": "a252b9bf075611c8ab356cd6960516166477cf4fd48c4dbfea11cd25ad97229e",
+      "expected": {
+        "sources": [
+          "a",
+          "credit"
+        ],
+        "expected": "90000.00",
+        "status": "matched"
+      },
+      "http_status": 200,
+      "model_returned": "google/gemma-4-26b-a4b-it",
+      "usage": {
+        "prompt_tokens": 277,
+        "completion_tokens": 51,
+        "total_tokens": 328,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "audio_tokens": 0,
+          "image_tokens": 0,
+          "accepted_prediction_tokens": null,
+          "rejected_prediction_tokens": null
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "server_tool_use": null,
+        "cost_rub": 0.00442432,
+        "cost": 0.00442432,
+        "plugins": null
+      },
+      "finish_reason": "stop",
+      "response": "```json\n{\n  \"sources\": [\n    \"a\",\n    \"credit\"\n  ],\n  \"expected\": \"90000.00\",\n  \"status\": \"matched\"\n}\n```",
+      "actual": {
+        "sources": [
+          "a",
+          "credit"
+        ],
+        "expected": "90000.00",
+        "status": "matched"
+      },
+      "passed": true,
+      "duration_ms": 2498
+    },
+    {
+      "model_requested": "google/gemma-4-26b-a4b-it",
+      "case_id": "independent-acts",
+      "repeat": 2,
+      "prompt_sha256": "2df2a667353b23a7dd973c503e014c27f4e530866aa54c4a2e45c1f5fe06b334",
+      "expected": {
+        "sources": [
+          "a",
+          "b"
+        ],
+        "expected": "120000.00",
+        "status": "matched"
+      },
+      "http_status": 200,
+      "model_returned": "google/gemma-4-26b-a4b-it",
+      "usage": {
+        "prompt_tokens": 260,
+        "completion_tokens": 52,
+        "total_tokens": 312,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "audio_tokens": 0,
+          "image_tokens": 0,
+          "accepted_prediction_tokens": null,
+          "rejected_prediction_tokens": null
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 32,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "server_tool_use": null,
+        "cost_rub": 0.00481821,
+        "cost": 0.00481821,
+        "plugins": null
+      },
+      "finish_reason": "stop",
+      "response": "```json\n{\n  \"sources\": [\n    \"a\",\n    \"b\"\n  ],\n  \"expected\": \"120000.00\",\n  \"status\": \"matched\"\n}\n```",
+      "actual": {
+        "sources": [
+          "a",
+          "b"
+        ],
+        "expected": "120000.00",
+        "status": "matched"
+      },
+      "passed": true,
+      "duration_ms": 3218
+    },
+    {
+      "model_requested": "google/gemma-4-26b-a4b-it",
+      "case_id": "duplicate-representations",
+      "repeat": 2,
+      "prompt_sha256": "9a2bb6d0e6fc05b83459ba801c83f100c0831faeb2b814e4bd5695fb47644840",
+      "expected": {
+        "sources": [
+          "act"
+        ],
+        "expected": "100000.00",
+        "status": "matched"
+      },
+      "http_status": 200,
+      "model_returned": "google/gemma-4-26b-a4b-it",
+      "usage": {
+        "prompt_tokens": 269,
+        "completion_tokens": 47,
+        "total_tokens": 316,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "audio_tokens": 0,
+          "image_tokens": 0,
+          "accepted_prediction_tokens": null,
+          "rejected_prediction_tokens": null
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "server_tool_use": null,
+        "cost_rub": 0.00454688,
+        "cost": 0.00454688,
+        "plugins": null
+      },
+      "finish_reason": "stop",
+      "response": "```json\n{\n  \"sources\": [\n    \"act\"\n  ],\n  \"expected\": \"100000.00\",\n  \"status\": \"matched\"\n}\n```",
+      "actual": {
+        "sources": [
+          "act"
+        ],
+        "expected": "100000.00",
+        "status": "matched"
+      },
+      "passed": true,
+      "duration_ms": 794
+    },
+    {
+      "model_requested": "google/gemma-4-26b-a4b-it",
+      "case_id": "period-and-agreement",
+      "repeat": 2,
+      "prompt_sha256": "9d42d4bea6647e812479af977df91cec76eb6c227cd8646df8e682de142f1f38",
+      "expected": {
+        "sources": [
+          "a"
+        ],
+        "expected": "100000.00",
+        "status": "mismatch"
+      },
+      "http_status": 200,
+      "model_returned": "google/gemma-4-26b-a4b-it",
+      "usage": {
+        "prompt_tokens": 297,
+        "completion_tokens": 53,
+        "total_tokens": 350,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "audio_tokens": 0,
+          "image_tokens": 0,
+          "accepted_prediction_tokens": null,
+          "rejected_prediction_tokens": null
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "server_tool_use": null,
+        "cost_rub": 0.00385125,
+        "cost": 0.00385125,
+        "plugins": null
+      },
+      "finish_reason": "stop",
+      "response": "```json\n{\n  \"sources\": [\n    \"a\",\n    \"other\"\n  ],\n  \"expected\": \"112500.00\",\n  \"status\": \"mismatch\"\n}\n```",
+      "actual": {
+        "sources": [
+          "a",
+          "other"
+        ],
+        "expected": "112500.00",
+        "status": "mismatch"
+      },
+      "passed": false,
+      "duration_ms": 1462
+    },
+    {
+      "model_requested": "google/gemma-4-26b-a4b-it",
+      "case_id": "missing-month",
+      "repeat": 2,
+      "prompt_sha256": "f12dcdea2fd8806dca6302e31058957d9921a0e423ff3d3291172ee495b80a5b",
+      "expected": {
+        "sources": [],
+        "expected": null,
+        "status": "insufficient_data"
+      },
+      "http_status": 200,
+      "model_returned": "google/gemma-4-26b-a4b-it",
+      "usage": {
+        "prompt_tokens": 268,
+        "completion_tokens": 41,
+        "total_tokens": 309,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "audio_tokens": 0,
+          "image_tokens": 0,
+          "accepted_prediction_tokens": null,
+          "rejected_prediction_tokens": null
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "server_tool_use": null,
+        "cost_rub": 0.00617212,
+        "cost": 0.00617212,
+        "plugins": null
+      },
+      "finish_reason": "stop",
+      "response": "```json\n{\n  \"sources\": [\n    \"jan\"\n  ],\n  \"expected\": null,\n  \"status\": \"insufficient_data\"\n}\n```",
+      "actual": {
+        "sources": [
+          "jan"
+        ],
+        "expected": null,
+        "status": "insufficient_data"
+      },
+      "passed": false,
+      "duration_ms": 1261
+    },
+    {
+      "model_requested": "google/gemma-4-26b-a4b-it",
+      "case_id": "net-vs-vat",
+      "repeat": 2,
+      "prompt_sha256": "ae4bb39a9aa73924b383097a508984ededf780b6f45856f37b872067dcffbe72",
+      "expected": {
+        "sources": [
+          "a"
+        ],
+        "expected": "100000.00",
+        "status": "matched"
+      },
+      "http_status": 200,
+      "model_returned": "google/gemma-4-26b-a4b-it",
+      "usage": {
+        "prompt_tokens": 269,
+        "completion_tokens": 47,
+        "total_tokens": 316,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "audio_tokens": 0,
+          "image_tokens": 0,
+          "accepted_prediction_tokens": null,
+          "rejected_prediction_tokens": null
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "server_tool_use": null,
+        "cost_rub": 0.00419304,
+        "cost": 0.00419304,
+        "plugins": null
+      },
+      "finish_reason": "stop",
+      "response": "```json\n{\n  \"sources\": [\n    \"a\"\n  ],\n  \"expected\": \"100000.00\",\n  \"status\": \"matched\"\n}\n```",
+      "actual": {
+        "sources": [
+          "a"
+        ],
+        "expected": "100000.00",
+        "status": "matched"
+      },
+      "passed": true,
+      "duration_ms": 2340
+    },
+    {
+      "model_requested": "google/gemma-4-26b-a4b-it",
+      "case_id": "negative-adjustment",
+      "repeat": 2,
+      "prompt_sha256": "a252b9bf075611c8ab356cd6960516166477cf4fd48c4dbfea11cd25ad97229e",
+      "expected": {
+        "sources": [
+          "a",
+          "credit"
+        ],
+        "expected": "90000.00",
+        "status": "matched"
+      },
+      "http_status": 200,
+      "model_returned": "google/gemma-4-26b-a4b-it",
+      "usage": {
+        "prompt_tokens": 277,
+        "completion_tokens": 51,
+        "total_tokens": 328,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "audio_tokens": 0,
+          "image_tokens": 0,
+          "accepted_prediction_tokens": null,
+          "rejected_prediction_tokens": null
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "server_tool_use": null,
+        "cost_rub": 0.00401706,
+        "cost": 0.00401706,
+        "plugins": null
+      },
+      "finish_reason": "stop",
+      "response": "```json\n{\n  \"sources\": [\n    \"a\",\n    \"credit\"\n  ],\n  \"expected\": \"90000.00\",\n  \"status\": \"matched\"\n}\n```",
+      "actual": {
+        "sources": [
+          "a",
+          "credit"
+        ],
+        "expected": "90000.00",
+        "status": "matched"
+      },
+      "passed": true,
+      "duration_ms": 1538
+    },
+    {
+      "model_requested": "qwen/qwen3.8-27b",
+      "case_id": "independent-acts",
+      "repeat": 1,
+      "prompt_sha256": "2df2a667353b23a7dd973c503e014c27f4e530866aa54c4a2e45c1f5fe06b334",
+      "expected": {
+        "sources": [
+          "a",
+          "b"
+        ],
+        "expected": "120000.00",
+        "status": "matched"
+      },
+      "http_status": 200,
+      "model_returned": "qwen/qwen3.8-27b",
+      "usage": {
+        "prompt_tokens": 302,
+        "completion_tokens": 393,
+        "total_tokens": 695,
+        "completion_tokens_details": {
+          "reasoning_tokens": 400,
+          "audio_tokens": 0,
+          "image_tokens": 0,
+          "accepted_prediction_tokens": null,
+          "rejected_prediction_tokens": null
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "server_tool_use": null,
+        "cost_rub": 0.03910264,
+        "cost": 0.03910264,
+        "plugins": null
+      },
+      "finish_reason": "stop",
+      "response": "\n\n{\n  \"sources\": [\"a\", \"b\"],\n  \"expected\": \"120000.00\",\n  \"status\": \"matched\"\n}",
+      "actual": {
+        "sources": [
+          "a",
+          "b"
+        ],
+        "expected": "120000.00",
+        "status": "matched"
+      },
+      "passed": true,
+      "duration_ms": 3681
+    },
+    {
+      "model_requested": "qwen/qwen3.8-27b",
+      "case_id": "duplicate-representations",
+      "repeat": 1,
+      "prompt_sha256": "9a2bb6d0e6fc05b83459ba801c83f100c0831faeb2b814e4bd5695fb47644840",
+      "expected": {
+        "sources": [
+          "act"
+        ],
+        "expected": "100000.00",
+        "status": "matched"
+      },
+      "http_status": 200,
+      "model_returned": "qwen/qwen3.8-27b",
+      "usage": {
+        "prompt_tokens": 311,
+        "completion_tokens": 389,
+        "total_tokens": 700,
+        "completion_tokens_details": {
+          "reasoning_tokens": 353,
+          "audio_tokens": 0,
+          "image_tokens": 0,
+          "accepted_prediction_tokens": null,
+          "rejected_prediction_tokens": null
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "server_tool_use": null,
+        "cost_rub": 0.10703972,
+        "cost": 0.10703972,
+        "plugins": null
+      },
+      "finish_reason": "stop",
+      "response": "\n\n{\n  \"sources\": [\n    \"act\"\n  ],\n  \"expected\": \"100000.00\",\n  \"status\": \"matched\"\n}",
+      "actual": {
+        "sources": [
+          "act"
+        ],
+        "expected": "100000.00",
+        "status": "matched"
+      },
+      "passed": true,
+      "duration_ms": 2059
+    },
+    {
+      "model_requested": "qwen/qwen3.8-27b",
+      "case_id": "period-and-agreement",
+      "repeat": 1,
+      "prompt_sha256": "9d42d4bea6647e812479af977df91cec76eb6c227cd8646df8e682de142f1f38",
+      "expected": {
+        "sources": [
+          "a"
+        ],
+        "expected": "100000.00",
+        "status": "mismatch"
+      },
+      "http_status": 200,
+      "model_returned": "qwen/qwen3.8-27b",
+      "usage": {
+        "prompt_tokens": 338,
+        "completion_tokens": 509,
+        "total_tokens": 847,
+        "completion_tokens_details": {
+          "reasoning_tokens": 470,
+          "audio_tokens": 0,
+          "image_tokens": 0,
+          "accepted_prediction_tokens": null,
+          "rejected_prediction_tokens": null
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "server_tool_use": null,
+        "cost_rub": 0.14170485,
+        "cost": 0.14170485,
+        "plugins": null
+      },
+      "finish_reason": "stop",
+      "response": "\n\n{\n  \"sources\": [\"a\"],\n  \"expected\": \"100000.00\",\n  \"status\": \"mismatch\"\n}",
+      "actual": {
+        "sources": [
+          "a"
+        ],
+        "expected": "100000.00",
+        "status": "mismatch"
+      },
+      "passed": true,
+      "duration_ms": 7402
+    },
+    {
+      "model_requested": "qwen/qwen3.8-27b",
+      "case_id": "missing-month",
+      "repeat": 1,
+      "prompt_sha256": "f12dcdea2fd8806dca6302e31058957d9921a0e423ff3d3291172ee495b80a5b",
+      "expected": {
+        "sources": [],
+        "expected": null,
+        "status": "insufficient_data"
+      },
+      "http_status": 200,
+      "model_returned": "qwen/qwen3.8-27b",
+      "usage": {
+        "prompt_tokens": 306,
+        "completion_tokens": 398,
+        "total_tokens": 704,
+        "completion_tokens_details": {
+          "reasoning_tokens": 370,
+          "audio_tokens": 0,
+          "image_tokens": 0,
+          "accepted_prediction_tokens": null,
+          "rejected_prediction_tokens": null
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "server_tool_use": null,
+        "cost_rub": 0.11885121,
+        "cost": 0.11885121,
+        "plugins": null
+      },
+      "finish_reason": "stop",
+      "response": "\n\n{\n  \"sources\": [],\n  \"expected\": null,\n  \"status\": \"insufficient_data\"\n}",
+      "actual": {
+        "sources": [],
+        "expected": null,
+        "status": "insufficient_data"
+      },
+      "passed": true,
+      "duration_ms": 4429
+    },
+    {
+      "model_requested": "qwen/qwen3.8-27b",
+      "case_id": "net-vs-vat",
+      "repeat": 1,
+      "prompt_sha256": "ae4bb39a9aa73924b383097a508984ededf780b6f45856f37b872067dcffbe72",
+      "expected": {
+        "sources": [
+          "a"
+        ],
+        "expected": "100000.00",
+        "status": "matched"
+      },
+      "http_status": 200,
+      "model_returned": "qwen/qwen3.8-27b",
+      "usage": {
+        "prompt_tokens": 304,
+        "completion_tokens": 584,
+        "total_tokens": 888,
+        "completion_tokens_details": {
+          "reasoning_tokens": 541,
+          "audio_tokens": 0,
+          "image_tokens": 0,
+          "accepted_prediction_tokens": null,
+          "rejected_prediction_tokens": null
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "server_tool_use": null,
+        "cost_rub": 0.17371033,
+        "cost": 0.17371033,
+        "plugins": null
+      },
+      "finish_reason": "stop",
+      "response": "\n\n{\n  \"sources\": [\n    \"a\"\n  ],\n  \"expected\": \"100000.00\",\n  \"status\": \"matched\"\n}",
+      "actual": {
+        "sources": [
+          "a"
+        ],
+        "expected": "100000.00",
+        "status": "matched"
+      },
+      "passed": true,
+      "duration_ms": 6083
+    },
+    {
+      "model_requested": "qwen/qwen3.8-27b",
+      "case_id": "negative-adjustment",
+      "repeat": 1,
+      "prompt_sha256": "a252b9bf075611c8ab356cd6960516166477cf4fd48c4dbfea11cd25ad97229e",
+      "expected": {
+        "sources": [
+          "a",
+          "credit"
+        ],
+        "expected": "90000.00",
+        "status": "matched"
+      },
+      "http_status": 200,
+      "model_returned": "qwen/qwen3.8-27b",
+      "usage": {
+        "prompt_tokens": 317,
+        "completion_tokens": 479,
+        "total_tokens": 796,
+        "completion_tokens_details": {
+          "reasoning_tokens": 432,
+          "audio_tokens": 0,
+          "image_tokens": 0,
+          "accepted_prediction_tokens": null,
+          "rejected_prediction_tokens": null
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "server_tool_use": null,
+        "cost_rub": 0.18452357,
+        "cost": 0.18452357,
+        "plugins": null
+      },
+      "finish_reason": "stop",
+      "response": "\n\n{\n  \"sources\": [\n    \"a\",\n    \"credit\"\n  ],\n  \"expected\": \"90000.00\",\n  \"status\": \"matched\"\n}",
+      "actual": {
+        "sources": [
+          "a",
+          "credit"
+        ],
+        "expected": "90000.00",
+        "status": "matched"
+      },
+      "passed": true,
+      "duration_ms": 3224
+    },
+    {
+      "model_requested": "qwen/qwen3.8-27b",
+      "case_id": "independent-acts",
+      "repeat": 2,
+      "prompt_sha256": "2df2a667353b23a7dd973c503e014c27f4e530866aa54c4a2e45c1f5fe06b334",
+      "expected": {
+        "sources": [
+          "a",
+          "b"
+        ],
+        "expected": "120000.00",
+        "status": "matched"
+      },
+      "http_status": 200,
+      "model_returned": "qwen/qwen3.8-27b",
+      "usage": {
+        "prompt_tokens": 302,
+        "completion_tokens": 392,
+        "total_tokens": 694,
+        "completion_tokens_details": {
+          "reasoning_tokens": 399,
+          "audio_tokens": 0,
+          "image_tokens": 0,
+          "accepted_prediction_tokens": null,
+          "rejected_prediction_tokens": null
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "server_tool_use": null,
+        "cost_rub": 0.03940692,
+        "cost": 0.03940692,
+        "plugins": null
+      },
+      "finish_reason": "stop",
+      "response": "\n\n{\n  \"sources\": [\"a\", \"b\"],\n  \"expected\": \"120000.00\",\n  \"status\": \"matched\"\n}",
+      "actual": {
+        "sources": [
+          "a",
+          "b"
+        ],
+        "expected": "120000.00",
+        "status": "matched"
+      },
+      "passed": true,
+      "duration_ms": 10600
+    },
+    {
+      "model_requested": "qwen/qwen3.8-27b",
+      "case_id": "duplicate-representations",
+      "repeat": 2,
+      "prompt_sha256": "9a2bb6d0e6fc05b83459ba801c83f100c0831faeb2b814e4bd5695fb47644840",
+      "expected": {
+        "sources": [
+          "act"
+        ],
+        "expected": "100000.00",
+        "status": "matched"
+      },
+      "http_status": 200,
+      "model_returned": "qwen/qwen3.8-27b",
+      "usage": {
+        "prompt_tokens": 311,
+        "completion_tokens": 429,
+        "total_tokens": 740,
+        "completion_tokens_details": {
+          "reasoning_tokens": 468,
+          "audio_tokens": 0,
+          "image_tokens": 0,
+          "accepted_prediction_tokens": null,
+          "rejected_prediction_tokens": null
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "server_tool_use": null,
+        "cost_rub": 0.04513559,
+        "cost": 0.04513559,
+        "plugins": null
+      },
+      "finish_reason": "stop",
+      "response": "\n\n{\n  \"sources\": [\n    \"act\"\n  ],\n  \"expected\": \"100000.00\",\n  \"status\": \"matched\"\n}",
+      "actual": {
+        "sources": [
+          "act"
+        ],
+        "expected": "100000.00",
+        "status": "matched"
+      },
+      "passed": true,
+      "duration_ms": 11581
+    },
+    {
+      "model_requested": "qwen/qwen3.8-27b",
+      "case_id": "period-and-agreement",
+      "repeat": 2,
+      "prompt_sha256": "9d42d4bea6647e812479af977df91cec76eb6c227cd8646df8e682de142f1f38",
+      "expected": {
+        "sources": [
+          "a"
+        ],
+        "expected": "100000.00",
+        "status": "mismatch"
+      },
+      "http_status": 200,
+      "model_returned": "qwen/qwen3.8-27b",
+      "usage": {
+        "prompt_tokens": 338,
+        "completion_tokens": 389,
+        "total_tokens": 727,
+        "completion_tokens_details": {
+          "reasoning_tokens": 351,
+          "audio_tokens": 0,
+          "image_tokens": 0,
+          "accepted_prediction_tokens": null,
+          "rejected_prediction_tokens": null
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "server_tool_use": null,
+        "cost_rub": 0.10337473,
+        "cost": 0.10337473,
+        "plugins": null
+      },
+      "finish_reason": "stop",
+      "response": "\n\n{\n  \"sources\": [\"a\"],\n  \"expected\": \"100000.00\",\n  \"status\": \"mismatch\"\n}",
+      "actual": {
+        "sources": [
+          "a"
+        ],
+        "expected": "100000.00",
+        "status": "mismatch"
+      },
+      "passed": true,
+      "duration_ms": 1892
+    },
+    {
+      "model_requested": "qwen/qwen3.8-27b",
+      "case_id": "missing-month",
+      "repeat": 2,
+      "prompt_sha256": "f12dcdea2fd8806dca6302e31058957d9921a0e423ff3d3291172ee495b80a5b",
+      "expected": {
+        "sources": [],
+        "expected": null,
+        "status": "insufficient_data"
+      },
+      "http_status": 200,
+      "model_returned": "qwen/qwen3.8-27b",
+      "usage": {
+        "prompt_tokens": 306,
+        "completion_tokens": 449,
+        "total_tokens": 755,
+        "completion_tokens_details": {
+          "reasoning_tokens": 421,
+          "audio_tokens": 0,
+          "image_tokens": 0,
+          "accepted_prediction_tokens": null,
+          "rejected_prediction_tokens": null
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "server_tool_use": null,
+        "cost_rub": 0.11872377,
+        "cost": 0.11872377,
+        "plugins": null
+      },
+      "finish_reason": "stop",
+      "response": "\n\n{\n  \"sources\": [],\n  \"expected\": null,\n  \"status\": \"insufficient_data\"\n}",
+      "actual": {
+        "sources": [],
+        "expected": null,
+        "status": "insufficient_data"
+      },
+      "passed": true,
+      "duration_ms": 2096
+    },
+    {
+      "model_requested": "qwen/qwen3.8-27b",
+      "case_id": "net-vs-vat",
+      "repeat": 2,
+      "prompt_sha256": "ae4bb39a9aa73924b383097a508984ededf780b6f45856f37b872067dcffbe72",
+      "expected": {
+        "sources": [
+          "a"
+        ],
+        "expected": "100000.00",
+        "status": "matched"
+      },
+      "http_status": 200,
+      "model_returned": "qwen/qwen3.8-27b",
+      "usage": {
+        "prompt_tokens": 304,
+        "completion_tokens": 473,
+        "total_tokens": 777,
+        "completion_tokens_details": {
+          "reasoning_tokens": 521,
+          "audio_tokens": 0,
+          "image_tokens": 0,
+          "accepted_prediction_tokens": null,
+          "rejected_prediction_tokens": null
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "server_tool_use": null,
+        "cost_rub": 0.04924165,
+        "cost": 0.04924165,
+        "plugins": null
+      },
+      "finish_reason": "stop",
+      "response": "\n\n{\n  \"sources\": [\n    \"a\"\n  ],\n  \"expected\": \"100000.00\",\n  \"status\": \"matched\"\n}",
+      "actual": {
+        "sources": [
+          "a"
+        ],
+        "expected": "100000.00",
+        "status": "matched"
+      },
+      "passed": true,
+      "duration_ms": 7622
+    },
+    {
+      "model_requested": "qwen/qwen3.8-27b",
+      "case_id": "negative-adjustment",
+      "repeat": 2,
+      "prompt_sha256": "a252b9bf075611c8ab356cd6960516166477cf4fd48c4dbfea11cd25ad97229e",
+      "expected": {
+        "sources": [
+          "a",
+          "credit"
+        ],
+        "expected": "90000.00",
+        "status": "matched"
+      },
+      "http_status": 200,
+      "model_returned": "qwen/qwen3.8-27b",
+      "usage": {
+        "prompt_tokens": 317,
+        "completion_tokens": 641,
+        "total_tokens": 958,
+        "completion_tokens_details": {
+          "reasoning_tokens": 602,
+          "audio_tokens": 0,
+          "image_tokens": 0,
+          "accepted_prediction_tokens": null,
+          "rejected_prediction_tokens": null
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 192,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "server_tool_use": null,
+        "cost_rub": 0.16862089,
+        "cost": 0.16862089,
+        "plugins": null
+      },
+      "finish_reason": "stop",
+      "response": "\n\n{\n  \"sources\": [\"a\", \"credit\"],\n  \"expected\": \"90000.00\",\n  \"status\": \"matched\"\n}",
+      "actual": {
+        "sources": [
+          "a",
+          "credit"
+        ],
+        "expected": "90000.00",
+        "status": "matched"
+      },
+      "passed": true,
+      "duration_ms": 3663
+    }
+  ]
+}

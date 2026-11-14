@@ -1,0 +1,4 @@
+Official Microsoft Office file type icon assets.
+Source base: https://res-1.cdn.office.net/files/fabric-cdn-prod_20230815.002/assets/item-types/48/
+Files: pdf.svg, docx.svg, xlsx.svg, pptx.svg, csv.svg, photo.svg
+Microsoft file-type icon guidance: https://learn.microsoft.com/en-us/microsoft-365/cloud-storage-partner-program/online/branding

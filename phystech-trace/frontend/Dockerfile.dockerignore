@@ -1,0 +1,9 @@
+# The web build only needs these two applications.
+**
+!frontend/
+!frontend/**
+!landing/
+!landing/**
+frontend/node_modules/
+frontend/dist/
+frontend/tsconfig.tsbuildinfo

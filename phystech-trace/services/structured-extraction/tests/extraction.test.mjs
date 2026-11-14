@@ -5,6 +5,22 @@ import { demoBlueprints } from "../data/demo-blueprints.mjs";
 import { classifyDocument, compareExtractionResults, extractStructuredDocument, normalizeDate, normalizeMoney, normalizeUnit, parserJsonShapeErrors } from "../lib/extraction/structured-extraction.mjs";
 import { adaptDocumentParserResult } from "../lib/parser/document-parser-adapter.mjs";
 
+test("separate PDF header lines take precedence over a merged paragraph", () => {
+  const parsed = {
+    document_id: "merged-pdf-header", title: "Отчёт КФЗ",
+    parts: [
+      { kind: "paragraph", id: "merged", text: "Отчёт КФЗ Номер отчёта: КФЗ-73/2026 Дата отчёта: 31.03.2026 Номер договора: Д-924 Общая сумма по отчёту: 9 000 руб." },
+      { kind: "paragraph", id: "report-number", text: "Номер отчёта: КФЗ-73/2026" },
+      { kind: "paragraph", id: "contract-number", text: "Номер договора: Д-924" },
+    ],
+  };
+  const result = extractStructuredDocument(parsed, { extractionId: "merged-header-rules", mode: "rules_only" });
+  assert.equal(result.fields.report_number.value, "КФЗ-73/2026");
+  assert.equal(result.fields.report_number.provenance.source_text, "Номер отчёта: КФЗ-73/2026");
+  assert.equal(result.fields.contract_reference.value, "Д-924");
+  assert.equal(result.fields.contract_reference.provenance.source_text, "Номер договора: Д-924");
+});
+
 async function parserResult(id) {
   return JSON.parse(await readFile(new URL(`../data/parser-results/${id}.json`, import.meta.url), "utf8"));
 }
@@ -193,7 +209,7 @@ test("partially populated addendum preserves all source cells and marks only abs
   }
   const comparison = compareExtractionResults(rulesResult, compareResult);
   assert.equal(comparison.matches.filter((item) => item.path === "changes.addendum-changes-r001").length, 1);
-  assert.deepEqual(comparison.counts, { matches: 11, discrepancies: 0, rules_only: 0, llm_only: 0 });
+  assert.deepEqual(comparison.counts, { matches: 12, discrepancies: 0, rules_only: 0, llm_only: 0 });
 
   const allUnmappedInput = await parserResult("addendum-2026-04");
   const allUnmappedTable = allUnmappedInput.logical_tables.find((table) => table.id === "addendum-changes");
@@ -245,27 +261,29 @@ test("compare reports addendum value changes, missing data and changed provenanc
 test("Compare counts each addendum change once and reports its value, missing data and provenance differences", async () => {
   const parsed = await parserResult("addendum-2026-04");
   const rules = extractStructuredDocument(parsed, { extractionId: "compare-addendum-rules" });
+  assert.equal(rules.fields.currency.value, "RUB");
+  assert.ok(rules.fields.currency.provenance, "The additional matched currency keeps an original source");
   const same = compareExtractionResults(rules, structuredClone(rules));
-  assert.deepEqual(same.counts, { matches: 11, discrepancies: 0, rules_only: 0, llm_only: 0 });
+  assert.deepEqual(same.counts, { matches: 12, discrepancies: 0, rules_only: 0, llm_only: 0 });
   assert.equal(same.matches.filter((item) => item.path === "changes.addendum-changes-r001").length, 1);
   assert.equal(same.matches.some((item) => item.path === "rows.addendum-changes-r001"), false);
 
   const changed = structuredClone(rules);
   changed.changes[0].new_value = { ...changed.changes[0].new_value, source_value: "5 400 000,00 руб.", value: "5400000.00" };
   const valueCompare = compareExtractionResults(rules, changed);
-  assert.deepEqual(valueCompare.counts, { matches: 10, discrepancies: 1, rules_only: 0, llm_only: 0 });
+  assert.deepEqual(valueCompare.counts, { matches: 11, discrepancies: 1, rules_only: 0, llm_only: 0 });
   assert.deepEqual(valueCompare.discrepancies.map((item) => item.path), ["changes.addendum-changes-r001"]);
 
   const missing = structuredClone(rules);
   missing.changes[0].old_value = { ...missing.changes[0].old_value, value: null, source_value: null, status: "missing", provenance: null };
   const missingCompare = compareExtractionResults(rules, missing);
-  assert.deepEqual(missingCompare.counts, { matches: 10, discrepancies: 1, rules_only: 0, llm_only: 0 });
+  assert.deepEqual(missingCompare.counts, { matches: 11, discrepancies: 1, rules_only: 0, llm_only: 0 });
   assert.deepEqual(missingCompare.discrepancies[0].missing_fields, ["old_value"]);
 
   const provenance = structuredClone(rules);
   provenance.changes[0].reason = { ...provenance.changes[0].reason, provenance: { ...provenance.changes[0].reason.provenance, source_ref: "#/parts/404" } };
   const provenanceCompare = compareExtractionResults(rules, provenance);
-  assert.deepEqual(provenanceCompare.counts, { matches: 10, discrepancies: 1, rules_only: 0, llm_only: 0 });
+  assert.deepEqual(provenanceCompare.counts, { matches: 11, discrepancies: 1, rules_only: 0, llm_only: 0 });
   assert.deepEqual(provenanceCompare.discrepancies.map((item) => item.path), ["changes.addendum-changes-r001"]);
 });
 

@@ -24,7 +24,7 @@ const fieldsByType = {
     ["customer", "Заказчик", ["заказчик"], "text"],
     ["supplier_inn", "ИНН исполнителя", ["инн исполнителя", "инн поставщика"], "inn"],
     ["customer_inn", "ИНН заказчика", ["инн заказчика"], "inn"],
-    ["contract_reference", "Договор", ["договор", "основание"], "identifier"],
+    ["contract_reference", "Договор", ["номер договора", "номер контракта", "договор", "контракт", "основание"], "contract_reference"],
     ["currency", "Валюта отчёта", ["валюта отчёта", "валюта"], "currency"],
     ["reported_total", "Общая сумма по отчёту", ["общая сумма по отчёту", "итого по отчёту", "итого"], "money"],
     ["responsible", "Ответственный", ["ответственный", "составитель"], "text"],
@@ -47,12 +47,12 @@ const fieldsByType = {
   ],
   act: [
     ["act_number", "Номер акта", ["номер акта", "номер документа"], "identifier"],
-    ["act_date", "Дата акта", ["дата акта", "дата"], "date"],
-    ["contract_reference", "Договор", ["договор", "основание"], "identifier"],
+    ["act_date", "Дата акта", ["дата акта", "дата документа", "дата"], "date"],
+    ["contract_reference", "Договор", ["номер договора", "номер контракта", "договор", "контракт", "основание"], "contract_reference"],
     ["execution_period", "Период выполнения", ["период выполнения", "отчётный период", "период"], "date_range"],
     ["contractor", "Исполнитель", ["исполнитель", "подрядчик"], "text"],
     ["customer", "Заказчик", ["заказчик"], "text"],
-    ["amount_due", "Итого к оплате", ["итого к оплате", "всего к оплате", "итого"], "money"],
+    ["amount_due", "Итого к оплате", ["итого к оплате", "всего к оплате", "итого", "сумма", "сумма по акту", "стоимость", "стоимость услуг", "стоимость оказанных услуг", "стоимость услуг за расчетный период"], "money"],
     ["vat_amount", "НДС", ["ндс", "в том числе ндс"], "money"],
     ["contractor_representative", "Представитель исполнителя", ["представитель исполнителя", "представитель подрядчика"], "text"],
     ["customer_representative", "Представитель заказчика", ["представитель заказчика", "подписант заказчика"], "text"],
@@ -88,14 +88,23 @@ const fieldsByType = {
     ["reporting_period", "Период", ["период", "отчётный период"], "date_range"],
     ["organization", "Организация", ["организация", "исполнитель"], "text"],
     ["counterparty", "Контрагент", ["контрагент", "заказчик", "покупатель"], "text"],
-    ["contract_reference", "Договор", ["договор", "основание"], "identifier"],
+    ["contract_reference", "Договор", ["номер договора", "номер контракта", "договор", "контракт", "основание"], "contract_reference"],
     ["registry_total", "Итого по реестру", ["итого по реестру", "итого", "общая сумма"], "money"],
     ["registry_status", "Статус", ["статус"], "text"],
   ],
-  unknown: [],
+  unknown: [
+    ["project_reference", "Проект", ["проект"], "identifier"],
+    ["document_number", "Номер документа", ["номер документа", "номер"], "identifier"],
+    ["document_date", "Дата документа", ["дата документа", "дата"], "date"],
+    ["contract_reference", "Договор", ["номер договора", "номер контракта", "договор", "контракт", "основание"], "contract_reference"],
+    ["reporting_period", "Период", ["отчётный период", "отчетный период", "период", "месяц"], "date_range"],
+    ["total_amount", "Сумма документа", ["сумма", "сумма по акту", "итого", "всего", "общая сумма", "стоимость", "стоимость услуг", "стоимость оказанных услуг", "стоимость услуг за расчетный период"], "money"],
+    ["currency", "Валюта", ["валюта"], "currency"],
+  ],
 };
 
 export const fieldDefinitions = fieldsByType;
+const allFieldDefinitions = new Map(Object.values(fieldsByType).flat().map(definition => [definition[0], definition]));
 
 function clean(value) {
   return String(value ?? "").replace(/\u00a0|\u202f/g, " ").trim();
@@ -152,6 +161,9 @@ function allText(parsed) {
 
 export function classifyDocument(parsed, llmClassification = null) {
   const text = allText(parsed);
+  if (parsed.phystech_trace?.document_role === "kfz") {
+    return { type: "kfz_report", label: "Отчёт КФЗ", confidence: null, status: "review", method: "rules", note: "Роль КФЗ задана пользователем; качество извлечения требует отдельной проверки" };
+  }
   const rules = [
     ["addendum", /дополнительн.{0,20}соглаш|(?:^|[^а-яёa-z])дс\s*[-№]?\s*\d|\baddendum\b|\bsupplementary agreement\b/i, "Дополнительное соглашение", 0.97],
     ["kfz_report", /(?:кфз|контрольно[- ]финансов.{0,20}отчет|отчет.{0,20}кфз)/i, "Отчёт КФЗ", 0.98],
@@ -283,6 +295,13 @@ function normalize(raw, kind, options = {}) {
   if (!value) return { value: null, status: "missing", note: null };
   if (kind === "date") return dateResult(value);
   if (kind === "date_range") {
+    const monthMatch = /^([а-яё]+)\s+(\d{4})\s*(?:г\.?)?$/iu.exec(value);
+    const monthNumber = monthMatch && monthMap[monthMatch[1].toLocaleLowerCase("ru-RU")];
+    if (monthNumber) {
+      const year = Number(monthMatch[2]);
+      const lastDay = new Date(Date.UTC(year, Number(monthNumber), 0)).getUTCDate();
+      return { value: { start: `${year}-${monthNumber}-01`, end: `${year}-${monthNumber}-${lastDay}` }, status: "extracted", note: null };
+    }
     const tokens = value.match(/(?:\d{1,2}[./-]\d{1,2}[./-]\d{2,4}|\d{4}-\d{1,2}-\d{1,2}|\d{1,2}\s+[а-яё]+\s+\d{4})/giu) ?? [];
     if (tokens.length !== 2) return { value: null, status: "review", note: "Период указан без двух однозначных границ" };
     const start = dateResult(tokens[0]);
@@ -291,7 +310,14 @@ function normalize(raw, kind, options = {}) {
     if (start.value > end.value) return { value: null, status: "review", note: "Начало периода позже окончания" };
     return { value: { start: start.value, end: end.value }, status: "extracted", note: null };
   }
+  if (kind === "contract_reference") {
+    const reference = value.replace(/^(?:договор|контракт)\s*(?:[№N]\s*)?/iu, "").split(/\s+от\s+|[,;]/iu)[0].trim().replace(/[.;]+$/, "");
+    return /^[\p{L}\p{N}][\p{L}\p{N}./_-]*$/u.test(reference)
+      ? { value: reference, status: "extracted", note: null }
+      : { value: null, status: "review", note: "Не выделен однозначный номер договора" };
+  }
   if (kind === "money") {
+    if (/^[а-яё]/iu.test(value) && !/^(?:руб|rub|usd|eur|cny)\b/iu.test(value)) return { value: null, status: "review", note: "Сумма прописью требует отдельной проверки" };
     if (value.includes("?") || /\d\s*\/\s*\d/.test(value)) return { value: null, status: "review", note: "Сумма распознана неоднозначно" };
     const numeric = firstNumericToken(value);
     const decimal = parseDecimalString(numeric);
@@ -376,13 +402,13 @@ function lookupMetadata(tables, aliases) {
   const aliasSet = aliases.map(canonical);
   let best = null;
   let bestScore = -1;
-  for (const table of metadataRows(tables)) {
+  for (const table of tables) {
     for (const row of table.rows ?? []) {
       const cells = [...(row.cells ?? [])].sort((a, b) => (a.column ?? 0) - (b.column ?? 0));
       if (cells.length < 2) continue;
       if (cells[0].source_available === false || cells[1].source_available === false) continue;
       const label = canonical(cells[0].text ?? cells[0].value);
-      const matched = aliasSet.map((alias) => ({ alias, score: label === alias ? 1000 + alias.length : alias.length >= 5 && label.includes(alias) ? 100 + alias.length : -1 }))
+      const matched = aliasSet.map((alias) => ({ alias, score: label === alias ? 1000 + alias.length : (alias.length >= 4 && label.endsWith(` ${alias}`) || label.startsWith(`${alias} `) && /^[\d\s%().]+$/.test(label.slice(alias.length))) ? 100 + alias.length : -1 }))
         .sort((left, right) => right.score - left.score)[0];
       if (matched?.score > bestScore) { bestScore = matched.score; best = { cell: cells[1], text: cells[1].text ?? cells[1].value ?? "", method: "rules" }; }
     }
@@ -390,31 +416,44 @@ function lookupMetadata(tables, aliases) {
   return bestScore >= 0 ? best : null;
 }
 
-function lookupFreeText(parsed, aliases) {
+function lookupFreeText(parsed, aliases, kind = null) {
   const aliasSet = aliases.map(canonical);
   let unavailableCandidate = null;
+  let bestCandidate = null;
+  let bestSeparators = Infinity;
   for (const element of adapted(parsed).elements) {
     const text = clean(element.text);
     if (!text) continue;
-    for (const line of text.split(/\r?\n/)) {
+    for (const line of text.split(/\r?\n|\s+\|\s+/)) {
       const delimiter = line.search(/[:：=]/);
       if (delimiter < 1) continue;
       const label = canonical(line.slice(0, delimiter));
-      if (!aliasSet.some((alias) => label === alias || alias.length >= 5 && (label.includes(alias) || alias.includes(label) && label.length >= 5))) continue;
+      if (!aliasSet.some((alias) => label === alias || alias.length >= 4 && label.endsWith(` ${alias}`))) continue;
       const value = clean(line.slice(delimiter + 1));
+      if (kind === "money" && /^[а-яё]/iu.test(value) && !/^(?:руб|rub|usd|eur|cny)\b/iu.test(value)) continue;
       const candidate = { cell: { id: element.id, text: value, source_available: element.source_available, provenance: element.provenance ? { ...element.provenance, source_text: text } : null, confidence: element.provenance?.confidence ?? null }, text: value, method: "rules" };
       if (element.source_available === false) { unavailableCandidate ??= candidate; continue; }
-      return candidate;
+      // PDF parsers may expose both a merged paragraph and its separate lines.
+      // Prefer the source that does not include neighbouring labelled fields.
+      const separators = (value.match(/[:：=]/g) ?? []).length;
+      if (separators < bestSeparators) {
+        bestCandidate = candidate;
+        bestSeparators = separators;
+      }
     }
   }
-  return unavailableCandidate;
+  return bestCandidate ?? unavailableCandidate;
 }
 
-function groundedFieldCandidate(parsed, fieldKey, llm) {
+function groundedFieldCandidate(parsed, fieldKey, llm, aliases = []) {
   for (const candidate of llm?.field_candidates ?? []) {
     if (candidate.field_key !== fieldKey) continue;
     const element = adapted(parsed).elements.find((item) => item.id === candidate.source_element_id);
-    const sourceValue = String(candidate.source_value ?? "");
+    let sourceValue = String(candidate.source_value ?? "");
+    const delimiter = sourceValue.search(/[:：=]/);
+    if (delimiter > 0 && aliases.some(alias => canonical(alias) === canonical(sourceValue.slice(0, delimiter)))) {
+      sourceValue = clean(sourceValue.slice(delimiter + 1));
+    }
     if (!element || element.source_available === false || !sourceValue || !String(element.text ?? "").includes(sourceValue)) continue;
     const provenance = element.provenance ? { ...element.provenance, source_text: element.text } : null;
     return { cell: { id: element.id, text: sourceValue, provenance, confidence: element.provenance?.confidence ?? null }, text: sourceValue, method: "llm", model_confidence: candidate.confidence ?? null };
@@ -430,14 +469,24 @@ function equalNormalized(left, right) {
   return JSON.stringify(left.value) === JSON.stringify(right.value) && left.status !== "review" && right.status !== "review";
 }
 
+function titleActDate(parsed) {
+  for (const element of adapted(parsed).elements) {
+    if (element.source_available === false) continue;
+    const match = /(?:акт|akt|act)[^\r\n]{0,80}?(?:\sот\s|\sot\s)\s*(\d{1,2}[./]\d{1,2}[./]\d{4})/iu.exec(element.text);
+    if (match) return { cell: element, text: match[1], method: "rules" };
+  }
+  return null;
+}
+
 function fieldValue(parsed, tables, [key, label, aliases, kind], llm, mode) {
-  const ruleCandidate = lookupMetadata(tables, aliases) ?? lookupFreeText(parsed, aliases);
-  const llmCandidate = mode === "rules_only" ? null : groundedFieldCandidate(parsed, key, llm);
+  const ruleCandidate = lookupMetadata(tables, aliases) ?? lookupFreeText(parsed, aliases, kind) ?? (key === "act_date" ? titleActDate(parsed) : null);
+  const llmCandidate = mode === "rules_only" ? null : groundedFieldCandidate(parsed, key, llm, aliases);
   let extracted;
   if (ruleCandidate && llmCandidate) {
     const ruleValue = normalizedCandidate(parsed, ruleCandidate, kind);
     const llmValue = normalizedCandidate(parsed, llmCandidate, kind);
-    if (equalNormalized(ruleValue, llmValue)) extracted = { ...ruleValue, source_method: "consensus", corroborated_by: "llm" };
+    if (kind === "money" && ruleValue.status === "extracted" && llmValue.value === null) extracted = { ...ruleValue, normalization_note: "Невалидный числовой кандидат модели отклонён; сохранён явный числовой итог источника" };
+    else if (equalNormalized(ruleValue, llmValue)) extracted = { ...ruleValue, source_method: "consensus", corroborated_by: "llm" };
     else extracted = {
       ...ruleValue,
       value: null,
@@ -518,7 +567,7 @@ function inferHeaderKind(header) {
   const key = canonical(header);
   if (/единиц|^ед изм$|^ед$/.test(key)) return "unit";
   if (/колич|кол\s*во|план|факт|объем/.test(key)) return "quantity";
-  if (/цена|сумм|стоимость|итого|к оплате/.test(key)) return "money";
+  if (/цена|сумм|стоимость|итого|к оплате|начислено взносов/.test(key)) return "money";
   if (/дата|срок/.test(key)) return "date";
   if (/код|идентификатор|артикул|договор|номер/.test(key)) return "identifier";
   return "text";
@@ -681,6 +730,25 @@ function indicators(fields, tables) {
   return rows;
 }
 
+function reportIndicators(parsed, llm, fields) {
+  const result = [];
+  const seen = new Set();
+  for (const candidate of llm?.field_candidates ?? []) {
+    const match = /^indicator_(money|number):(.{1,200})$/u.exec(candidate.field_key);
+    if (!match) continue;
+    const grounded = groundedFieldCandidate(parsed, candidate.field_key, { field_candidates: [candidate] });
+    if (!grounded) continue;
+    const identity = JSON.stringify([candidate.source_element_id, candidate.source_value, match[2]]);
+    if (seen.has(identity)) continue;
+    seen.add(identity);
+    const quantity = match[1] === 'number' || /трудо[её]мк|человеко[- ]/iu.test(match[2]);
+    const extracted = normalizedCandidate(parsed, grounded, quantity ? 'quantity' : 'money', { currencyHint: fields.currency?.status === 'extracted' ? fields.currency.value : null });
+    result.push({ key: quantity ? `indicator_number:${match[2]}` : candidate.field_key, label: match[2], extracted });
+  }
+  if (result.length) console.debug('[FIX:report-indicators] Grounded report indicators:', result.length);
+  return result;
+}
+
 function outputKey(type) {
   return type === "contract" ? "payment_schedule" : type === "addendum" ? "changes" : "line_items";
 }
@@ -690,7 +758,7 @@ export function compareExtractionResults(rulesResult, llmResult) {
   const discrepancies = [];
   const rulesOnly = [];
   const llmOnly = [];
-  const fieldKeys = new Set([...Object.keys(rulesResult.fields ?? {}), ...Object.keys(llmResult.fields ?? {})]);
+  const fieldKeys = new Set([...Object.keys(rulesResult.fields ?? {}), ...Object.keys(llmResult.fields ?? {})].filter(key => !key.startsWith("source_text_")));
   const same = (left, right) => JSON.stringify(left?.value ?? null) === JSON.stringify(right?.value ?? null)
     && left?.status === right?.status
     && JSON.stringify(left?.source_value ?? null) === JSON.stringify(right?.source_value ?? null)
@@ -766,10 +834,41 @@ export function extractStructuredDocument(parsed, options = {}) {
     extracted.extracted.label = definition[1];
     return [extracted.key, extracted.extracted];
   }));
+  for (const key of new Set((llm?.field_candidates ?? []).map(candidate => candidate.field_key))) {
+    const definition = allFieldDefinitions.get(key);
+    if (!definition || fields[key]) continue;
+    fields[key] = fieldValue(parsed, tables, definition, llm, mode).extracted;
+  }
+  if (!fields.currency?.value && fields.currency?.status !== "review") {
+    const currencies = new Map();
+    for (const element of source.elements) {
+      if (element.source_available === false) continue;
+      for (const match of element.text.matchAll(/(?<![\p{L}])(?:RUB|руб(?:лей|ля|ль)?\.?|EUR|евро|USD|CNY|₽|€|\$|元)(?![\p{L}])/giu)) {
+        const code = detectCurrency(match[0]);
+        if (code && !currencies.has(code)) currencies.set(code, { element, token: match[0] });
+      }
+    }
+    if (currencies.size === 1) {
+      const { element, token } = [...currencies.values()][0];
+      fields.currency = valueObject(parsed, element, token, "currency", null, { source_method: "rules" });
+      fields.currency.label = "Валюта документа";
+      fields.currency.normalization_note = "Единственное явное обозначение валюты в документе; источник сохранён";
+    }
+  }
+  if (fields.currency?.status === "extracted") {
+    for (const [key, field] of Object.entries(fields)) {
+      if (field.value && typeof field.value === "object" && "amount" in field.value && !field.value.currency && field.provenance && field.source_value) {
+        fields[key] = { ...valueObject(parsed, { text: field.source_value, provenance: field.provenance, confidence: field.confidence }, field.source_value, "money", null, { currencyHint: fields.currency.value, source_method: field.source_method ?? "rules" }), label: field.label, normalization_note: "Валюта взята из явного обозначения fields.currency" };
+      }
+    }
+  }
   const parsedTables = extractedTables(parsed, tables, typeResult.type, llm);
   const targetTables = parsedTables.filter((table) => ["line_items", "payment_schedule", "amendments"].includes(table.role));
   const rows = typeResult.type === "addendum" ? amendmentRows(parsed, parsedTables, llm) : targetTables.flatMap((table) => table.rows);
   const { missing, review } = collectReviewAndMissing(fields, parsedTables, typeResult.type === "addendum" ? rows : []);
+  if (["failed", "partial"].includes(parsed.document_review?.status)) {
+    review.push({ path: "parser.document_review", reason: "Дополнительная проверка распознавания не завершена; требуется сверка с оригиналом", source_value: null, provenance: null });
+  }
   const qualityDiagnostics = llm?.fragment_diagnostics ? {
     fragment_count: llm.fragment_count,
     model_calls: llm.model_calls,
@@ -784,7 +883,7 @@ export function extractStructuredDocument(parsed, options = {}) {
   }
   for (const key of Object.keys(fields)) {
     const candidates = (llm?.field_candidates ?? []).filter(candidate => candidate.field_key === key && groundedFieldCandidate(parsed, key, { field_candidates: [candidate] }));
-    const kind = fieldsByType[typeResult.type].find(definition => definition[0] === key)?.[3];
+    const kind = (fieldsByType[typeResult.type].find(definition => definition[0] === key) ?? allFieldDefinitions.get(key))?.[3];
     const identities = candidates.map(candidate => {
       const normalized = normalize(candidate.source_value, kind);
       return normalized.status === 'extracted' ? JSON.stringify(normalized.value) : JSON.stringify(candidate.source_value);
@@ -795,6 +894,15 @@ export function extractStructuredDocument(parsed, options = {}) {
     }
   }
   if (llm?.grounding_rejections?.length) review.push({ path: 'extraction_engine.llm', reason: 'Часть кандидатов LLM отклонена проверкой исходных значений; подробности сохранены в usage.quality_analysis', source_value: null, provenance: null });
+  if (typeResult.type !== "kfz_report") {
+    const tableIds = new Set(source.tables.flatMap(table => [...(table.header_cells ?? []).map(cell => cell.id), ...table.rows.flatMap(row => row.cells.map(cell => cell.id))]));
+    for (const [index, element] of source.elements.entries()) {
+      if (element.source_available === false || tableIds.has(element.id) || !/[\p{L}]/u.test(element.text)) continue;
+      const extracted = valueObject(parsed, element, element.text, "text", null, { source_method: "rules" });
+      extracted.label = "Исходный текст документа";
+      fields[`source_text_${index}`] = extracted;
+    }
+  }
   const result = {
     extraction_id: options.extractionId ?? globalThis.crypto.randomUUID(),
     document_id: documentId,
@@ -820,7 +928,7 @@ export function extractStructuredDocument(parsed, options = {}) {
     },
     fields,
     tables: parsedTables,
-    indicators: indicators(fields, parsedTables),
+    indicators: [...indicators(fields, parsedTables), ...(typeResult.type === "kfz_report" ? reportIndicators(parsed, llm, fields) : [])],
     missing_fields: missing,
     review_required: review,
     [outputKey(typeResult.type)]: rows,

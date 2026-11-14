@@ -380,20 +380,22 @@ def _calculate_target(
             else:
                 plan = None
     elif settings.llm_enabled and (
-        (request.context.data_classification in {"open", "anonymized"} and request.context.external_llm_allowed)
+        (request.context.data_classification in {"open", "anonymized", "confidential"} and request.context.external_llm_allowed)
         or (request.context.data_classification == "confidential" and settings.llm_trusted_local)
     ):
         try:
             groups = {fact.document_id: _group_id(fact.document_id) for fact in facts}
-            plan = (planner or LLMPlanner(settings)).plan(
+            polza_external = settings.llm_base_url.rstrip("/") == "https://polza.ai/api/v1" and request.context.external_llm_allowed
+            selected_settings = settings.model_copy(update={"llm_model": "google/gemma-4-26b-a4b-it" if request.context.data_classification == "confidential" else "deepseek/deepseek-v4.1-flash"}) if polza_external else settings
+            plan = (planner or LLMPlanner(selected_settings)).plan(
                 target, facts, groups, linking,
-                sensitive_data=request.context.data_classification == "confidential",
+                sensitive_data=request.context.data_classification == "confidential" and not polza_external,
             )
             plan_source = "llm"
         except IncompatibleChunkPlans as exc:
             planner_diagnostic = Diagnostic("chunk_plans_incompatible", "$.planner.batches", str(exc))
         except (PlannerUnavailable, httpx.HTTPError, ValueError) as exc:
-            if request.context.data_classification == "confidential" and not is_trusted_internal_endpoint(settings.llm_base_url, settings.llm_trusted_hosts):
+            if request.context.data_classification == "confidential" and not polza_external and not is_trusted_internal_endpoint(settings.llm_base_url, settings.llm_trusted_hosts):
                 planner_diagnostic = Diagnostic("trusted_llm_endpoint_not_local", "$.settings.llm_base_url", "Confidential data was not sent because the configured endpoint is not loopback or operator-allowlisted internal infrastructure")
             else:
                 planner_diagnostic = Diagnostic("planner_unavailable", "$.planner", str(exc))
@@ -651,14 +653,19 @@ def reconcile(request: ReconciliationRequest, settings: Settings, planner: LLMPl
     identity = input_snapshot_identity(request)
     snapshot_hash = identity["snapshot_sha256"]
     reconciliation_id = reconciliation_id_for(request, settings)
-    calculations = []
-    for target in request.context.targets:
+    def calculate(target):
         try:
-            calculations.append(_calculate_target(request, target, facts, settings, snapshot_hash, planner))
+            return _calculate_target(request, target, facts, settings, snapshot_hash, planner)
         except InputContractError as exc:
-            calculations.append(_failed_target_result(request, target, snapshot_hash, exc.diagnostics))
+            return _failed_target_result(request, target, snapshot_hash, exc.diagnostics)
         except Exception as exc:
-            calculations.append(_failed_target_result(request, target, snapshot_hash, [Diagnostic("target_calculation_failed", f"$.context.targets[target_id={target.target_id}]", "This indicator failed safely; other indicators were still processed", {"error_type": type(exc).__name__, "message": str(exc)})]))
+            return _failed_target_result(request, target, snapshot_hash, [Diagnostic("target_calculation_failed", f"$.context.targets[target_id={target.target_id}]", "This indicator failed safely; other indicators were still processed", {"error_type": type(exc).__name__, "message": str(exc)})])
+    if settings.target_workers > 1 and planner is None and len(request.context.targets) > 1:
+        from concurrent.futures import ThreadPoolExecutor
+        with ThreadPoolExecutor(max_workers=settings.target_workers) as pool:
+            calculations = list(pool.map(calculate, request.context.targets))
+    else:
+        calculations = [calculate(target) for target in request.context.targets]
     created_at = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
     return {
         "reconciliation_id": reconciliation_id,

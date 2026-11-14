@@ -4,7 +4,7 @@ import re
 from typing import Any
 
 from .errors import Diagnostic
-from .facts import Fact, numeric_value
+from .facts import Fact, numeric_value, document_agreements
 from .models import TargetIndicator
 from .plans import CalculationPlan
 
@@ -109,6 +109,8 @@ def validate_plan(
     diagnostics: list[Diagnostic] = []
     human_confirmed_fact_ids = human_confirmed_fact_ids or set()
     fact_by_id = {fact.fact_id: fact for fact in facts}
+    agreements = document_agreements(facts)
+    target_agreement = agreements.get(target.kfz_document_id, set())
     included_ids = [item.fact_id for item in plan.included]
     duplicates = [key for key, count in Counter(included_ids).items() if count > 1]
     for fact_id in duplicates:
@@ -122,6 +124,9 @@ def validate_plan(
             diagnostics.append(Diagnostic("unknown_fact_id", included_paths[fact_id], "Plan refers to a fact outside the supplied extraction snapshot", {"fact_id": fact_id}))
             continue
         selected_facts.append(fact)
+        source_agreement = agreements.get(fact.document_id, set())
+        if len(target_agreement) == 1 and len(source_agreement) == 1 and target_agreement != source_agreement:
+            diagnostics.append(Diagnostic("agreement_mismatch", fact.source_path, "Source belongs to another explicitly identified agreement", {"fact_id": fact_id, "document_id": fact.document_id}))
         if fact.document_id == target.kfz_document_id or fact.document_type == "kfz_report":
             code = "target_fact_self_reference" if fact.fact_id == target.target_fact_id or fact.document_id == target.kfz_document_id else "kfz_source_forbidden"
             diagnostics.append(Diagnostic(code, included_paths[fact_id], "KФЗ values are context only and cannot be used as independent financial evidence", {"fact_id": fact_id, "document_id": fact.document_id}))

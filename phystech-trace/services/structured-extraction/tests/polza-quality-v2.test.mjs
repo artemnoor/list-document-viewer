@@ -31,3 +31,13 @@ test('caller context and output limits are enforced before transport',async()=>{
  }});assert.ok(calls>1);assert.equal(result.fragment_count,calls);
  await assert.rejects(callPolzaForExtraction(input,{POLZA_API_KEY:'offline',POLZA_MAX_OUTPUT_TOKENS:4097,POLZA_FETCH:()=>{throw Error('must not send');}}),e=>e.code==='POLZA_INVALID_LIMIT');
 });
+
+test('known field label does not create a false contract conflict',()=>{
+ const input={document_id:'label',title:'Акт выполненных работ',parts:[{id:'p',kind:'paragraph',text:'Договор: КД240315'}]};
+ const id=buildGroundedContext(input).source_elements[0].source_element_id;
+ const llm={...empty,document_type:'act',field_candidates:[{field_key:'contract_reference',source_element_id:id,source_value:'Договор: КД240315',confidence:.9}]};
+ const result=extractStructuredDocument(input,{mode:'llm_assisted',llm});
+ assert.equal(result.fields.contract_reference.value,'КД240315');
+ assert.equal(result.fields.contract_reference.source_value,'КД240315');
+ assert.equal(result.fields.contract_reference.status,'extracted');
+});

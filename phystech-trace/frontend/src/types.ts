@@ -1,9 +1,11 @@
+export type ReportDecision = { status: "accepted" | "rejected"; comment: string; decided_at: string; report_fingerprint: string; outdated?: boolean };
+export type VerificationScope = { calculation_mode?: "auto" | "semantic"; report_row?: string | null; period_start?: string | null; period_end?: string | null };
 export type StageName = "parser" | "extraction" | "linking" | "reconciliation" | "verification";
-export type StageState = { status: string; completed: number; total: number; mode?: string; warning?: string | null; error?: { code?: string; message?: string } | null };
+export type StageState = { status: string; completed: number; total: number; mode?: string; current_file?: string | null; current_document_id?: string | null; warning?: string | null; error?: { code?: string; message?: string } | null };
 export type TraceDocument = {
   id: string; role: "kfz" | "primary"; file_name: string; document_id: string; parser_state: string;
   parser_error?: { code?: string; message?: string } | null; has_parser_result: boolean;
-  extraction_id?: string | null; document_type?: string | null; extraction_error?: { code?: string; message?: string } | null;
+  extraction_state?: "ready" | "running" | "error" | "pending"; extraction_id?: string | null; document_type?: string | null; extraction_error?: { code?: string; message?: string } | null;
   source_url: string;
 };
 export type EvidenceSide = { document_id: string; path?: string; raw_value?: unknown; normalized_value?: string; provenance?: Provenance | null };
@@ -22,7 +24,7 @@ export type TraceLink = {
 export type LinkingResult = { linking_run_id: string; links: TraceLink[]; review_required: { link_id: string; reason: string; candidate_document_ids: string[] }[]; unlinked_documents: { document_id: string; reason: string }[]; warnings: string[]; analysis_summary: string };
 export type TraceProject = {
   id: string; name: string; data_classification: "confidential" | "public" | "synthetic" | "anonymized";
-  allow_external_llm: boolean; status: string; created_at: string; updated_at: string;
+  report_fingerprint?: string | null; report_decision?: ReportDecision | null; financial_audit?: Record<string, any> | null; document_findings?: Array<{ category: string; message: string; file_name: string; source_url?: string }>; verification_scope?: VerificationScope; allow_external_llm: boolean; status: string; created_at: string; updated_at: string;
   stages: Record<StageName, StageState>; last_error?: { code?: string; message?: string } | null;
   reconciliation_result?: Record<string, any> | null; verification_result?: Record<string, any> | null; linking_job_id?: string | null; linking_result?: LinkingResult | null; documents: TraceDocument[];
 };

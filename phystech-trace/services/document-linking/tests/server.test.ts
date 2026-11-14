@@ -5,6 +5,7 @@ import { GEMMA_MODEL } from "../src/linking/llm-matcher";
 
 function setup(options: { token?: string; job?: any; config?: Record<string, unknown>; storageError?: Error } = {}) {
   const storage: any = {
+    readJobPayload: async () => JSON.stringify({model: GEMMA_MODEL}),
     health: async () => true, rateLimit: async () => true,
     readJob: async () => { if (options.storageError) throw options.storageError; return options.job; },
   };
@@ -72,4 +73,27 @@ test("internal failures do not leak database, bearer or Polza secrets in API res
   assert.equal(response.status, 500);
   const body = await response.text();
   assert.doesNotMatch(body, /server-secret|provider-secret-value|connection failed/);
+});
+
+
+test("queued model selection is persisted, isolated by payload hash and reported by status", async () => {
+  const { readFileSync } = await import("node:fs");
+  const documents = [JSON.parse(readFileSync("fixtures/upstream-structured-extraction-1.2.0/act-2026-0424.json", "utf8"))];
+  const stored: any[] = [];
+  const storage: any = { rateLimit: async () => true, findJobByIdempotency: async () => null, createJob: async (job:any) => stored.push(job), readJob: async (id:string) => ({id, progress_json:{}}), readJobPayload: async (job:any) => stored.find(x => x.id === job.id).payload };
+  const app = createApp({storage,queue:{enqueue:async()=>{}} as any,config:{apiToken:"test",llmEnabled:true,polzaApiKey:"test",requireExternalLlmConsent:true} as any});
+  const headers = {Authorization:"Bearer test","Content-Type":"application/json"};
+  for (const data_classification of ["confidential","public"]) {
+    const response = await app.request("/api/linking-jobs",{method:"POST",headers,body:JSON.stringify({documents,data_classification,allow_external_llm:true})});
+    assert.equal(response.status,202);
+  }
+  assert.notEqual(stored[0].payloadHash,stored[1].payloadHash);
+  assert.equal(JSON.parse(stored[0].payload).model,GEMMA_MODEL);
+  assert.equal(JSON.parse(stored[1].payload).model,"deepseek/deepseek-v4.1-flash");
+  for (const job of stored) {
+    const response = await app.request(`/api/linking-jobs/${job.id}`,{headers});
+    assert.equal((await response.json() as any).model,JSON.parse(job.payload).model);
+  }
+  const denied = await app.request("/api/linking-jobs",{method:"POST",headers,body:JSON.stringify({documents,data_classification:"confidential",allow_external_llm:false})});
+  assert.equal(denied.status,403);
 });

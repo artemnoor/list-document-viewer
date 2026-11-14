@@ -8,7 +8,7 @@ from typing import Any
 import httpx
 
 from .config import Settings
-from .facts import Fact, numeric_value
+from .facts import Fact, numeric_value, document_agreements
 from .models import TargetIndicator
 from .plans import CalculationPlan, PlanExclusion, PlanStep
 from .security import is_trusted_internal_endpoint
@@ -105,6 +105,13 @@ class LLMPlanner:
             for fact in facts
             if fact.row_id and fact.key == "description" and isinstance(fact.normalized_value, str)
         }
+        for fact in facts:
+            if fact.role == "table_cell" and fact.row_id and isinstance(fact.normalized_value, str) and numeric_value(fact) is None:
+                row_key = (fact.document_id, fact.row_id)
+                previous = row_descriptions.get(row_key, "")
+                text = f"{fact.label}: {fact.normalized_value}"
+                if text not in previous:
+                    row_descriptions[row_key] = f"{previous}; {text}".strip("; ")
         candidate_documents = {fact.document_id for fact in candidates}
         candidate_rows = {(fact.document_id, fact.row_id) for fact in candidates if fact.row_id}
         target_documents = {target.kfz_document_id}
@@ -118,6 +125,8 @@ class LLMPlanner:
                     return True
             return False
 
+        agreements = document_agreements(facts)
+        target_agreement = agreements.get(target.kfz_document_id, set())
         compact_facts = []
         for fact in candidates:
             compact_facts.append({
@@ -128,6 +137,7 @@ class LLMPlanner:
                 "key": fact.key,
                 "label": fact.label,
                 "value_available": numeric_value(fact) is not None,
+                "agreement_matches_target": agreements.get(fact.document_id) == target_agreement if len(target_agreement) == 1 and len(agreements.get(fact.document_id, set())) == 1 else None,
                 "currency": fact.currency,
                 "unit": fact.unit,
                 "amount_basis": fact.amount_basis,
@@ -148,7 +158,7 @@ class LLMPlanner:
             for fact in facts
             if fact.document_id in relevant_documents
             and fact.document_id in group_by_document
-            and fact.role in {"field", "indicator"}
+            and fact.role in {"field", "indicator", "table_cell"}
             and fact.status == "extracted"
             and isinstance(fact.value, str)
             and re.fullmatch(r"\d{4}-\d{2}-\d{2}", fact.value)

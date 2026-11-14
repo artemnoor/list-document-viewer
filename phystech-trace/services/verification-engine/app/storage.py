@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import copy
 import json
 import os
 import sqlite3
@@ -11,7 +12,7 @@ from typing import Any
 
 from app.contracts import validate_result_contract
 from app.engine import canonical_fingerprint, run_verification
-from app.explanations import ReviewExplanationProvider
+from app.explanations import ReviewExplanationProvider, PolzaGemmaProvider
 from app.models import (
     VerificationHistory,
     VerificationRequest,
@@ -132,12 +133,17 @@ class SQLiteVerificationStore:
         # Deterministic processing and optional Polza calls happen with no DB
         # lock or write transaction held. The unique fingerprint handles races.
         created_at = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+        provider = self.explanation_provider
+        model = ((request.linking_result or {}).get("processing_metadata") or {}).get("llm", {}).get("model")
+        if isinstance(provider, PolzaGemmaProvider) and model in {"google/gemma-4-26b-a4b-it", "deepseek/deepseek-v4.1-flash", "deepseek/deepseek-v4.1-flash-1017"}:
+            provider = copy.copy(provider)
+            provider.model = model
         result = run_verification(
             request,
             verification_id,
             created_at,
             fingerprint,
-            self.explanation_provider,
+            provider,
             deadline=time.monotonic() + self.max_processing_seconds,
         )
         validate_result_contract(result)

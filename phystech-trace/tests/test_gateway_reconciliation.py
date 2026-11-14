@@ -78,3 +78,51 @@ def test_reconciliation_target_keeps_field_pointer_when_no_indicator_alias_exist
 
     assert len(targets) == 1
     assert targets[0]["kfz_source_path"] == "#/fields/reported_total"
+
+
+def test_reconciliation_includes_nonmonetary_report_indicators_without_system_counts():
+    extraction = {"document_id": "kfz", "fields": {}, "indicators": [
+        {"key": "effort", "label": "Трудоемкость", "extracted": {"value": "42", "status": "extracted", "provenance": {"source_part_id": "p1"}}},
+        {"key": "extracted_line_count", "extracted": {"value": "5", "provenance": None}},
+    ]}
+    targets = reconciliation_targets(extraction)
+    assert len(targets) == 1
+    assert targets[0]["kfz_source_path"] == "#/indicators/0/extracted"
+    assert targets[0]["currency"] is None
+
+
+def test_optional_review_failure_preserves_recognized_content():
+    import asyncio
+    import httpx
+    from gateway import main
+    async def check():
+        async with httpx.AsyncClient(transport=httpx.MockTransport(lambda _: httpx.Response(200, json={"document_review": {"status": "failed"}}))) as client:
+            result = {"parts": [{"text": "Recognized content"}]}
+            await main.add_optional_review(client, "doc", "test-model", result)
+            assert result["parts"][0]["text"] == "Recognized content"
+            assert result["document_review"]["status"] == "failed"
+            assert result["warnings"]
+    asyncio.run(check())
+
+
+def test_reconciliation_does_not_hide_monetary_indicator_with_missing_currency():
+    targets = reconciliation_targets({"document_id": "kfz", "fields": {}, "indicators": [{"key": "cost", "label": "Cost", "extracted": {"value": {"amount": "12.00", "currency": None}, "status": "review", "provenance": {"source_part_id": "p1"}}}]})
+    assert len(targets) == 1
+    assert targets[0]["currency"] is None
+
+
+def test_reconciliation_deduplicates_repeated_indicator_evidence_from_fragments():
+    wrapper = _amount_wrapper("#/tables/0/rows/1/cells/2", "cell-2")
+    targets = reconciliation_targets({"document_id": "kfz", "fields": {}, "indicators": [{"key": "first", "extracted": wrapper}, {"key": "alias", "extracted": wrapper}]})
+    assert len(targets) == 1
+    assert targets[0]["kfz_source_path"] == "#/indicators/0/extracted"
+
+
+def test_report_scope_selects_requested_stage_year_and_rejects_inverted_period():
+    from gateway.main import VerificationScope, scope_targets
+    import pytest
+    scope = VerificationScope(report_row="3 этап, 2026 г.", period_start="2026-01-01", period_end="2026-05-31")
+    targets = [{"label": "Оплата труда 3 этап 2026"}, {"label": "Оплата труда 3 этап 2025"}, {"label": "Итого 13 этап 2026"}]
+    assert scope_targets(targets, scope.model_dump(mode="json")) == [targets[0]]
+    with pytest.raises(ValueError):
+        VerificationScope(period_start="2026-05-31", period_end="2026-01-01")

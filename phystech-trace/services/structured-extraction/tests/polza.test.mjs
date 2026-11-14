@@ -197,3 +197,19 @@ test("Polza table context preserves source column indexes when an earlier header
   assert.match(result.line_items[0].quantity.provenance.source_ref, /rows\/0\/cells\/1$/);
   assert.match(result.line_items[0].description.provenance.source_ref, /rows\/0\/cells\/2$/);
 });
+
+
+test("classification selects the model in every extraction request and its saved metadata", async () => {
+  const parsed = await fixture("document-parser-native-pdf.analysis.json");
+  for (const classification of ["confidential", "public"]) {
+    const expected = classification === "confidential" ? "google/gemma-4-26b-a4b-it" : "deepseek/deepseek-v4.1-flash";
+    const requests = [];
+    const result = await callPolzaForExtraction(parsed, {
+      POLZA_API_KEY: "test-key", DATA_CLASSIFICATION: classification,
+      POLZA_FETCH: async (_url, init) => { requests.push(JSON.parse(init.body)); return okResponse(valid); },
+    });
+    assert.ok(requests.length);
+    assert.ok(requests.every(body => body.model === expected));
+    assert.equal(result.model, expected);
+  }
+});

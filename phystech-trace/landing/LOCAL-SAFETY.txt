@@ -1,0 +1,1 @@
+Local-only interaction guard: form submits and telephone links are suppressed. Embedded YouTube playback uses a local preview and an offline notice.

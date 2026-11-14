@@ -1,4 +1,4 @@
-import type { DocumentResult, LinkingResult, StageName, TraceProject } from "./types";
+import type { DocumentResult, LinkingResult, StageName, TraceProject, VerificationScope, ReportDecision } from "./types";
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetch(path, init);
@@ -12,9 +12,11 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 }
 
 export const api = {
+  decideReport: (id: string, body: { status: "accepted" | "rejected"; comment: string; report_fingerprint: string }) => request<{ report_decision: ReportDecision }>(`/api/projects/${encodeURIComponent(id)}/report-decision`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }),
   listProjects: () => request<{ projects: TraceProject[] }>("/api/projects"),
   getProject: (id: string) => request<TraceProject>(`/api/projects/${encodeURIComponent(id)}`),
-  createProject: (body: { name: string; data_classification: string; allow_external_llm: boolean }) => request<TraceProject>("/api/projects", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }),
+  updateSettings: (id: string, body: { data_classification: string; allow_external_llm: boolean; verification_scope?: VerificationScope }) => request<TraceProject>(`/api/projects/${encodeURIComponent(id)}/processing-settings`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }),
+  createProject: (body: { name: string; data_classification: string; allow_external_llm: boolean; verification_scope?: VerificationScope }) => request<TraceProject>("/api/projects", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }),
   async upload(id: string, role: "kfz" | "primary", files: File[]) {
     const form = new FormData(); form.set("role", role); files.forEach((file) => form.append("files", file));
     return request(`/api/projects/${encodeURIComponent(id)}/documents`, { method: "POST", body: form });

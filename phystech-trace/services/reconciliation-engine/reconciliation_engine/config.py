@@ -10,6 +10,7 @@ class Settings(BaseSettings):
 
     service_name: str = "Phystech Trace — Reconciliation Engine"
     result_store_dir: str = "./data/results"
+    target_workers: int = Field(default=1, ge=1, le=4)
     llm_enabled: bool = False
     llm_trusted_local: bool = False
     llm_base_url: str = "https://api.openai.com/v1"

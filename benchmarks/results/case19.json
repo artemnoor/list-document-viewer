@@ -1,0 +1,90 @@
+{
+  "engine": "local-cost-audit/1.1",
+  "assessment": {
+    "project_id": "a3e1d5c6-0cae-4a01-8ddf-c650df63076e",
+    "pipeline_status": "completed",
+    "passed": true,
+    "amount_checks": [
+      {
+        "label": "Затраты на оплату труда - всего (0200)",
+        "expected_actual": "5558474.83",
+        "expected_value": "5558474.83",
+        "expected_status": "matched",
+        "passed": true,
+        "found_statuses": [
+          "matched"
+        ]
+      },
+      {
+        "label": "Страховые взносы (0300)",
+        "expected_actual": "1671359.96",
+        "expected_value": "1671359.96",
+        "expected_status": "matched",
+        "passed": true,
+        "found_statuses": [
+          "matched"
+        ]
+      },
+      {
+        "label": "Общепроизводственные затраты (0800)",
+        "expected_actual": "1145798.1",
+        "expected_value": "1133298.1",
+        "expected_status": "mismatch",
+        "passed": true,
+        "found_statuses": [
+          "mismatch"
+        ]
+      },
+      {
+        "label": "Общехозяйственные затраты (0900)",
+        "expected_actual": "3204744.51",
+        "expected_value": "3204744.51",
+        "expected_status": "matched",
+        "passed": true,
+        "found_statuses": [
+          "matched"
+        ]
+      },
+      {
+        "label": "ИТОГО: 3 этап, 2026 г.",
+        "expected_actual": "11580377.4",
+        "expected_value": "11567877.4",
+        "expected_status": "mismatch",
+        "passed": true,
+        "found_statuses": [
+          "mismatch"
+        ]
+      }
+    ],
+    "additional_checks": {
+      "duplicate_operation": true,
+      "wrong_period": true,
+      "incorrect_document_link": true,
+      "unverified_indicators": true
+    },
+    "last_error": null
+  },
+  "summary": {
+    "matched": 3,
+    "mismatch": 2,
+    "insufficient_data": 10
+  },
+  "exports": {
+    "report.md": {
+      "status": 200,
+      "bytes": 33347
+    },
+    "report.pdf": {
+      "status": 200,
+      "bytes": 65242
+    },
+    "financial-audit": {
+      "status": 200,
+      "bytes": 262598
+    }
+  },
+  "document_ids_preserved": true,
+  "citations_checked": 93,
+  "gateway_source_sha256": "359581ac6302a1b0767a0d8a1b0e2749b6e89188bb7ea0f4a4bc49c3a6bae922",
+  "hash_normalization": "UTF-8 file bytes with CRLF normalized to LF"
+}

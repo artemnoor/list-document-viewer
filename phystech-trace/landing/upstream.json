@@ -1,0 +1,13 @@
+{
+  "repository": "https://github.com/artemnoor/phystech-trace-site",
+  "commit": "f1a0e58c2a0162a6276614220761fd8852d359a1",
+  "imported_at": "2026-11-14",
+  "source_directory": "site/",
+  "integration_changes": [
+    "Restored all 240 non-auth site files byte-for-byte from the original GitHub commit.",
+    "Only logIn/index.html and register/index.html retain functional Gateway account forms.",
+    "Additional auth.css and auth.js support working login and registration.",
+    "No replacement homepage layout, component patches, typography or animation changes."
+  ],
+  "upstream_notes": "UPSTREAM.md"
+}

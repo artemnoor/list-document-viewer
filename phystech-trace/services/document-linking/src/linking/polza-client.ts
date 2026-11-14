@@ -1,5 +1,10 @@
 export const POLZA_BASE_URL = "https://polza.ai/api/v1";
 export const POLZA_MODEL = "google/gemma-4-26b-a4b-it";
+export const DEEPSEEK_MODEL = "deepseek/deepseek-v4.1-flash";
+export const ALLOWED_MODELS = [POLZA_MODEL, DEEPSEEK_MODEL];
+export function modelForClassification(classification?: string): string {
+  return classification === "confidential" ? POLZA_MODEL : DEEPSEEK_MODEL;
+}
 const MAX_RETRY_AFTER_MS = 15 * 60 * 1000;
 
 export type PolzaJsonResponse<T = unknown> = { value: T; model: string; finishReason?: string; promptTokens: number; completionTokens: number; cost?: number; currency?: string };
@@ -29,7 +34,7 @@ function providerError(status: number, retryAfter: string | null): PolzaRequestE
 }
 
 export async function requestPolzaJson<T = unknown>(args: { apiKey: string; model: string; timeoutMs: number; maxTokens: number; systemPrompt: string; userContent: string; onInvalidJsonResponse?: (response: { rawText: string; model: string; promptTokens: number; completionTokens: number; cost?: number; currency?: string }) => Promise<void> | void }): Promise<PolzaJsonResponse<T>> {
-  if (args.model !== POLZA_MODEL) throw new PolzaRequestError(`Разрешена только модель ${POLZA_MODEL}`, 400, false);
+  if (!ALLOWED_MODELS.includes(args.model)) throw new PolzaRequestError("Модель не разрешена политикой проекта", 400, false);
   const controller = new AbortController(), timer = setTimeout(() => controller.abort(), args.timeoutMs);
   try {
     let response: Response;
@@ -37,7 +42,7 @@ export async function requestPolzaJson<T = unknown>(args: { apiKey: string; mode
       response = await fetch(`${POLZA_BASE_URL}/chat/completions`, {
         method: "POST", signal: controller.signal,
         headers: { Authorization: `Bearer ${args.apiKey}`, "Content-Type": "application/json" },
-        body: JSON.stringify({ model: args.model, temperature: 0, max_tokens: args.maxTokens, response_format: { type: "json_object" }, messages: [{ role: "system", content: args.systemPrompt }, { role: "user", content: args.userContent }] }),
+        body: JSON.stringify({ model: args.model, reasoning: { effort: "none" }, temperature: 0, max_tokens: args.maxTokens, response_format: { type: "json_object" }, messages: [{ role: "system", content: args.systemPrompt }, { role: "user", content: args.userContent }] }),
       });
     } catch (error: any) {
       if (error?.name === "AbortError") throw new PolzaRequestError(`Истекло время ожидания Polza (${args.timeoutMs} мс)`, 504, true);
@@ -49,15 +54,17 @@ export async function requestPolzaJson<T = unknown>(args: { apiKey: string; mode
     try { body = await response.json(); }
     catch { throw new PolzaRequestError("Polza AI вернул некорректный ответ", 502, true); }
     const usage = body.usage ?? {};
-    if (body.model && body.model !== POLZA_MODEL) throw new PolzaRequestError("Polza AI вернул неожиданный ID модели", 502, false);
+    if (body.model && body.model !== args.model && !(args.model === DEEPSEEK_MODEL && body.model === `${DEEPSEEK_MODEL}-1017`)) throw new PolzaRequestError("Polza AI вернул неожиданный ID модели", 502, false);
     let value: T;
     const rawText = body.choices?.[0]?.message?.content || "";
     const cost = typeof usage.cost === "number" ? usage.cost : typeof body.cost === "number" ? body.cost : undefined;
     const currency = usage.cost_currency ?? usage.currency ?? body.cost_currency ?? body.currency;
-    try { value = JSON.parse(rawText) as T; }
+    try { const text = rawText.trim();
+      const fenced = /^```(?:json)?\s*([\s\S]*?)\s*```$/i.exec(text);
+      value = JSON.parse(fenced ? fenced[1] : text) as T; }
     catch {
       await args.onInvalidJsonResponse?.({ rawText, model: body.model ?? args.model, promptTokens: Number(usage.prompt_tokens) || 0, completionTokens: Number(usage.completion_tokens) || 0, ...(cost !== undefined ? { cost } : {}), ...(currency ? { currency } : {}) });
-      throw new PolzaRequestError("Gemma вернула невалидный JSON", 502, true);
+      throw new PolzaRequestError("Модель вернула невалидный JSON", 502, true);
     }
     return { value, model: body.model ?? args.model, finishReason: body.choices?.[0]?.finish_reason, promptTokens: Number(usage.prompt_tokens) || 0, completionTokens: Number(usage.completion_tokens) || 0, ...(cost !== undefined ? { cost } : {}), ...(currency ? { currency } : {}) };
   } finally { clearTimeout(timer); }

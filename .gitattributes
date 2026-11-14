@@ -2,3 +2,6 @@
 phystech-trace/services/structured-extraction/**/*.json text eol=lf
 phystech-trace/services/document-linking/**/*.json text eol=lf
 phystech-trace/services/verification-engine/**/*.json -text
+benchmarks/** text eol=lf
+scripts/*.py text eol=lf
+docs/*.md text eol=lf

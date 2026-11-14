@@ -11,7 +11,7 @@ from typing import Any
 
 import httpx
 
-from run_e2e import resolve_json_path
+from run_e2e import resolve_json_path, validate_compact_relations
 
 
 TRACE_ROOT = Path(__file__).resolve().parents[2]
@@ -46,20 +46,13 @@ def main() -> int:
         require(response.status_code == 200, f"Project read failed: HTTP {response.status_code}")
         project = response.json()
         require(project.get("status") == "completed", "Project is not completed")
-        require(all(project.get("stages", {}).get(stage, {}).get("status") == "completed" for stage in ("parser", "extraction", "linking")), "One or more project stages are incomplete")
+        require(all(project.get("stages", {}).get(stage, {}).get("status") == "completed" for stage in ("parser", "extraction", "linking", "reconciliation", "verification")), "One or more project stages are incomplete")
 
         result = project.get("linking_result") or {}
         llm = result.get("processing_metadata", {}).get("llm", {})
         require(llm.get("provider") == "Polza AI" and llm.get("calls", 0) > 0, "Saved output lacks live Polza model metadata")
         links = result.get("links", [])
-        by_type = {link.get("relationship_type"): link for link in links}
-        require(EXPECTED_RELATIONS <= by_type.keys(), "Saved Linking output lacks expected synthetic relationships")
-        require(has_pair(by_type["report_summarizes_registry"], "fields.reported_total.value.amount", "fields.registry_total.value.amount"), "Report total does not match registry total evidence")
-        require(has_pair(by_type["act_validates_registry"], "fields.amount_due.value.amount", "fields.registry_total.value.amount"), "Act total does not match registry total evidence")
-        line_link = by_type["act_contains_line_item"]
-        require(has_pair(line_link, "line_items[0].description.value", "tables[0].rows[0].description.value"), "Known line item description does not match")
-        require(has_pair(line_link, "line_items[0].quantity.value", "tables[0].rows[0].quantity.value"), "Known line item quantity does not match")
-        require(has_pair(line_link, "line_items[0].amount.value.amount", "tables[0].rows[0].amount.value.amount"), "Known line item amount does not match")
+        known_relations = validate_compact_relations(links, project['documents'])
 
         extractions: dict[str, dict[str, Any]] = {}
         source_documents = 0
@@ -92,7 +85,7 @@ def main() -> int:
     report = {
         "status": "saved-project-verified", "project_id": args.project_id,
         "model_provider": llm.get("provider"), "model": llm.get("model"),
-        "model_calls": llm.get("calls"), "known_relations": sorted(EXPECTED_RELATIONS),
+        "model_calls": llm.get("calls"), "known_relations": known_relations,
         "evidence_sides_resolved": evidence_sides, "source_documents_resolved": source_documents,
         "pdf_page_preview": "passed", "verified_at": datetime.now(timezone.utc).isoformat(),
     }
@@ -103,7 +96,7 @@ def main() -> int:
     if latest_path.exists():
         latest = json.loads(latest_path.read_text(encoding="utf-8"))
         if latest.get("project_id") == args.project_id:
-            latest.setdefault("linking", {})["known_relations"] = sorted(EXPECTED_RELATIONS)
+            latest.setdefault("linking", {})["known_relations"] = known_relations
             check = "Saved live relationships, known amounts/row values, source files, PDF page and evidence provenance revalidated"
             if check not in latest.setdefault("checks", []):
                 latest["checks"].append(check)
