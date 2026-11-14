@@ -1,0 +1,5 @@
+{
+  "description": "Test-only synthetic Extraction and Reconciliation payloads. Numeric values, provenance locators, and confirmation states are invented for deterministic scenarios and are not claims about a real KFZ project.",
+  "reconciliation_contract": "contracts/reconciliation-result-1.0.0.schema.json",
+  "expected_baseline": "tests/fixtures/synthetic/reconciliation-matched.json is expected to produce matched for target-reported-total"
+}

@@ -1,0 +1,645 @@
+{
+  "schema_version": "1.2.0",
+  "integrity_status": "verified",
+  "legacy_overall_status": null,
+  "verification_id": "ver_cf16d7a536c9bc7ff733fd65",
+  "project_id": "synthetic-project",
+  "calculation_id": "synthetic-calculation-001",
+  "created_at": "2026-11-14T10:00:00Z",
+  "input_fingerprint": "cf16d7a536c9bc7ff733fd65b31e4bc8065c75693951470fa5a6f0db6ebab34b",
+  "input_metadata": {
+    "structured_extraction": {
+      "primary": {
+        "document_id": "synthetic-kfz-001",
+        "extraction_id": "synthetic-kfz-extraction-v1",
+        "schema_version": "1.2.0",
+        "input_hash": "8c8e1c024bb7db0728d75c57d2ebb70d916ee41b271d7f0755502f6b9c0ff6b9"
+      },
+      "supporting": [
+        {
+          "document_id": "synthetic-invoice-001",
+          "extraction_id": "synthetic-invoice-extraction-v1",
+          "schema_version": "1.2.0",
+          "input_hash": "f4cdaba5950e1e04e781f481d3d08ea6620cffbbb2999d3c389015ad535b530c"
+        }
+      ]
+    },
+    "document_linking": {
+      "schema_version": null,
+      "payload_contract_version": null,
+      "linking_run_id": null
+    },
+    "reconciliation": {
+      "contract_version": "1.0.0",
+      "run_id": "synthetic-reconciliation-run-001",
+      "calculation_id": "synthetic-calculation-001",
+      "engine_version": "synthetic-reconciliation/1.0"
+    }
+  },
+  "overall_status": "mismatch",
+  "summary": {
+    "matched": 1,
+    "mismatch": 1,
+    "insufficient_data": 0,
+    "needs_review": 0,
+    "not_applicable": 0
+  },
+  "conclusion": {
+    "overall_status": "mismatch",
+    "has_proven_mismatch": true,
+    "coverage_complete": true,
+    "mismatch_count": 1,
+    "unresolved_count": 0,
+    "not_applicable_count": 0
+  },
+  "completeness": {
+    "total_indicators": 2,
+    "applicable_indicators": 2,
+    "verified_indicators": 2,
+    "matched_indicators": 1,
+    "mismatched_indicators": 1,
+    "not_applicable_indicators": 0,
+    "unresolved_indicators": 0,
+    "complete": true
+  },
+  "indicators": [
+    {
+      "target_id": "target-reported-total",
+      "semantic_key": "reported_total",
+      "label": "Reported amount",
+      "value_type": "money",
+      "status": "mismatch",
+      "legacy_status": null,
+      "actual": {
+        "source_value": "100.00 RUB",
+        "normalized_value": {
+          "amount": "100.00",
+          "currency": "RUB"
+        },
+        "value_type": "money",
+        "currency": "RUB",
+        "unit": null,
+        "period": {
+          "start": "2026-01-01",
+          "end": "2026-03-31"
+        },
+        "extraction_status": "extracted",
+        "json_pointer": "/fields/reported_total/value",
+        "document_id": "synthetic-kfz-001",
+        "extraction_id": "synthetic-kfz-extraction-v1",
+        "row_id": null,
+        "provenance": {
+          "document_id": "synthetic-kfz-001",
+          "source_ref": "#/synthetic/kfz/page-1/total",
+          "page_no": 1,
+          "sheet_name": null,
+          "cell_address": null,
+          "source_text": "100.00 RUB",
+          "source_available": true
+        }
+      },
+      "expected": {
+        "source_value": {
+          "amount": "110.25",
+          "currency": "RUB"
+        },
+        "normalized_value": {
+          "amount": "110.25",
+          "currency": "RUB"
+        },
+        "value_type": "money",
+        "currency": "RUB",
+        "unit": null,
+        "period": {
+          "start": "2026-01-01",
+          "end": "2026-03-31"
+        },
+        "extraction_status": "reconciliation_result",
+        "json_pointer": "/targets/0/result/expected_value",
+        "document_id": null,
+        "extraction_id": null,
+        "row_id": null,
+        "provenance": {
+          "calculation_id": "target-reported-total",
+          "formula": "SUM(src-invoice-total)",
+          "applied_rules": [
+            "Synthetic source value supplied as complete"
+          ]
+        }
+      },
+      "difference": {
+        "absolute": "-10.25",
+        "relative": "-0.09297052154195011337868480726",
+        "formula": "actual - expected",
+        "evaluated_actual": "100.00",
+        "evaluated_expected": "110.25",
+        "accepted_by": "none"
+      },
+      "discrepancies": [
+        {
+          "category": "amount_difference",
+          "established": true,
+          "hypothesis": false,
+          "description": "Actual and expected values differ under the declared comparison rules.",
+          "evidence_references": [
+            "actual",
+            "expected"
+          ]
+        },
+        {
+          "category": "unsubstantiated_cause",
+          "established": false,
+          "hypothesis": true,
+          "description": "A value difference is established, but the available evidence does not establish its cause.",
+          "evidence_references": [
+            "actual",
+            "expected"
+          ]
+        }
+      ],
+      "evidence": {
+        "actual_reference": {
+          "document_id": "synthetic-kfz-001",
+          "extraction_id": "synthetic-kfz-extraction-v1",
+          "json_pointer": "/fields/reported_total/value",
+          "row_id": null,
+          "source_value": "100.00 RUB",
+          "normalized_value": {
+            "amount": "100.00",
+            "currency": "RUB"
+          },
+          "provenance": {
+            "document_id": "synthetic-kfz-001",
+            "source_ref": "#/synthetic/kfz/page-1/total",
+            "page_no": 1,
+            "sheet_name": null,
+            "cell_address": null,
+            "source_text": "100.00 RUB",
+            "source_available": true
+          }
+        },
+        "reconciliation_reference": {
+          "run_id": "synthetic-reconciliation-run-001",
+          "calculation_id": "synthetic-calculation-001",
+          "target_id": "target-reported-total",
+          "json_pointer": "/targets/0/result",
+          "formula": "SUM(src-invoice-total)",
+          "operations": [
+            {
+              "operation_id": "operation-sum-1",
+              "operation_type": "sum",
+              "formula": "SUM(src-invoice-total)",
+              "input_source_ids": [
+                "src-invoice-total"
+              ],
+              "output_value": "110.25",
+              "rounding_rule": null
+            }
+          ],
+          "applied_rules": [
+            "Synthetic source value supplied as complete"
+          ],
+          "provenance": [
+            {
+              "stage": "synthetic-source",
+              "source_id": "src-invoice-total",
+              "json_pointer": "/fields/source_amount/value"
+            }
+          ]
+        },
+        "used_sources": [
+          {
+            "source_id": "src-invoice-total",
+            "document_id": "synthetic-invoice-001",
+            "extraction_id": "synthetic-invoice-extraction-v1",
+            "row_id": null,
+            "json_pointer": "/fields/source_amount/value",
+            "reason": null,
+            "evidence_status": "human_confirmed",
+            "resolved_value": {
+              "amount": "110.25",
+              "currency": "RUB"
+            },
+            "raw_value": "110.25 RUB",
+            "declared_evidence_status": "human_confirmed",
+            "reference_resolved": true,
+            "technical_validity": "valid",
+            "automatic_confirmation": "confirmed",
+            "human_confirmation": "confirmed",
+            "provenance": {
+              "document_id": "synthetic-invoice-001",
+              "source_ref": "#/synthetic/invoice/page-1/total",
+              "page_no": 1,
+              "sheet_name": null,
+              "cell_address": null,
+              "source_text": "110.25 RUB",
+              "source_available": true
+            },
+            "link_id": null,
+            "linking_evidence": [],
+            "diagnostics": []
+          }
+        ],
+        "excluded_sources": [],
+        "linking_references": [],
+        "provenance_chain": [
+          {
+            "stage": "extraction",
+            "document_id": "synthetic-kfz-001",
+            "extraction_id": "synthetic-kfz-extraction-v1",
+            "json_pointer": "/fields/reported_total/value",
+            "provenance": {
+              "document_id": "synthetic-kfz-001",
+              "source_ref": "#/synthetic/kfz/page-1/total",
+              "page_no": 1,
+              "sheet_name": null,
+              "cell_address": null,
+              "source_text": "100.00 RUB",
+              "source_available": true
+            }
+          },
+          {
+            "stage": "reconciliation",
+            "run_id": "synthetic-reconciliation-run-001",
+            "calculation_id": "synthetic-calculation-001",
+            "target_id": "target-reported-total",
+            "operations": [
+              {
+                "operation_id": "operation-sum-1",
+                "operation_type": "sum",
+                "formula": "SUM(src-invoice-total)",
+                "input_source_ids": [
+                  "src-invoice-total"
+                ],
+                "output_value": "110.25",
+                "rounding_rule": null
+              }
+            ],
+            "used_sources": [
+              {
+                "source_id": "src-invoice-total",
+                "document_id": "synthetic-invoice-001",
+                "extraction_id": "synthetic-invoice-extraction-v1",
+                "row_id": null,
+                "json_pointer": "/fields/source_amount/value",
+                "reason": null,
+                "evidence_status": "human_confirmed",
+                "resolved_value": {
+                  "amount": "110.25",
+                  "currency": "RUB"
+                },
+                "raw_value": "110.25 RUB",
+                "declared_evidence_status": "human_confirmed",
+                "reference_resolved": true,
+                "technical_validity": "valid",
+                "automatic_confirmation": "confirmed",
+                "human_confirmation": "confirmed",
+                "provenance": {
+                  "document_id": "synthetic-invoice-001",
+                  "source_ref": "#/synthetic/invoice/page-1/total",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "source_text": "110.25 RUB",
+                  "source_available": true
+                },
+                "link_id": null,
+                "linking_evidence": [],
+                "diagnostics": []
+              }
+            ]
+          }
+        ]
+      },
+      "trust": {
+        "technical_validity": "valid",
+        "automatic_link_confirmation": "not_required",
+        "human_confirmation": "confirmed",
+        "calculation_trust": "proven"
+      },
+      "comparison_rules": {
+        "value_type": "money",
+        "actual_currency": "RUB",
+        "expected_currency": "RUB",
+        "actual_unit": null,
+        "expected_unit": null,
+        "actual_vat_basis": "gross",
+        "expected_vat_basis": "gross",
+        "actual_comparison_basis": "actual",
+        "expected_comparison_basis": "actual",
+        "tolerance": {
+          "absolute": null,
+          "absolute_unit": null,
+          "relative": null,
+          "rounding_scale": null,
+          "rounding_mode": "HALF_UP"
+        },
+        "period": {
+          "actual": {
+            "start": "2026-01-01",
+            "end": "2026-03-31"
+          },
+          "expected": {
+            "start": "2026-01-01",
+            "end": "2026-03-31"
+          },
+          "expected_source": "reconciliation"
+        },
+        "applied_rules": [
+          "Synthetic source value supplied as complete"
+        ],
+        "formula": "actual - expected"
+      },
+      "diagnostics": [],
+      "uncertainty": {
+        "level": "medium",
+        "reasons": [
+          "no_rounding_rule_or_tolerance_was_supplied"
+        ],
+        "manual_review_required": false,
+        "status_reason": "A reproducible difference or period mismatch is established using a complete, validated calculation basis."
+      }
+    },
+    {
+      "target_id": "target-reporting-period",
+      "semantic_key": "reporting_period",
+      "label": "Reporting period",
+      "value_type": "period",
+      "status": "matched",
+      "legacy_status": null,
+      "actual": {
+        "source_value": "2026 Q1",
+        "normalized_value": {
+          "start": "2026-01-01",
+          "end": "2026-03-31"
+        },
+        "value_type": "period",
+        "currency": null,
+        "unit": null,
+        "period": {
+          "start": "2026-01-01",
+          "end": "2026-03-31"
+        },
+        "extraction_status": "extracted",
+        "json_pointer": "/fields/reporting_period/value",
+        "document_id": "synthetic-kfz-001",
+        "extraction_id": "synthetic-kfz-extraction-v1",
+        "row_id": null,
+        "provenance": {
+          "document_id": "synthetic-kfz-001",
+          "source_ref": "#/synthetic/kfz/page-1/period",
+          "page_no": 1,
+          "sheet_name": null,
+          "cell_address": null,
+          "source_text": "2026 Q1",
+          "source_available": true
+        }
+      },
+      "expected": {
+        "source_value": {
+          "start": "2026-01-01",
+          "end": "2026-03-31"
+        },
+        "normalized_value": {
+          "start": "2026-01-01",
+          "end": "2026-03-31"
+        },
+        "value_type": "period",
+        "currency": null,
+        "unit": null,
+        "period": {
+          "start": "2026-01-01",
+          "end": "2026-03-31"
+        },
+        "extraction_status": "reconciliation_result",
+        "json_pointer": "/targets/1/result/expected_value",
+        "document_id": null,
+        "extraction_id": null,
+        "row_id": null,
+        "provenance": {
+          "calculation_id": "target-reporting-period",
+          "formula": "Source period accepted by Reconciliation",
+          "applied_rules": []
+        }
+      },
+      "difference": {
+        "absolute": null,
+        "relative": null,
+        "formula": "actual period equals expected period",
+        "evaluated_actual": null,
+        "evaluated_expected": null,
+        "accepted_by": "exact"
+      },
+      "discrepancies": [],
+      "evidence": {
+        "actual_reference": {
+          "document_id": "synthetic-kfz-001",
+          "extraction_id": "synthetic-kfz-extraction-v1",
+          "json_pointer": "/fields/reporting_period/value",
+          "row_id": null,
+          "source_value": "2026 Q1",
+          "normalized_value": {
+            "start": "2026-01-01",
+            "end": "2026-03-31"
+          },
+          "provenance": {
+            "document_id": "synthetic-kfz-001",
+            "source_ref": "#/synthetic/kfz/page-1/period",
+            "page_no": 1,
+            "sheet_name": null,
+            "cell_address": null,
+            "source_text": "2026 Q1",
+            "source_available": true
+          }
+        },
+        "reconciliation_reference": {
+          "run_id": "synthetic-reconciliation-run-001",
+          "calculation_id": "synthetic-calculation-001",
+          "target_id": "target-reporting-period",
+          "json_pointer": "/targets/1/result",
+          "formula": "Source period accepted by Reconciliation",
+          "operations": [
+            {
+              "operation_id": "operation-period-1",
+              "operation_type": "period_selection",
+              "formula": "Select confirmed source period",
+              "input_source_ids": [
+                "src-invoice-period"
+              ],
+              "output_value": {
+                "start": "2026-01-01",
+                "end": "2026-03-31"
+              },
+              "rounding_rule": null
+            }
+          ],
+          "applied_rules": [],
+          "provenance": [
+            {
+              "stage": "synthetic-source",
+              "source_id": "src-invoice-period",
+              "json_pointer": "/fields/source_period/value"
+            }
+          ]
+        },
+        "used_sources": [
+          {
+            "source_id": "src-invoice-period",
+            "document_id": "synthetic-invoice-001",
+            "extraction_id": "synthetic-invoice-extraction-v1",
+            "row_id": null,
+            "json_pointer": "/fields/source_period/value",
+            "reason": null,
+            "evidence_status": "human_confirmed",
+            "resolved_value": {
+              "start": "2026-01-01",
+              "end": "2026-03-31"
+            },
+            "raw_value": "2026 Q1",
+            "declared_evidence_status": "human_confirmed",
+            "reference_resolved": true,
+            "technical_validity": "valid",
+            "automatic_confirmation": "confirmed",
+            "human_confirmation": "confirmed",
+            "provenance": {
+              "document_id": "synthetic-invoice-001",
+              "source_ref": "#/synthetic/invoice/page-1/period",
+              "page_no": 1,
+              "sheet_name": null,
+              "cell_address": null,
+              "source_text": "2026 Q1",
+              "source_available": true
+            },
+            "link_id": null,
+            "linking_evidence": [],
+            "diagnostics": []
+          }
+        ],
+        "excluded_sources": [],
+        "linking_references": [],
+        "provenance_chain": [
+          {
+            "stage": "extraction",
+            "document_id": "synthetic-kfz-001",
+            "extraction_id": "synthetic-kfz-extraction-v1",
+            "json_pointer": "/fields/reporting_period/value",
+            "provenance": {
+              "document_id": "synthetic-kfz-001",
+              "source_ref": "#/synthetic/kfz/page-1/period",
+              "page_no": 1,
+              "sheet_name": null,
+              "cell_address": null,
+              "source_text": "2026 Q1",
+              "source_available": true
+            }
+          },
+          {
+            "stage": "reconciliation",
+            "run_id": "synthetic-reconciliation-run-001",
+            "calculation_id": "synthetic-calculation-001",
+            "target_id": "target-reporting-period",
+            "operations": [
+              {
+                "operation_id": "operation-period-1",
+                "operation_type": "period_selection",
+                "formula": "Select confirmed source period",
+                "input_source_ids": [
+                  "src-invoice-period"
+                ],
+                "output_value": {
+                  "start": "2026-01-01",
+                  "end": "2026-03-31"
+                },
+                "rounding_rule": null
+              }
+            ],
+            "used_sources": [
+              {
+                "source_id": "src-invoice-period",
+                "document_id": "synthetic-invoice-001",
+                "extraction_id": "synthetic-invoice-extraction-v1",
+                "row_id": null,
+                "json_pointer": "/fields/source_period/value",
+                "reason": null,
+                "evidence_status": "human_confirmed",
+                "resolved_value": {
+                  "start": "2026-01-01",
+                  "end": "2026-03-31"
+                },
+                "raw_value": "2026 Q1",
+                "declared_evidence_status": "human_confirmed",
+                "reference_resolved": true,
+                "technical_validity": "valid",
+                "automatic_confirmation": "confirmed",
+                "human_confirmation": "confirmed",
+                "provenance": {
+                  "document_id": "synthetic-invoice-001",
+                  "source_ref": "#/synthetic/invoice/page-1/period",
+                  "page_no": 1,
+                  "sheet_name": null,
+                  "cell_address": null,
+                  "source_text": "2026 Q1",
+                  "source_available": true
+                },
+                "link_id": null,
+                "linking_evidence": [],
+                "diagnostics": []
+              }
+            ]
+          }
+        ]
+      },
+      "trust": {
+        "technical_validity": "valid",
+        "automatic_link_confirmation": "not_required",
+        "human_confirmation": "confirmed",
+        "calculation_trust": "proven"
+      },
+      "comparison_rules": {
+        "value_type": "period",
+        "actual_currency": null,
+        "expected_currency": null,
+        "actual_unit": null,
+        "expected_unit": null,
+        "actual_vat_basis": "not_applicable",
+        "expected_vat_basis": "not_applicable",
+        "actual_comparison_basis": "actual",
+        "expected_comparison_basis": "actual",
+        "tolerance": {
+          "absolute": null,
+          "absolute_unit": null,
+          "relative": null,
+          "rounding_scale": null,
+          "rounding_mode": "HALF_UP"
+        },
+        "period": {
+          "actual": {
+            "start": "2026-01-01",
+            "end": "2026-03-31"
+          },
+          "expected": {
+            "start": "2026-01-01",
+            "end": "2026-03-31"
+          },
+          "expected_source": "reconciliation"
+        },
+        "applied_rules": [],
+        "formula": "type-specific equality"
+      },
+      "diagnostics": [],
+      "uncertainty": {
+        "level": "none",
+        "reasons": [],
+        "manual_review_required": false,
+        "status_reason": "Values are compatible and equal under explicit rules, with a complete calculation proof and validated source references."
+      }
+    }
+  ],
+  "diagnostics": [
+    {
+      "code": "indicator_requires_review",
+      "target_id": "target-reported-total",
+      "message": "A reproducible difference or period mismatch is established using a complete, validated calculation basis."
+    }
+  ]
+}

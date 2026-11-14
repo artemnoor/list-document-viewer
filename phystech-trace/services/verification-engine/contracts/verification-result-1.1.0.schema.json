@@ -1,0 +1,668 @@
+{
+  "$defs": {
+    "Difference": {
+      "properties": {
+        "absolute": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Absolute"
+        },
+        "relative": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Relative"
+        },
+        "formula": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Formula"
+        },
+        "evaluated_actual": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Evaluated Actual"
+        },
+        "evaluated_expected": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Evaluated Expected"
+        },
+        "accepted_by": {
+          "default": "none",
+          "enum": [
+            "exact",
+            "absolute_tolerance",
+            "relative_tolerance",
+            "rounding",
+            "none"
+          ],
+          "title": "Accepted By",
+          "type": "string"
+        }
+      },
+      "title": "Difference",
+      "type": "object"
+    },
+    "Discrepancy": {
+      "properties": {
+        "category": {
+          "$ref": "#/$defs/DiscrepancyCategory"
+        },
+        "established": {
+          "title": "Established",
+          "type": "boolean"
+        },
+        "hypothesis": {
+          "default": false,
+          "title": "Hypothesis",
+          "type": "boolean"
+        },
+        "description": {
+          "title": "Description",
+          "type": "string"
+        },
+        "evidence_references": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence References",
+          "type": "array"
+        }
+      },
+      "required": [
+        "category",
+        "established",
+        "description"
+      ],
+      "title": "Discrepancy",
+      "type": "object"
+    },
+    "DiscrepancyCategory": {
+      "enum": [
+        "amount_difference",
+        "wrong_period",
+        "duplicate_operation",
+        "missing_supporting_document",
+        "incorrect_document_link",
+        "quantity_or_indicator_difference",
+        "incompatible_unit",
+        "rounding_problem",
+        "conflicting_primary_documents",
+        "unsubstantiated_cause",
+        "economic_meaning_mismatch"
+      ],
+      "title": "DiscrepancyCategory",
+      "type": "string"
+    },
+    "EvidenceTrace": {
+      "properties": {
+        "actual_reference": {
+          "anyOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Actual Reference"
+        },
+        "reconciliation_reference": {
+          "anyOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reconciliation Reference"
+        },
+        "used_sources": {
+          "items": {
+            "type": "object"
+          },
+          "title": "Used Sources",
+          "type": "array"
+        },
+        "excluded_sources": {
+          "items": {
+            "type": "object"
+          },
+          "title": "Excluded Sources",
+          "type": "array"
+        },
+        "linking_references": {
+          "items": {
+            "type": "object"
+          },
+          "title": "Linking References",
+          "type": "array"
+        },
+        "provenance_chain": {
+          "items": {
+            "type": "object"
+          },
+          "title": "Provenance Chain",
+          "type": "array"
+        }
+      },
+      "title": "EvidenceTrace",
+      "type": "object"
+    },
+    "EvidenceTrust": {
+      "description": "Independent trust dimensions; a declared status alone is never proof.",
+      "properties": {
+        "technical_validity": {
+          "enum": [
+            "valid",
+            "invalid",
+            "incomplete",
+            "not_checked"
+          ],
+          "title": "Technical Validity",
+          "type": "string"
+        },
+        "automatic_link_confirmation": {
+          "enum": [
+            "not_required",
+            "confirmed",
+            "unconfirmed",
+            "rejected"
+          ],
+          "title": "Automatic Link Confirmation",
+          "type": "string"
+        },
+        "human_confirmation": {
+          "enum": [
+            "not_required",
+            "confirmed",
+            "unconfirmed",
+            "rejected"
+          ],
+          "title": "Human Confirmation",
+          "type": "string"
+        },
+        "calculation_trust": {
+          "enum": [
+            "proven",
+            "unproven",
+            "invalid",
+            "not_applicable"
+          ],
+          "title": "Calculation Trust",
+          "type": "string"
+        }
+      },
+      "required": [
+        "technical_validity",
+        "automatic_link_confirmation",
+        "human_confirmation",
+        "calculation_trust"
+      ],
+      "title": "EvidenceTrust",
+      "type": "object"
+    },
+    "IndicatorResult": {
+      "properties": {
+        "target_id": {
+          "title": "Target Id",
+          "type": "string"
+        },
+        "semantic_key": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Semantic Key"
+        },
+        "label": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Label"
+        },
+        "value_type": {
+          "title": "Value Type",
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/$defs/VerificationStatus"
+        },
+        "actual": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ValueEvidence"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "expected": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ValueEvidence"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "difference": {
+          "$ref": "#/$defs/Difference"
+        },
+        "discrepancies": {
+          "items": {
+            "$ref": "#/$defs/Discrepancy"
+          },
+          "title": "Discrepancies",
+          "type": "array"
+        },
+        "evidence": {
+          "$ref": "#/$defs/EvidenceTrace"
+        },
+        "trust": {
+          "$ref": "#/$defs/EvidenceTrust"
+        },
+        "comparison_rules": {
+          "title": "Comparison Rules",
+          "type": "object"
+        },
+        "diagnostics": {
+          "items": {
+            "type": "object"
+          },
+          "title": "Diagnostics",
+          "type": "array"
+        },
+        "uncertainty": {
+          "$ref": "#/$defs/Uncertainty"
+        }
+      },
+      "required": [
+        "target_id",
+        "value_type",
+        "status",
+        "uncertainty"
+      ],
+      "title": "IndicatorResult",
+      "type": "object"
+    },
+    "PeriodRange": {
+      "additionalProperties": false,
+      "properties": {
+        "start": {
+          "title": "Start",
+          "type": "string"
+        },
+        "end": {
+          "title": "End",
+          "type": "string"
+        }
+      },
+      "required": [
+        "start",
+        "end"
+      ],
+      "title": "PeriodRange",
+      "type": "object"
+    },
+    "Uncertainty": {
+      "properties": {
+        "level": {
+          "enum": [
+            "none",
+            "low",
+            "medium",
+            "high"
+          ],
+          "title": "Level",
+          "type": "string"
+        },
+        "reasons": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Reasons",
+          "type": "array"
+        },
+        "manual_review_required": {
+          "title": "Manual Review Required",
+          "type": "boolean"
+        },
+        "status_reason": {
+          "title": "Status Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "level",
+        "manual_review_required",
+        "status_reason"
+      ],
+      "title": "Uncertainty",
+      "type": "object"
+    },
+    "ValueEvidence": {
+      "properties": {
+        "source_value": {
+          "default": null,
+          "title": "Source Value"
+        },
+        "normalized_value": {
+          "default": null,
+          "title": "Normalized Value"
+        },
+        "value_type": {
+          "title": "Value Type",
+          "type": "string"
+        },
+        "currency": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Currency"
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Unit"
+        },
+        "period": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PeriodRange"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "extraction_status": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Extraction Status"
+        },
+        "json_pointer": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Json Pointer"
+        },
+        "document_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Document Id"
+        },
+        "extraction_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Extraction Id"
+        },
+        "row_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Row Id"
+        },
+        "provenance": {
+          "anyOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Provenance"
+        }
+      },
+      "required": [
+        "value_type"
+      ],
+      "title": "ValueEvidence",
+      "type": "object"
+    },
+    "VerificationCompleteness": {
+      "properties": {
+        "total_indicators": {
+          "minimum": 0,
+          "title": "Total Indicators",
+          "type": "integer"
+        },
+        "applicable_indicators": {
+          "minimum": 0,
+          "title": "Applicable Indicators",
+          "type": "integer"
+        },
+        "verified_indicators": {
+          "minimum": 0,
+          "title": "Verified Indicators",
+          "type": "integer"
+        },
+        "matched_indicators": {
+          "minimum": 0,
+          "title": "Matched Indicators",
+          "type": "integer"
+        },
+        "mismatched_indicators": {
+          "minimum": 0,
+          "title": "Mismatched Indicators",
+          "type": "integer"
+        },
+        "not_applicable_indicators": {
+          "minimum": 0,
+          "title": "Not Applicable Indicators",
+          "type": "integer"
+        },
+        "unresolved_indicators": {
+          "minimum": 0,
+          "title": "Unresolved Indicators",
+          "type": "integer"
+        },
+        "complete": {
+          "title": "Complete",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "total_indicators",
+        "applicable_indicators",
+        "verified_indicators",
+        "matched_indicators",
+        "mismatched_indicators",
+        "not_applicable_indicators",
+        "unresolved_indicators",
+        "complete"
+      ],
+      "title": "VerificationCompleteness",
+      "type": "object"
+    },
+    "VerificationStatus": {
+      "enum": [
+        "matched",
+        "mismatch",
+        "insufficient_data",
+        "needs_review",
+        "not_applicable"
+      ],
+      "title": "VerificationStatus",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.1.0",
+      "default": "1.1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "verification_id": {
+      "title": "Verification Id",
+      "type": "string"
+    },
+    "project_id": {
+      "title": "Project Id",
+      "type": "string"
+    },
+    "calculation_id": {
+      "title": "Calculation Id",
+      "type": "string"
+    },
+    "created_at": {
+      "title": "Created At",
+      "type": "string"
+    },
+    "input_fingerprint": {
+      "title": "Input Fingerprint",
+      "type": "string"
+    },
+    "input_metadata": {
+      "title": "Input Metadata",
+      "type": "object"
+    },
+    "overall_status": {
+      "$ref": "#/$defs/VerificationStatus"
+    },
+    "summary": {
+      "additionalProperties": {
+        "type": "integer"
+      },
+      "title": "Summary",
+      "type": "object"
+    },
+    "completeness": {
+      "$ref": "#/$defs/VerificationCompleteness"
+    },
+    "indicators": {
+      "items": {
+        "$ref": "#/$defs/IndicatorResult"
+      },
+      "title": "Indicators",
+      "type": "array"
+    },
+    "diagnostics": {
+      "items": {
+        "type": "object"
+      },
+      "title": "Diagnostics",
+      "type": "array"
+    }
+  },
+  "required": [
+    "verification_id",
+    "project_id",
+    "calculation_id",
+    "created_at",
+    "input_fingerprint",
+    "input_metadata",
+    "overall_status",
+    "summary",
+    "completeness",
+    "indicators"
+  ],
+  "title": "Phystech Trace Verification Result 1.1.0",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://phystech-trace.local/contracts/verification-result-1.1.0.schema.json"
+}

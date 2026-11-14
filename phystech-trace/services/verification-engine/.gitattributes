@@ -1,0 +1,3 @@
+contracts/reconciliation-engine/*.json -text
+tests/fixtures/upstream/reconciliation-engine/*.json -text
+tests/fixtures/synthetic/reconciliation-engine/*.json -text
