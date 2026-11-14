@@ -78,7 +78,7 @@ def _runtime_settings() -> Settings:
     )
 
 
-def _model_catalog(settings: Settings) -> list[str]:
+def _model_catalog(settings: Settings, output_path: Path | None = None) -> list[str]:
     url = settings.llm_base_url.rstrip("/") + "/models"
     response = httpx.get(url, headers={"Authorization": f"Bearer {settings.llm_api_key}"}, timeout=settings.llm_timeout_seconds, follow_redirects=False)
     response.raise_for_status()
@@ -89,7 +89,7 @@ def _model_catalog(settings: Settings) -> list[str]:
     model_ids = sorted({item["id"] for item in data if isinstance(item, dict) and isinstance(item.get("id"), str)})
     if settings.llm_model not in model_ids:
         raise RuntimeError(f"Configured model {settings.llm_model!r} is not present in the provider /models response.")
-    _write(RESULTS / "model-catalog.json", {
+    _write(output_path or RESULTS / "model-catalog.json", {
         "retrieved_at": datetime.now(timezone.utc).isoformat(),
         "base_url": settings.llm_base_url,
         "model_count": len(model_ids),
@@ -100,7 +100,7 @@ def _model_catalog(settings: Settings) -> list[str]:
     return model_ids
 
 
-def _preflight(settings: Settings) -> dict[str, Any]:
+def _preflight(settings: Settings, output_path: Path | None = None) -> dict[str, Any]:
     payload = {
         "target": {"target_id": "target_001", "label": "Synthetic API preflight", "description": "Protocol check using no source records."},
         "candidates": [],
@@ -125,7 +125,7 @@ def _preflight(settings: Settings) -> dict[str, Any]:
         "llm_calls": planner.call_records,
         "secret_included": False,
     }
-    _write(RESULTS / "provider-preflight.json", record)
+    _write(output_path or RESULTS / "provider-preflight.json", record)
     return record
 
 
@@ -372,10 +372,23 @@ def _aggregate(case_id: str, repeats: list[dict[str, Any]]) -> dict[str, Any]:
     }
 
 
-def run(repeat_count: int, max_api_calls: int) -> dict[str, Any]:
+def _select_cases(cases: list[dict[str, Any]], case_ids: list[str] | None) -> list[dict[str, Any]]:
+    if not case_ids:
+        return cases
+    available = {case["reference"]["case_id"] for case in cases}
+    unknown = sorted(set(case_ids) - available)
+    if unknown:
+        raise ValueError(f"Unknown synthetic case ID(s): {', '.join(unknown)}")
+    selected = set(case_ids)
+    return [case for case in cases if case["reference"]["case_id"] in selected]
+
+
+def run(repeat_count: int, max_api_calls: int, case_ids: list[str] | None = None) -> dict[str, Any]:
     settings = _runtime_settings()
-    model_ids = _model_catalog(settings)
-    cases = prepare()
+    all_cases = prepare()
+    cases = _select_cases(all_cases, case_ids)
+    output_tag = f".targeted-{'-'.join(case['reference']['case_id'] for case in cases)}" if case_ids else ""
+    model_ids = _model_catalog(settings, RESULTS / f"model-catalog{output_tag}.json")
     anticipated_calls = 0
     for case in cases:
         request = ReconciliationRequest.model_validate(case["request"])
@@ -385,7 +398,7 @@ def run(repeat_count: int, max_api_calls: int) -> dict[str, Any]:
     total_budgeted_calls = anticipated_calls + 1
     if total_budgeted_calls > max_api_calls:
         raise RuntimeError(f"Bounded run would require {total_budgeted_calls} paid Chat Completions including one protocol preflight, above --max-api-calls={max_api_calls}; no calls were made.")
-    preflight = _preflight(settings)
+    preflight = _preflight(settings, RESULTS / f"provider-preflight{output_tag}.json")
 
     all_case_summaries = []
     all_calls = list(preflight["llm_calls"])
@@ -420,12 +433,12 @@ def run(repeat_count: int, max_api_calls: int) -> dict[str, Any]:
                 "synthetic_data_only": True,
                 "real_llm_response": bool(call_records and any(item.get("assistant_content") for item in call_records)),
             }
-            repeat_path = case_dir / f"repeat-{repeat_index:02d}.json"
+            repeat_path = case_dir / f"repeat-{repeat_index:02d}{output_tag}.json"
             _write(repeat_path, repeat_result)
             repeat_results.append(repeat_result)
             print(f"{case_id} repeat {repeat_index}: calls={len(call_records)} status={calculation['status']} precision={comparison['precision']:.3f} recall={comparison['recall']:.3f} formula={comparison['formula_correct']} value={calculation.get('expected_value')}")
         summary = _aggregate(case_id, repeat_results)
-        _write(case_dir / "metrics.json", summary)
+        _write(case_dir / f"metrics{output_tag}.json", summary)
         all_case_summaries.append(summary)
 
     all_usage = _usage_totals(all_calls)
@@ -449,6 +462,7 @@ def run(repeat_count: int, max_api_calls: int) -> dict[str, Any]:
         "model_id": settings.llm_model,
         "available_model_count": len(model_ids),
         "scenario_count": len(all_case_summaries),
+        "selected_case_ids": [case["reference"]["case_id"] for case in cases],
         "repeat_count": repeat_count,
         "paid_call_limit": max_api_calls,
         "actual_llm_call_count": sum(item["llm_calls"] for item in all_case_summaries),
@@ -479,7 +493,7 @@ def run(repeat_count: int, max_api_calls: int) -> dict[str, Any]:
         "total_latency_ms": sum(call.get("duration_ms", 0) for call in all_calls),
         "scenarios": all_case_summaries,
     }
-    _write(RESULTS / "evaluation-summary.json", evaluation)
+    _write(RESULTS / f"evaluation-summary{output_tag}.json", evaluation)
     return evaluation
 
 
@@ -487,6 +501,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repeat", type=int, default=3, help="Real model runs per scenario; default 3.")
     parser.add_argument("--max-api-calls", type=int, default=40, help="Hard cap on billed chat-completion calls; model catalog GET is not included.")
+    parser.add_argument("--case-id", action="append", help="Run only this synthetic scenario. Repeat the option to select multiple scenarios.")
     parser.add_argument("--prepare-only", action="store_true", help="Write synthetic requests and independent references without model calls.")
     args = parser.parse_args()
     if args.repeat < 1 or args.max_api_calls < 1:
@@ -496,11 +511,13 @@ def main() -> int:
         print(f"Prepared {len(cases)} synthetic scenarios. No LLM request was made.")
         return 0
     try:
-        evaluation = run(args.repeat, args.max_api_calls)
+        evaluation = run(args.repeat, args.max_api_calls, args.case_id)
     except Exception as exc:
         print(f"LIVE EVALUATION NOT COMPLETED: {type(exc).__name__}: {exc}")
         return 2
-    print(f"Completed {evaluation['scenario_count']} scenarios, {evaluation['repeat_count']} repeats each, {evaluation['actual_llm_call_count']} scenario calls + {evaluation['protocol_preflight_call_count']} preflight call; mean F1={evaluation['overall_mean_f1']:.3f}, formula accuracy={evaluation['overall_formula_accuracy']:.3f}, value accuracy={evaluation['overall_value_accuracy']:.3f}")
+    def format_metric(value: float | None) -> str:
+        return f"{value:.3f}" if value is not None else "n/a"
+    print(f"Completed {evaluation['scenario_count']} scenarios, {evaluation['repeat_count']} repeats each, {evaluation['actual_llm_call_count']} scenario calls + {evaluation['protocol_preflight_call_count']} preflight call; mean F1={format_metric(evaluation['overall_mean_f1'])}, formula accuracy={format_metric(evaluation['overall_formula_accuracy'])}, value accuracy={format_metric(evaluation['overall_value_accuracy'])}")
     return 0
 
 

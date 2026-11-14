@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 import json
+import re
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -172,6 +173,23 @@ def _linking(extractions: list[dict[str, Any]], links: list[dict[str, Any]], unl
     }
 
 
+def _description_overlap(description: str | None, target_label: str) -> float:
+    generic_terms = {"amount", "total", "sum", "value"}
+
+    def terms(value: str) -> set[str]:
+        return {
+            token
+            for token in re.findall(r"[^\W_]+", value.casefold(), flags=re.UNICODE)
+            if not token.isdecimal() and token not in generic_terms
+        }
+
+    description_terms = terms(description or "")
+    target_terms = terms(target_label)
+    shared_terms = description_terms & target_terms
+    denominator = min(len(description_terms), len(target_terms))
+    return len(shared_terms) / denominator if denominator else 0.0
+
+
 def _make_case(
     case_id: str,
     title: str,
@@ -209,11 +227,23 @@ def _make_case(
     link_index = 0
     source_facts = [fact for fact in all_facts if fact.document_id != kfz["document_id"] and fact.status == "extracted" and fact.currency]
     if support:
+        expected_fact_ids = {fact.fact_id for group in expected_groups for fact in group}
+        descriptions = {
+            (fact.document_id, fact.row_id): str(fact.normalized_value)
+            for fact in all_facts
+            if fact.key == "description" and fact.row_id and isinstance(fact.normalized_value, str)
+        }
         for source in source_facts:
+            confirmed = source.fact_id in expected_fact_ids
+            plausible_unreviewed = _description_overlap(
+                descriptions.get((source.document_id, source.row_id)), target_label
+            ) >= 0.5
+            if not confirmed and not plausible_unreviewed:
+                continue
             link_index += 1
-            # Linking is a discovery hint; synthetic fixtures should not imply
-            # that every machine-proposed relation was reviewed by a person.
-            links.append(_support_link(source, target_fact, f"synthetic-support-{case_id}-{link_index:04d}", confirmed=source.fact_id in {fact.fact_id for group in expected_groups for fact in group}))
+            # Only annotated support is confirmed. Textually plausible alternatives
+            # remain machine-proposed so the fixture exercises the review gate.
+            links.append(_support_link(source, target_fact, f"synthetic-support-{case_id}-{link_index:04d}", confirmed=confirmed))
     for index, (left, right) in enumerate(extra_correspondences or [], start=1):
         links.append(_correspondence_link(left, right, f"synthetic-correspondence-{case_id}-{index:04d}"))
     linking = _linking(extractions, links, unlinked_doc_ids)

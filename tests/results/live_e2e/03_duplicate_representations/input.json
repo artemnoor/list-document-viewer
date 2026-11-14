@@ -612,92 +612,6 @@
         "source_row_id": "live-duplicate-act-row-0001"
       },
       {
-        "link_id": "synthetic-support-03_duplicate_representations-0002",
-        "relationship_type": "supports_indicator",
-        "source_document_id": "live-duplicate-invoice",
-        "target_document_id": "live-synthetic-kfz-03_duplicate_representations",
-        "evidence": [
-          {
-            "source": {
-              "document_id": "live-duplicate-invoice",
-              "path": "#/line_items/0/amount",
-              "raw_value": "synthetic-private-value",
-              "normalized_value": "synthetic-source",
-              "provenance": {
-                "document_id": "live-duplicate-invoice",
-                "source_ref": "#/line_items/0/amount",
-                "source_text": "125.00",
-                "source_available": true
-              }
-            },
-            "target": {
-              "document_id": "live-synthetic-kfz-03_duplicate_representations",
-              "path": "#/indicators/0/extracted",
-              "raw_value": "synthetic-target-value",
-              "normalized_value": "synthetic-target",
-              "provenance": {
-                "document_id": "live-synthetic-kfz-03_duplicate_representations",
-                "source_ref": "#/indicators/0/extracted",
-                "source_text": "125.00",
-                "source_available": true
-              }
-            },
-            "signal": "synthetic_operation_support",
-            "explanation": "Synthetic evidence edge for evaluator-controlled test records."
-          }
-        ],
-        "explanation": "Synthetic source-to-target relation.",
-        "confidence": 0.7,
-        "status": "review",
-        "verification_status": "not_reviewed",
-        "detection_method": "llm",
-        "conflicts": [],
-        "source_row_id": "live-duplicate-invoice-row-0001"
-      },
-      {
-        "link_id": "synthetic-support-03_duplicate_representations-0003",
-        "relationship_type": "supports_indicator",
-        "source_document_id": "live-duplicate-registry",
-        "target_document_id": "live-synthetic-kfz-03_duplicate_representations",
-        "evidence": [
-          {
-            "source": {
-              "document_id": "live-duplicate-registry",
-              "path": "#/line_items/0/amount",
-              "raw_value": "synthetic-private-value",
-              "normalized_value": "synthetic-source",
-              "provenance": {
-                "document_id": "live-duplicate-registry",
-                "source_ref": "#/line_items/0/amount",
-                "source_text": "125.00",
-                "source_available": true
-              }
-            },
-            "target": {
-              "document_id": "live-synthetic-kfz-03_duplicate_representations",
-              "path": "#/indicators/0/extracted",
-              "raw_value": "synthetic-target-value",
-              "normalized_value": "synthetic-target",
-              "provenance": {
-                "document_id": "live-synthetic-kfz-03_duplicate_representations",
-                "source_ref": "#/indicators/0/extracted",
-                "source_text": "125.00",
-                "source_available": true
-              }
-            },
-            "signal": "synthetic_operation_support",
-            "explanation": "Synthetic evidence edge for evaluator-controlled test records."
-          }
-        ],
-        "explanation": "Synthetic source-to-target relation.",
-        "confidence": 0.7,
-        "status": "review",
-        "verification_status": "not_reviewed",
-        "detection_method": "llm",
-        "conflicts": [],
-        "source_row_id": "live-duplicate-registry-row-0001"
-      },
-      {
         "link_id": "synthetic-correspondence-03_duplicate_representations-0001",
         "relationship_type": "line_item_correspondence",
         "source_document_id": "live-duplicate-act",
@@ -786,24 +700,7 @@
         "conflicts": []
       }
     ],
-    "review_required": [
-      {
-        "link_id": "synthetic-support-03_duplicate_representations-0002",
-        "reason": "Synthetic unreviewed relation.",
-        "candidate_document_ids": [
-          "live-duplicate-invoice",
-          "live-synthetic-kfz-03_duplicate_representations"
-        ]
-      },
-      {
-        "link_id": "synthetic-support-03_duplicate_representations-0003",
-        "reason": "Synthetic unreviewed relation.",
-        "candidate_document_ids": [
-          "live-duplicate-registry",
-          "live-synthetic-kfz-03_duplicate_representations"
-        ]
-      }
-    ],
+    "review_required": [],
     "unlinked_documents": [],
     "warnings": [
       "Synthetic evaluation data; no production documents or values."

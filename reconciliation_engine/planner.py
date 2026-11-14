@@ -106,8 +106,18 @@ class LLMPlanner:
             if fact.row_id and fact.key == "description" and isinstance(fact.normalized_value, str)
         }
         candidate_documents = {fact.document_id for fact in candidates}
+        candidate_rows = {(fact.document_id, fact.row_id) for fact in candidates if fact.row_id}
         target_documents = {target.kfz_document_id}
         relevant_documents = candidate_documents | target_documents
+
+        def relationship_applies_to_candidates(item: dict[str, Any]) -> bool:
+            for document_key, row_key in (("source_document_id", "source_row_id"), ("target_document_id", "target_row_id")):
+                document_id = item.get(document_key)
+                row_id = item.get(row_key)
+                if document_id in candidate_documents and (row_id is None or (document_id, row_id) in candidate_rows):
+                    return True
+            return False
+
         compact_facts = []
         for fact in candidates:
             compact_facts.append({
@@ -146,11 +156,13 @@ class LLMPlanner:
         links = sorted(linking.get("links", []), key=lambda item: str(item.get("link_id", "")))
         link_aliases = {link.get("link_id"): f"link_{index + 1:05d}" for index, link in enumerate(links)}
         safe_links = []
+        included_link_ids: set[str] = set()
         for link in links:
             source_document = link.get("source_document_id")
             target_document = link.get("target_document_id")
-            if not ({source_document, target_document} & relevant_documents):
+            if not ({source_document, target_document} & relevant_documents) or not relationship_applies_to_candidates(link):
                 continue
+            included_link_ids.add(link.get("link_id"))
             evidence = []
             for item in link.get("evidence", []):
                 source = item.get("source") or {}
@@ -182,7 +194,7 @@ class LLMPlanner:
                 "candidate_source_groups": [group_by_document.get(doc_id, "source_unknown") for doc_id in item.get("candidate_document_ids", [])],
             }
             for item in linking.get("review_required", [])
-            if any(doc_id in relevant_documents for doc_id in item.get("candidate_document_ids", []))
+            if item.get("link_id") in included_link_ids
         ]
         safe_diagnostics = [
             {
@@ -193,7 +205,8 @@ class LLMPlanner:
                 "candidate_status": item.get("candidate_status"),
             }
             for item in linking.get("link_validation_diagnostics", [])
-            if {item.get("source_document_id"), item.get("target_document_id")} & relevant_documents
+            if ({item.get("source_document_id"), item.get("target_document_id")} & relevant_documents)
+            and relationship_applies_to_candidates(item)
         ]
         safe_unlinked = [
             {"source_group_id": group_by_document.get(item.get("document_id"), "source_unknown")}
@@ -232,6 +245,11 @@ class LLMPlanner:
         ).hexdigest()
         headers = {"Authorization": f"Bearer {self.settings.llm_api_key}"} if self.settings.llm_api_key else {}
         url = self.settings.llm_base_url.rstrip("/") + "/chat/completions"
+        candidate_count = len(payload.get("candidates", []))
+        batch_size = payload.get("candidate_batch", {}).get("batch_candidate_count")
+        if isinstance(batch_size, int) and batch_size >= 0:
+            candidate_count = batch_size
+        max_output_tokens = min(16_384, max(2_048, 2_048 + 32 * candidate_count))
         started = time.perf_counter()
         try:
             with httpx.Client(timeout=self.settings.llm_timeout_seconds, follow_redirects=False) as client:
@@ -241,6 +259,7 @@ class LLMPlanner:
                     json={
                         "model": self.settings.llm_model,
                         "temperature": 0,
+                        "max_tokens": max_output_tokens,
                         "response_format": {"type": "json_object"},
                         "messages": [
                             {"role": "system", "content": system_prompt},

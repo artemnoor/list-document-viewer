@@ -453,61 +453,9 @@
         "detection_method": "llm",
         "conflicts": [],
         "source_row_id": "live-april-operation-row-0001"
-      },
-      {
-        "link_id": "synthetic-support-05_period_filter-0002",
-        "relationship_type": "supports_indicator",
-        "source_document_id": "live-march-operation",
-        "target_document_id": "live-synthetic-kfz-05_period_filter",
-        "evidence": [
-          {
-            "source": {
-              "document_id": "live-march-operation",
-              "path": "#/line_items/0/amount",
-              "raw_value": "synthetic-private-value",
-              "normalized_value": "synthetic-source",
-              "provenance": {
-                "document_id": "live-march-operation",
-                "source_ref": "#/line_items/0/amount",
-                "source_text": "500.00",
-                "source_available": true
-              }
-            },
-            "target": {
-              "document_id": "live-synthetic-kfz-05_period_filter",
-              "path": "#/indicators/0/extracted",
-              "raw_value": "synthetic-target-value",
-              "normalized_value": "synthetic-target",
-              "provenance": {
-                "document_id": "live-synthetic-kfz-05_period_filter",
-                "source_ref": "#/indicators/0/extracted",
-                "source_text": "500.00",
-                "source_available": true
-              }
-            },
-            "signal": "synthetic_operation_support",
-            "explanation": "Synthetic evidence edge for evaluator-controlled test records."
-          }
-        ],
-        "explanation": "Synthetic source-to-target relation.",
-        "confidence": 0.7,
-        "status": "review",
-        "verification_status": "not_reviewed",
-        "detection_method": "llm",
-        "conflicts": [],
-        "source_row_id": "live-march-operation-row-0001"
       }
     ],
-    "review_required": [
-      {
-        "link_id": "synthetic-support-05_period_filter-0002",
-        "reason": "Synthetic unreviewed relation.",
-        "candidate_document_ids": [
-          "live-march-operation",
-          "live-synthetic-kfz-05_period_filter"
-        ]
-      }
-    ],
+    "review_required": [],
     "unlinked_documents": [],
     "warnings": [
       "Synthetic evaluation data; no production documents or values."

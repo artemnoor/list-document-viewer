@@ -1,6 +1,6 @@
 # Gemma 4 live evaluation status
 
-## Status: real Gemma evaluation completed with two timeouts
+## Status: live evaluation is partially verified; final replay awaits provider credit
 
 The requested label is “Gemma 4 30B A4”. Polza's current model catalog exposes the A4B Gemma 4 variant under the exact ID `google/gemma-4-26b-a4b-it`; it also lists `google/gemma-4-31b-it`. Google names the available MoE family member **Gemma 4 26B A4B**, while 31B is a separate dense model ([Google Gemma 4 model overview](https://ai.google.dev/gemma/docs/core.md)). The E2E harness is pinned to the A4B ID and refuses any other configured model.
 
@@ -14,7 +14,9 @@ After fixing batch boundaries to preserve Extraction order and continuing after 
 
 The run's initial engine metrics cover only the 27 returned scenario responses: source F1 0.889, formula accuracy 1.000 (20 scored), and expected-value accuracy 0.529 (17 scored). They exclude the 320-candidate case because it received no valid model response. Replaying those same genuine plans offline after the row-aware review-gate fix raised published-value accuracy to 0.765 (17 scored) and pass count to 14; all three actual-versus-planned repeats now calculate the expected `900.00`. Source F1 and formula accuracy are unchanged. The replay made no provider calls; full per-scenario results are in [`evaluation-summary.post-fix.json`](../tests/results/live_e2e/evaluation-summary.post-fix.json).
 
-Review of the saved plans also exposed missing formula trees, unnecessary assumptions that repeated explicit evidence, and confusion between a selected row and another row in its document. Prompt `calculation-plan.v1.0.3` now states row-reference matching, evidence-backed assumptions, sign preservation, complete reachable formulas, and the manual-review invariant. The latest genuine model responses were generated with prompt 1.0.2; the new prompt has not yet had a live run because the provider returned HTTP 402 for the final scenario's batch calls.
+Review of the saved plans also exposed missing formula trees, unnecessary assumptions that repeated explicit evidence, and confusion between a selected row and another row in its document. Prompt `calculation-plan.v1.0.3` now states row-reference matching, evidence-backed assumptions, sign preservation, complete reachable formulas, and the manual-review invariant. The 27-response benchmark used prompt 1.0.2; the separate targeted 320-candidate run used 1.0.3.
+
+A targeted real-model run of the 320-candidate case did use prompt `1.0.3`. With 120 candidates per batch, Gemma returned valid plans for batches 1 and 3; batch 2 received HTTP 402. Batch 3 selected the expected row `live-many-candidates-row-0308` with no false inclusion. Because the earlier batches were unresolved, the merged result correctly remained `manual_review` with `expected_value=null`; this run verifies later-batch selection but does not pass the full-case evaluation. At the time of the follow-up attempt, Polza required at least 1 RUB per completion and reported 0.93 RUB available, so no additional completion was possible. The revised fixture and bounded output-token request have offline regression coverage; live verification of those latest changes remains pending provider credit.
 
 The evaluation harness has ten synthetic, contract-validated cases with independent golden references prepared under [`tests/results/live_e2e/`](../tests/results/live_e2e/):
 
@@ -27,7 +29,7 @@ The evaluation harness has ten synthetic, contract-validated cases with independ
 7. Missing required invoice and unconfirmed source link.
 8. Actual versus planned amount.
 9. Similar operations with equal amounts.
-10. 320 numeric candidates split into batches.
+10. 320 numeric candidates split into batches, with one confirmed target link and no links for unrelated distractors. Plausible competing descriptions can produce unreviewed links.
 
 No source values from real documents were transmitted. The model payload omits numeric values and full provenance; IDs are pseudonymized. All input documents are synthetic.
 
@@ -61,4 +63,4 @@ The offline replay command is available only after genuine Gemma responses have 
 python tests/live_e2e/replay_saved_results.py
 ```
 
-Current run status and the exact provider model IDs observed are in [`evaluation-status.json`](../tests/results/live_e2e/evaluation-status.json) and [`model-catalog.json`](../tests/results/live_e2e/model-catalog.json). No model accuracy, formula score, or financial result is claimed until the live Gemma run completes.
+Current aggregate metrics and the exact provider model IDs observed are in [`evaluation-summary.post-fix.json`](../tests/results/live_e2e/evaluation-summary.post-fix.json), [`evaluation-status.json`](../tests/results/live_e2e/evaluation-status.json), and [`model-catalog.json`](../tests/results/live_e2e/model-catalog.json). The 27-response offline replay and targeted later-batch selection are reported separately; neither is presented as a passing full 320-candidate live evaluation.

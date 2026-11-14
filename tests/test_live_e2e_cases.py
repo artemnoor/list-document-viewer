@@ -12,7 +12,7 @@ sys.path.insert(0, str(ROOT / "tests" / "live_e2e"))
 
 from prepare_cases import build_cases
 from replay_saved_results import _validate_recorded_model_identity
-from run_live_evaluation import REQUESTED_MODEL_ID, _aggregate, _formula_matches, _runtime_settings, _source_metrics, _validate_response_models
+from run_live_evaluation import REQUESTED_MODEL_ID, _aggregate, _formula_matches, _runtime_settings, _select_cases, _source_metrics, _validate_response_models
 
 from reconciliation_engine.contracts import validate_upstream_inputs
 from reconciliation_engine.config import Settings
@@ -49,8 +49,12 @@ def test_live_e2e_cases_are_synthetic_contract_valid_and_have_independent_refere
     assert target_index >= 300
     assert "308" not in many["request"]["context"]["targets"][0]["description"]
     links = many["request"]["linking_result"]["links"]
-    assert any(link["verification_status"] == "human_confirmed" for link in links)
-    assert any(link["verification_status"] == "not_reviewed" for link in links)
+    assert len(links) == 1
+    assert links[0]["verification_status"] == "human_confirmed"
+
+    actual_vs_planned = next(case for case in cases if case["reference"]["case_id"] == "08_actual_vs_planned")
+    review_links = actual_vs_planned["request"]["linking_result"]["links"]
+    assert {link["verification_status"] for link in review_links} == {"human_confirmed", "not_reviewed"}
 
 
 def test_later_candidate_batch_is_sent_after_an_earlier_timeout(monkeypatch):
@@ -97,6 +101,10 @@ def test_later_candidate_batch_is_sent_after_an_earlier_timeout(monkeypatch):
     assert target_alias is not None
     assert target_alias not in {item["fact_id"] for item in calls[0]["candidates"]}
     assert target_alias in {item["fact_id"] for item in calls[1]["candidates"]}
+    assert len(calls[0]["candidates"]) == 300
+    assert len(calls[1]["candidates"]) == 20
+    assert len(calls[0]["linking_graph"]["relationships"]) == 0
+    assert len(calls[1]["linking_graph"]["relationships"]) == 1
     assert result.included[0].fact_id == case["reference"]["expected_source_groups"][0][0]
     assert len(result.unprocessed_fact_ids) == 300
     assert result.requires_manual_review
@@ -160,6 +168,16 @@ def test_live_evaluation_is_pinned_to_the_requested_gemma_model(monkeypatch):
     assert REQUESTED_MODEL_ID == "google/gemma-4-26b-a4b-it"
     with pytest.raises(RuntimeError, match="pinned to google/gemma-4-26b-a4b-it"):
         _runtime_settings()
+
+
+def test_live_runner_can_select_a_synthetic_case_without_running_the_full_suite():
+    cases = build_cases()
+
+    selected = _select_cases(cases, ["10_hundreds_of_candidates"])
+
+    assert [case["reference"]["case_id"] for case in selected] == ["10_hundreds_of_candidates"]
+    with pytest.raises(ValueError, match="Unknown synthetic case ID"):
+        _select_cases(cases, ["unknown-case"])
 
 
 def test_current_planner_prompt_has_general_evidence_and_formula_integrity_rules():

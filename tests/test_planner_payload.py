@@ -74,7 +74,11 @@ def test_planner_records_actual_response_content_and_provider_usage(monkeypatch)
         "choices": [{"message": {"content": plan_content}, "finish_reason": "stop"}],
         "usage": {"prompt_tokens": 123, "completion_tokens": 45, "total_tokens": 168, "cost": 0.001, "cost_rub": 0.001},
     }
-    monkeypatch.setattr(httpx.Client, "post", lambda *args, **kwargs: httpx.Response(200, json=provider_response, request=httpx.Request("POST", "https://polza.ai/api/v1/chat/completions")))
+    posted_requests = []
+    def provider_post(*args, **kwargs):
+        posted_requests.append(kwargs["json"])
+        return httpx.Response(200, json=provider_response, request=httpx.Request("POST", "https://polza.ai/api/v1/chat/completions"))
+    monkeypatch.setattr(httpx.Client, "post", provider_post)
     planner = LLMPlanner(Settings(llm_enabled=True, llm_api_key="unit-test-only", llm_base_url="https://polza.ai/api/v1", llm_model="openai/gpt-6.1-sol"))
 
     plan = planner._request_plan({"candidates": []}, sensitive_data=False)
@@ -87,3 +91,20 @@ def test_planner_records_actual_response_content_and_provider_usage(monkeypatch)
     assert planner.call_records[0]["provider_cost_currency"] == "RUB"
     assert len(planner.call_records[0]["prompt_sha256"]) == 64
     assert len(planner.call_records[0]["payload_sha256"]) == 64
+    assert posted_requests[0]["max_tokens"] == 2048
+
+
+def test_planner_output_token_limit_scales_with_the_active_candidate_batch(monkeypatch):
+    plan_content = json.dumps({"target_id": "target_001", "method_description": "No plan for this transport test.", "requires_manual_review": True})
+    provider_response = {"choices": [{"message": {"content": plan_content}}]}
+    posted_requests = []
+
+    def provider_post(*args, **kwargs):
+        posted_requests.append(kwargs["json"])
+        return httpx.Response(200, json=provider_response, request=httpx.Request("POST", "https://polza.ai/api/v1/chat/completions"))
+
+    monkeypatch.setattr(httpx.Client, "post", provider_post)
+    planner = LLMPlanner(Settings(llm_enabled=True, llm_api_key="unit-test-only"))
+    planner._request_plan({"candidates": [{}] * 120, "candidate_batch": {"batch_candidate_count": 120}}, sensitive_data=False)
+
+    assert posted_requests[0]["max_tokens"] == 5_888
