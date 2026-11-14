@@ -60,7 +60,7 @@ def main():
     for ident in args.cases:
         if ident not in {'1','3','7','9','18','27'}:
             parser.error('Supported case numbers: 1, 3, 7, 9, 18, 27')
-        inputs = list((root / 'бенчмаркс').glob('тест ' + ident + '.*'))
+        inputs = list((root / 'benchmarks' / 'document-parser').glob('тест ' + ident + '.*'))
         if len(inputs) != 1:
             parser.error(f'Expected one input for case {ident}; found {len(inputs)}')
         truth = root / 'backend/tests/ground_truth' / (names.get(ident, 'case-' + ident) + '.json')

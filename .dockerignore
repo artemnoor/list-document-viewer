@@ -12,7 +12,7 @@ backend/tests
 backend/*.log
 backend/diagnostic*.log
 backend/ocr-check*.log
-бенчмаркс
+benchmarks/document-parser
 бенчмаркс.zip
 бенчмаркс-запуск.log
 бенчмаркс-повтор.log

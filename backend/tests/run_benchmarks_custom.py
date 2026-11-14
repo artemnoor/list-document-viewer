@@ -8,7 +8,7 @@ from markdown_export import structured_markdown
 from server import normalize_tables
 
 root=Path(__file__).resolve().parents[2]
-out=root/'бенчмаркс';out.mkdir(exist_ok=True)
+out=root/'benchmarks'/'document-parser';out.mkdir(exist_ok=True)
 status=out/'статус.json'; report=[]
 def record(item):
  report.append(item);status.write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')

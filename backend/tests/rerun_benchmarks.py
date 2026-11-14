@@ -12,7 +12,7 @@ from extraction import analyze, native_parts
 from pdf_layout import extract_pdf_layout, merge_model_layout
 from markdown_export import structured_markdown
 from server import normalize_tables
-root=Path(__file__).resolve().parents[2]; out=root/'бенчмаркс'
+root=Path(__file__).resolve().parents[2]; out=root/'benchmarks'/'document-parser'
 records=[]
 for n in range(1,45):
  matches=list(out.glob(f'тест {n}.*'))
