@@ -6,7 +6,11 @@
 
 Проверка достоверности КФЗ по первичным учётным документам.
 
+**[Открыть сайт → trace.andromedabmstu.ru](https://trace.andromedabmstu.ru/)**
+
 [![CI](https://github.com/artemnoor/list-document-viewer/actions/workflows/integration.yml/badge.svg?branch=main)](https://github.com/artemnoor/list-document-viewer/actions/workflows/integration.yml)
+[![Release](https://img.shields.io/github/v/release/artemnoor/list-document-viewer)](https://github.com/artemnoor/list-document-viewer/releases/latest)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 ![Python](https://img.shields.io/badge/Python-3.11-3776AB?logo=python&logoColor=white)
 ![Vue](https://img.shields.io/badge/Vue-3%20%2B%20TypeScript-42B883?logo=vuedotjs&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)
@@ -114,3 +118,7 @@ flowchart LR
 | [Архитектура](phystech-trace/docs/architecture.md) | Компоненты и границы ответственности |
 | [Поток данных](phystech-trace/docs/data-flow.md) | От загрузки до заключения |
 | [Document Parser](docs/document-parser.md) | Сохранённая подробная документация распознавания |
+
+## Лицензия
+
+Оригинальный код проекта распространяется по [Apache License 2.0](LICENSE). Сторонние компоненты, шрифты и встроенные материалы сохраняют свои условия и уведомления; см. [NOTICE](NOTICE).

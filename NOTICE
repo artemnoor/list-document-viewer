@@ -1,0 +1,18 @@
+Phystech Trace
+Copyright 2026 Phystech Trace contributors.
+
+Original project code is licensed under the Apache License, Version 2.0.
+See LICENSE for the full license text.
+
+Third-party components, fonts, imported source files, and embedded assets retain
+their respective copyright notices and license terms. This project's license
+does not relicense those materials or grant additional rights to them.
+
+Existing notices include:
+- phystech-trace/gateway/assets/fonts/LICENSE_DEJAVU
+- phystech-trace/services/structured-extraction/scripts/vite/sites-vite-plugin.LICENSE
+- phystech-trace/services/structured-extraction/vendor/shadcn-tailwind-4.13.0.LICENSE.md
+- phystech-trace/landing/UPSTREAM.md and phystech-trace/landing/upstream.json
+
+Dependency licenses remain available in their respective packages and upstream
+repositories. Product names and trademarks belong to their respective owners.
