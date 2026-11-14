@@ -1,0 +1,66 @@
+# Gemma 4 live evaluation status
+
+## Status: live evaluation is partially verified; final replay awaits provider credit
+
+The requested label is “Gemma 4 30B A4”. Polza's current model catalog exposes the A4B Gemma 4 variant under the exact ID `google/gemma-4-26b-a4b-it`; it also lists `google/gemma-4-31b-it`. Google names the available MoE family member **Gemma 4 26B A4B**, while 31B is a separate dense model ([Google Gemma 4 model overview](https://ai.google.dev/gemma/docs/core.md)). The E2E harness is pinned to the A4B ID and refuses any other configured model.
+
+The live evaluation was run on 14 November 2026 against `google/gemma-4-26b-a4b-it`, using only synthetic data. It completed all ten scenarios at three repeats within the 40-call cap: 31 scenario calls plus one protocol preflight. The provider returned 29 model responses; two calls timed out in the 320-candidate scenario. Across scored responses, mean source F1 was 0.714, formula accuracy was 0.950 (20 scored formulas), and expected-value accuracy was 0.412 (17 scored values). The timeouts were retained as failed attempts and not retried. Detailed metrics are in [`evaluation-summary.json`](../tests/results/live_e2e/evaluation-summary.json); bulky per-repeat raw snapshots are not committed.
+
+After the dimension and response-echo fixes, the same bounded benchmark was repeated: 29 responses, two timeouts, mean source F1 0.810, formula accuracy 0.947 (19 scored), and expected-value accuracy 0.625 (16 scored). Formula scoring treats `add` and `sum` as equivalent when their leaves and count match. See the current aggregate in [`evaluation-summary.json`](../tests/results/live_e2e/evaluation-summary.json).
+
+The earlier 320-candidate run did not pass model evaluation: two of its three attempts timed out. The only returned plan selected the matching source and also included one distractor from the later batch. The target description explicitly named “row 308”; that clue made the distractor look relevant to the model. The target source itself had a human-confirmed Linking relation. The engine kept the outcome in manual review with no published value. This run exposed a fixture-prompt leak and did not establish reliable model performance on the large candidate set.
+
+After fixing batch boundaries to preserve Extraction order and continuing after an individual batch failure, the bounded run was repeated. The three 320-candidate evaluations made six batch calls: five received HTTP 402 and one timed out, leaving no model response for that scenario. The preceding nine scenarios returned 27 model responses; the provider also returned the protocol preflight. The updated synthetic target description no longer reveals its row position. An offline regression test confirms that this target is sent in batch 2 and that a failed batch stays unprocessed while batch 2 is still requested. Live validation of model selection in that later batch remains unverified until provider credit is available.
+
+The run's initial engine metrics cover only the 27 returned scenario responses: source F1 0.889, formula accuracy 1.000 (20 scored), and expected-value accuracy 0.529 (17 scored). They exclude the 320-candidate case because it received no valid model response. Replaying those same genuine plans offline after the row-aware review-gate fix raised published-value accuracy to 0.765 (17 scored) and pass count to 14; all three actual-versus-planned repeats now calculate the expected `900.00`. Source F1 and formula accuracy are unchanged. The replay made no provider calls; full per-scenario results are in [`evaluation-summary.post-fix.json`](../tests/results/live_e2e/evaluation-summary.post-fix.json).
+
+Review of the saved plans also exposed missing formula trees, unnecessary assumptions that repeated explicit evidence, and confusion between a selected row and another row in its document. Prompt `calculation-plan.v1.0.3` now states row-reference matching, evidence-backed assumptions, sign preservation, complete reachable formulas, and the manual-review invariant. The 27-response benchmark used prompt 1.0.2; the separate targeted 320-candidate run used 1.0.3.
+
+A targeted real-model run of the 320-candidate case did use prompt `1.0.3`. With 120 candidates per batch, Gemma returned valid plans for batches 1 and 3; batch 2 received HTTP 402. Batch 3 selected the expected row `live-many-candidates-row-0308` with no false inclusion. Because the earlier batches were unresolved, the merged result correctly remained `manual_review` with `expected_value=null`; this run verifies later-batch selection but does not pass the full-case evaluation. At the time of the follow-up attempt, Polza required at least 1 RUB per completion and reported 0.93 RUB available, so no additional completion was possible. The revised fixture and bounded output-token request have offline regression coverage; live verification of those latest changes remains pending provider credit.
+
+The evaluation harness has ten synthetic, contract-validated cases with independent golden references prepared under [`tests/results/live_e2e/`](../tests/results/live_e2e/):
+
+1. One act confirms a КФЗ indicator.
+2. Two potentially independent acts require a safe independence gate.
+3. Act, invoice, and registry duplicate representations.
+4. Negative correction.
+5. April versus an equal March amount.
+6. Gross amount less explicitly included VAT.
+7. Missing required invoice and unconfirmed source link.
+8. Actual versus planned amount.
+9. Similar operations with equal amounts.
+10. 320 numeric candidates split into batches, with one confirmed target link and no links for unrelated distractors. Plausible competing descriptions can produce unreviewed links.
+
+No source values from real documents were transmitted. The model payload omits numeric values and full provenance; IDs are pseudonymized. All input documents are synthetic.
+
+## Real upstream example check
+
+On 14 November 2026, the rebuilt real request example (`act-2026-0424` plus `kfz-2026-q1`, both upstream Extraction 1.2.0) was sent to the pinned model three times before and once after repairing the example generator. All four calls returned a plan with five included source facts; deterministic local execution of the plan returned `1180300.00`. The engine correctly kept `expected_value=null` and `status=manual_review` because the April act does not match the Q1 target period and the example has no human-confirmed Linking path. Numeric source values and full provenance are omitted from the model payload. The safe run summaries are stored locally under `data/real-llm-*.json` and are not committed.
+
+After adding deterministic dimension filtering, the real act example was run once more. Gemma selected exactly five `amount` facts (no quantity or unit-price facts); deterministic execution again returned `1180300.00`. The publication gate remained `manual_review` for the same period and Linking reasons.
+
+A separate run used all six authentic Extraction fixtures (113 numeric candidates, empty Linking graph) in batches of 40. Prompt 1.0.2 states generic dimension and candidate-accounting requirements. Explicitly incompatible currency/unit facts are now excluded before transmission based only on structured target/fact dimensions; merge independently checks the actual dimensions of model-selected facts. On the rerun, all 91 dimension-compatible candidates were handled in three model responses, selected dimensions were consistently RUB with no unit, and the prior `mixed_units`/`currency_missing` diagnostics disappeared. Result stayed `manual_review` due unprocessed ambiguous facts, period mismatch, and absent human-confirmed Linking. No expected value is published without a human-reviewed Linking path.
+
+When the target indicator and period are derived directly from the upstream KFZ Extraction, the six-document run also completes all three candidate batches. Gemma returned three valid plans with no `ValidationError`; the result remains `manual_review` because the real fixtures contain no human-confirmed Linking path and leave unresolved evidence gaps. The planner now discards only exact echoes of request-only metadata before schema validation; altered or invented fields remain errors.
+
+## Reproduction
+
+After provider billing is available, run from Windows PowerShell:
+
+```powershell
+python tests/live_e2e/run_live_evaluation.py --repeat 3 --max-api-calls 40
+```
+
+The runner verifies the exact Gemma model ID against `/models` before making a completion. `LLM_MODEL` must equal `google/gemma-4-26b-a4b-it`; any other value is rejected. Preparing the fixtures does not contact the provider:
+
+```powershell
+python tests/live_e2e/run_live_evaluation.py --prepare-only
+```
+
+The offline replay command is available only after genuine Gemma responses have been saved:
+
+```powershell
+python tests/live_e2e/replay_saved_results.py
+```
+
+Current aggregate metrics and the exact provider model IDs observed are in [`evaluation-summary.post-fix.json`](../tests/results/live_e2e/evaluation-summary.post-fix.json), [`evaluation-status.json`](../tests/results/live_e2e/evaluation-status.json), and [`model-catalog.json`](../tests/results/live_e2e/model-catalog.json). The 27-response offline replay and targeted later-batch selection are reported separately; neither is presented as a passing full 320-candidate live evaluation.

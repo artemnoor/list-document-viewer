@@ -1,0 +1,11 @@
+{
+  "provider": "Polza OpenAI-compatible API",
+  "endpoint": "https://polza.ai/api/v1/models",
+  "checked_date": "2026-11-14",
+  "gemma_4_model_ids": [
+    "google/gemma-4-26b-a4b-it",
+    "google/gemma-4-31b-it"
+  ],
+  "selected_model": "google/gemma-4-26b-a4b-it",
+  "credentials_included": false
+}

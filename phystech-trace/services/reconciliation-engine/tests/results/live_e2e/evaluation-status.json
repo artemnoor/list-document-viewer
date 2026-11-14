@@ -1,0 +1,16 @@
+{
+  "status": "completed_with_timeouts",
+  "model_id": "google/gemma-4-26b-a4b-it",
+  "provider": "Polza OpenAI-compatible API",
+  "completed_date": "2026-11-14",
+  "scenario_count": 10,
+  "repeat_count": 3,
+  "paid_call_limit": 40,
+  "scenario_call_count": 31,
+  "preflight_call_count": 1,
+  "real_model_responses": 29,
+  "read_timeouts": 2,
+  "synthetic_data_only": true,
+  "summary": "evaluation-summary.json",
+  "credentials_included": false
+}

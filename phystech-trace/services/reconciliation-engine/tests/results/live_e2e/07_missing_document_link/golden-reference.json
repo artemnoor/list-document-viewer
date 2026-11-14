@@ -1,0 +1,19 @@
+{
+  "case_id": "07_missing_document_link",
+  "synthetic": true,
+  "title": "Нет обязательного счёта и подтверждённой связи",
+  "scenario_note": "Even a numerically complete plan must not be published without the required invoice and a confirmed evidence path.",
+  "expected_source_groups": [
+    [
+      "fact_d0e017575046755855b0"
+    ]
+  ],
+  "expected_excluded_fact_ids": [],
+  "expected_formula": {
+    "operation": "sum",
+    "input_count": 1
+  },
+  "expected_value": "500.00",
+  "expected_publication_gate": "required_document_missing",
+  "truth_source": "deterministic synthetic input specification; independent of all LLM outputs"
+}

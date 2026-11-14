@@ -1,0 +1,171 @@
+{
+  "case_id": "02_independent_acts",
+  "repeat_count": 3,
+  "real_llm_responses": 3,
+  "pass_count": 0,
+  "mean_precision": 1.0,
+  "mean_recall": 1.0,
+  "mean_f1": 1.0,
+  "source_identification_precision": 1.0,
+  "source_identification_recall": 1.0,
+  "source_identification_f1": 1.0,
+  "formula_accuracy": 1,
+  "formula_scored_repeats": 3,
+  "value_accuracy": null,
+  "value_scored_repeats": 0,
+  "false_duplicate_inclusions": 0,
+  "false_refusals": 0,
+  "stable_run_fraction": 1.0,
+  "llm_calls": 3,
+  "provider_error_calls": 0,
+  "usage": {
+    "prompt_tokens": 8070,
+    "completion_tokens": 830,
+    "total_tokens": 8900,
+    "provider_cost_total": 0.10197459,
+    "provider_cost_currency": "RUB"
+  },
+  "latency_ms": 15852.626,
+  "runs": [
+    {
+      "repeat": 1,
+      "comparison": {
+        "selected_fact_ids": [
+          "fact_62391e1c5c9ecca4c669",
+          "fact_40e18cffd64fa0341138"
+        ],
+        "identified_fact_ids": [
+          "fact_62391e1c5c9ecca4c669",
+          "fact_40e18cffd64fa0341138"
+        ],
+        "expected_operation_groups": 2,
+        "represented_groups": 2,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "false_positive_sources": 0,
+        "missed_operation_groups": 0,
+        "false_duplicate_inclusions": 0,
+        "source_selection_correct": true,
+        "source_identification_precision": 1.0,
+        "source_identification_recall": 1.0,
+        "source_identification_f1": 1.0,
+        "identified_operation_groups": 2,
+        "unidentified_operation_groups": 0,
+        "false_positive_identifications": 0,
+        "source_identification_correct": true,
+        "formula_applicable": true,
+        "formula_correct": true,
+        "calculation_status": "manual_review",
+        "expected_value": "150.00",
+        "actual_expected_value": null,
+        "value_applicable": false,
+        "value_correct": false,
+        "expected_publication_gate": "independence_not_established",
+        "publication_gate_observed": false,
+        "safe_abstention": true,
+        "diagnostic_codes": [
+          "assumptions_require_review",
+          "independence_not_established"
+        ],
+        "plan_source": "llm",
+        "pass": false
+      },
+      "llm_call_count": 1,
+      "real_llm_response": true
+    },
+    {
+      "repeat": 2,
+      "comparison": {
+        "selected_fact_ids": [
+          "fact_62391e1c5c9ecca4c669",
+          "fact_40e18cffd64fa0341138"
+        ],
+        "identified_fact_ids": [
+          "fact_62391e1c5c9ecca4c669",
+          "fact_40e18cffd64fa0341138"
+        ],
+        "expected_operation_groups": 2,
+        "represented_groups": 2,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "false_positive_sources": 0,
+        "missed_operation_groups": 0,
+        "false_duplicate_inclusions": 0,
+        "source_selection_correct": true,
+        "source_identification_precision": 1.0,
+        "source_identification_recall": 1.0,
+        "source_identification_f1": 1.0,
+        "identified_operation_groups": 2,
+        "unidentified_operation_groups": 0,
+        "false_positive_identifications": 0,
+        "source_identification_correct": true,
+        "formula_applicable": true,
+        "formula_correct": true,
+        "calculation_status": "manual_review",
+        "expected_value": "150.00",
+        "actual_expected_value": null,
+        "value_applicable": false,
+        "value_correct": false,
+        "expected_publication_gate": "independence_not_established",
+        "publication_gate_observed": false,
+        "safe_abstention": true,
+        "diagnostic_codes": [
+          "assumptions_require_review",
+          "independence_not_established"
+        ],
+        "plan_source": "llm",
+        "pass": false
+      },
+      "llm_call_count": 1,
+      "real_llm_response": true
+    },
+    {
+      "repeat": 3,
+      "comparison": {
+        "selected_fact_ids": [
+          "fact_62391e1c5c9ecca4c669",
+          "fact_40e18cffd64fa0341138"
+        ],
+        "identified_fact_ids": [
+          "fact_62391e1c5c9ecca4c669",
+          "fact_40e18cffd64fa0341138"
+        ],
+        "expected_operation_groups": 2,
+        "represented_groups": 2,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "false_positive_sources": 0,
+        "missed_operation_groups": 0,
+        "false_duplicate_inclusions": 0,
+        "source_selection_correct": true,
+        "source_identification_precision": 1.0,
+        "source_identification_recall": 1.0,
+        "source_identification_f1": 1.0,
+        "identified_operation_groups": 2,
+        "unidentified_operation_groups": 0,
+        "false_positive_identifications": 0,
+        "source_identification_correct": true,
+        "formula_applicable": true,
+        "formula_correct": true,
+        "calculation_status": "manual_review",
+        "expected_value": "150.00",
+        "actual_expected_value": null,
+        "value_applicable": false,
+        "value_correct": false,
+        "expected_publication_gate": "independence_not_established",
+        "publication_gate_observed": false,
+        "safe_abstention": true,
+        "diagnostic_codes": [
+          "independence_not_established"
+        ],
+        "plan_source": "llm",
+        "pass": false
+      },
+      "llm_call_count": 1,
+      "real_llm_response": true
+    }
+  ]
+}

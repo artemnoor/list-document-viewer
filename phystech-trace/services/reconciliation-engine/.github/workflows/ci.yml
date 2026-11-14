@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  tests-and-container:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install and run tests
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[test]"
+          pytest
+      - name: Validate and rebuild synthetic acceptance artifacts
+        run: python examples/build_synthetic_acceptance.py
+      - name: Build Docker image
+        run: docker build --tag reconciliation-engine:ci .
+      - name: Docker HTTP smoke test
+        run: |
+          docker run --detach --rm --name reconciliation-engine-ci -p 127.0.0.1:8000:8000 reconciliation-engine:ci
+          trap 'docker stop reconciliation-engine-ci >/dev/null 2>&1 || true' EXIT
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:8000/health >/dev/null; then
+              break
+            fi
+            sleep 1
+          done
+          curl --fail --silent http://127.0.0.1:8000/health
+          curl --fail --silent http://127.0.0.1:8000/openapi.json >/dev/null
+          curl --fail --silent http://127.0.0.1:8000/docs >/dev/null

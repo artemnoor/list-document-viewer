@@ -1,0 +1,22 @@
+{
+  "case_id": "04_negative_adjustment",
+  "synthetic": true,
+  "title": "Отрицательная корректировка",
+  "scenario_note": "The correction keeps its source sign and is included once.",
+  "expected_source_groups": [
+    [
+      "fact_b714ae9370471efe0417"
+    ],
+    [
+      "fact_bc49e8cb41de85b55cba"
+    ]
+  ],
+  "expected_excluded_fact_ids": [],
+  "expected_formula": {
+    "operation": "sum",
+    "input_count": 2
+  },
+  "expected_value": "100.00",
+  "expected_publication_gate": null,
+  "truth_source": "deterministic synthetic input specification; independent of all LLM outputs"
+}
